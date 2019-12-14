@@ -1,0 +1,14 @@
+{
+  "httpserver":{
+  	"port" : 4000
+  },
+  "api": {
+  	"url":"http://localhost:3500/api/v1"
+  },
+  "mongodb": {
+    "address":"mongodb://localhost:27017/portalweb"
+  },
+  "pagination":{
+  	"pageSize":10
+  }
+}
