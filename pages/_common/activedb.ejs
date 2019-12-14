@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Logging in...</title>
+    <script src="/js/jquery.v3.4.1.min.js"></script>
+</head>
+<body>
+  <center>
+    <div><img src="/images/tr216-logo3.png" alt="tr216 logo" style="max-width: 300px;width: 100%;"></div>
+    <h3>logging in....</h3>
+  </center>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      <% if(typeof databases!='undefined') { %>
+          var databases=<%- JSON.stringify(databases) %>;
+      <% }else{ %>
+          var databases=[];
+      <% } %>
+      localStorage.setItem("databases",JSON.stringify(databases));
+
+      if(databases.some(value=>{return value._id==localStorage.getItem('activeDb')})==false){
+        if(databases.length>0){
+          localStorage.setItem('activeDb',databases[0]._id);
+          localStorage.setItem('activeDbName',databases[0].dbName);
+        }else{
+          localStorage.removeItem('activeDb');
+          localStorage.removeItem('activeDbName');
+        }
+      }
+      window.location.href=window.location.origin + '/general/dashboard?db=' + (localStorage.getItem('activeDb') || '') + '&sid=<%=sid%>';
+
+    });
+  </script>
+</body>
+</html>

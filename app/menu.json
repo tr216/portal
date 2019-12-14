@@ -1,0 +1,40 @@
+[
+	{"text":"Ana Sayfa",				"path":"/general/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
+	{"text":"MRP",						"path":"",					"icon":"table", "visible":false, "nodes":[]},
+	{"text":"E-Fatura",					"path":"",		"icon":"table", "visible":true, 
+		"nodes":[
+			{"text":"Yeni",					"path":"/einvoice-new",		"icon":"table", "visible":true, "nodes":[]},
+			{"text":"Gelen",					"path":"/e-invoice/inbox",		"icon":"table", "visible":true , "nodes":[]},
+			{"text":"Giden",					"path":"/e-invoice/outbox",		"icon":"table", "visible":true, "nodes":[]},
+			{"text":"GIB Entegrator Tanimlari",		"path":"/settings/e-integrators",	"icon":"cogs", "visible":true, "nodes":[]}
+		]
+	},
+	{"text":"E-Defter",					"path":"/eledger",		"icon":"table", 	"visible":false, "nodes":[]},
+	{"text":"Yazar Kasa Aktarim",		"path":"",				"icon":"cash-register", "visible":true,
+		"nodes":[
+			{"text":"Aktarim",					"path":"/pos-device/transfer",	"icon":"cloud-upload-alt", "visible":true, "nodes":[]},
+			{"text":"Cihaz Toplam Raporu",					"path":"/pos-device/rapor1",	"icon":"table", "visible":true, "nodes":[]},
+			{"text":"Lokasyon Toplam Raporu",					"path":"/pos-device/rapor2",	"icon":"table", "visible":true, "nodes":[]},
+			{"text":"Servis Tanimlari",			"path":"/pos-device/services-defines",	"icon":"cogs", 		"visible":true, "nodes":[]},
+			{"text":"Cihaz listesi",			"path":"/pos-device/list",		"icon":"cash-register", 		"visible":true, "nodes":[]}
+		]
+	},
+	{"text":"Ayarlar ve Tanimlar",		"path":"",					"icon":"wrench", "visible":true,
+		"nodes":[
+			{"text":"Lokasyon Tanimlari",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
+			{"text":"Lokal Connector Tanimlari",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
+			
+		]
+	},
+	{"text":"System",		"path":"",					"icon":"shield-alt", "visible":true,
+		"nodes":[
+			{"text":"Veri Ambarları",					"path":"/settings/dbdefine",		"icon":"database", "visible":true, "nodes":[]}
+		]
+	},
+	{"text":"",		"path":"",					"icon":"", "visible":false,
+		"nodes":[
+			{"text":"Profil ve Şifre",					"path":"/general/me",		"icon":"user", "visible":false, "nodes":[]},
+			{"text":"Veri Ambari Kullanicilari",		"path":"/settings/dbinvite",	"icon":"user-plus", "visible":false, "nodes":[]}
+		]
+	}
+]

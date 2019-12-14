@@ -1,0 +1,16 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/form',{
+    formControls:{
+        username            :{caption:'Kullanici Adı',                   type:'textbox'    ,required:true},
+        name            :{caption:'Isim',                   type:'textbox'    ,required:true},
+        lastName            :{caption:'Soyad',                   type:'textbox'    ,required:true},
+        password            :{caption:'Password',                   type:'textbox' },
+        verified         :{caption:'Verified',                 type:'checkbox'},
+        passive         :{caption:'Pasif',                 type:'checkbox'}
+    },
+    action:'',
+    mode:'addnew',
+    backUrl:'/sys-members'
+    }) 
+%>
+

@@ -1,0 +1,15 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/form',{
+    formControls:{
+        location        :{caption:'Lokasyon',             type:'lookup', lookup:locationList, textField:'locationName', valueField:'_id'    ,required:true},
+        service         :{caption:'Servis adı',           type:'lookup', lookup:serviceList, textField:'name', valueField:'_id'     ,required:true},
+        deviceModel     :{caption:'Model',                type:'textbox' },
+        deviceSerialNo  :{caption:'Cihaz seri no',        type:'textbox'    ,required:true},
+        localConnector  :{caption:'Lokal Etulia Connector', type:'lookup' , lookup:localConnectorList, textField:'name', valueField:'_id' },
+        passive         :{caption:'Pasif',                 type:'checkbox'}
+    },
+    action:'',
+    mode:'edit'
+    }) 
+%>
+

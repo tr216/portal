@@ -1,0 +1,16 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'locationName',text:'Lokasyon Ismi',type:'label' , orderable:true},
+        {name:'locationTypeName',text:'Turu',type:'label', orderable:true},
+        {name:'passive',text:'Pasif',type:'checkbox',width:1, orderable:true}
+    ],
+    caption:'Lokasyon Listesi',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    dataSourceUrl:'/dbapi/locations?db=' + db + '&sid=' + sid,
+    deleteUrl:'/dbapi/locations/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>
+

@@ -1,0 +1,19 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'eIntegrator',text:'GIB Entegrator',type:'lookup',lookup:eIntegrators, orderable:true},
+        {name:'name',text:'Adı',type:'label', orderable:true},
+        {name:'url',text:'url',type:'label', orderable:true},
+        {name:'firmNo',text:'Firma No',type:'label', orderable:false},
+        {name:'username',text:'username',type:'label', orderable:false},
+        {name:'password',text:'password',type:'label', orderable:false},
+        {name:'passive',text:'Pasif',type:'checkbox',width:1, orderable:true}
+    ],
+    caption:'GIB Entegrator Tanimlari',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    deleteUrl:'/dbapi/e-integrators/{_id}?db='+db+'&sid=' + sid
+    }) 
+%>
+

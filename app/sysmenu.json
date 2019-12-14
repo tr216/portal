@@ -1,0 +1,14 @@
+[
+	{"text":"Ana Sayfa",				"path":"/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
+	{"text":"Members",					"path":"",		"icon":"table", "visible":true, 
+		"nodes":[
+			{"text":"Uyeler",					"path":"/sys-members",		"icon":"users", "visible":true, "nodes":[]},
+			{"text":"Veri tabanlari",			"path":"/sys-databases",		"icon":"database", "visible":true, "nodes":[]}
+		]
+	},
+	{"text":"",		"path":"",					"icon":"", "visible":false,
+		"nodes":[
+			{"text":"Profil ve Şifre",					"path":"/me",		"icon":"user", "visible":false, "nodes":[]}
+		]
+	}
+]

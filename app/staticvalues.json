@@ -1,0 +1,60 @@
+{
+	"locationTypes":[
+			{"text":"Depo","value": 0},
+			{"text":"Magaza","value": 1},
+			{"text":"Uretim","value":2},
+			{"text":"Iade","value":3},
+			{"text":"Seyyar","value":4},
+			{"text":"Diger","value":5}
+		],
+	"posDeviceServiceTypes":[
+			{"text":"-none-","value": ""},
+			{"text":"Ingenico","value": "ingenico"},
+			{"text":"Beko","value": "beko"},
+			{"text":"Hugin","value": "hugin"},
+			{"text":"Profilo","value": "profilo"},
+			{"text":"Verifone","value": "verifone"},
+			{"text":"Olivetti","value": "olivetti"},
+			{"text":"Vera Delta","value": "veradelta"}
+		],
+	"localConnectorConnectionTypes":[
+		{"text":"Microsoft SQL Server","value": "mssql"},
+		{"text":"MySQL","value": "mysql"},
+		{"text":"Dosya sistemi","value": "file"},
+		{"text":"Javascript","value": "js"},
+		{"text":"Batch File","value": "bat"},
+		{"text":"WScript","value": "wscript"},
+		{"text":"CScript","value": "cscript"},
+		{"text":"Shell Script(BASH)","value": "bash"},
+		{"text":"Command Prompt","value": "console"}
+	],
+	"localConnectorFileTypes":[
+		{"text":".ejs","value": "ejs","icon":"file-code"},
+		{"text":".sql","value": "sql","icon":"file-code"},
+		{"text":".json","value": "json","icon":"scroll"},
+		{"text":".txt","value": "txt","icon":"file-alt"},
+		{"text":".txt","value": "txt","icon":"file-alt"},
+		{"text":".xml","value": "xml","icon":"file"},
+		{"text":".xslt","value": "xslt","icon":"file"},
+		{"text":".csv","value": "csv","icon":"file-csv"},
+		{"text":".xls","value": "xls","icon":"file-excel"},
+		{"text":".xlsx","value": "xlsx","icon":"file-excel"},
+		{"text":".js","value": "js","icon":"file-code"},
+		{"text":".bat","value": "bat","icon":"file-code"},
+		{"text":".cmd","value": "cmd","icon":"file-code"},
+		{"text":".sh","value": "sh","icon":"file-code"}
+	],
+	"genderList":[
+		{"text":"Erkek","value": "male"},
+		{"text":"Kadin","value": "female"}
+	],
+	"eIntegrators":[
+		{"text":"Uyumsoft","value": "uyumsoft"},
+		{"text":"Finans Bank","value": "finansbank"},
+		{"text":"Ing Bank","value": "ingbank"},
+		{"text":"Innova","value": "innova"},
+		{"text":"Logo","value": "logo"},
+		{"text":"Turkcell","value": "turkcell"}
+	]
+}
+

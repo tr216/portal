@@ -1,0 +1,22 @@
+<%layout('../../_common/layout')%>
+<div class="form-group">
+    <label class="control-label" for="">Veri Ambari</label>
+    <input type="text" form="" name="dbName" class="form-control" autocomplete="off" value="<%=dbName%>" readonly="true">
+</div>
+<div class="form-group">
+    <label class="control-label" for="">Davet edilecek üye</label>
+    <input type="text" form="form-general" name="username" readonly="true" id="username" class="form-control" value="<% if(typeof form.username!='undefined'){%><%=form.username%><%}%>">
+    <input type="text" form="form-general" name="memberId"  id="memberId" hidden="true" value="<% if(typeof form.memberId!='undefined'){%><%=form.memberId%><%}%>">
+</div>
+
+<%- partial('../../_common/form',{
+    formControls:{
+        canRead         :{caption:'Okuyabilir?',                 type:'checkbox'},
+        canWrite         :{caption:'Yazabilir?',                 type:'checkbox'},
+        canDelete         :{caption:'Silebilir?',                 type:'checkbox'}
+    },
+    action:'',
+    mode:'edit',
+    backUrl:'/dbinvite'
+    }) 
+%>

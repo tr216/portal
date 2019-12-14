@@ -1,0 +1,44 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/form',{
+    tabs:[
+        {
+            active:(activeTab==0),
+            caption:'Connector',
+            formControls:{
+                name            :{caption:'Adı',                   type:'label'    ,required:true},
+                connectorId     :{caption:'Connector ID',          type:'label'    ,required:true},
+                connectorPass   :{caption:'Connector Password',    type:'label'    ,required:true},
+                connectionType  :{caption:'Baglanti Turu',         type:'label',    required:true,  lookup:connectionTypes
+                    ,formControls:{
+                        server          :{name:'connection.server', caption:'Server',             type:'label'},
+                        port            :{name:'connection.port',caption:'port',                  type:'label'},
+                        database        :{name:'connection.database',caption:'Database',          type:'label'},
+                        username        :{name:'connection.username',caption:'Username',          type:'label'},
+                        password        :{name:'connection.password',caption:'Password',          type:'label'},
+                        file            :{name:'connection.file', caption:'Dosya(lar) veya klasör',  type:'label'}
+                    }
+                },
+                passive         :{caption:'Pasif',                 type:'label'},
+                connectorTest :{caption:'Connector Test', type:'partial', partial:'../settings/local-connectors/connector-test.ejs'}
+            }
+        },
+        {
+            active:(activeTab==1),
+            caption:'Kodlar ve Gorevler'
+            ,partial:'../settings/local-connectors/entegrasyon-form'
+        },
+        {
+            active:(activeTab==2),
+            caption:'Calistir'
+            ,partial:'run-code'
+        }
+    ],
+    action:'',
+    mode:'view'
+    , backUrl:'/settings/local-connectors'
+    }) 
+%>
+
+
+
+

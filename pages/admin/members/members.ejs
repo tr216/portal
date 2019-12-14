@@ -1,0 +1,17 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid',{
+    fields:[
+        {name:'_id',text:'Giriş',type:'button' , icon:'unlock', buttonTarget:'_blank', path:'/sys-members/login',width:1},
+        {name:'username',text:'Kullanici adı',type:'label'},
+        {name:'name',text:'Isim',type:'label'},
+        {name:'lastName',text:'Soyadı',type:'label'},
+        {name:'verified',text:'Verified',type:'checkbox',width:1},
+        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+    ],
+    caption:'Member List',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true
+    }) 
+%>

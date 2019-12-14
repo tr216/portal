@@ -1,0 +1,46 @@
+<ul class="navbar-nav  sidebar sidebar-dark bg-gradient-primary accordion" id="accordionSidebar">
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+        <div class="header-logo">
+            <img src="/images/tr216-logo3.png" style="width: 100%;">
+        </div>
+      </a>
+
+      <hr class="sidebar-divider">
+
+<% leftMenu.forEach(function(mainItem,menuIndex){ %>
+    <% if(mainItem.visible){ %>
+        <li class="nav-item">
+        <% if(mainItem.nodes.length>0){ %>
+            <a class="nav-link" href="#" data-toggle="collapse" data-target="#menu<%=menuIndex%>" aria-expanded="true" aria-controls="menu<%=menuIndex%>">
+              <i class="fa fa-<%= mainItem.icon %> fa-fw"></i>
+              <span><%= mainItem.text %></span>
+            </a>
+            <div id="menu<%=menuIndex%>" class="collapse" aria-labelledby="heading<%=menuIndex%>" data-parent="#accordionSidebar">
+              <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header"><%= mainItem.text %></h6>
+                <% mainItem.nodes.forEach(function(subItem){ %>
+                    <% if(subItem.visible){ %>
+                <a class="collapse-item" href="<%= subItem.path %>?db=<%=db%>&sid=<%=sid%>"><i class="fa fa-<%= subItem.icon %> fa-fw"></i> <%= subItem.text %></a>
+                    <% } %>
+                <% }); %>
+              </div>
+            </div>
+            
+        <% } else { %>
+            <a class="nav-link" href="<%= mainItem.path %>?db=<%=db%>&sid=<%=sid%>"><i class="fa fa-<%= mainItem.icon %> fa-fw"></i> <span><%= mainItem.text %></span></a>
+        <% } %>
+        </li>
+        
+    <% } %>
+<% }); %>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>

@@ -1,0 +1,16 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/form',{
+   
+    formControls:{
+        serviceType:{caption:'Servis Turu', type:'lookup' , lookup:serviceTypes   ,required:true},
+        name:{caption:'Adı(nick name)', type:'textbox'    ,required:true},
+        url:{caption:'Web service url', type:'textbox'    },
+        username:{caption:'Username', type:'textbox'    },
+        password:{caption:'Password', type:'textbox'    },
+        passive:{caption:'Pasif?', type:'checkbox'    }
+    },
+    action:'',
+    mode:'edit'
+    }) 
+%>
+

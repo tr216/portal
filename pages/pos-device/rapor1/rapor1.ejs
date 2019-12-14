@@ -1,0 +1,106 @@
+<%layout('../../_common/layout')%>
+<form action="" method="POST" role="form" name="form1">
+        <div class="row align-items-end shadow-sm">
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label class="control-label" for="date1">Başlangıç</label>
+                <div class="input-group date">
+                    <input type="text" name="date1" id="date1" class="form-control" value="<% if(typeof filter.date1=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=filter.date1%><%}%>">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label class="control-label" for="date2">Bitiş</label>
+                <div class="input-group date">
+                    <input type="text" name="date2" id="date2" class="form-control" value="<% if(typeof filter.date2=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=filter.date2%><%}%>">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+            </div>
+            <div class="col-sm-3 text-right">
+                <div class="form-group">
+                    <button type="submit" name="btnFilter" class="btn btn-primary" value="true"><i class="fa fa-filter"></i> Süzgeç</button>
+                </div>
+            </div>
+        </div>
+
+</form>
+    <!-- </div> -->
+<% if(typeof message!='undefined') { %>
+    <% if(message!='') { %>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <%=message %>
+        </div>
+    </div>
+</div>
+    <% } %>
+<% } %>
+
+
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'posDevice.location.locationName',    text:'Lokasyon',    type:'lookup' ,orderable:false, filter:true, filterField:'location', lookupList:locationList, textField:'locationName', valueField:'_id'}, 
+        {name:'posDevice.deviceSerialNo',           text:'Seri No',     type:'label',orderable:false, filter:true,filterField:'deviceSerialNo'}, 
+        {name:'count',           text:'ZRap Adet',     type:'label',orderable:true, filter:false}, 
+        {name:'GunlukToplamTutar',                       text:'Toplam Tutar',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'MaliFisAdedi',                       text:'MaliFisAdedi',    type:'label' , className: 'text-right', orderable:true,filter:false},
+        {name:'NakitTutari',                       text:'NakitTutari',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'KrediTutari',                       text:'KrediTutari',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'FoodSaleCnt',                       text:'Yemek Cek A.',    type:'label' , className: 'text-right', format:'n0', orderable:true,filter:false},
+        {name:'FoodRcptTotalAmount',               text:'Yemek Ceki T.',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'InvoiceTotal',                       text:'Fatura',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'EInvoiceTotal',                       text:'E-Fatura',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'EArchiveInvoiceTotal',                       text:'E-Arsiv',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'BankaTransferTutari',                       text:'Banka Transfer',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'TaxRate0Amount',                       text:'Kdv0',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'TaxRate1Amount',                       text:'Kdv1',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'TaxRate8Amount',                       text:'Kdv8',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {name:'TaxRate18Amount',                       text:'Kdv18',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false}
+        
+        
+        
+    ],
+    caption:'Toplam Raporu',
+    addNewButton:false,
+    editButton:false,
+    deleteButton:false,
+    viewButton:false,
+    selection:false,
+    showPanel:false
+    })
+%>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $('.input-group.date').datepicker({
+            format: 'yyyy-mm-dd',
+            language: "tr",
+            orientation: "bottom auto",
+            // todayBtn: "linked",
+            autoclose: true,
+            todayHighlight: true,
+            clearBtn: true
+
+            // startDate: -4,
+            // endDate: +8,
+        });
+  
+
+       
+    });
+</script>
+
+
+
+

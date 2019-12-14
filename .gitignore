@@ -1,3 +1,12 @@
+log/
+downloads/
+config.json
+config_local.json
+*.bat
+apidoc.json
+nodemon.json
+w*.js
+
 # Logs
 logs
 *.log

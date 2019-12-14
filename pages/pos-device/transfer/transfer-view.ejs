@@ -1,0 +1,34 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/form',{
+   
+    formControls:{
+        locationName:{name:'posDevice.location.locationName',    caption:'Lokasyon',    type:'label'}, 
+        deviceSerialNo:{name:'posDevice.deviceSerialNo',           caption:'Seri No',     type:'label'}, 
+        serviceName:{name:'posDevice.service.name',             caption:'Servis adı',  type:'label'}, 
+        localConnectorName:{name:'posDevice.localConnector.name',      caption:'Local Connector',  type:'label'}, 
+        status:{name:'status',                            caption:'Durum',     type:'label'},
+        data:{name:'data',                               caption:'ZRapor Data',    type:'json'}
+        
+    },
+    action:'',
+    mode:'view'
+    }) 
+%>
+
+<div class="row">
+    <div class="col-lg-6 col-md-6">
+        
+    <% if(typeof form!='undefined') { %>
+        <a id="fileDownload" href="" download="ornek_data.json"><i class="fa fa-file"></i> ornek_data.json</a>
+    <% } %>
+    </div>
+</div> 
+<script type="text/javascript">
+    $(document).ready(function(){
+        var s=<%- JSON.stringify(form)%>;
+        var s64='data:application/json;base64,' + btoa(JSON.stringify(s,null,2));
+        
+        $('#fileDownload').attr('href',s64);
+
+    });
+</script>

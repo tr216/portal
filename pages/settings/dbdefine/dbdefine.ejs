@@ -1,0 +1,19 @@
+<% layout('../../_common/layout')%>
+            
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'dbName',text:'Veri Ambari Ismi',type:'label',orderable:true},
+        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+    ],
+    caption:'Veri Ambar Listesi',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    deleteButton:true,
+    customButtons:[
+    	{text:'davet', icon:'fas fa-user-plus', path:'/settings/dbinvite?db={_id}&sid=' + sid}
+    ],
+    
+    deleteUrl:'/api/dbdefine/{_id}?sid=' + sid
+    }) 
+%>
