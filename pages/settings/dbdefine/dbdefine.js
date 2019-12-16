@@ -39,7 +39,7 @@ function getList(req,res,data,callback){
 			}
 		}
 
-		res.redirect('/dbdefine?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
+		res.redirect('/settings/dbdefine?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		// data.filter.page=1;
 		data.filter=Object.assign(data.filter,req.query);
@@ -72,7 +72,7 @@ function addnew(req,res,data,callback){
 			data['dbName']=dbName;
 			api.post('/dbdefine',req,{dbName:dbName},(err,resp)=>{
 				if(!err){
-					res.redirect('/dbdefine?sid=' + req.query.sid);
+					res.redirect('/settings/dbdefine?sid=' + req.query.sid);
  					//callback(null,data);
  				}else{
  					data['message']=err.message;
@@ -92,7 +92,7 @@ function edit(req,res,data,callback){
 		
 		api.put('/dbdefine/' + _id,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/dbdefine?sid=' + req.query.sid);
+				res.redirect('/settings/dbdefine?sid=' + req.query.sid);
 
 			}else{
 				data['message']=err.message;

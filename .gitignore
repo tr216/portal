@@ -1,7 +1,7 @@
 log/
 downloads/
-config1.json
-config_local1.json
+#config.json
+#config_local.json
 *.bat
 apidoc.json
 nodemon.json

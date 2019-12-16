@@ -8,6 +8,11 @@ module.exports = function(req,res,callback){
 			url:'',
 			username:'',
 			password:'',
+			invoicePrefix:'AAA',
+			dispatchPrefix:'AAA',
+			postboxAlias:'default',
+			senderboxAlias:'default',
+			isDefault:false,
 			passive:false
 		},
 		list:[],
@@ -46,7 +51,7 @@ function getList(req,res,data,callback){
 			}
 		}
 
-		res.redirect('/e-integrators?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
+		res.redirect('/settings/e-integrators?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
 		console.log(data);
@@ -72,7 +77,7 @@ function addnew(req,res,data,callback){
 		console.log('data.form:',data.form);
 		api.post('/' + req.query.db + '/e-integrators',req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
+				res.redirect('/settings/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
 				return;
 			}else{
 				data['message']=err.message;
@@ -97,7 +102,7 @@ function edit(req,res,data,callback){
 
 		api.put('/' + req.query.db + '/e-integrators/' + _id,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
+				res.redirect('/settings/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
 				return;
 			}else{
 				data['message']=err.message;
@@ -121,7 +126,7 @@ function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
 	api.delete('/' + req.query.db + '/e-integrators/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/settings/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
 		}else{
 			data['message']=err.message;
 			callback(null,data);

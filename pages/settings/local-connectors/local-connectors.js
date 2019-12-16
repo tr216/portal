@@ -59,7 +59,7 @@ function getList(req,res,data,callback){
 			}
 		}
 
-		res.redirect('/local-connectors?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
+		res.redirect('/settings/local-connectors?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		// data.filter.page=1;
 		data.filter=Object.assign(data.filter,req.query);
@@ -91,7 +91,7 @@ function addnew(req,res,data,callback){
 		}else{
 			api.post('/' + req.query.db + '/local-connectors',req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/local-connectors?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/settings/local-connectors?db=' + req.query.db +'&sid=' + req.query.sid);
 				}else{
 					data['message']=err.message;
 					callback(null,data);
@@ -115,7 +115,7 @@ function edit(req,res,data,callback){
 		}else{
 			api.put('/' + req.query.db + '/local-connectors/' + _id,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/local-connectors?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/settings/local-connectors?db=' + req.query.db +'&sid=' + req.query.sid);
 
 				}else{
 					data['message']=err.message;
@@ -233,7 +233,7 @@ function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
 	api.delete('/' + req.query.db + '/local-connectors/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/local-connectors?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/settings/local-connectors?db=' + req.query.db +'&sid=' + req.query.sid);
 			
 		}else{
 			

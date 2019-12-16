@@ -55,7 +55,7 @@ function addnew(req,res,data,callback){
 		}else{
 			api.post('/' + req.query.db + '/locations',req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/locations?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/settings/locations?db=' + req.query.db +'&sid=' + req.query.sid);
  				}else{
  					data['message']=err.message;
  					callback(null,data);
@@ -85,7 +85,7 @@ function edit(req,res,data,callback){
 
 		api.put('/' + req.query.db + '/locations/' + _id, req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/locations?db=' + req.query.db +'&sid=' + req.query.sid);
+				res.redirect('/settings/locations?db=' + req.query.db +'&sid=' + req.query.sid);
 
 			}else{
 				data['message']=err.message;
@@ -109,7 +109,7 @@ function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
 	api.delete('/' + req.query.db + '/locations/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/locations?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/settings/locations?db=' + req.query.db +'&sid=' + req.query.sid);
 			
 		}else{
 			
