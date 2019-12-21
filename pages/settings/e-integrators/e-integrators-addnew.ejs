@@ -1,5 +1,5 @@
 <%layout('../../_common/layout')%>
-<%- partial('../../_common/form', {
+<%- partial('../../_common/form',{
     formControls:{
         eIntegrator:{caption:'GIB Entegrator', type:'lookup' , lookup:eIntegrators   ,required:true},
         name:{caption:'Adı(nick name)', type:'textbox'    ,required:true},
@@ -7,8 +7,8 @@
         firmNo:{caption:'Firma No', type:'textbox'    },
         username:{caption:'Service Username', type:'textbox'    },
         password:{caption:'Service Password', type:'textbox'    },
-        invoicePrefix:{caption:'Fatura Ön Ek', type:'textbox', max-length:3   },
-        dispatchPrefix:{caption:'İrsaliye Ön Ek', type:'textbox', max-length:3   },
+        invoicePrefix:{caption:'Fatura Ön Ek', type:'textbox'  },
+        dispatchPrefix:{caption:'İrsaliye Ön Ek', type:'textbox' },
         postboxAlias:{caption:'Posta Kutusu', type:'textbox'  },
         senderboxAlias:{caption:'Gonderim Kutusu', type:'textbox'  },
         isDefault:{caption:'Varsayilan?', type:'checkbox'    },

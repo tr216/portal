@@ -1,17 +1,18 @@
 <%layout('../../_common/layout')%>
 <%- partial('../../_common/grid2',{
     fields:[
-        {name:'id',text:'Fat.No',type:'label', filter:true,orderable:true},
+        {name:'ID',text:'Fat.No',type:'label', filter:true,orderable:true},
         {name:'issueDate',text:'Fat. Tarihi',type:'label', orderable:true},
         {name:'accountingParty.title',text:'Unvan',type:'label', filter:true, orderable:true},
         {name:'payableAmount',text:'Ödenecek Tutar',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
         {name:'taxExclusiveAmount',text:'Vergi Hariç',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
         {name:'taxTotal',text:'Vergi Toplam',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
         {name:'documentCurrencyCode',text:'Döviz',type:'label'},
-        {name:'vat1',text:'Kdv%1',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'vat8',text:'Kdv%8',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'vat18',text:'Kdv%18',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'status',text:'Durumu',type:'label'}
+        {name:'exchangeRate',text:'Kur',type:'label', className: 'text-right', format:'n5'},
+        {name:'taxSummary.vat1',text:'Kdv%1',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
+        {name:'taxSummary.vat8',text:'Kdv%8',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
+        {name:'taxSummary.vat18',text:'Kdv%18',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
+        {name:'invoiceStatus',text:'Durumu',type:'label'}
     ],
     caption:'Gelen Faturalar',
     addNewButton:false,

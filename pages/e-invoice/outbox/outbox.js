@@ -46,7 +46,7 @@ function getList(req,res,data,callback){
 			}
 		}
 
-		res.redirect('/e-integrators?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
+		res.redirect('/e-invoice/outbox?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
 		console.log(data);
@@ -54,25 +54,38 @@ function getList(req,res,data,callback){
 		delete data.filter.db;
 		data.filter.sid=undefined;
 		delete data.filter.sid;
-
-		api.get('/' + req.query.db + '/e-integrators',req,data.filter,(err,resp)=>{
-			if(!err){
-				data=mrutil.setGridData(data,resp);
-			}
-			callback(null,data);
-		});
+		initLookUpLists(req,res,data,(err,data)=>{
+			api.get('/' + req.query.db + '/e-invoice/outboxInvoiceList',req,data.filter,(err,resp)=>{
+				if(!err){
+					data=mrutil.setGridData(data,resp);
+				}
+				callback(null,data);
+			});
+		})
+		
 		
 	}
 
+}
+
+function initLookUpLists(req,res,data,cb){
+	data.eIntegratorList=[];
+	api.get('/' + req.query.db + '/e-integrators',req,{passive:false},(err,resp)=>{
+		if(!err){
+			data.eIntegratorList=resp.data.docs;
+			data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
+		}
+		cb(null,data);
+	});
 }
 
 function addnew(req,res,data,callback){
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body);
 		console.log('data.form:',data.form);
-		api.post('/' + req.query.db + '/e-integrators',req,data.form,(err,resp)=>{
+		api.post('/' + req.query.db + '/e-invoice/invoice',req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
+				res.redirect('/e-invoice/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
 				return;
 			}else{
 				data['message']=err.message;
@@ -95,9 +108,9 @@ function edit(req,res,data,callback){
 			return;
 		}
 
-		api.put('/' + req.query.db + '/e-integrators/' + _id,req,data.form,(err,resp)=>{
+		api.put('/' + req.query.db + '/e-invoice/invoice/' + _id,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
+				res.redirect('/e-invoice/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
 				return;
 			}else{
 				data['message']=err.message;
@@ -105,7 +118,7 @@ function edit(req,res,data,callback){
 			}
 		});
 	}else{
-		api.get('/' + req.query.db + '/e-integrators/' + _id,req,null,(err,resp)=>{
+		api.get('/' + req.query.db + '/e-invoice/invoice/' + _id,req,null,(err,resp)=>{
 			if(!err){
 				data.form=Object.assign(data.form,resp.data);
 				callback(null,data);
@@ -119,9 +132,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/e-integrators/' + _id,req,(err,resp)=>{
+	api.delete('/' + req.query.db + '/e-invoice/invoice/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/e-invoice/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
 		}else{
 			data['message']=err.message;
 			callback(null,data);
