@@ -1,6 +1,7 @@
 module.exports = function(req,res,callback){
 	var data={
 		eIntegratorList:[],
+		eInvoiceStatusTypes:staticValues.eInvoiceStatusTypes,
 		// form:{
 		// 	eIntegrator:'',
 		// 	name:'',
@@ -57,6 +58,7 @@ function getList(req,res,data,callback){
 		initLookUpLists(req,res,data,(err,data)=>{
 			api.get('/' + req.query.db + '/e-invoice/inboxInvoiceList',req,data.filter,(err,resp)=>{
 				if(!err){
+					console.log(resp.data.docs);
 					data=mrutil.setGridData(data,resp);
 				}
 				callback(null,data);

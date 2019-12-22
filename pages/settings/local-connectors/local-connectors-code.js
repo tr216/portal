@@ -3,8 +3,8 @@
 
 module.exports = function(req,res,callback){
 	var data={
-		connectionTypes:staticvalues.localConnectorConnectionTypes,
-		fileTypes:staticvalues.localConnectorFileTypes,
+		connectionTypes:staticValues.localConnectorConnectionTypes,
+		fileTypes:staticValues.localConnectorFileTypes,
 		form:{
 			name:'',
 			connectorId:'',
@@ -68,7 +68,7 @@ function load(req,res,data,callback){
 			console.log('startFile=',data.form.startFile);
 			data.form.files.forEach((f)=>{
 				console.log('isStart:',f.isStart);
-				staticvalues.localConnectorFileTypes.forEach((fType)=>{
+				staticValues.localConnectorFileTypes.forEach((fType)=>{
 					if(f.extension==fType.value){
 						f['icon']=fType.icon;
 						return;
@@ -83,7 +83,7 @@ function load(req,res,data,callback){
 					data.form.fileFullName=f.name + (f.extension!=''?'.' + f.extension:'');
 					data.form.fileType=f.type;
 
-					staticvalues.localConnectorFileTypes.forEach((e)=>{
+					staticValues.localConnectorFileTypes.forEach((e)=>{
 						if(e.value==f.extension){
 							data.form.fileIcon=e.icon;
 						}

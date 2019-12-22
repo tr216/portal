@@ -1,6 +1,6 @@
 module.exports = function(req,res,callback){
 	var data={
-		serviceTypes:staticvalues.posDeviceServiceTypes,
+		serviceTypes:staticValues.posDeviceServiceTypes,
 		form:{
 			serviceType:'',
 			name:'',

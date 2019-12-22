@@ -1,6 +1,6 @@
 module.exports = function(req,res,callback){
 	var data={
-		genderList:staticvalues.genderList,
+		genderList:staticValues.genderList,
 		form:{
 			username:'',
 			name:'',

@@ -1,6 +1,6 @@
 module.exports = function(req,res,callback){
 	var data={
-		eIntegrators:staticvalues.eIntegrators,
+		eIntegrators:staticValues.eIntegrators,
 		form:{
 			eIntegrator:'',
 			name:'',

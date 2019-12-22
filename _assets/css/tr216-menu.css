@@ -202,10 +202,10 @@ a.article, a.article:hover {
 }
 
 #sidebarToggle{
-    display: none;
+    /*display: none;*/
 }
 #sidebarToggleTop{
-    display: none;
+    /*display: none;*/
 }
 /* ---------------------------------------------------
     MEDIAQUERIES

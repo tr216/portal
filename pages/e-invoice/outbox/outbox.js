@@ -1,6 +1,7 @@
 module.exports = function(req,res,callback){
 	var data={
 		eIntegratorList:[],
+		eInvoiceStatusTypes:staticValues.eInvoiceStatusTypes,
 		// form:{
 		// 	eIntegrator:'',
 		// 	name:'',

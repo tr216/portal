@@ -12,7 +12,7 @@
         {name:'taxSummary.vat1',text:'Kdv%1',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
         {name:'taxSummary.vat8',text:'Kdv%8',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
         {name:'taxSummary.vat18',text:'Kdv%18',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'invoiceStatus',text:'Durumu',type:'label'}
+        {name:'invoiceStatus',text:'Durumu',type:'lookup',filter:true, lookupList:eInvoiceStatusTypes, textField:'text', valueField:'value', orderable:false}
     ],
     caption:'Gelen Faturalar',
     addNewButton:false,

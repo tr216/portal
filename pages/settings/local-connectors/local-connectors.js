@@ -1,7 +1,7 @@
 module.exports = function(req,res,callback){
 	var data={
-		connectionTypes:staticvalues.localConnectorConnectionTypes,
-		fileTypes:staticvalues.localConnectorFileTypes,
+		connectionTypes:staticValues.localConnectorConnectionTypes,
+		fileTypes:staticValues.localConnectorFileTypes,
 		form:{
 			name:'',
 			connectorId:'',

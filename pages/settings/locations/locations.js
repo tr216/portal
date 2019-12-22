@@ -1,6 +1,6 @@
 module.exports = function(req,res,callback){
 	var data={
-		locationTypeList:staticvalues.locationTypes,
+		locationTypeList:staticValues.locationTypes,
 		form:{
 			locationName:'',
 			locationType:0,

@@ -75,7 +75,7 @@ app.use(function(err, req, res, next) {
 
 global.menu=require('./app/menu.json');
 global.sysmenu=require('./app/sysmenu.json');
-global.staticvalues=require('./app/staticvalues.json');
+global.staticValues=require('./app/staticvalues.json');
 
 //=========== RESONANCE SERVICE ==================
 //global.service_resonance=require('./lib/service_resonance.js');

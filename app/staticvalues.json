@@ -55,6 +55,16 @@
 		{"text":"Innova","value": "innova"},
 		{"text":"Logo","value": "logo"},
 		{"text":"Turkcell","value": "turkcell"}
+	],
+	"eInvoiceStatusTypes":[
+		{"text":"Taslak","value": "Draft"},
+		{"text":"İşleniyor","value": "Processing"},
+		{"text":"GİB e iltildi","value": "SentToGib"},
+		{"text":"Onaylandı","value": "Approved"},
+		{"text":"Reddedildi","value": "Declined"},
+		{"text":"Onay bekliyor","value": "WaitingForAprovement"},
+		{"text":"Hata","value": "Error"}
+		
 	]
 }
 

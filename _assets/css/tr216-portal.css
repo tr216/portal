@@ -136,9 +136,20 @@
     padding-top: 0.25em!important;
 }
 
+.table thead th {
+    padding: 0.25rem;
+    vertical-align: middle;
+    border-bottom: 2px solid #e3e6f0;
+}
+
+.table th, .table td {
+    padding: 0.25rem;
+    vertical-align: middle;
+    /*border-top: 1px solid #e3e6f0;*/
+}
 td {
-   max-height: 35px !important;
-   height: 35px !important;
+    max-height: 35px !important;
+    height: 35px !important;
 }
 
 hr {
@@ -153,4 +164,8 @@ hr {
     color: #fbe3bf;
     background-color: #111111;
     overflow-x: scroll;
+}
+.form-control {
+    height: 28px;
+    padding: 0.05rem 0.25rem;
 }
