@@ -1,143 +1,15 @@
 body {
-    /*font-size: 11px;*/
-}
-.table {
-    color: #29292d;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 12px;
 }
 
-.bg-gradient-primary {
-    background-color: #19002d;
-    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(10%,#49007f),to(#29005f));
-    background-image: linear-gradient(#000040,#29005f 100%);
-    background-size: cover;
+body, input, button, select, label, textarea {
+    color: #555;
+    font-size: 12px;
 }
-
-
-.topbar {
-    height: 4.375rem;
-    background-color: #040043;
-}
-
-
-.header-logo {
-	padding: 2.5rem ;
-}
-/*.toggled a div.header-logo {
-	padding: 0 !important;
-}
-
-@media (max-width: 768px){
-	.header-logo {
-		padding: 0 !important;
-	}
-}
-.sidebar .sidebar-brand {
-    padding: 0.5rem 0.5rem;
-}*/
-
-.grid-back {
-    background-color: #8940Bf;
-    background-image: linear-gradient(#111111, #8940Bf);
-    background-repeat: no-repeat;
-}
-
-.grid-lines {
-    background-color: transparent;
-    background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
-    height: 100%;
-    background-size: 50px 50px;
-}
-
-.koyu-zemin {
-	background-color: #19092d;
-}
-
-
-.focus-effect{
-  border-radius: 8px;
-  position: relative;
-  z-index: 1;
-}
-
-.focus-effect:after {
-  pointer-events: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    /*border-radius: 50%;*/
-    border-radius: 8px;
-    content:'';
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
-
-    top: -5px;
-    left: -5px;
-    padding: 5px;
-    box-shadow: 0 0 0 3px gold;
-    -webkit-transition: -webkit-transform 0.2s, opacity 0.2s;
-    -webkit-transform: scale(.8);
-    -moz-transition: -moz-transform 0.2s, opacity 0.2s;
-    -moz-transform: scale(.8);
-    -ms-transform: scale(.8);
-    /*transition: transform 0.2s, opacity 0.2s;*/
-    transform: scale(.8);
-    opacity: 0;
-}
-/* Effect 1a */
- .focus-effect:hover {
-    background: rgba(127, 64, 255, 0.4);
-    color: #7930af;
-}
-
-.focus-effect:hover:after {
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
-    opacity: 1;
-}
-
-#dbLabel {
-	display: inherit;
-	text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 140px;
-    max-width: 250px;
-}
-@media (max-width: 768px){
-	#dbLabel {
-		display: none;
-	}
-
-   
-}
-
-
-.container, .container-fluid {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-}
-
-
-
-.grid-control-buttons {
-    width: 50px!important;
-    padding-bottom: 0.40em!important;
-    padding-top: 0.40em!important;
-}
-
-.tab-content {
-    border: thin #dddfeb solid;
-    padding: 10px;
-}
-}
-
-
-.dataTables_info {
-    padding-top: 0.25em!important;
+.table {
+    color: #555;
+    font-size: 12px;
 }
 
 .table thead th {
@@ -164,13 +36,79 @@ hr {
     border-top: 1px solid #f8f9fc6b;
 }
 
+.form-control {
+    height: 28px;
+    padding: 0.05rem 0.25rem;
+    font-size: 12px;
+}
+
+.btn {
+    padding: 0.0rem 0.6rem;
+}
+
+.bg-gradient-primary {
+    background-color: #19002d;
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(10%,#49007f),to(#29005f));
+    background-image: linear-gradient(#000040,#29005f 100%);
+    background-size: cover;
+}
+
+
+.topbar {
+    height: 4.375rem;
+    background-color: #040043;
+}
+
+
+.header-logo {
+	padding: 2.5rem ;
+}
+
+#dbLabel {
+	display: inherit;
+	text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 140px;
+    max-width: 250px;
+}
+
+@media (max-width: 768px){
+	#dbLabel {
+		display: none;
+	}
+}
+
+.container, .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.grid-control-buttons {
+    width: 50px!important;
+    padding-bottom: 0.40em!important;
+    padding-top: 0.40em!important;
+}
+
+.tab-content {
+    border: thin #dddfeb solid;
+    padding: 10px;
+}
+
+
+.dataTables_info {
+    padding-top: 0.25em!important;
+}
+
+
 .code-area {
     overflow-wrap: normal;
     color: #fbe3bf;
     background-color: #111111;
     overflow-x: scroll;
 }
-.form-control {
-    height: 28px;
-    padding: 0.05rem 0.25rem;
+
+.rounded-circle {
+    border-radius: 50% !important;
+    padding: 0.4rem 0.8rem !important;
 }

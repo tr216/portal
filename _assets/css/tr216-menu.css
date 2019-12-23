@@ -30,6 +30,7 @@ a, a:hover, a:focus {
     border-radius: 0;
     margin-bottom: 40px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 12pt;
 }
 
 .navbar-btn {
@@ -62,6 +63,7 @@ a, a:hover, a:focus {
     /*transition: all 0.6s cubic-bezier(0.945, 0.020, 0.270, 0.665);*/
     /*transform-origin: bottom left;*/
     display: initial;
+    font-size: 12pt;
 }
 
 #sidebar.toggled {
@@ -238,12 +240,17 @@ a.article, a.article:hover {
     #sidebarCollapse.active span:last-of-type {
         transform: rotate(-45deg) translate(1px, -1px);
     }*/
-
+    #sidebar {
+        display: none;
+    }
+    #sidebar.toggled {
+        display: initial;
+    }
 
     #sidebarToggle{
-        display: inherit;
+        display: initial;
     }
     #sidebarToggleTop{
-        display: inherit;
+        display: initial;
     }
 }

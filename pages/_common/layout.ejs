@@ -44,7 +44,7 @@
       <div id="content">
 
         <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light topbar mb-2 static-top shadow">
+        <nav class="navbar navbar-expand navbar-light topbar mb-1 static-top shadow">
 
           <!-- Sidebar Toggle (Topbar) -->
           <!-- <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3"> -->
@@ -173,7 +173,7 @@
                 <!-- <img class="img-profile rounded-circle" src=""> -->
               </a>
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="/me?db=<%=db%>&sid=<%=sid%>">
+                <a class="dropdown-item" href="/general/me?db=<%=db%>&sid=<%=sid%>">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profil ve Şifre
                 </a>
@@ -191,16 +191,11 @@
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
-
-          <!-- Page Heading -->
-         <!--  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800"><%=title%></h1>
-          </div> -->
-          <div class="card shadow mb-4">
-            <div class="card-header py-1">
-                <h1 class="m-0 font-weight-bold text-primary" style="font-size:22pt"><%=title%></h1>
+          <div class="card shadow mb-4 mt-0 pt-0">
+            <div class="card-header p-2">
+                <h1 class="m-0 font-weight-bold text-primary" style="font-size:16pt"><%=title%></h1>
             </div>
-            <div class="card-body">
+            <div class="card-body p-2">
               <%- body %>
             </div>
           </div>

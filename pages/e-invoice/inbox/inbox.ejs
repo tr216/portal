@@ -2,7 +2,7 @@
 <%- partial('../../_common/grid2',{
     fields:[
         {name:'ID',text:'Fat.No',type:'label', filter:true,orderable:true},
-        {name:'issueDate',text:'Fat. Tarihi',type:'label',filter:true, orderable:true},
+        {name:'issueDate',text:'Fat. Tarihi',type:'label', nowrap:true, filter:true, orderable:true},
         {name:'accountingParty.title',text:'Unvan',type:'label', filter:true, orderable:true},
         {name:'payableAmount',text:'Ödenecek Tutar',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
         {name:'taxExclusiveAmount',text:'Vergi Hariç',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
@@ -19,6 +19,7 @@
     viewButton:false,
     editButton:false,
     deleteButton:false,
+    selection:true,
     customButtons:[
         {path:'/e-invoice/inbox/view/{_id}?db=' + db + '&sid=' + sid,text:'Goruntule',icon:'fas fa-search-plus' , popup:true, target:'_blank'},
         {path:'/e-invoice/inbox/pdf/{_id}?db=' + db + '&sid=' + sid,text:'Pdf',icon:'fas fa-file-pdf' , popup:false, target:'_blank'}

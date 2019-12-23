@@ -85,7 +85,7 @@
                     <% } %>
 
                     <% fields.forEach(function(field){%> 
-                        <th class="" style="<% if(typeof field.width!='undefined'){%>width:<%=field.width%><%}%>"><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %><%=field.text%></th>
+                        <th class=""><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %><%=field.text%></th>
                     <%});%>
                     <th class="text-center" style="width: <%=(ctrlCol*30)%>px;">
                          <% if(addNewButton){ %>
@@ -103,7 +103,7 @@
                     
                     <% fields.forEach(function(field,index){%> 
                         <!-- <th class="<% if(typeof field.width!='undefined'){%>ctrl-col-<%=field.width%><%}%> nowrap"> -->
-                        <th class="" style="">
+                        <th class="">
                             <% if(field.filter){ %>
                                 <% if(field.type=='lookup' && typeof field.lookupList!='undefined'){ %>
                                     <select name="filter_<%=index%>" id="filter_<%=index%>" class="form-control p-0 m-0">
@@ -177,7 +177,7 @@
                                 }else if(field.type=='button'){
                                     %><td class="text-center"><a href="<%=field.path%>/<%=item._id%>?db=<%=db%>&sid=<%=sid%>" class="btn btn-info" title="<%=field.text%>" <% if(typeof field.buttonTarget!='undefined'){%>target="<%=field.buttonTarget%>"<%}%>><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %></a></td><%
                                 }else{
-                                    %><td class="<% if(typeof field.nowrap!='undefined') if(field.nowrap){%>text-nowrap <%}%><% if(typeof field.align=='undefined' && !isNaN(itemValue)){%>text-nowrap text-right<%}%>"><%- mrutil.formatCol(itemValue,field) %></td><%
+                                    %><td class="<% if(typeof field.align=='undefined' && !isNaN(itemValue)){%>text-nowrap text-right<%}%>"><%- mrutil.formatCol(itemValue,field) %></td><%
                                 }
                             }else{
                             %><td><%- mrutil.formatCol(itemValue,field)%></td>
@@ -358,12 +358,12 @@
                 %>
                     filtreVar=true;
                     if($("#filter_<%=index%>").val()!=''){
-                        params['<%=field.filterField%>']=$("#filter_<%=index%>").val();
+                        params.<%=field.filterField%>=$("#filter_<%=index%>").val();
                         //queryString=queryString + '&<%=field.filterField%>=' + encodeURIComponent($("#filter_<%=index%>").val());
                     }else{
-                        if(params['<%=field.filterField%>']!=undefined){
-                            params['<%=field.filterField%>']=undefined;
-                            delete params['<%=field.filterField%>'];
+                        if(params.<%=field.filterField%>!=undefined){
+                            params.<%=field.filterField%>=undefined;
+                            delete params.<%=field.filterField%>;
                         }
                     }
                     
