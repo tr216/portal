@@ -15,7 +15,7 @@
     if(deleteButton) ctrlCol++;
     if(viewButton) ctrlCol++;
     if(typeof customButtons!='undefined') {
-        console.log('customButtons:',customButtons);
+        
         for(var i=0;i<customButtons.length;i++){
             if(ctrlCol<5){
                 ctrlCol++; 
@@ -141,7 +141,7 @@
                         return subObject;
                     }
 
-                    console.log('list.length:',list.length);
+                    
                     
                     list.forEach(function(item,index){ %>
                     <tr>
@@ -191,17 +191,21 @@
                                     for(var i=0;i<customButtons.length;i++){ 
                                     var tmpUrl='';
                                     var cusPath='';
-                                    
+                                    var popup=false;
+                                    var target='_self';
+
                                     if(customButtons[i].path.indexOf('?')<0){
                                         tmpUrl='?db=' + db + '&sid=' + sid;
                                     }else if(customButtons[i].path.indexOf('sid=')<0){
                                         tmpUrl='&sid=' + sid;
                                     }
+                                    if(typeof customButtons[i].popup!='undefined') popup=customButtons[i].popup;
+                                    if(typeof customButtons[i].target!='undefined') target=customButtons[i].target;
 
-                                    cusPath=customButtons[i].path.replaceAll('{_id}', item._id )  + tmpUrl;
+                                    cusPath=customButtons[i].path.replaceAll("{_id}", item._id )  + tmpUrl;
                                     
                                 %>
-                            <a href="javascript:openUrl('<%=cusPath%>','<%=item._id%>');" class="btn btn-info btn-sm" title="<%=customButtons[i].title%>"><% if(customButtons[i].icon!=''){%><i class="<%=customButtons[i].icon%>"></i> <%}%><%=customButtons[i].text%></a>
+                            <a href="javascript:openUrl('<%=cusPath%>','<%=item._id%>','<%=target%>',<%=popup%>);" class="btn btn-info btn-sm btn-danger" title="<%=customButtons[i].title%>"><% if(customButtons[i].icon!=''){%><i class="<%=customButtons[i].icon%>"></i> <%}%><%=customButtons[i].text%></a>
                                 <% } %>
                             <% } %>
                             <% if(viewButton){ %>
@@ -222,7 +226,6 @@
             <% if(typeof pageCount!='undefined'){
                     if(pageCount>1) { %>
             <div class="col-md-6 col-sm-12">
-                
                 <ul class="pagination">
                     <%  
                         if(page>1){ %>
@@ -304,7 +307,7 @@
 
         <% if(selection){ %>
             $('#selectAll').change(function(e){
-                //console.log('selectAll val:',this.checked);
+                
                 $('input:checkbox').not(this).prop('checked', this.checked);
             });
         <% } %>
@@ -315,7 +318,7 @@
             %>
                 <% if(field.type=='lookup'){ %>
                     $("#filter_<%=index%>").change(function(e){
-                        //console.log('e:',e);
+                        
                         keyupTimer=0;
                         runFilter();
                     });
@@ -333,7 +336,7 @@
 
             function runTimer(){
                 if(keyupTimer==0) return;
-                console.log('keyupTimer:',keyupTimer);
+                
                 if(keyupTimer>=3){
                     keyupTimer=0;
                     runFilter();
@@ -364,7 +367,7 @@
                         }
                     }
                     
-                //console.log('filtre:', $("#filter_<%=index%>").val());
+                
 
                 <% } }); %>
                 if(filtreVar){
@@ -389,10 +392,33 @@
     }
 
         
-    function openUrl(url,_id){
-        localStorage.setItem('returnUrl',window.location.href);
+    function openUrl(url,_id,target,popup){
         url=url.replaceAll('{_id}',_id);
-        window.location.href=url;
+        if(target=='_blank' && popup!=true){
+            window.open(url,target);
+        }else if(popup){
+            popupCenter(url,'Goster','900','600');
+        }else{
+            localStorage.setItem('returnUrl',window.location.href);
+            window.location.href=url;
+        }
+        
+    }
+    function popupCenter(url, title, w, h) {
+        // Fixes dual-screen position                         Most browsers      Firefox
+        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX;
+        var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
+
+        var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+        var systemZoom = width / window.screen.availWidth;
+    var left = (width - w) / 2 / systemZoom + dualScreenLeft
+    var top = (height - h) / 2 / systemZoom + dualScreenTop
+        var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left);
+
+        // Puts focus on the newWindow
+        if (window.focus) newWindow.focus();
     }
 
     function deleteItem(url,_id){

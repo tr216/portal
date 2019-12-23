@@ -7,7 +7,7 @@ exports.get=(endpoint,req, params, callback)=>{
 			var url=config.api.url + endpoint;
 			
 			var headers = {
-			    'Content-Type':'application/json; charset=utf-8',
+			    // 'Content-Type':'application/json; charset=utf-8',
 			    'token':token
 			}
 
@@ -29,12 +29,11 @@ exports.get=(endpoint,req, params, callback)=>{
 						return callback({code: 'API_ERROR_GET', message: error.message});
 					}
 			    	try{
-
 		    			var resp=JSON.parse(body);
 		    			if(resp.success){
 		    				callback(null,resp);
 		    			}else{
-		    				callback(resp.error);
+		    				callback((resp.error || body));
 		    			}
 			    		
 			    	}catch(e){
@@ -47,6 +46,59 @@ exports.get=(endpoint,req, params, callback)=>{
 			    	}
 			    
 			});
+		}else{
+			callback(err);
+		}
+	});
+}
+
+exports.getFile=(endpoint,req, params, callback)=>{
+	sessionId2Token(req,(err,token)=>{
+		if(!err){
+			var url=config.api.url + endpoint;
+			
+			var headers = {
+			    // 'Content-Type':'application/json; charset=utf-8',
+			    'token':token
+			}
+
+			if(req.params.sid){
+				req.params.sid=undefined;
+				delete req.params.sid;
+			}
+			
+			var options = {
+			    url: url,
+			    method: 'GET',
+			    headers: headers,
+			    rejectUnauthorized: false,
+			    qs: params?params:{}
+			}
+
+			request(options, function (error, response, body) {
+					if(error){
+						return callback({code: 'API_ERROR_GET', message: error.message});
+					}
+			    	return callback(null,body);
+			    
+			});
+		}else{
+			callback(err);
+		}
+	});
+}
+
+exports.downloadFile=(endpoint,req, res, params, callback)=>{
+	sessionId2Token(req,(err,token)=>{
+		if(!err){
+			var url=config.api.url + endpoint + '?token=' + token;
+			if(params){
+				for(var key in params){
+					url = url + '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+				}
+			}
+			res.redirect(url);
+			callback(null);
 		}else{
 			callback(err);
 		}

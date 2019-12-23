@@ -2,15 +2,11 @@ module.exports = function(req,res,callback){
 	var data={
 		eIntegratorList:[],
 		eInvoiceStatusTypes:staticValues.eInvoiceStatusTypes,
-		// form:{
-		// 	eIntegrator:'',
-		// 	name:'',
-		// 	firmNo:0,
-		// 	url:'',
-		// 	username:'',
-		// 	password:'',
-		// 	passive:false
-		// },
+		form:{
+			eIntegrator:''
+			
+		},
+		html:'Goruntulenemedi',
 		list:[],
 		filter:{}
 	}
@@ -25,6 +21,12 @@ module.exports = function(req,res,callback){
 		break;
 		case 'edit':
 			edit(req,res,data,callback);
+		break;
+		case 'view':
+			view(req,res,data,callback);
+		break;
+		case 'pdf':
+			pdf(req,res,data,callback);
 		break;
 		case 'delete':
 		
@@ -50,7 +52,6 @@ function getList(req,res,data,callback){
 		res.redirect('/e-invoice/outbox?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
-		console.log(data);
 		data.filter.db=undefined;
 		delete data.filter.db;
 		data.filter.sid=undefined;
@@ -71,6 +72,7 @@ function getList(req,res,data,callback){
 
 function initLookUpLists(req,res,data,cb){
 	data.eIntegratorList=[];
+	data.eInvoiceStatusTypes.unshift({text:'-Tümü-',value:''});
 	api.get('/' + req.query.db + '/e-integrators',req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
@@ -98,6 +100,30 @@ function addnew(req,res,data,callback){
 	}
 }
 
+function view(req,res,data,callback){
+	var _id=req.params.id || '';
+	api.getFile('/' + req.query.db + '/e-invoice/invoiceView/' + _id,req,null,(err,resp)=>{
+		if(!err){
+			data['html']=resp;
+			callback(null,data);
+		}else{
+			data['html']=err.message;
+			callback(null,data);
+		}
+	});
+}
+function pdf(req,res,data,callback){
+	var _id=req.params.id || '';
+	api.downloadFile('/' + req.query.db + '/e-invoice/invoicePdf/' + _id,req,res,null,(err,resp)=>{
+		return;
+		// if(!err){
+		// 	callback(null,data);
+		// }else{
+		// 	data['message']=err.message || 'Hata';
+		// 	callback(null,data);
+		// }
+	});
+}
 
 function edit(req,res,data,callback){
 	var _id=req.params.id || '';

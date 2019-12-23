@@ -526,7 +526,7 @@ function localApi(req,res,dbApi){
 	if(dbApi){
 		if(req.query.db) dburl='/' + req.query.db + '';
 	}
-	
+
 	var enpoint='';
 	if(req.params.func){
 		enpoint = '/' + req.params.func;
@@ -563,9 +563,10 @@ function localApi(req,res,dbApi){
 
 		default: //default GET
 			api.get(dburl + enpoint,req,req.query,(err,resp)=>{
-				console.log(resp);
 				res.status(200).json(resp);
 			});
+			
+			
 		break;
 	}
 }

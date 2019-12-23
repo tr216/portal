@@ -1,7 +1,11 @@
-/*.sidebar-dark .sidebar-brand {
-    color: gold;
+body {
+    /*font-size: 11px;*/
 }
-*/
+.table {
+    color: #29292d;
+    font-size: 12px;
+}
+
 .bg-gradient-primary {
     background-color: #19002d;
     background-image: -webkit-gradient(linear,left top,left bottom,color-stop(10%,#49007f),to(#29005f));
@@ -140,6 +144,7 @@
     padding: 0.25rem;
     vertical-align: middle;
     border-bottom: 2px solid #e3e6f0;
+    font-size: 14px;
 }
 
 .table th, .table td {
