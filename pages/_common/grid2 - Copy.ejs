@@ -77,15 +77,71 @@
 %>
 
 <div class="table-responsive mt-1">
+    <div class="row m-0">
+        <div class="col-12">
+            <div class="float-left form-inline m-0 p-0 mt-2 mb-1">
+                <% if(typeof pageSize!='undefined'){ %>
+                <div class="form-group" style="display: inline-block;">
+                    Sayfada
+                    <select class="form-control input-inline input-sm" name="pageSize" id="pageSize">
+                        <option value="10"<% if(pageSize==10){%> selected<%}%>>10</option>
+                        <option value="20"<% if(pageSize==20){%> selected<%}%>>20</option>
+                        <option value="50"<% if(pageSize==50){%> selected<%}%>>50</option>
+                        <option value="100"<% if(pageSize==100){%> selected<%}%>>100</option>
+                        <option value="250"<% if(pageSize==250){%> selected<%}%>>250</option>
+                        <option value="500"<% if(pageSize==500){%> selected<%}%>>500</option>
+                    </select>
+                </div>
+                <% } %>
+                <div class="" style="display: inline-block;">
+                    <% if(typeof pageSize!='undefined'){ %>
+                        <%=((page-1)*pageSize)+1%> - <% if(page*pageSize<recordCount) {%><%=page*pageSize%><%} else {%><%=recordCount%><%} %> arasi, Toplam: <%=recordCount%> kayit, <%=pageCount%> sayfa
+                    <% } else if(typeof recordCount!='undefined'){ %>
+                        Toplam: <%=recordCount%> kayit
+                    <% } %>
+                </div>
+            </div>
+            <% if(typeof pageCount!='undefined'){
+                    if(pageCount>1) { %>
+            <div class="float-right">
+                <ul class="pagination mb-1">
+                    <%  
+                        if(page>1){ %>
+                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=1&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">|&lt;</a></li>
+                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(page-1)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&lt;</a></li>
+                        <% }
+                        var sayfalar=pagination(page,pageCount);
+                        for(var i=0;i<sayfalar.length;i++){
+                            if(sayfalar[i]==page){ %>
+                            <li class="page-item active"><span class="page-link"><%=page%></span></li>
+                            <% } else if(sayfalar[i]=='...') { %>
+                            <li class="page-item"><span class="page-link">...</span></li>
+                            <% } else { %>
+                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=sayfalar[i]%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>"><%=sayfalar[i]%></a></li>
+                            <% } %>
+                        <% } %>
+                        
+                        <% if(page<pageCount) { %>
+                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(page+1)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&gt;</a></li>
+                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(pageCount)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&gt;|</a></li>
+                        <% } %>
+                    
+                </ul>
+                
+            </div>
+            <% }
+                } %>
+        </div>
+    </div>
     <table id="grid1" class="table table-bordered table-striped"  cellspacing="0">
             <thead>
-                <tr class="">
+                <tr class="text-nowrap">
                     <% if(selection) { %>
                     <th style="width: 30px;"><input type="checkbox" value="true" name="selectAll" id="selectAll"></th>
                     <% } %>
 
                     <% fields.forEach(function(field){%> 
-                        <th class=""><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %><%=field.text%></th>
+                        <th class="" style="<% if(typeof field.width!='undefined'){%>width:<%=field.width%><%}%>"><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %><%=field.text%></th>
                     <%});%>
                     <th class="text-center" style="width: <%=(ctrlCol*30)%>px;">
                          <% if(addNewButton){ %>
@@ -103,7 +159,7 @@
                     
                     <% fields.forEach(function(field,index){%> 
                         <!-- <th class="<% if(typeof field.width!='undefined'){%>ctrl-col-<%=field.width%><%}%> nowrap"> -->
-                        <th class="">
+                        <th class="" style="">
                             <% if(field.filter){ %>
                                 <% if(field.type=='lookup' && typeof field.lookupList!='undefined'){ %>
                                     <select name="filter_<%=index%>" id="filter_<%=index%>" class="form-control p-0 m-0">
@@ -177,7 +233,7 @@
                                 }else if(field.type=='button'){
                                     %><td class="text-center"><a href="<%=field.path%>/<%=item._id%>?db=<%=db%>&sid=<%=sid%>" class="btn btn-info" title="<%=field.text%>" <% if(typeof field.buttonTarget!='undefined'){%>target="<%=field.buttonTarget%>"<%}%>><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %></a></td><%
                                 }else{
-                                    %><td class="<% if(typeof field.align=='undefined' && !isNaN(itemValue)){%>text-nowrap text-right<%}%>"><%- mrutil.formatCol(itemValue,field) %></td><%
+                                    %><td class="<% if(typeof field.nowrap!='undefined') if(field.nowrap){%>text-nowrap <%}%><% if(typeof field.align=='undefined' && !isNaN(itemValue)){%>text-nowrap text-right<%}%>"><%- mrutil.formatCol(itemValue,field) %></td><%
                                 }
                             }else{
                             %><td><%- mrutil.formatCol(itemValue,field)%></td>
@@ -221,12 +277,23 @@
                     </tr>
                 <% }); %>
             </tbody>
-        </table>
-        <div class="row mt-1 mx-1">
+    </table>
+    <div class="row m-0">
+        <div class="col-12">
+            
+            <div class="float-left form-inline m-0 p-0 mt-2 mb-1">
+                <div class="" style="display: inline-block;">
+                    <% if(typeof pageSize!='undefined'){ %>
+                        <%=((page-1)*pageSize)+1%> - <% if(page*pageSize<recordCount) {%><%=page*pageSize%><%} else {%><%=recordCount%><%} %> arasi, Toplam: <%=recordCount%> kayit, <%=pageCount%> sayfa
+                    <% } else if(typeof recordCount!='undefined'){ %>
+                        Toplam: <%=recordCount%> kayit
+                    <% } %>
+                </div>
+            </div>
             <% if(typeof pageCount!='undefined'){
                     if(pageCount>1) { %>
-            <div class="col-md-6 col-sm-12">
-                <ul class="pagination">
+            <div class="float-right">
+                <ul class="pagination mb-1">
                     <%  
                         if(page>1){ %>
                             <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=1&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">|&lt;</a></li>
@@ -247,42 +314,19 @@
                             <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(page+1)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&gt;</a></li>
                             <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(pageCount)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&gt;|</a></li>
                         <% } %>
-                    
                 </ul>
-                
             </div>
             <% }
                 } %>
-            <div class="col-md-6 col-sm-12 mb-3 form-inline">
-                <% if(typeof pageSize!='undefined'){ %>
-                <div class="form-group" style="display: inline-block;">
-                    Görüntüle
-                    <select class="form-control input-inline input-sm" name="pageSize" id="pageSize">
-                        <option value="10"<% if(pageSize==10){%> selected<%}%>>10</option>
-                        <option value="20"<% if(pageSize==20){%> selected<%}%>>20</option>
-                        <option value="50"<% if(pageSize==50){%> selected<%}%>>50</option>
-                        <option value="100"<% if(pageSize==100){%> selected<%}%>>100</option>
-                        <option value="250"<% if(pageSize==250){%> selected<%}%>>250</option>
-                        <option value="500"<% if(pageSize==500){%> selected<%}%>>500</option>
-                    </select>
-                </div>
-                <% } %>
-                <div class="" style="display: inline-block;">
-                    <% if(typeof pageSize!='undefined'){ %>
-                        <%=((page-1)*pageSize)+1%> ile <% if(page*pageSize<recordCount) {%><%=page*pageSize%><%} else {%><%=recordCount%><%} %> arası, toplam: <%=recordCount%> (<%=pageCount%> Sayfa)
-                    <% } else if(typeof recordCount!='undefined'){ %>
-                        Toplam: <%=recordCount%> kayit.
-                    <% } %>
-                </div>
-            </div>
         </div>
-        <div class="row mt-1 mx-1">
-            <div class="col-auto">
-                <button class="btn btn-success" id="btnExportExcel" title="Excel Export"><i class="fas fa-file-excel"></i> Excel</button>
-                <button class="btn btn-success" id="btnExportCsv" title="Csv Export"><i class="fas fa-file-csv"></i> Csv</button>
-                <button class="btn btn-success" id="btnExportPdf" title="Pdf Export"><i class="fas fa-file-pdf"></i> Pdf</button>
-            </div>
+    </div>
+    <div class="row mt-1 mx-1">
+        <div class="col-auto">
+            <button class="btn btn-success" id="btnExportExcel" title="Excel Export"><i class="fas fa-file-excel"></i> Excel</button>
+            <button class="btn btn-success" id="btnExportCsv" title="Csv Export"><i class="fas fa-file-csv"></i> Csv</button>
+            <button class="btn btn-success" id="btnExportPdf" title="Pdf Export"><i class="fas fa-file-pdf"></i> Pdf</button>
         </div>
+    </div>
 </div>
 <style type="text/css">
     <% if(showSearch==false){ %>
@@ -358,16 +402,14 @@
                 %>
                     filtreVar=true;
                     if($("#filter_<%=index%>").val()!=''){
-                        params.<%=field.filterField%>=$("#filter_<%=index%>").val();
+                        params['<%=field.filterField%>']=$("#filter_<%=index%>").val();
                         //queryString=queryString + '&<%=field.filterField%>=' + encodeURIComponent($("#filter_<%=index%>").val());
                     }else{
-                        if(params.<%=field.filterField%>!=undefined){
-                            params.<%=field.filterField%>=undefined;
-                            delete params.<%=field.filterField%>;
+                        if(params['<%=field.filterField%>']!=undefined){
+                            params['<%=field.filterField%>']=undefined;
+                            delete params['<%=field.filterField%>'];
                         }
                     }
-                    
-                
 
                 <% } }); %>
                 if(filtreVar){

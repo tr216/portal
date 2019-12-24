@@ -77,6 +77,7 @@ global.menu=require('./app/menu.json');
 global.sysmenu=require('./app/sysmenu.json');
 global.staticValues=require('./app/staticvalues.json');
 
+
 //=========== RESONANCE SERVICE ==================
 //global.service_resonance=require('./lib/service_resonance.js');
 

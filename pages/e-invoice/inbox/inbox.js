@@ -1,15 +1,15 @@
 module.exports = function(req,res,callback){
 	var data={
 		eIntegratorList:[],
-		eInvoiceStatusTypes:staticValues.eInvoiceStatusTypes,
+		eInvoiceStatusTypes:Array.from(staticValues.eInvoiceStatusTypes),
 		form:{
 			eIntegrator:''
-			
 		},
 		html:'Goruntulenemedi',
 		list:[],
 		filter:{}
 	}
+	data.eInvoiceStatusTypes.unshift({text:'-Tümü-',value:''});
 
 	if(!req.query.db){
 		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
@@ -72,7 +72,6 @@ function getList(req,res,data,callback){
 
 function initLookUpLists(req,res,data,cb){
 	data.eIntegratorList=[];
-	data.eInvoiceStatusTypes.unshift({text:'-Tümü-',value:''});
 	api.get('/' + req.query.db + '/e-integrators',req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
