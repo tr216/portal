@@ -3,27 +3,36 @@
 	{"text":"MRP",						"path":"",					"icon":"table", "visible":false, "nodes":[]},
 	{"text":"E-Fatura",					"path":"",		"icon":"table", "visible":true, 
 		"nodes":[
-			{"text":"Yeni",					"path":"/einvoice-new",		"icon":"table", "visible":true, "nodes":[]},
-			{"text":"Gelen",					"path":"/e-invoice/inbox",		"icon":"table", "visible":true , "nodes":[]},
-			{"text":"Giden",					"path":"/e-invoice/outbox",		"icon":"table", "visible":true, "nodes":[]},
-			{"text":"GIB Entegrator Tanimlari",		"path":"/settings/e-integrators",	"icon":"cogs", "visible":true, "nodes":[]}
+			{"text":"Yeni Fatura Oluştur",			"path":"/einvoice-new",		"icon":"file-alt", "visible":true, "nodes":[]},
+			{"text":"Gelen Kutusu",					"path":"/e-invoice/inbox",		"icon":"table", "visible":true , "nodes":[]},
+			{"text":"Giden Kutusu",					"path":"/e-invoice/outbox",		"icon":"table", "visible":true, "nodes":[]},
+			{"text":"Taslaklar",					"path":"/e-invoice/drafts",		"icon":"pencil-ruler", "visible":true, "nodes":[]},
+			{"text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
+				{"text":"GIB Entegrator Tanimlari",		"path":"/settings/e-integrators",	"icon":"cogs", "visible":true, "nodes":[]},
+				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
+			]}
 		]
 	},
 	{"text":"E-Defter",					"path":"/eledger",		"icon":"table", 	"visible":false, "nodes":[]},
-	{"text":"Yazar Kasa Aktarim",		"path":"",				"icon":"cash-register", "visible":true,
+	{"text":"YazarKasa Pos",		"path":"",				"icon":"cash-register", "visible":true,
 		"nodes":[
 			{"text":"Aktarim",					"path":"/pos-device/transfer",	"icon":"cloud-upload-alt", "visible":true, "nodes":[]},
-			{"text":"Cihaz Toplam Raporu",					"path":"/pos-device/rapor1",	"icon":"table", "visible":true, "nodes":[]},
-			{"text":"Lokasyon Toplam Raporu",					"path":"/pos-device/rapor2",	"icon":"table", "visible":true, "nodes":[]},
-			{"text":"Servis Tanimlari",			"path":"/pos-device/services-defines",	"icon":"cogs", 		"visible":true, "nodes":[]},
-			{"text":"Cihaz listesi",			"path":"/pos-device/list",		"icon":"cash-register", 		"visible":true, "nodes":[]}
+			{"text":"Raporlar",					"path":"",	"icon":"chart-bar", "visible":true, "nodes":[
+				{"text":"Cihaz Toplamlari",					"path":"/pos-device/rapor1",	"icon":"chart-bar", "visible":true, "nodes":[]},
+				{"text":"Lokasyon Toplamlari",					"path":"/pos-device/rapor2",	"icon":"chart-bar", "visible":true, "nodes":[]}
+			]},
+			{"text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
+				{"text":"Servis Tanimlari",			"path":"/pos-device/services-defines",	"icon":"cogs", 		"visible":true, "nodes":[]},
+				{"text":"Cihaz listesi",			"path":"/pos-device/list",		"icon":"cash-register", 		"visible":true, "nodes":[]},
+				{"text":"Lokasyonlar",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
+				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
+			]}
 		]
 	},
-	{"text":"Ayarlar ve Tanimlar",		"path":"",					"icon":"wrench", "visible":true,
+	{"text":"Ayarlar",		"path":"",					"icon":"wrench", "visible":true,
 		"nodes":[
-			{"text":"Lokasyon Tanimlari",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
-			{"text":"Lokal Connector Tanimlari",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
-			
+			{"text":"Lokasyonlar",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
+			{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
 		]
 	},
 	{"text":"System",		"path":"",					"icon":"shield-alt", "visible":true,

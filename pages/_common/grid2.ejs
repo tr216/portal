@@ -77,9 +77,9 @@
 %>
 
 <div class="table-responsive mt-1">
-    <div class="row m-0">
-        <div class="col-12">
-            <div class="float-left form-inline m-0 p-0 mt-2 mb-1">
+    <div class="row m-0 border">
+        <div class="col-12 pt-1 px-1">
+            <div class="float-left form-inline m-0 p-0 mt-1 mb-1">
                 <% if(typeof pageSize!='undefined'){ %>
                 <div class="form-group" style="display: inline-block;">
                     Sayfada
@@ -133,7 +133,7 @@
                 } %>
         </div>
     </div>
-    <table id="grid1" class="table table-bordered table-striped"  cellspacing="0">
+    <table id="grid1" class="table table-bordered table-striped m-0"  cellspacing="0">
             <thead>
                 <tr class="text-nowrap">
                     <% if(selection) { %>
@@ -261,7 +261,7 @@
                                     cusPath=customButtons[i].path.replaceAll("{_id}", item._id )  + tmpUrl;
                                     
                                 %>
-                            <a href="javascript:openUrl('<%=cusPath%>','<%=item._id%>','<%=target%>',<%=popup%>);" class="btn btn-info btn-sm btn-danger" title="<%=customButtons[i].title%>"><% if(customButtons[i].icon!=''){%><i class="<%=customButtons[i].icon%>"></i> <%}%><%=customButtons[i].text%></a>
+                            <a href="javascript:openUrl('<%=cusPath%>','<%=item._id%>','<%=target%>',<%=popup%>);" class="btn btn-secondary btn-sm" title="<%=customButtons[i].title%>"><% if(customButtons[i].icon!=''){%><i class="<%=customButtons[i].icon%>"></i> <%}%><%=customButtons[i].text%></a>
                                 <% } %>
                             <% } %>
                             <% if(viewButton){ %>
@@ -278,7 +278,7 @@
                 <% }); %>
             </tbody>
     </table>
-    <div class="row m-0">
+    <div class="row m-0 border rounded pt-2">
         <div class="col-12">
             <div class="float-left form-inline p-0 mt-1 mb-1 mr-4">
                 <div class="" style="display: inline-block;">

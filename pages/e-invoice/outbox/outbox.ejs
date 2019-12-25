@@ -1,43 +1,16 @@
 <%layout('../../_common/layout')%>
-<form action="" method="POST" role="form" name="form1">
-    <div class="row m-0">
-        <div class="col-12">
-            <div class="float-left">
-                <select class="form-control input-inline input-sm" name="cboEasyDate" id="cboEasyDate">
-                    <option value="">Tarih</option>
-                    <option value="today">Bugün</option>
-                    <option value="thisWeek">Bu Hafta</option>
-                    <option value="thisMonth">Bu Ay</option>
-                    <option value="last1Week">Son 1 Hafta</option>
-                    <option value="last1Month">Son 1 Ay</option>
-                    <option value="last3Months">Son 3 Ay</option>
-                    <option value="last6Months">Son 6 Ay</option>
-                    <option value="thisYear">Bu yıl</option>
-                    <option value="last1Year">Son 1 yıl</option>
-                </select>
-            </div>
-            <div class="float-left">
-                <div class="input-group date">
-                    <input type="text" name="date1" id="date1" class="form-control" value="<% if(typeof filter.date1=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=filter.date1%><%}%>">
-                    <div class="input-group-addon">
-                        <i class="fa fa-calendar fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="float-left ml-md-2">
-                <div class="input-group date">
-                    <input type="text" name="date2" id="date2" class="form-control" value="<% if(typeof filter.date2=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=filter.date2%><%}%>">
-                    <div class="input-group-addon">
-                        <i class="fa fa-calendar fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="float-md-right">
-                <button type="submit" name="btnFilter" class="btn btn-primary" value="true"><i class="fa fa-filter"></i> Filtrele</button>
-            </div>
-        </div>
-    </div>
-</form>
+<%- partial('../../_common/date-filter',{includeForm:true,includeFilterButton:true}) %>
+<div class="btn-toolbar mt-2 border p-1 rounded justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-primary" id="btnSendToGib">Gönder</button>
+  </div>
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-info" id="btnSendToArchive">Arşive Kaldır</button>
+  </div>
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-info" id="btnImportFromLocal" title="Serverdan iceri al"><i class="fas fa-plug"></i> İçeri Al</button>
+  </div>
+</div>
 
 <% if(typeof message!='undefined') { %>
     <% if(message!='') { %>
@@ -67,89 +40,16 @@
         {name:'invoiceStatus',text:'Durumu',type:'lookup',filter:true, lookupList:eInvoiceStatusTypes, textField:'text', valueField:'value', orderable:false}
     ],
     caption:'Giden Faturalar',
-    addNewButton:false,
+    addNewButton:true,
     viewButton:false,
-    editButton:false,
-    deleteButton:false,
+    editButton:true,
+    deleteButton:true,
     selection:true,
     customButtons:[
         {path:'/e-invoice/inbox/view/{_id}?db=' + db + '&sid=' + sid,text:'Goruntule',icon:'fas fa-search-plus' , popup:true, target:'_blank'},
         {path:'/e-invoice/inbox/pdf/{_id}?db=' + db + '&sid=' + sid,text:'Pdf',icon:'fas fa-file-pdf' , popup:false, target:'_blank'}
     ]
-    //,
-    //deleteUrl:'/dbapi/e-integrators/{_id}?db='+db+'&sid=' + sid
+    ,
+    deleteUrl:'/dbapi/e-invoice/invoice/{_id}?db='+db+'&sid=' + sid
     }) 
 %>
-<option value="">Tarih</option>
-                    <option value="today">Bugün</option>
-                    <option value="thisWeek">Bu Hafta</option>
-                    <option value="thisMonth">Bu Ay</option>
-                    <option value="last1Week">Son 1 Hafta</option>
-                    <option value="last1Month">Son 1 Ay</option>
-                    <option value="last3Months">Son 3 Ay</option>
-                    <option value="last6Months">Son 6 Ay</option>
-                    <option value="thisYear">Bu yıl</option>
-                    <option value="last1Year">Son 1 yıl</option>
-<script type="text/javascript">
-    
-
-    $(document).ready(function(){
-            $('.input-group.date').datepicker({
-                format: 'yyyy-mm-dd',
-                language: "tr",
-                orientation: "bottom auto",
-                // todayBtn: "linked",
-                autoclose: true,
-                todayHighlight: true,
-                clearBtn: true
-
-                // startDate: -4,
-                // endDate: +8,
-            });
-
-            $('#cboEasyDate').change(function(e){
-                console.log('val:',$('#cboEasyDate').val());
-                var date1=new Date();
-                var date2=new Date();
-
-                switch($('#cboEasyDate').val()){
-                    case 'today':break;
-                    case 'thisWeek':
-                        date1=date1.addDays(-1 * (date1.getDay()-1));
-                        date2=date2.addDays(7- date2.getDay());
-                    break;
-                    case 'thisMonth': 
-                        date1=date1.addDays(-1 * (date1.getDate()-1));
-                        date2=date2.lastThisMonth();
-                        //date2=date2.addDays(7- date2.getDay());
-                    break;
-                    case 'last1Week':
-                        date1=date1.addDays(-7);
-                    break;
-
-                    case 'last1Month':
-                        date1=new Date(date1.setMonth(date1.getMonth()-1))
-                    break;
-                    case 'last3Months':
-                        date1=new Date(date1.setMonth(date1.getMonth()-3))
-                    break;
-                    case 'last6Months':
-                        date1=new Date(date1.setMonth(date1.getMonth()-6))
-                    break;
-                    case 'thisYear':
-                        date1=new Date(date1.getFullYear(),0,1);
-                        date2=new Date(date2.getFullYear(),11,31);
-                        break;
-                    case 'last1Year':
-                        date1=new Date(date1.setMonth(date1.getMonth()-12))
-                    break;
-                    default:
-                    break;
-                }
-                $('#date1').val(date1.yyyymmdd());
-                $('#date2').val(date2.yyyymmdd());
-                console.log('Date1:',date1);
-                console.log('Date2:',date2);
-            });
-    });
-</script>

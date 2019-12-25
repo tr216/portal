@@ -25,7 +25,7 @@ a, a:hover, a:focus {
 
 .navbar {
     padding: 15px 10px;
-    background: #29005f;
+    background: #55859f;
     border: none;
     border-radius: 0;
     margin-bottom: 40px;
@@ -55,11 +55,11 @@ a, a:hover, a:focus {
 */
 
 #sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 14rem;
+    max-width: 14rem;
     /*background: #7386D5;*/
-    background: #29005f;
-    color: #fff;
+    background: #55859f;
+    color: #F0F0F0;
     /*transition: all 0.6s cubic-bezier(0.945, 0.020, 0.270, 0.665);*/
     /*transform-origin: bottom left;*/
     display: initial;
@@ -74,7 +74,7 @@ a, a:hover, a:focus {
 
 #sidebar .sidebar-header {
     padding: 0px;
-    background: #29005f;
+    background: #55859f;
     /*height: 70px;*/
     /*height: 5.0rem;*/
     text-align: center;
@@ -87,7 +87,7 @@ a, a:hover, a:focus {
 
 #sidebar ul.components {
     padding: 10px 0;
-    border-bottom: 1px solid #29005f;
+    border-bottom: 1px solid #55859f;
 }
 
 #sidebar ul p {
@@ -107,9 +107,12 @@ a, a:hover, a:focus {
 
 #sidebar ul li.active > a, a[aria-expanded="true"] {
     color: #fff;
-    background: #29005f;
+    background: #55859f;
 }
 
+.topbar.navbar-light .navbar-nav .nav-item .nav-link {
+    color: #F0F0F0;
+}
 
 a[data-toggle="collapse"] {
     position: relative;
@@ -126,7 +129,7 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.8em !important;
     padding-left: 30px !important;
-    background: #29005f;
+    background: #55859f;
 }
 
 ul.CTAs {
@@ -143,7 +146,7 @@ ul.CTAs a {
 
 a.download {
     background: #F0F0F0;
-    color: #29005f;
+    color: #55859f;
 }
 
 a.article, a.article:hover {
@@ -166,7 +169,7 @@ a.article, a.article:hover {
 #sidebarCollapse {
     width: 40px;
     height: 40px;
-    background: #29005f;
+    background: #55859f;
     cursor: pointer;
 }
 

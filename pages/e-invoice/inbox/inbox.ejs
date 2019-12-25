@@ -1,4 +1,19 @@
 <%layout('../../_common/layout')%>
+<%- partial('../../_common/date-filter',{includeForm:true,includeFilterButton:true}) %>
+<div class="btn-toolbar mt-2 border p-1 rounded justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-primary" id="btnAppove">Onayla</button>
+    <button type="button" class="btn btn-danger" id="btnDecline">Reddet</button>
+  </div>
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-info" id="btnSendToArchive">Arşive Kaldır</button>
+  </div>
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-info" id="btnSendToLocal" title="Faturayı lokaldeki servera aktar"><i class="fas fa-plug"></i> Servera Aktar</button>
+    <button type="button" class="btn btn-secondary" id="btnLocalMark" title="Faturayı servera alınmış gibi işaretle">İşaretle</button>
+    <button type="button" class="btn btn-warning" id="btnLocalUnmark" title="Servera alındı işaretini kaldır">İşareti Kaldır</button>
+  </div>
+</div>
 <%- partial('../../_common/grid2',{
     fields:[
         {name:'ID',text:'Fat.No',type:'label', filter:true,orderable:true},
