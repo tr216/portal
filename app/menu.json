@@ -6,7 +6,7 @@
 			{"text":"Yeni Fatura Oluştur",			"path":"/einvoice-new",		"icon":"file-alt", "visible":true, "nodes":[]},
 			{"text":"Gelen Kutusu",					"path":"/e-invoice/inbox",		"icon":"table", "visible":true , "nodes":[]},
 			{"text":"Giden Kutusu",					"path":"/e-invoice/outbox",		"icon":"table", "visible":true, "nodes":[]},
-			{"text":"Taslaklar",					"path":"/e-invoice/drafts",		"icon":"pencil-ruler", "visible":true, "nodes":[]},
+			{"text":"E-Fatura Mükellefleri",		"path":"/e-invoice/gib-users",	"icon":"users", "visible":true, "nodes":[]},
 			{"text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
 				{"text":"GIB Entegrator Tanimlari",		"path":"/settings/e-integrators",	"icon":"cogs", "visible":true, "nodes":[]},
 				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
