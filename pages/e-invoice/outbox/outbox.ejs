@@ -1,6 +1,33 @@
 <%layout('../../_common/layout')%>
-<%- partial('../../_common/date-filter',{includeForm:true,includeFilterButton:true}) %>
-<div class="btn-toolbar mt-2 border p-1 rounded justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
+<form action="" method="POST" role="form" name="form1">
+    <div class="row m-0 mt-2">
+        <div class="col-12 p-0">
+<%- partial('../../_common/date-filter',{includeForm:false,includeFilterButton:false}) %>
+    
+            <div class="float-left form-inline ml-md-4">
+                <label class="text-primary">Senaryo:</label>
+                <select class="form-control input-inline input-sm" name="profileId" id="profileId">
+                    <% eInvoiceProfileIdList.forEach((e)=>{ %> 
+                    <option value="<%=e.value%>"<% if(typeof filter.profileId!='undefined') if(filter.profileId==e.value){%>selected<% } %>><%=e.text%></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="float-left form-inline ml-md-2">
+                <label class="text-primary">Fatura Türü:</label>
+                <select class="form-control input-inline input-sm" name="invoiceTypeCode" id="invoiceTypeCode">
+                    <% eInvoiceTypeCodeList.forEach((e)=>{ %> 
+                    <option value="<%=e.value%>"<% if(typeof filter.invoiceTypeCode!='undefined') if(filter.invoiceTypeCode==e.value){%>selected<% } %>><%=e.text%></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="float-md-right">
+                <button type="submit" name="btnFilter" class="btn btn-primary" value="true"><i class="fa fa-filter"></i> Filtrele</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="btn-toolbar mt-2 border p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
   <div class="btn-group mr-2" role="group" aria-label="">
     <button type="button" class="btn btn-primary" id="btnSendToGib">Gönder</button>
   </div>
@@ -26,18 +53,13 @@
 
 <%- partial('../../_common/grid2',{
     fields:[
-        {name:'ID',text:'Fat.No',type:'label', filter:true,orderable:true},
-        {name:'issueDate',text:'Fat. Tarihi',type:'label', nowrap:true, orderable:true},
-        {name:'accountingParty.title',text:'Unvan',type:'label', filter:true, orderable:true},
-        {name:'payableAmount',text:'Ödenecek Tutar',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'taxExclusiveAmount',text:'Vergi Hariç',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'taxTotal',text:'Vergi Toplam',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'documentCurrencyCode',text:'Döviz',type:'label'},
-        {name:'exchangeRate',text:'Kur',type:'label', className: 'text-right', format:'n5'},
-        {name:'taxSummary.vat1',text:'Kdv%1',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'taxSummary.vat8',text:'Kdv%8',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'taxSummary.vat18',text:'Kdv%18',type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'invoiceStatus',text:'Durumu',type:'lookup',filter:true, lookupList:eInvoiceStatusTypes, textField:'text', valueField:'value', orderable:false}
+        {name:'invoiceNo',text:'Fat.No',type:'label', filterField:'invoiceNo', filter:true,orderable:true},
+        {name:'issueDate',text:'Fat. Tarihi',type:'label', orderable:true},
+        {name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
+        {name:'amount',text:'Tutar',type:'label'},
+        {name:'tax',text:'Vergi',type:'label' },
+        {name:'currency',text:'Döviz',type:'lookup',filter:true, filterField:'documentCurrencyCode', lookupList:currencyList,textField:'text', valueField:'value', dontUseLookup:true },
+        {name:'invoiceStatus',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:eInvoiceStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
     ],
     caption:'Giden Faturalar',
     addNewButton:true,
@@ -46,10 +68,33 @@
     deleteButton:true,
     selection:true,
     customButtons:[
-        {path:'/e-invoice/inbox/view/{_id}?db=' + db + '&sid=' + sid,text:'Goruntule',icon:'fas fa-search-plus' , popup:true, target:'_blank'},
-        {path:'/e-invoice/inbox/pdf/{_id}?db=' + db + '&sid=' + sid,text:'Pdf',icon:'fas fa-file-pdf' , popup:false, target:'_blank'}
+        {path:'/e-invoice/outbox/view/{_id}?db=' + db + '&sid=' + sid,text:'Goruntule',icon:'fas fa-search-plus' , popup:true, target:'_blank'},
+        {path:'/e-invoice/outbox/pdf/{_id}?db=' + db + '&sid=' + sid,text:'Pdf',icon:'fas fa-file-pdf' , popup:false, target:'_blank'}
     ]
     ,
     deleteUrl:'/dbapi/e-invoice/invoice/{_id}?db='+db+'&sid=' + sid
     }) 
 %>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        $('#btnImportFromLocal').click(function(){
+            $.ajax({
+                url:'/dbapi/e-invoice/transfer/import?db=<%=db%>&sid=<%=sid%>',
+                data:{},
+                type:'POST',
+                success:function(result){
+                    if(result.success){
+                        window.location.reload();
+                    }else{
+
+                         alert(result.error.code + '\n' + result.error.message);
+                    }
+                }
+            });
+            
+        });
+    });
+</script>

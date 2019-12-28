@@ -55,6 +55,7 @@
         if(typeof field.path=='undefined') field['path']='';
         if(typeof field.buttonTarget=='undefined') field['buttonTarget']='_self';
         if(typeof field.filterField=='undefined') field.filterField=field.name;
+        if(typeof field.dontUseLookup=='undefined') field.dontUseLookup=false;
 
         if(typeof field.filter!='undefined'){
             if(field.filter){
@@ -215,7 +216,7 @@
                             }
                         %>
                         <% if(typeof field.type!='undefined'){
-                                if(field.type=='lookup' && typeof field.lookupList!='undefined'){
+                                if(field.type=='lookup' && typeof field.lookupList!='undefined' && field.dontUseLookup==false ){
                                     var bFound=false;
                                     
                                     field.lookupList.forEach(function(e){

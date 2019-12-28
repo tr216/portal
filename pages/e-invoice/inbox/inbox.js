@@ -2,15 +2,22 @@ module.exports = function(req,res,callback){
 	var data={
 		eIntegratorList:[],
 		eInvoiceStatusTypes:Array.from(staticValues.eInvoiceStatusTypes),
+		currencyList:Array.from(staticValues.currencyList),
+		eInvoiceProfileIdList:Array.from(staticValues.eInvoiceProfileIdList),
+		eInvoiceTypeCodeList:Array.from(staticValues.eInvoiceTypeCodeList),
 		form:{
 			eIntegrator:''
+			
 		},
 		html:'Goruntulenemedi',
 		list:[],
 		filter:{}
 	}
 	data.eInvoiceStatusTypes.unshift({text:'-Tümü-',value:''});
-
+	data.currencyList.unshift({text:'-Tümü-',value:''});
+	data.eInvoiceProfileIdList.unshift({text:'-Tümü-',value:''});
+	data.eInvoiceTypeCodeList.unshift({text:'-Tümü-',value:''});
+	
 	if(!req.query.db){
 		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
 	}
@@ -39,17 +46,16 @@ module.exports = function(req,res,callback){
 	
 }
 
+
 function getList(req,res,data,callback){
 	if(req.method=='POST'){
 		var filter={};
-		
-		for(let k in req.body){
-			if(req.body[k] && k!='btnFilter'){
-				filter[k]=req.body[k];
-			}
-		}
-
-		res.redirect('/e-invoice/inbox?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
+		filter=Object.assign(filter,req.query);
+		filter=Object.assign(filter,req.body);
+		filter['btnFilter']=undefined;
+		delete filter['btnFilter'];
+		filter['page']=1;
+		res.redirect('/e-invoice/inbox?' + mrutil.encodeUrl(filter));
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
 		data.filter.db=undefined;
@@ -59,19 +65,24 @@ function getList(req,res,data,callback){
 		initLookUpLists(req,res,data,(err,data)=>{
 			api.get('/' + req.query.db + '/e-invoice/inboxInvoiceList',req,data.filter,(err,resp)=>{
 				if(!err){
+					var docs=[]
+					resp.data.docs.forEach((e)=>{
+						docs.push(eInvoiceHelper.makeSimpleInvoiceList(e));
+					});
+					resp.data.docs=docs;
 					data=mrutil.setGridData(data,resp);
 				}
 				callback(null,data);
 			});
 		})
-		
-		
 	}
-
 }
+
+
 
 function initLookUpLists(req,res,data,cb){
 	data.eIntegratorList=[];
+	
 	api.get('/' + req.query.db + '/e-integrators',req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;

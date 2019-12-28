@@ -4,9 +4,10 @@
 %>
 <% if(includeForm){ %>
 <form action="" method="POST" role="form" name="form1">
-<% } %>
+
     <div class="row m-0">
         <div class="col-12 p-0">
+<% } %>
             <div class="float-left">
                 <select class="form-control input-inline input-sm" name="cboEasyDate" id="cboEasyDate">
                     <option value=""<% if(typeof filter.cboEasyDate!='undefined') if(filter.cboEasyDate==''){%>selected<% } %>>Tarih</option>
@@ -37,14 +38,15 @@
                     </div>
                 </div>
             </div>
-            <% if(includeForm){ %>
+
+            <% if(includeFilterButton){ %>
             <div class="float-md-right">
                 <button type="submit" name="btnFilter" class="btn btn-primary" value="true"><i class="fa fa-filter"></i> Filtrele</button>
             </div>
             <% } %>
+<% if(includeForm){ %>            
         </div>
     </div>
-<% if(includeForm){ %>
 </form>
 <% } %>
 

@@ -24,6 +24,8 @@ global.ttext = require('./lib/language.js');
 
 global.api = require('./providers/api/api.js');
 
+global.eInvoiceHelper=require('./lib/einvoice_helper.js');
+
 
 
 var app = express();

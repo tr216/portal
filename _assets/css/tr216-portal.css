@@ -49,6 +49,7 @@ hr {
 .btn {
     padding: 0.0rem 0.6rem;
     font-size: 14px;
+    text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
 }
 
 .btn-primary {
@@ -118,4 +119,102 @@ hr {
 .btn-outline-secondary {
     color: #F0f0f0;
     border-color: #F0f0f0;
+}
+
+.badge-invoice {
+    border-radius: 0.15rem;
+    font-size: 100%;
+    padding: 0.30rem;
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
+    /*white-space: nowrap;*/
+}
+
+.invoice-temel {
+    color:#fff;
+    background-color: #47d1de;
+}
+.invoice-ticari {
+    color:#fff;
+    background-color: #ffa037;
+}
+
+.invoice-ihracat {
+    color:#fff;
+    background-color: #990099;
+}
+.invoice-yolcuberaber {
+    color:#fff;
+    background-color: #996099;
+}
+
+.invoice-earsiv {
+    color:#fff;
+    background-color: #50CC66;
+}
+
+
+.invoice-satis {
+    color:#fff;
+    background-color: #00CC66;
+}
+
+.invoice-iade {
+    color:#fff;
+    background-color: #990099;
+}
+
+.invoice-tevkifat {
+    color:#fff;
+    background-color: #3333FF;
+}
+
+.invoice-istisna {
+    color:#fff;
+    background-color: #0000FF;
+}
+
+.invoice-ozelmatrah {
+    color:#fff;
+    background-color: #0033CC;
+}
+
+.invoice-ihrackayitli {
+    color:#fff;
+    background-color: #468847;
+}
+
+
+
+
+.invoice-approved {
+    color:#fff;
+    background-color: #468847;
+}
+.invoice-waitingforaprovement {
+    color:#fff;
+    background-color: #00CC66;
+}
+
+.invoice-declined {
+    color:#fff;
+    background-color: #FF6666;
+}
+
+.invoice-error {
+    color:#fff;
+    background-color: #FF0000;
+}
+
+.invoice-senttogib {
+    color:#fff;
+    background-color: #0000FF;
+}
+
+.invoice-draft {
+    color:#fff;
+    background-color: #D0D0D0;
+}
+.invoice-processing {
+    color:#fff;
+    background-color: #444444;
 }

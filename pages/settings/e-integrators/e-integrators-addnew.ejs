@@ -12,6 +12,9 @@
         postboxAlias:{caption:'Posta Kutusu', type:'textbox'  },
         senderboxAlias:{caption:'Gonderim Kutusu', type:'textbox'  },
         isDefault:{caption:'Varsayilan?', type:'checkbox'    },
+        localConnector1:{name:'localConnectorImportInvoice.localConnector', caption:'Local Connector Import Fatura(Gidecek faturalari tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+        localConnector2:{name:'localConnectorExportInvoice.localConnector',caption:'Local Connector Export Fatura(Gelen faturalari serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+        localConnector3:{name:'localConnectorImportELedger.localConnector',caption:'Local Connector Import E-Defter(Gidecek E-Defterleri tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
         passive:{caption:'Pasif?', type:'checkbox'    }
     },
     action:'',

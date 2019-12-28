@@ -65,6 +65,31 @@
 		{"text":"Onay bekliyor","value": "WaitingForAprovement"},
 		{"text":"Hata","value": "Error"}
 		
+	],
+	"currencyList":[
+		{"text":"TL","value": "TRY"},
+		{"text":"EUR","value": "EUR"},
+		{"text":"USD","value": "USD"},
+		{"text":"GBP","value": "GBP"},
+		{"text":"RUB","value": "RUB"}
+		
+	],
+	"eInvoiceProfileIdList":[
+		{"text":"Temel","value": "TEMELFATURA"},
+		{"text":"Ticari","value": "TICARIFATURA"},
+		{"text":"İhracat","value": "IHRACAT"},
+		{"text":"Yolcu beraber","value": "YOLCUBERABERFATURA"},
+		{"text":"e-Arşiv","value": "EARSIVFATURA"}
+		
+	],
+	"eInvoiceTypeCodeList":[
+		{"text":"Satış","value": "SATIS"},
+		{"text":"İade","value": "IADE"},
+		{"text":"Tevkifat","value": "TEVKIFAT"},
+		{"text":"İstisna","value": "ISTISNA"},
+		{"text":"Özel Matrah","value": "OZELMATRAH"},
+		{"text":"İhraç Kayıtlı","value": "IHRACKAYITLI"}
+		
 	]
 }
 
