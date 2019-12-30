@@ -1,6 +1,3 @@
-
-
-
 module.exports = function(req,res,callback){
 	var data={
 		connectionTypes:staticValues.localConnectorConnectionTypes,

@@ -2,6 +2,7 @@ module.exports = function(req,res,callback){
 	var data={
 		eIntegrators:staticValues.eIntegrators,
 		localConnectorList:[],
+		fileTypes:staticValues.eInvoiceXsltFileTypes,
 		form:{
 			eIntegrator:'',
 			name:'',
@@ -17,6 +18,7 @@ module.exports = function(req,res,callback){
 			localConnectorImportInvoice:{localConnector:''},
 			localConnectorExportInvoice:{localConnector:''},
 			localConnectorImportELedger:{localConnector:''},
+			
 			passive:false
 		},
 		list:[],
@@ -38,12 +40,17 @@ module.exports = function(req,res,callback){
 		
 		deleteItem(req,res,data,callback);
 		break;
+		case 'xslt':
+			require('./e-integrators-xslt.js')(req,res,callback);
+		break;
 		default:
 			getList(req,res,data,callback);
 		break;
 	}
 	
 }
+
+var editorFileTypes=['text/plain', 'application/json','text/javascript','text/html','application/xml'];
 
 function getList(req,res,data,callback){
 	if(req.method=='POST'){

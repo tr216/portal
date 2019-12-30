@@ -97,5 +97,35 @@
             });
             
         });
+
+        $('#btnSendToGib').click(function(){
+            var data={list:[]};
+            $(".checkSingle").each(function() {
+                if(this.checked){
+                    var satir=JSON.parse(decodeURIComponent(this.value));
+                    //console.log('satir:',satir);
+                    if(satir.doc.invoiceStatus=='Draft' || satir.doc.invoiceStatus=='Error'){
+                        data.list.push({_id:satir._id, ID:satir.doc.ID});
+                    }
+                    
+                }
+            });
+            if(data.list.length==0)  return alert('Gonderilecek kayit secilmemis!\nDurum: Taslak + Hata');
+            if(!confirm(data.list.length + ' adet fatura GIB e gonderilecektir. Onayliyor musunuz?')) return;
+            $.ajax({
+                url:'/dbapi/e-invoice/sendToGib?db=<%=db%>&sid=<%=sid%>',
+                data:data,
+                type:'POST',
+                success:function(result){
+                    if(result.success){
+                        //alert('Aktarim basladi.');
+                        window.location.reload();
+                    }else{
+                        alert(result.error);
+                    }
+                }
+            });
+            
+        });
     });
 </script>

@@ -1,5 +1,6 @@
 <%layout('../../_common/layout')%>
 <%- partial('../../_common/form',{
+
     formControls:{
         eIntegrator:{caption:'GIB Entegrator', type:'lookup' , lookup:eIntegrators   ,required:true},
         name:{caption:'Adı(nick name)', type:'textbox'    ,required:true},
@@ -21,4 +22,3 @@
     mode:'edit'
     }) 
 %>
-

@@ -218,3 +218,7 @@ hr {
     color:#fff;
     background-color: #444444;
 }
+.invoice-pending {
+    color:#fff;
+    background-color: #4444FF;
+}

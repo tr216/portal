@@ -152,23 +152,8 @@ function onListening() {
 
 
 
-// process.on('uncaughtException', function (err) {
-//     mrutil.console('Caught exception: ' + err);
-// });
+process.on('uncaughtException', function (err) {
+    mrutil.console('Caught exception: ' + err);
+});
 
-// api.get('/cities',null,{province:'Ankara'},(err,data)=>{
-//   if(!err){
-//     console.log('api test get data:',data);
-//   }else{
-//     console.log('api test get error:', err);
-//   }
-// });
-
-// api.get('/provinces11',null,null,(err,data)=>{
-//   if(!err){
-//     console.log('api test post data:',data);
-//   }else{
-//     console.log('api test post error:', err);
-//   }
-// });
 

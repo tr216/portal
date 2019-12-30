@@ -58,6 +58,7 @@
 	],
 	"eInvoiceStatusTypes":[
 		{"text":"Taslak","value": "Draft"},
+		{"text":"Kuyrukta","value": "Pending"},
 		{"text":"İşleniyor","value": "Processing"},
 		{"text":"GİB e iltildi","value": "SentToGib"},
 		{"text":"Onaylandı","value": "Approved"},
@@ -90,6 +91,12 @@
 		{"text":"Özel Matrah","value": "OZELMATRAH"},
 		{"text":"İhraç Kayıtlı","value": "IHRACKAYITLI"}
 		
+	],
+	"eInvoiceXsltFileTypes":[
+		{"text":".xslt","value": "xslt","icon":"file"},
+		{"text":".txt","value": "txt","icon":"file-alt"},
+		{"text":".xml","value": "xml","icon":"file"},
+		{"text":".xsl","value": "xsl","icon":"file"}
 	]
 }
 

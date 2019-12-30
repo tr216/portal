@@ -63,7 +63,7 @@ function getList(req,res,data,callback){
 	}else{
 		// data.filter.page=1;
 		data.filter=Object.assign(data.filter,req.query);
-		console.log(data);
+
 		data.filter.db=undefined;
 		delete data.filter.db;
 		data.filter.sid=undefined;

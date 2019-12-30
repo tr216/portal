@@ -1,0 +1,35 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/form',{
+tabs:[
+        {
+            active:false,
+            caption:'Entegrator Bilgisi',
+            formControls:{
+                eIntegrator:{caption:'GIB Entegrator', type:'lookup' , lookup:eIntegrators   ,required:true},
+                name:{caption:'Adı(nick name)', type:'textbox'    ,required:true},
+                url:{caption:'Web service url', type:'textbox'    },
+                firmNo:{caption:'Firma No', type:'textbox'    },
+                username:{caption:'Service Username', type:'textbox'    },
+                password:{caption:'Service Password', type:'textbox'    },
+                invoicePrefix:{caption:'Fatura Ön Ek', type:'textbox'  },
+                dispatchPrefix:{caption:'İrsaliye Ön Ek', type:'textbox' },
+                postboxAlias:{caption:'Posta Kutusu', type:'textbox'  },
+                senderboxAlias:{caption:'Gonderim Kutusu', type:'textbox'  },
+                isDefault:{caption:'Varsayilan?', type:'checkbox'    },
+                localConnector1:{name:'localConnectorImportInvoice.localConnector', caption:'Local Connector Import Fatura(Gidecek faturalari tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                localConnector2:{name:'localConnectorExportInvoice.localConnector',caption:'Local Connector Export Fatura(Gelen faturalari serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                localConnector3:{name:'localConnectorImportELedger.localConnector',caption:'Local Connector Import E-Defter(Gidecek E-Defterleri tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                passive:{caption:'Pasif?', type:'checkbox'    }
+            }
+        },
+        {
+            active:true,
+            caption:'Fatura Xslt Tasarim Dosyalari',
+            partial:'../settings/e-integrators/invoice-xsltfiles.ejs'
+        }
+    ],
+    action:'',
+    mode:'view',
+    backUrl:'/settings/e-integrators'
+    }) 
+%>
