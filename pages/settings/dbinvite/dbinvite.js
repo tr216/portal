@@ -76,7 +76,7 @@ function addnew(req,res,data,callback){
 			data.form=Object.assign(data.form,req.body);
 			api.post('/dbinvite/' + req.query.db,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/dbinvite?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/settings/dbinvite?db=' + req.query.db +'&sid=' + req.query.sid);
 				}else{
 					data['message']=err.message;
 					callback(null,data);
@@ -160,7 +160,7 @@ function view(req,res,data,callback){
 function deleteItem(req,res,data,callback){
 	api.delete('/dbinvite/' + req.query.db + '/' + req.params.id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/dbinvite?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/settings/dbinvite?db=' + req.query.db +'&sid=' + req.query.sid);
 			
 		}else{
 			data['message']=err.message;

@@ -72,7 +72,7 @@ function signup(req,res,data,cb){
 	}
 	api.post('/signup',req,data.form,(err,resp)=>{
 		if(!err){
-			res.redirect('/login/verify?username=' + data.form.username);
+			res.redirect('/general/login/verify?username=' + data.form.username);
 		}else{
 			data.message=err.message;
 			cb(null,data);
@@ -124,7 +124,7 @@ function forgotPassword(req,res,data,cb){
 		data.form.username=req.body.username;
 		api.post('/forgot-password',req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/login');
+				res.redirect('/general/login');
 				
 			}else{
 				data.message=err.message;
