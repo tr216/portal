@@ -1,0 +1,37 @@
+<% layout('../../_common/layout')%>
+<%- partial('../../_common/date-filter',{includeForm:true,includeFilterButton:true}) %>
+
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'taskType',text:'Görev Türü',type:'lookup',filter:true, lookupList:[
+            {text:'-Tümü-', value:''},
+            {text:'Z Rapor aktar', value:'connector_transfer_zreport'},
+            {text:'E-Fatura içeri al', value:'connector_import_einvoice'},
+            {text:'E-Fatura dışarı ver', value:'connector_export_einvoice'},
+            {text:'E-Defter içeri al', value:'connector_import_eledger'},
+            {text:'E-Fatura GİB e gönder', value:'einvoice_send_to_gib'},
+            {text:'Email gönder', value:'send_email'},
+            {text:'SMS gönder', value:'send_sms'}
+        ]},
+        {name:'collectionName',text:'Kolleksiyon',type:'label',orderable:true},
+        {name:'documentId',text:'DocumanID',type:'label',orderable:true},
+        {name:'startDate',text:'Başlangıç',type:'label',orderable:true},
+        {name:'endDate',text:'Bitiş',type:'label',orderable:true},
+        {name:'status',text:'Durum',type:'lookup',filter:true, lookupList:[
+            {text:'-Tümü-', value:''},
+            {text:'Kuyrukta', value:'pending'},
+            {text:'Çalışıyor', value:'running'},
+            {text:'Tamamlandı', value:'completed'},
+            {text:'İptal', value:'cancelled'},
+            {text:'Hata', value:'error'}
+        ]},
+        {name:'attemptCount',text:'Tekrar Sayısı',type:'label'}
+    ],
+    caption:'Görev Yöneticisi',
+    addNewButton:false,
+    editButton:false,
+    viewButton:true,
+    deleteButton:true,
+    deleteUrl:'/dbapi/tasks/{_id}?db='+db+'&sid=' + sid
+    }) 
+%>

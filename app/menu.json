@@ -37,7 +37,8 @@
 	},
 	{"text":"System",		"path":"",					"icon":"shield-alt", "visible":true,
 		"nodes":[
-			{"text":"Veri Ambarları",					"path":"/settings/dbdefine",		"icon":"database", "visible":true, "nodes":[]}
+			{"text":"Veri Ambarları",					"path":"/settings/dbdefine",		"icon":"database", "visible":true, "nodes":[]},
+			{"text":"Görev Yöneticisi",					"path":"/system/tasks",		"icon":"tasks", "visible":true, "nodes":[]}
 		]
 	},
 	{"text":"",		"path":"",					"icon":"", "visible":false,

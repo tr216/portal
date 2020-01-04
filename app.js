@@ -153,7 +153,7 @@ function onListening() {
 
 
 process.on('uncaughtException', function (err) {
-    mrutil.console('Caught exception: ' + err);
+    console.log('Caught exception: ', err);
 });
 
 
