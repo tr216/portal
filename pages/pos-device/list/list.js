@@ -52,7 +52,7 @@ function getList(req,res,data,callback){
 			}
 		}
 
-		res.redirect('/posdevice-list?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
+		res.redirect('/pos-device/list?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
 		
@@ -111,7 +111,7 @@ function addnew(req,res,data,callback){
 			data.form=Object.assign(data.form,req.body);
 			api.post('/' + req.query.db + '/pos-devices',req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/posdevice-list?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/pos-device/list?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
  				}else{
  					data['message']=err.message;
@@ -132,7 +132,7 @@ function edit(req,res,data,callback){
 			data.form=Object.assign(data.form,req.body);
 			api.put('/' + req.query.db + '/pos-devices/' + _id,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/posdevice-list?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/pos-device/list?db=' + req.query.db +'&sid=' + req.query.sid);
 
 				}else{
 					data['message']=err.message;
@@ -172,7 +172,7 @@ function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
 	api.delete('/' + req.query.db + '/pos-devices/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/posdevice-list?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/pos-device/list?db=' + req.query.db +'&sid=' + req.query.sid);
 			
 		}else{
 			data['message']=err.message;
