@@ -144,7 +144,7 @@ function edit(req,res,data,callback){
 	}
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body);
-		if(data.form.invoiceLine)
+		data.form['accountingCustomerParty']={party:(data.form.party || {})}
 
 		api.put('/' + req.query.db + '/e-invoice/invoice/' + _id,req,data.form,(err,resp)=>{
 			if(!err){

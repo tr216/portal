@@ -3,13 +3,14 @@ var formOrjinal;
 function editLine(index){
 	var invoiceTemplate=eInvoiceDocumentTemplate();
 	var old=document.getElementById('invoiceLineModal');
-	old.parentNode.replaceChild(formOrjinal,old);
+	old.parentNode.replaceChild(formOrjinal.cloneNode(true),old);
 	
 
 	var btnSave=document.getElementById('invoiceLineModalSaveButton');
 	btnSave.href='javascript:saveInvoiceLine(' + index + ')';
 	var line=invoice.invoiceLine[index];
 	line=Object.assign(JSON.parse(JSON.stringify(invoiceTemplate.invoiceLine)),line);
+	invoiceLinePackageGrid_clear();
 	$('#invoiceLinePackageGrid-Quantity').on('keyup',function(e){
 		if((e.keyCode ? e.keyCode : e.which)=='13'){
 			invoiceLinePackageGrid_AddRow();
@@ -24,20 +25,21 @@ function editLine(index){
 	$('#invoiceLine-invoicedQuantity-unitCode').val(line.invoicedQuantity.attr.unitCode);
 	$('#invoiceLine-price-priceAmount').val(line.price.priceAmount.value);
 
-
-	if(line.taxTotal.taxSubtotal.length>0){
-		$('#invoiceLine-taxExemptionReasonCode').val(line.taxTotal.taxSubtotal[0].taxCategory.taxExemptionReasonCode.value);
-		
-		$('#invoiceLine-KDV-percent').val(line.taxTotal.taxSubtotal[0].percent.value);
-		$('#invoiceLine-KDV-amount').val(line.taxTotal.taxSubtotal[0].taxAmount.value);
-	}
-
-	if(line.withholdingTaxTotal.length>0)
-		if(line.withholdingTaxTotal[0].taxSubtotal.length>0){
-			$('#invoiceLine-Tevkifat-percent').val(line.withholdingTaxTotal[0].taxSubtotal[0].percent.value);
-			$('#invoiceLine-Tevkifat-amount').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value);
-			$('#invoiceLine-tevkifat-taxTypeCode').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value);
-		}
+	if(line.taxTotal)
+		if(line.taxTotal.taxSubtotal)
+			if(line.taxTotal.taxSubtotal.length>0){
+				$('#invoiceLine-taxExemptionReasonCode').val(line.taxTotal.taxSubtotal[0].taxCategory.taxExemptionReasonCode.value);
+				
+				$('#invoiceLine-KDV-percent').val(line.taxTotal.taxSubtotal[0].percent.value);
+				$('#invoiceLine-KDV-amount').val(line.taxTotal.taxSubtotal[0].taxAmount.value);
+			}
+	if(line.withholdingTaxTotal)
+		if(line.withholdingTaxTotal.length>0)
+			if(line.withholdingTaxTotal[0].taxSubtotal.length>0){
+				$('#invoiceLine-Tevkifat-percent').val(line.withholdingTaxTotal[0].taxSubtotal[0].percent.value);
+				$('#invoiceLine-Tevkifat-amount').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value);
+				$('#invoiceLine-tevkifat-taxTypeCode').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value);
+			}
 
 
 
@@ -48,6 +50,8 @@ function editLine(index){
 	$('#invoiceLine-item-brandName').val(line.item.brandName.value);
 	$('#invoiceLine-item-modelName').val(line.item.modelName.value);
 	$('#invoiceLine-item-keyword').val(line.item.keyword.value);
+	$('#invoiceLine-item-description').val(line.item.description.value);
+
 	if(line.item.originCountry) $('#invoiceLine-originCountry-identificationCode').val(line.item.originCountry.identificationCode.value);
 	
 	if(line.item.commodityClassification)
@@ -56,20 +60,6 @@ function editLine(index){
 
 	
 
-	if(line.delivery)
-		if(line.delivery.length>0){
-			if(line.delivery[0].deliveryTerms)
-				if(line.delivery[0].deliveryTerms.length>0)
-					$('#invoiceLine-deliveryTerms').val(line.delivery[0].ID.value);
-			if(line.delivery[0].shipment){
-				if(line.delivery[0].shipment.goodsItem)
-					if(line.delivery[0].shipment.goodsItem.length>0)
-						$('#invoiceLine-GTIPNO').val(line.delivery[0].shipment.goodsItem[0].requiredCustomsId.value);
-				if(line.delivery[0].shipment.shipmentStage)
-					if(line.delivery[0].shipment.shipmentStage.length>0)
-						$('#invoiceLine-transportModeCode').val(line.delivery[0].shipment.shipmentStage[0].transportModeCode.value);
-			}
-		}
 	
 	
 	if(line.note)
@@ -117,6 +107,31 @@ function editLine(index){
 			}
 		});
 	}
+
+	
+	if(line.delivery){
+		if(line.delivery.length>0){
+			if(line.delivery[0].deliveryTerms)
+				if(line.delivery[0].deliveryTerms.length>0)
+					$('#invoiceLine-deliveryTerms').val(line.delivery[0].deliveryTerms[0].ID.value);
+			if(line.delivery[0].shipment){
+				if(line.delivery[0].shipment.goodsItem)
+					if(line.delivery[0].shipment.goodsItem.length>0)
+						$('#invoiceLine-GTIPNO').val(line.delivery[0].shipment.goodsItem[0].requiredCustomsId.value);
+				if(line.delivery[0].shipment.shipmentStage)
+					if(line.delivery[0].shipment.shipmentStage.length>0)
+						$('#invoiceLine-transportModeCode').val(line.delivery[0].shipment.shipmentStage[0].transportModeCode.value);
+				if(line.delivery[0].shipment.transportHandlingUnit)
+					if(line.delivery[0].shipment.transportHandlingUnit.length>0)
+						if(line.delivery[0].shipment.transportHandlingUnit[0].actualPackage.length>0){
+							line.delivery[0].shipment.transportHandlingUnit[0].actualPackage.forEach((e)=>{
+								invoiceLinePackageGrid_AddRow({quantity:e.quantity.value, packagingTypeCode:e.packagingTypeCode.value});
+							})
+					}
+			}
+		}
+	}
+	
 
 	$('#invoiceLineModal').modal('show');
 }
@@ -184,18 +199,12 @@ function saveInvoiceLine(index){
 	line.item.brandName.value=$('#invoiceLine-item-brandName').val();
 	line.item.modelName.value=$('#invoiceLine-item-modelName').val();
 	line.item.keyword.value=$('#invoiceLine-item-keyword').val();
+	line.item.description.value=$('#invoiceLine-item-description').val();
 	line.item.originCountry.identificationCode.value= $('#invoiceLine-originCountry-identificationCode').val();
 
-	line.item.commodityClassification[{ itemClassificationCode:{ value:$('#invoiceLine-item-itemClassificationCode').val()}}];
+	line.item.commodityClassification=[{ itemClassificationCode:{ value:$('#invoiceLine-item-itemClassificationCode').val()}}];
 
-	line.delivery=[]
-
-	if($('#invoiceLine-deliveryTerms').val().trim()!='' || $('#invoiceLine-GTIPNO').val().trim()!='' || $('#invoiceLine-transportModeCode').val().trim()!=''){
-		line.delivery=[JSON.parse(JSON.stringify(invoiceTemplate.delivery))];
-		line.delivery[0].ID.value=$('#invoiceLine-deliveryTerms').val().trim();
-		line.delivery[0].shipment.goodsItem[0].requiredCustomsId.value=$('#invoiceLine-GTIPNO').val().trim();
-		line.delivery[0].shipment.shipmentStage[0].transportModeCode.value=$('#invoiceLine-transportModeCode').val().trim();
-	}
+	
 	
 	line.note=[];
 	if($('#invoiceLine-notes').val().trim()!=''){
@@ -287,7 +296,59 @@ function saveInvoiceLine(index){
 			line.allowanceCharge.push(obj)
 		}
 	});
-	
+	// -- ihracat paketleri ---
+	var ihracatPaketleri=[];
+	var table1=document.getElementById('invoiceLinePackageGridBody');
+	if(table1.rows){
+		if(table1.rows.length>0){
+			for(var i=0;i<table1.rows.length-1;i++){
+				if(!isNaN(table1.rows[i].cells[1].innerHTML) && table1.rows[i].cells[2].innerHTML!=''){
+					if(Number(table1.rows[i].cells[1].innerHTML)>0){
+						var obj={
+							quantity:Number(table1.rows[i].cells[1].innerHTML),
+							packagingTypeCode:table1.rows[i].cells[2].innerHTML
+						}
+						ihracatPaketleri.push(obj);
+					}
+				}
+			}
+			if(!isNaN((document.getElementById('invoiceLinePackageGrid-Quantity').value)) && document.getElementById('invoiceLinePackageGrid-packagingTypeCode').value!=''){
+				if(Number(document.getElementById('invoiceLinePackageGrid-Quantity').value)>0){
+					var obj={
+						quantity:Number(document.getElementById('invoiceLinePackageGrid-Quantity').value),
+						packagingTypeCode:document.getElementById('invoiceLinePackageGrid-packagingTypeCode').value
+					}
+					ihracatPaketleri.push(obj);
+				}
+			}
+		}
+	}
+	line.delivery=[]
+
+	if(ihracatPaketleri.length>0 || $('#invoiceLine-deliveryTerms').val().trim()!='' || $('#invoiceLine-GTIPNO').val().trim()!='' || $('#invoiceLine-transportModeCode').val().trim()!=''){
+		line.delivery=[JSON.parse(JSON.stringify(invoiceTemplate.delivery))];
+		line.delivery[0].deliveryTerms=[{ID:{ value:$('#invoiceLine-deliveryTerms').val().trim()}}];
+
+		line.delivery[0].shipment.goodsItem=[{requiredCustomsId:{value:$('#invoiceLine-GTIPNO').val().trim()}}];
+		line.delivery[0].shipment.shipmentStage=[{transportModeCode:{value:$('#invoiceLine-transportModeCode').val().trim()}}];
+		if(ihracatPaketleri.length>0){
+			line.delivery[0].shipment.totalTransportHandlingUnitQuantity.value=0;
+			line.delivery[0].shipment.transportHandlingUnit=[{actualPackage:[]}]
+			ihracatPaketleri.forEach((e,index)=>{
+				var actualPackage={
+					ID:{value:(index+1)},
+					quantity:{value:e.quantity},
+					packagingTypeCode:{value:e.packagingTypeCode}
+				}
+				line.delivery[0].shipment.transportHandlingUnit[0].actualPackage.push(actualPackage);
+				line.delivery[0].shipment.totalTransportHandlingUnitQuantity.value+=actualPackage.quantity.value;
+			});
+		}
+		
+	}
+
+
+	// end of ihracat paketleri ---
 	invoice.invoiceLine[index]=line;
 	console.log('invoice.invoiceLine[index]:',invoice.invoiceLine[index]);
     saveInvoice((err)=>{
@@ -380,9 +441,26 @@ function removeArtirimRow(rowId){
 	
 }
 
-function invoiceLinePackageGrid_AddRow(){
-	if(isNaN(document.getElementById('invoiceLinePackageGrid-Quantity').value) || document.getElementById('invoiceLinePackageGrid-packagingTypeCode').value=='') return;
-	if(Number(document.getElementById('invoiceLinePackageGrid-Quantity').value)<=0) return;
+function invoiceLinePackageGrid_clear(){
+	var table1=document.getElementById('invoiceLinePackageGridBody');
+	var rowCount=table1.rows.length;
+	for(var i=0;i<rowCount-1;i++){
+		invoiceLinePackageGrid_RemoveRow(0);
+	}
+	document.getElementById('invoiceLinePackageGrid-ID').value=1;
+	document.getElementById('invoiceLinePackageGrid-Quantity').value='';
+	document.getElementById('invoiceLinePackageGrid-packagingTypeCode').value='';
+}
+
+function invoiceLinePackageGrid_AddRow(obj={quantity:0,packagingTypeCode:''}){
+	if(obj.quantity>0 && obj.packagingTypeCode!=''){
+		document.getElementById('invoiceLinePackageGrid-Quantity').value=obj.quantity;
+		document.getElementById('invoiceLinePackageGrid-packagingTypeCode').value=obj.packagingTypeCode;
+	}else{
+		if(isNaN(document.getElementById('invoiceLinePackageGrid-Quantity').value) || document.getElementById('invoiceLinePackageGrid-packagingTypeCode').value=='') return;
+		if(Number(document.getElementById('invoiceLinePackageGrid-Quantity').value)<=0) return;
+	}
+	
 	var table1=document.getElementById('invoiceLinePackageGridBody');
 	var newRow=table1.insertRow(table1.rows.length-1);
 	newRow.insertCell(0).innerHTML=table1.rows.length-1;
@@ -402,6 +480,14 @@ function invoiceLinePackageGrid_RemoveRow(index){
 		table1.rows[i].cells[0].innerHTML=(i+1).toString();
 	}
 	document.getElementById('invoiceLinePackageGrid-ID').value=table1.rows.length;
+}
+
+function addNewLine(){
+	var invoiceTemplate=eInvoiceDocumentTemplate();
+	var line=JSON.parse(JSON.stringify(invoiceTemplate.invoiceLine));
+	line.ID.value=invoice.invoiceLine.length+1;
+	invoice.invoiceLine.push(line);
+	editLine(invoice.invoiceLine.length-1);
 }
 
 $(document).ready(function(){

@@ -173,7 +173,7 @@ function eInvoiceDocumentTemplate(){
 					address:{}
 				},
 				freeOnBoardValueAmount :currencytType,
-				goodsItem:[{requiredCustomsID:valueType}], //qwerty alt nesleneler oldukca fazla
+				goodsItem:[{requiredCustomsId:valueType}], //qwerty alt nesleneler oldukca fazla
 				grossVolumeMeasure:quantityType,
 				grossWeightMeasure:quantityType,
 				handlingCode:valueType,
