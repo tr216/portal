@@ -47,7 +47,8 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '_vendors'), { maxAge: (60 * 1000 * 60 * 24 * 365) }));
-app.use(express.static(path.join(__dirname, '_assets')));
+//app.use(express.static(path.join(__dirname, '_assets'), { maxAge: (60 * 1000 * 60 * 2) })); //2saat cache
+app.use(express.static(path.join(__dirname, '_assets'))); //qwerty cache siz
 
 app.use(flash());
 

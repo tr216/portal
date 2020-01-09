@@ -67,31 +67,35 @@
     if(item.hasChildren){ %>
         </div>
         <div class="panel-body">
-        <%- partial('form-partial',{formControls:item.formControls,level:level+1}) %>
+        <%- partial('form2-partial',{formControls:item.formControls,level:level+1}) %>
         </div>
       </div>
     <% } %>
+    <% if(typeof item.newLine!='undefined'){
+        if(item.newLine){ %>
+        <div class="w-100"></div>
+    <% }} %>
 <% } %>
 
 <% function textbox(item,itemValue,level){ %>
-  <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-    <label ><%=item.caption%></label>
-    <input type="text" class="form-control <%=item.class %>" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
+  <div class="form-group <% if(typeof item.class!='undefined'){%><%=item.class%><%} else{%>float-left col-lg-12 col-md-12<%}%>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
+    <label for="<%- generateFormName(item.name) %>" class="m-0"><%=item.caption%></label>
+    <input type="text" class="form-control" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
   </div>
 <% } %>
 
 <% function label(item,itemValue,level){ %>
-  <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
+  <div class="form-group <% if(typeof item.class!='undefined'){%><%=item.class%><%} else{%>float-left col-lg-12 col-md-12<%}%>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
     <% if(item.type=='label'){%>
-      <div class="<%=item.class %>"><b><%=item.caption%>:</b> <%=itemValue%></div>
+      <div class=""><b><%=item.caption%>:</b> <%=itemValue%></div>
     <%} else { %>
-      <div class="<%=item.class %>"><%=item.caption%></div>
+      <div class=""><%=item.caption%></div>
     <% } %>
   </div>
 <% } %>
 
 <% function checkbox(item,itemValue,level){ %>
-  <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
+  <div class="form-group <% if(typeof item.class!='undefined'){%><%=item.class%><%} else{%>float-left col-lg-12 col-md-12<%}%>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
     <label>
       <input type="checkbox" class="" name="<%- generateFormName(item.name) %>" value="true" <%=(itemValue?'checked':'')%> <%- item.readonly?'disabled':'' %> />
       <%=item.caption%>
@@ -100,8 +104,8 @@
 <% } %>
 
 <% function lookup(item,itemValue,level){ %>
-  <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-    <label for=""><%=item.caption%></label>
+  <div class="form-group <% if(typeof item.class!='undefined'){%><%=item.class%><%} else{%>float-left col-lg-12 col-md-12<%}%>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
+    <label for="<%- generateFormName(item.name) %>" class="m-0"><%=item.caption%></label>
     <select name="<%- generateFormName(item.name) %>" id="input" class="form-control" <%- item.required?'required="required"':'' %> <%- item.readonly?'disabled':'' %>>
       <% item.lookup.forEach(function(e){ %>
         <option value="<%=e[item.valueField]%>" <% if(e[item.valueField]==itemValue){%>selected<%} %> ><%=e[item.textField]%></option>
@@ -111,7 +115,7 @@
 <% } %>
 
 <% function partialItem(item,itemValue,level){ %>
-  <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
+  <div class="form-group <% if(typeof item.class!='undefined'){%><%=item.class%><%} else{%>float-left col-lg-12 col-md-12<%}%>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
     <div class="panel panel-info">
       <% if(item.caption!=''){ %>
         <div class="panel-heading">
@@ -133,8 +137,8 @@
 <% } %>
 
 <% function jsonData(item,itemValue,level){ %>
-  <div class="form-group<% if(typeof item.class!='undefined'){%> <%=item.class%><%}%>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-    <label class="m-0"><%=item.caption%></label>
+  <div class="form-group <% if(typeof item.class!='undefined'){%><%=item.class%><%} else{%>float-left col-lg-12 col-md-12<%}%>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
+    <label for="<%- generateFormName(item.name) %>" class="m-0"><%=item.caption%></label>
     <textarea name="<%- generateFormName(item.name) %>" class="form-control" rows="10"  style="height: auto;font-family: monospace;" <%- item.readonly?'readonly':'' %>><%- JSON.stringify(itemValue, undefined, 4) %></textarea>
    
   </div>

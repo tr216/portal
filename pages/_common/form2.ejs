@@ -62,9 +62,9 @@
       </li>
       <% } %>
     </ul>
-    <div class="tab-content" style="min-height: 70vh;overflow: auto;">
+    <div class="tab-content" style="min-height: 70vh;">
       <% for(var tabIndex=0;tabIndex<tabs.length;tabIndex++){ %>
-        <div class="tab-pane<%- tabs[tabIndex].active?' show active':''%> " id="tab<%=tabIndex%>" role="tabpanel" aria-labelledby="IDtab<%=tabIndex%>">
+        <div class="tab-pane fade<%- tabs[tabIndex].active?' show active':''%> " id="tab<%=tabIndex%>" role="tabpanel" aria-labelledby="IDtab<%=tabIndex%>">
           <% if(typeof tabs[tabIndex].partial!='undefined'){ %>
           <%- partial(tabs[tabIndex].partial,form) %>
           <% } %>
@@ -102,15 +102,13 @@
 
 <% function standartForm(formObject){ %>
   <div class="row">
-      <div class="col-lg-12 col-md-12">
             <% 
               var partialData={};
               partialData.formControls=formObject.formControls;
               partialData.mode=formObject.mode;
               
             %>
-            <%- partial('form-partial', partialData) %>
-      </div>
+            <%- partial('form2-partial', partialData) %>
   </div>
 <% } %>
 

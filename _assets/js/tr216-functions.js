@@ -8,6 +8,15 @@ Date.prototype.yyyymmdd = function () {
     var sec = this.getSeconds().toString();
     return yyyy + '-' + (mm[1]?mm:"0" + mm[0]) + '-' + (dd[1]?dd:"0" + dd[0]); 
 }
+
+Date.prototype.hhmmss = function () {
+    
+    var HH = this.getHours().toString();
+    var min = this.getMinutes().toString();
+    var sec = this.getSeconds().toString();
+    return (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0]); 
+};
+
 Date.prototype.addDays = function(days)
 {
     var dat = new Date(this.valueOf());
@@ -243,4 +252,37 @@ function b64EncodeUnicode(str) {
         function toSolidBytes(match, p1) {
             return String.fromCharCode('0x' + p1);
     })));
+}
+
+Number.prototype.formatMoney = function(){
+    var c=2;
+    var d=whatDecimalPointer();
+    var t=d==','?'.':',';
+    
+    var s= _formatMoney(this,c,d,t);
+
+    return s;
+};
+
+function _formatMoney(value,c,d,t){
+    var n = value, 
+    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+    d = d == undefined ? "." : d, 
+    t = t == undefined ? "," : t, 
+    s = n < 0 ? "-" : "", 
+    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+    j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+}
+
+
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = this.length - 1; i >= 0; i--) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
 }

@@ -137,13 +137,14 @@ function pdf(req,res,data,callback){
 
 function edit(req,res,data,callback){
 	var _id=req.params.id || '';
+	if(_id.trim()==''){
+		data['message']='id bos olamaz';
+		callback(null,data);
+		return;
+	}
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body);
-		if(_id.trim()==''){
-			data['message']='ID bos olamaz';
-			callback(null,data);
-			return;
-		}
+		if(data.form.invoiceLine)
 
 		api.put('/' + req.query.db + '/e-invoice/invoice/' + _id,req,data.form,(err,resp)=>{
 			if(!err){

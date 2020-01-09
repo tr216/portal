@@ -550,7 +550,7 @@ function localApi(req,res,dbApi){
 		break;
 
 		case 'PUT':
-			api.put(dburl + enpoint,reqd,req.body,(err,resp)=>{
+			api.put(dburl + enpoint,req,req.body,(err,resp)=>{
 				res.status(200).json(resp);
 			});
 		break;
