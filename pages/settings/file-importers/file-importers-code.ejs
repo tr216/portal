@@ -1,0 +1,32 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/form',{
+    tabs:[
+        {
+            active:(activeTab==0),
+            caption:'File Importer',
+            formControls:{
+                name            :{caption:'Adı',                   type:'label'    ,required:true},
+                importFileExtensions :{caption:'Dosya uzantıları', type:'textbox' },
+                passive         :{caption:'Pasif',                 type:'label'}
+            }
+        },
+        {
+            active:(activeTab==1),
+            caption:'Kodlar ve Gorevler'
+            ,partial:'../settings/file-importers/entegrasyon-form'
+        },
+        {
+            active:(activeTab==2),
+            caption:'Calistir'
+            ,partial:'run-code'
+        }
+    ],
+    action:'',
+    mode:'view'
+    , backUrl:'/settings/file-importers'
+    }) 
+%>
+
+
+
+

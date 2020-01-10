@@ -1,22 +1,19 @@
+var template=require(path_module.join(rootDir,'_assets','js','einvoice-document-template.js'));
+
 module.exports = function(req,res,callback){
+	
 	var data={
 		eIntegratorList:[],
 		eInvoiceStatusTypes:Array.from(staticValues.eInvoiceStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
 		eInvoiceProfileIdList:Array.from(staticValues.eInvoiceProfileIdList),
 		eInvoiceTypeCodeList:Array.from(staticValues.eInvoiceTypeCodeList),
-		form:{
-			eIntegrator:''
-			
-		},
+		form:JSON.parse(JSON.stringify(template.invoiceTemplate.invoice)),
 		html:'Goruntulenemedi',
 		list:[],
 		filter:{}
 	}
-	data.eInvoiceStatusTypes.unshift({text:'-Tümü-',value:''});
-	data.currencyList.unshift({text:'-Tümü-',value:''});
-	data.eInvoiceProfileIdList.unshift({text:'-Tümü-',value:''});
-	data.eInvoiceTypeCodeList.unshift({text:'-Tümü-',value:''});
+	
 	
 	if(!req.query.db){
 		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
@@ -24,7 +21,7 @@ module.exports = function(req,res,callback){
 	switch(req.params.func || ''){
 		case 'addnew':
 		
-		addnew(req,res,data,callback);
+			addnew(req,res,data,callback);
 		break;
 		case 'edit':
 			edit(req,res,data,callback);
@@ -48,6 +45,10 @@ module.exports = function(req,res,callback){
 
 
 function getList(req,res,data,callback){
+	data.eInvoiceStatusTypes.unshift({text:'-Tümü-',value:''});
+	data.currencyList.unshift({text:'-Tümü-',value:''});
+	data.eInvoiceProfileIdList.unshift({text:'-Tümü-',value:''});
+	data.eInvoiceTypeCodeList.unshift({text:'-Tümü-',value:''});
 	if(req.method=='POST'){
 		var filter={};
 		filter=Object.assign(filter,req.query);
@@ -63,6 +64,7 @@ function getList(req,res,data,callback){
 		data.filter.sid=undefined;
 		delete data.filter.sid;
 		initLookUpLists(req,res,data,(err,data)=>{
+			data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
 			api.get('/' + req.query.db + '/e-invoice/outboxInvoiceList',req,data.filter,(err,resp)=>{
 				if(!err){
 					var docs=[]
@@ -86,16 +88,23 @@ function initLookUpLists(req,res,data,cb){
 	api.get('/' + req.query.db + '/e-integrators',req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
-			data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
+			if(data.eIntegratorList.length>0){
+				data.eIntegratorList.forEach((e)=>{
+					if(e.isDefault){
+						data.form.eIntegrator=e._id;
+					}
+				})
+			}
 		}
 		cb(null,data);
 	});
 }
 
 function addnew(req,res,data,callback){
-	if(req.method=='POST'){
+	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body);
-		console.log('data.form:',data.form);
+		data.form['accountingCustomerParty']={party:(data.form.party || {})}
+
 		api.post('/' + req.query.db + '/e-invoice/invoice',req,data.form,(err,resp)=>{
 			if(!err){
 				res.redirect('/e-invoice/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
@@ -106,7 +115,9 @@ function addnew(req,res,data,callback){
 			}
 		});
 	}else{
-		callback(null,data);
+		initLookUpLists(req,res,data,(err,data)=>{
+			callback(null,data);
+		});
 	}
 }
 
@@ -156,15 +167,18 @@ function edit(req,res,data,callback){
 			}
 		});
 	}else{
-		api.get('/' + req.query.db + '/e-invoice/invoice/' + _id,req,null,(err,resp)=>{
-			if(!err){
-				data.form=Object.assign(data.form,resp.data);
-				callback(null,data);
-			}else{
-				data['message']=err.message;
-				callback(null,data);
-			}
-		});
+		initLookUpLists(req,res,data,(err,data)=>{
+			api.get('/' + req.query.db + '/e-invoice/invoice/' + _id,req,null,(err,resp)=>{
+				if(!err){
+					data.form=Object.assign(data.form,resp.data);
+					callback(null,data);
+				}else{
+					data['message']=err.message;
+					callback(null,data);
+				}
+			});
+		})
+		
 	}
 }
 

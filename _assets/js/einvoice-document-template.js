@@ -1,3 +1,4 @@
+(function(exports) { 
 const currencytType={ value:0, attr:{ currencyID:''}}
 const quantityType={ value:0, attr:{ unitCode:''}}
 const IDType={ value:0, attr:{ unitCode:''}}
@@ -66,6 +67,7 @@ const actualPackageType={
 function eInvoiceDocumentTemplate(){
 	return {
 		invoice:{
+			eIntegrator:'',
 			profileId : valueType,
 			ID : valueType,
 			uuid : valueType,
@@ -238,3 +240,7 @@ function eInvoiceDocumentTemplate(){
 	}
 }
 
+ exports.invoiceTemplate = eInvoiceDocumentTemplate(); 
+       
+})(typeof exports === 'undefined'?  
+            this['eInvoiceDoumentTemplate']={}: exports); 

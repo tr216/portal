@@ -1,3 +1,7 @@
+html {
+    overflow-y: scroll;
+}
+
 body {
     /*font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;*/
     font-family: 'Open Sans', sans-serif;
@@ -322,4 +326,9 @@ hr {
       -webkit-border-radius: 0px;
       -moz-border-radius: 0px;
       background-image: none;
+}
+
+.card-header .btn {
+  height: 26px;
+  font-size: 16px;
 }

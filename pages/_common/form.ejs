@@ -1,6 +1,4 @@
-
 <%
-
   if(typeof mode=='undefined') mode=func;
   if(typeof action=='undefined') action='';
   if(typeof caption=='undefined') caption='';
@@ -9,25 +7,33 @@
 
   if(typeof tabs=='undefined') showTabs=false;
   
-  /*pageHeaderButtons={visible:true, save:false, back:true}
-  if(mode!='view'){
-    pageHeaderButtons.save=true;
+  switch(mode){
+    case 'edit':
+      funcTitle='Değiştir'
+    break;
+    case 'view':
+      funcTitle='İncele'
+    break;
+    case 'addnew':
+      funcTitle='*Yeni*'
+    break;
   }
-  if(typeof backUrl!='undefined'){
-      pageHeaderButtons['backUrl']=backUrl;
-  } 
-  */
+
+  headerButtons='';
+  if(mode!='view'){
+    headerButtons +='<button type="submit" form="' + formName + '" class="btn btn-primary" title="Kaydet"><i class="fas fa-save"></i></button>';
+  }
+  headerButtons +='<a href="javascript:openBack();" class="btn btn-dark ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
 
 %>
+<script type="text/javascript">
+    var headerButtons=document.getElementById('headerButtons');
+    if(headerButtons){
+      headerButtons.innerHTML='<%- headerButtons %>';
+    }
+</script>
 <form action="<%=action%>" method="POST" role="form" name="<%=formName%>" id="<%=formName%>">
-  <div class="row page-header">
-    <div class="col-md-8">
-    </div>
-    <div class="col-md-4 text-right">
-      <button type="submit" form="<%=formName%>" class="btn btn-primary" title="Kaydet"><i class="fas fa-save"></i></button>
-      <a href="javascript:openBack()" class="btn btn-dark" title="Vazgeç"><i class="fas fa-reply"></i></a>
-    </div>
-  </div>
+  
   <% if(message!=''){ %>
   <div class="row">
     <div class="col-lg-12 col-md-12">

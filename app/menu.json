@@ -3,13 +3,14 @@
 	{"text":"MRP",						"path":"",					"icon":"table", "visible":false, "nodes":[]},
 	{"text":"E-Fatura",					"path":"",		"icon":"table", "visible":true, 
 		"nodes":[
-			{"text":"Yeni Fatura Oluştur",			"path":"/einvoice-new",		"icon":"file-alt", "visible":true, "nodes":[]},
+			{"text":"Yeni Fatura Oluştur",			"path":"/e-invoice/outbox/addnew",		"icon":"file-alt", "visible":true, "nodes":[]},
 			{"text":"Gelen Kutusu",					"path":"/e-invoice/inbox",		"icon":"table", "visible":true , "nodes":[]},
 			{"text":"Giden Kutusu",					"path":"/e-invoice/outbox",		"icon":"table", "visible":true, "nodes":[]},
 			{"text":"E-Fatura Mükellefleri",		"path":"/e-invoice/gib-users",	"icon":"users", "visible":true, "nodes":[]},
 			{"text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
 				{"text":"GIB Entegrator Tanimlari",		"path":"/settings/e-integrators",	"icon":"cogs", "visible":true, "nodes":[]},
-				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
+				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]},
+				{"text":"File Importer",	"path":"/settings/file-importers",	"icon":"file-import", "visible":true, "nodes":[]}
 			]}
 		]
 	},
@@ -25,7 +26,8 @@
 				{"text":"Servis Tanimlari",			"path":"/pos-device/services-defines",	"icon":"cogs", 		"visible":true, "nodes":[]},
 				{"text":"Cihaz listesi",			"path":"/pos-device/list",		"icon":"cash-register", 		"visible":true, "nodes":[]},
 				{"text":"Lokasyonlar",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
-				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
+				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]},
+				{"text":"File Importer",	"path":"/settings/file-importers",	"icon":"file-import", "visible":true, "nodes":[]}
 			]}
 		]
 	},

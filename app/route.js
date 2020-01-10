@@ -282,6 +282,7 @@ function setGeneralParams(req,data){
 				
 	data['title']=data['pageTitle'];
 	data['funcTitle']='';
+	
 
 	return data;
 }
@@ -507,8 +508,18 @@ function getMenuText(req, urlPath){
 						if(m2.nodes.length>0){
 							m2.nodes.forEach((m3)=>{
 								if(m3.path==urlPath){
-									text=m2.text;
+									text=m3.text;
 									return;
+								}
+								if(m3.nodes){
+									if(m3.nodes.length>0){
+										m3.nodes.forEach((m4)=>{
+											if(m4.path==urlPath){
+												text=m4.text;
+												return;
+											}
+										});
+									}
 								}
 							});
 						}

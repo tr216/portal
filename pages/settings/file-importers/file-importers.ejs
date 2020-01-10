@@ -1,0 +1,17 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'name',text:'Adı',type:'label'},
+        {name:'importerType',text:'Türü',type:'lookup' , lookupList:staticValues.fileImporterTypes},
+        {name:'importFileExtensions',text:'Dosya uzantıları',type:'label'},
+        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+    ],
+    title:'File Importers',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    customButtons:[{path:'/settings/file-importers/code/{_id}?db=' + db + '&sid=' + sid,text:'Kodlama',icon:'fas fa-code'}],
+    deleteUrl:'/dbapi/file-importers/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>

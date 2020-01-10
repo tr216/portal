@@ -28,7 +28,7 @@
 	<link href="/css/tr216-portal.css" rel="stylesheet">
 	<link href="/css/tr216-menu.css" rel="stylesheet">
 </head>
-<body id="page-top">
+<body id="page-top" style="scroll-behavior: smooth;">
 
 	<!-- Page Wrapper -->
 	<div id="wrapper">
@@ -44,7 +44,7 @@
 			<div id="content">
 
 				<!-- Topbar -->
-				<nav class="navbar navbar-expand navbar-light topbar mb-1 static-top shadow">
+				<nav class="navbar navbar-expand navbar-light topbar mb-1 static-top">
 
 					<!-- Sidebar Toggle (Topbar) -->
 					<!-- <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3"> -->
@@ -148,7 +148,12 @@
 								%>
 								<% if(dbSecili==false){ %>*secili degil*<% } %>
 							</span>
-
+							<script type="text/javascript">
+								var dbLabel=document.getElementById('dbLabel');
+								if(dbLabel && localStorage.getItem('activeDbName')){
+									dbLabel.innerHTML=localStorage.getItem('activeDbName');
+								}
+							</script>
 							<!-- <span class="badge badge-danger badge-counter">etulia 2019</span> -->
 						</a>
 
@@ -193,7 +198,13 @@
 			<div class="container-fluid">
 				<div class="card shadow mb-4 mt-0 pt-0">
 					<div class="card-header p-1">
-						<h1 class="m-0 font-weight-bold text-primary" style="font-size:16pt"><%=title%></h1>
+						<div class="float-left">
+							<% if(typeof funcTitle=='undefined') funcTitle=''; %>
+							<h1 class="m-0 font-weight-bold text-primary" style="font-size:16pt"><%=title%><% if(funcTitle!=''){%> - <%=funcTitle%><% } %></h1>
+						</div>
+						<div id="headerButtons" class="float-right" style="min-height: 26px;">
+							
+						</div>
 					</div>
 					<div class="card-body p-1">
 						<%- body %>
@@ -209,7 +220,7 @@
 		<footer class="sticky-footer bg-white">
 			<div class="container my-auto">
 				<div class="copyright text-center my-auto">
-					<span>shaman.Coders((e)=>{return '2019 - &copy; <%=(new Date()).getFullYear()%>';})</span>
+					<!-- <span>shaman.Coders((e)=>{return '2019 - &copy; <%=(new Date()).getFullYear()%>';})</span> -->
 				</div>
 			</div>
 		</footer>
@@ -257,8 +268,14 @@
 <script type="text/javascript" src="/js/tr216-ui.js"></script>
 
 <script type="text/javascript">
-	$(document).ready(function(){
+	//$(document).ready(function(){
+	var dbLabel=document.getElementById('dbLabel');
+	// if(dbLabel && localStorage.getItem('activeDbName')){
+	// 	dbLabel.innerHTML=localStorage.getItem('activeDbName');
+	// }
+	loadDatabases();
 
+	function loadDatabases(){
 		var databases=[];
 
 		if(localStorage.getItem('databases')!=null){
@@ -296,11 +313,13 @@
 			}
 		}
 
+		
 		$.each(databases, function(i, db) 
 		{ 
 			var url=window.location.origin + window.location.pathname + '?db=' + db._id + '&sid=<%=sid%>';
 			if(localStorage.getItem('activeDb')==db._id){
-				$("#dbLabel").html(db.dbName);
+				//if(dbLabel) dbLabel.innerHTML=db.dbName;
+				// $("#dbLabel").html(db.dbName);
 				$("#dbList").append('<div class="dropdown-item d-flex align-items-center">\
 					<div class="mr-3">\
 					<div class="icon-circle bg-primary">\
@@ -324,7 +343,8 @@
 					</a>');
 			}
 		});
-	});
+	}
+	//});
 </script>
 </body>
 </html>

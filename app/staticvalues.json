@@ -885,6 +885,11 @@
 				{"value":"ZM", "text":"ZM ZAMBIA"},
 				{"value":"ZW", "text":"ZW ZIMBABWE"}
 		],
-		"deliveryTerms":["","FOB","CIF","DAF","EXW","FCA","FAS","CFR","CPT","CIP","DES","DEQ","DDU","DDP"]
+		"deliveryTerms":["","FOB","CIF","DAF","EXW","FCA","FAS","CFR","CPT","CIP","DES","DEQ","DDU","DDP"],
+		"fileImporterTypes":[
+			{"text":"e-invoice","value":"e-invoice"},
+			{"text":"e-ledger","value":"e-ledger"},
+			{"text":"zreport","value":"zreport"}
+		]
 }
 
