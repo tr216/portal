@@ -155,6 +155,10 @@
 
                             </div>
                         </div>
+                        <div class="form-group col-md-2 offset-md-3">
+                            <label for="" class="m-0">Yerel Fatura No</label>
+                            <input type="text" class="form-control" name="localDocumentId" placeholder="localDocumentId" autocomplete="on"  value="<%=form.localDocumentId%>">
+                        </div>
                     </div>
 
                 </div>
@@ -562,20 +566,23 @@
 
                 var kdvOrani='', kdvTutar=''; 
                 var kdvDahilTutar=line.lineExtensionAmount.value;
-                if(line.taxTotal.taxSubtotal.length>0){
-                    kdvOrani='% ' + line.taxTotal.taxSubtotal[0].percent.value;
-                    kdvTutar=line.taxTotal.taxAmount.value.formatMoney();
-                    kdvDahilTutar +=line.taxTotal.taxAmount.value;
-                }
-                if(line.withholdingTaxTotal.length>0){
-                    line.withholdingTaxTotal.forEach((wTax)=>{
-                        if(wTax.taxSubtotal.length>0){
-                            kdvOrani +='<br>Tevk:% ' + wTax.taxSubtotal[0].percent.value;
-                            kdvTutar +='<br>Tevk.:' + wTax.taxAmount.value.formatMoney();
-                            kdvDahilTutar -=wTax.taxAmount.value;
+                if(line.taxTotal)
+                    if(line.taxTotal.taxSubtotal)
+                        if(line.taxTotal.taxSubtotal.length>0){
+                            kdvOrani='% ' + line.taxTotal.taxSubtotal[0].percent.value;
+                            kdvTutar=line.taxTotal.taxAmount.value.formatMoney();
+                            kdvDahilTutar +=line.taxTotal.taxAmount.value;
                         }
-                    });
-                }
+                if(line.withholdingTaxTotal)
+                    if(line.withholdingTaxTotal.length>0){
+                        line.withholdingTaxTotal.forEach((wTax)=>{
+                            if(wTax.taxSubtotal.length>0){
+                                kdvOrani +='<br>Tevk:% ' + wTax.taxSubtotal[0].percent.value;
+                                kdvTutar +='<br>Tevk.:' + wTax.taxAmount.value.formatMoney();
+                                kdvDahilTutar -=wTax.taxAmount.value;
+                            }
+                        });
+                    }
 
                 var cell9=newRow.insertCell(9);
                 cell9.classList.add('text-right');

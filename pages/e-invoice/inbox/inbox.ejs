@@ -97,5 +97,68 @@
             });
             
         });
+
+        $('#btnApprove').click(function(){
+            var data={list:[]};
+            $(".checkSingle").each(function() {
+                if(this.checked){
+                    var satir=JSON.parse(decodeURIComponent(this.value));
+                    if(satir.doc.invoiceStatus=='WaitingForAprovement'){
+                        data.list.push({_id:satir._id, ID:satir.doc.ID});
+                    }
+                    
+                }
+            });
+            if(data.list.length==0)  return alert('Kayit secilmemis!');
+            if(!confirm(data.list.length + ' adet ticari faturayi onayliyor musunuz?')) return;
+            $.ajax({
+                url:'/dbapi/e-invoice/approve?db=<%=db%>&sid=<%=sid%>',
+                data:data,
+                type:'POST',
+                success:function(result){
+                    if(result.success){
+                        
+                        window.location.reload();
+                    }else{
+                        alert(result.error.code + '\n' + result.error.message);
+                    }
+                }
+            });
+            
+        });
+
+        $('#btnDecline').click(function(){
+            var data={list:[]};
+            $(".checkSingle").each(function() {
+                if(this.checked){
+                    var satir=JSON.parse(decodeURIComponent(this.value));
+                    if(satir.doc.invoiceStatus=='WaitingForAprovement'){
+                        data.list.push({_id:satir._id, ID:satir.doc.ID});
+                    }
+                    
+                }
+            });
+            if(data.list.length==0)  return alert('Kayit secilmemis!');
+            if(!confirm(data.list.length + ' adet ticari faturayi reddediyor musunuz?')) return;
+            $.ajax({
+                url:'/dbapi/e-invoice/decline?db=<%=db%>&sid=<%=sid%>',
+                data:data,
+                type:'POST',
+                success:function(result){
+                    if(result.success){
+                        
+                        window.location.reload();
+                    }else{
+                        alert(result.error.code + '\n' + result.error.message);
+                    }
+                }
+            });
+            
+        });
     });
+
+    function showErrors(_id){
+        var url='<%=urlPath%>/errors/'+ _id + '?db=<%=db%>&sid=<%=sid%>';
+        popupCenter(url,'Goster','900','600');
+    }
 </script>

@@ -6,6 +6,7 @@
             caption:'File Importer',
             formControls:{
                 name            :{caption:'Adı',                   type:'label'    ,required:true},
+                importerType :{caption:'Türü', type:'lookup', lookup:staticValues.fileImporterTypes },
                 importFileExtensions :{caption:'Dosya uzantıları', type:'textbox' },
                 passive         :{caption:'Pasif',                 type:'label'}
             }
@@ -13,7 +14,7 @@
         {
             active:(activeTab==1),
             caption:'Kodlar ve Gorevler'
-            ,partial:'../settings/file-importers/entegrasyon-form'
+            ,partial:'../settings/file-importers/importer-form'
         },
         {
             active:(activeTab==2),

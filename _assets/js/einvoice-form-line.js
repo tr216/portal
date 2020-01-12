@@ -1,10 +1,9 @@
 var formOrjinal;
 
 function editLine(index){
-	var invoiceTemplate=eInvoiceDocumentTemplate();
+	var invoiceTemplate=eInvoiceDoumentTemplate.invoiceTemplate;
 	var old=document.getElementById('invoiceLineModal');
 	old.parentNode.replaceChild(formOrjinal.cloneNode(true),old);
-	
 
 	var btnSave=document.getElementById('invoiceLineModalSaveButton');
 	btnSave.href='javascript:saveInvoiceLine(' + index + ')';
@@ -141,7 +140,7 @@ var artirimCount=1;
 
 function saveInvoiceLine(index){
 	if(index<0) return;
-	var invoiceTemplate=eInvoiceDocumentTemplate();
+	var invoiceTemplate=eInvoiceDoumentTemplate.invoiceTemplate;
 	
 	//var satir=$('input[name="invoiceLine['+index+']"]').val();
 	//var line=JSON.parse(decodeURIComponent(satir));
@@ -162,7 +161,7 @@ function saveInvoiceLine(index){
 		
 		console.log('line.taxTotal oncesi:',line.taxTotal)
 
-		line.taxTotal['taxAmount']['value']=Number($('#invoiceLine-KDV-amount').val());
+		line.taxTotal['taxAmount']={value:Number($('#invoiceLine-KDV-amount').val())};
 		
 		line.taxTotal.taxSubtotal[0].percent.value=Number($('#invoiceLine-KDV-percent').val());
 		line.taxTotal.taxSubtotal[0].taxAmount.value=Number($('#invoiceLine-KDV-amount').val());

@@ -32,9 +32,8 @@ module.exports = function(req,res,callback){
 		case 'pdf':
 			pdf(req,res,data,callback);
 		break;
-		case 'delete':
-		
-		deleteItem(req,res,data,callback);
+		case 'errors':
+			showErrors(req,res,data,callback);
 		break;
 		default:
 			getList(req,res,data,callback);
@@ -43,6 +42,23 @@ module.exports = function(req,res,callback){
 	
 }
 
+function showErrors(req,res,data,callback){
+	var _id=req.params.id || '';
+	if(_id.trim()==''){
+		data['message']='id bos olamaz';
+		callback(null,data);
+		return;
+	}
+	api.get('/' + req.query.db + '/e-invoice/errors/' + _id,req,null,(err,resp)=>{
+		if(!err){
+			data.form=Object.assign(data.form,resp.data);
+			callback(null,data);
+		}else{
+			data['message']=err.message;
+			callback(null,data);
+		}
+	});
+}
 
 function getList(req,res,data,callback){
 	data.eInvoiceStatusTypes.unshift({text:'-Tümü-',value:''});
