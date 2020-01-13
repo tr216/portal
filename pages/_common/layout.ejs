@@ -283,7 +283,7 @@
 			if(databases.length>0){
 				localStorage.setItem('activeDb',databases[0]._id);
 				localStorage.setItem('activeDbName',databases[0].dbName);
-				changeActiveDb(localStorage.getItem('activeDb'));
+				changeActiveDb(localStorage.getItem('activeDb'),localStorage.getItem('activeDbName'));
 				return;  
 			}
 		}else{
@@ -301,7 +301,7 @@
 				if(databases.length>0){
 					localStorage.setItem('activeDb',databases[0]._id);
 					localStorage.setItem('activeDbName',databases[0].dbName);
-					changeActiveDb(localStorage.getItem('activeDb'));
+					changeActiveDb(localStorage.getItem('activeDb'),localStorage.getItem('activeDbName'));
 
 				}else{
 					localStorage.removeItem('activeDb');
@@ -328,7 +328,7 @@
 					</div>\
 					</div>');
 			}else{
-				$("#dbList").append('<a class="dropdown-item d-flex align-items-center" href="' + url + '">\
+				$("#dbList").append('<a class="dropdown-item d-flex align-items-center" href="javascript:changeActiveDb(\'' + db._id + '\',\'' + db.dbName + '\')">\
 					<div class="mr-3">\
 					<div class="icon-circle bg-secondary">\
 					<i class="fas fa-database text-white"></i>\
@@ -340,8 +340,17 @@
 					</a>');
 			}
 		});
+
+
 	}
 	//});
+
+	function changeActiveDb(dbId,dbName){
+		localStorage.setItem('activeDb',dbId);
+		localStorage.setItem('activeDbName',dbName);
+		var url=window.location.origin + '/general/dashboard?db=' + dbId + '&sid=<%=sid%>';
+		window.location.href=url;
+	}
 </script>
 </body>
 </html>

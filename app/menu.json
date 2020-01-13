@@ -1,52 +1,52 @@
 [
-	{"text":"Ana Sayfa",				"path":"/general/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
-	{"text":"MRP",						"path":"",					"icon":"table", "visible":false, "nodes":[]},
-	{"text":"E-Fatura",					"path":"",		"icon":"table", "visible":true, 
+	{"_id":"1", "text":"Ana Sayfa",				"path":"/general/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
+	{"_id":"2", "text":"MRP",						"path":"",					"icon":"table", "visible":false, "nodes":[]},
+	{"_id":"3", "text":"E-Fatura",					"path":"",		"icon":"table", "visible":true, 
 		"nodes":[
-			{"text":"Yeni Fatura Oluştur",			"path":"/e-invoice/outbox/addnew",		"icon":"file-alt", "visible":true, "nodes":[]},
-			{"text":"Gelen Kutusu",					"path":"/e-invoice/inbox",		"icon":"table", "visible":true , "nodes":[]},
-			{"text":"Giden Kutusu",					"path":"/e-invoice/outbox",		"icon":"table", "visible":true, "nodes":[]},
-			{"text":"E-Fatura Mükellefleri",		"path":"/e-invoice/gib-users",	"icon":"users", "visible":true, "nodes":[]},
-			{"text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
-				{"text":"GIB Entegrator Tanimlari",		"path":"/settings/e-integrators",	"icon":"cogs", "visible":true, "nodes":[]},
-				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]},
-				{"text":"File Importer",	"path":"/settings/file-importers",	"icon":"file-import", "visible":true, "nodes":[]}
+			{"_id":"1.1", "text":"Yeni Fatura Oluştur",			"path":"/e-invoice/outbox/addnew",		"icon":"file-alt", "visible":true, "nodes":[]},
+			{"_id":"1.2", "text":"Gelen Kutusu",					"path":"/e-invoice/inbox",		"icon":"table", "visible":true , "nodes":[]},
+			{"_id":"1.3", "text":"Giden Kutusu",					"path":"/e-invoice/outbox",		"icon":"table", "visible":true, "nodes":[]},
+			{"_id":"1.4", "text":"E-Fatura Mükellefleri",		"path":"/e-invoice/gib-users",	"icon":"users", "visible":true, "nodes":[]},
+			{"_id":"1.5", "text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
+				{"_id":"1.5.1", "text":"GIB Entegrator Tanimlari",		"path":"/settings/e-integrators",	"icon":"cogs", "visible":true, "nodes":[]},
+				{"_id":"1.5.2", "text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]},
+				{"_id":"1.5.3", "text":"File Importer",	"path":"/settings/file-importers",	"icon":"file-import", "visible":true, "nodes":[]}
 			]}
 		]
 	},
-	{"text":"E-Defter",					"path":"/eledger",		"icon":"table", 	"visible":false, "nodes":[]},
-	{"text":"YazarKasa Pos",		"path":"",				"icon":"cash-register", "visible":true,
+	{"_id":"4", "text":"E-Defter",					"path":"/eledger",		"icon":"table", 	"visible":false, "nodes":[]},
+	{"_id":"5", "text":"YazarKasa Pos",		"path":"",				"icon":"cash-register", "visible":true,
 		"nodes":[
-			{"text":"Aktarim",					"path":"/pos-device/transfer",	"icon":"cloud-upload-alt", "visible":true, "nodes":[]},
-			{"text":"Raporlar",					"path":"",	"icon":"chart-bar", "visible":true, "nodes":[
-				{"text":"Cihaz Toplamlari",					"path":"/pos-device/rapor1",	"icon":"chart-bar", "visible":true, "nodes":[]},
-				{"text":"Lokasyon Toplamlari",					"path":"/pos-device/rapor2",	"icon":"chart-bar", "visible":true, "nodes":[]}
+			{"_id":"5.1", "text":"Aktarim",					"path":"/pos-device/transfer",	"icon":"cloud-upload-alt", "visible":true, "nodes":[]},
+			{"_id":"5.2", "text":"Raporlar",					"path":"",	"icon":"chart-bar", "visible":true, "nodes":[
+				{"_id":"5.2.1", "text":"Cihaz Toplamlari",					"path":"/pos-device/rapor1",	"icon":"chart-bar", "visible":true, "nodes":[]},
+				{"_id":"5.2.2", "text":"Lokasyon Toplamlari",					"path":"/pos-device/rapor2",	"icon":"chart-bar", "visible":true, "nodes":[]}
 			]},
-			{"text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
-				{"text":"Servis Tanimlari",			"path":"/pos-device/services-defines",	"icon":"cogs", 		"visible":true, "nodes":[]},
-				{"text":"Cihaz listesi",			"path":"/pos-device/list",		"icon":"cash-register", 		"visible":true, "nodes":[]},
-				{"text":"Lokasyonlar",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
-				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]},
-				{"text":"File Importer",	"path":"/settings/file-importers",	"icon":"file-import", "visible":true, "nodes":[]}
+			{"_id":"5.3", "text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
+				{"_id":"5.3.1", "text":"Servis Tanimlari",			"path":"/pos-device/services-defines",	"icon":"cogs", 		"visible":true, "nodes":[]},
+				{"_id":"5.3.2", "text":"Cihaz listesi",			"path":"/pos-device/list",		"icon":"cash-register", 		"visible":true, "nodes":[]},
+				{"_id":"5.3.3", "text":"Lokasyonlar",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
+				{"_id":"5.3.4", "text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]},
+				{"_id":"5.3.5", "text":"File Importer",	"path":"/settings/file-importers",	"icon":"file-import", "visible":true, "nodes":[]}
 			]}
 		]
 	},
-	{"text":"Ayarlar",		"path":"",					"icon":"wrench", "visible":true,
+	{"_id":"6", "text":"Ayarlar",		"path":"",					"icon":"wrench", "visible":true,
 		"nodes":[
-			{"text":"Lokasyonlar",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
-			{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
+			{"_id":"6.1", "text":"Lokasyonlar",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
+			{"_id":"6.2", "text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
 		]
 	},
-	{"text":"System",		"path":"",					"icon":"shield-alt", "visible":true,
+	{"_id":"7", "text":"System",		"path":"",					"icon":"shield-alt", "visible":true,
 		"nodes":[
-			{"text":"Veri Ambarları",					"path":"/settings/dbdefine",		"icon":"database", "visible":true, "nodes":[]},
-			{"text":"Görev Yöneticisi",					"path":"/system/tasks",		"icon":"tasks", "visible":true, "nodes":[]}
+			{"_id":"7.1", "text":"Veri Ambarları",					"path":"/settings/dbdefine",		"icon":"database", "visible":true, "nodes":[]},
+			{"_id":"7.2", "text":"Görev Yöneticisi",					"path":"/system/tasks",		"icon":"tasks", "visible":true, "nodes":[]}
 		]
 	},
-	{"text":"",		"path":"",					"icon":"", "visible":false,
+	{"_id":"8", "text":"",		"path":"",					"icon":"", "visible":false,
 		"nodes":[
-			{"text":"Profil ve Şifre",					"path":"/general/me",		"icon":"user", "visible":false, "nodes":[]},
-			{"text":"Veri Ambari Kullanicilari",		"path":"/settings/dbinvite",	"icon":"user-plus", "visible":false, "nodes":[]}
+			{"_id":"8.1", "text":"Profil ve Şifre",					"path":"/general/me",		"icon":"user", "visible":false, "nodes":[]},
+			{"_id":"8.2", "text":"Veri Ambari Kullanicilari",		"path":"/settings/dbinvite",	"icon":"user-plus", "visible":false, "nodes":[]}
 		]
 	}
 ]
