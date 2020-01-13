@@ -58,7 +58,8 @@
 	],
 	"eInvoiceStatusTypes":[
 		{"text":"Taslak","value": "Draft"},
-		{"text":"Kuyrukta","value": "Pending"},
+		{"text":"Bekliyor","value": "Pending"},
+		{"text":"Kuyrukta","value": "Queued"},
 		{"text":"İşleniyor","value": "Processing"},
 		{"text":"GİB e iltildi","value": "SentToGib"},
 		{"text":"Onaylandı","value": "Approved"},

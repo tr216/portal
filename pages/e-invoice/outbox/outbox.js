@@ -4,6 +4,7 @@ module.exports = function(req,res,callback){
 	
 	var data={
 		eIntegratorList:[],
+		
 		eInvoiceStatusTypes:Array.from(staticValues.eInvoiceStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
 		eInvoiceProfileIdList:Array.from(staticValues.eInvoiceProfileIdList),

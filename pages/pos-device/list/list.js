@@ -66,9 +66,9 @@ function getList(req,res,data,callback){
 				if(!err){
 					data=mrutil.setGridData(data,resp);
 				}else{
-					console.log('hata:',err);
+					eventLog('hata:',err);
 				}
-				console.log('data:',data);
+				eventLog('data:',data);
 				callback(null,data);
 			});
 		});

@@ -65,7 +65,7 @@ function getList(req,res,data,callback){
 		res.redirect('/settings/e-integrators?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
-		console.log(data);
+		eventLog(data);
 		data.filter.db=undefined;
 		delete data.filter.db;
 		data.filter.sid=undefined;
@@ -98,7 +98,7 @@ function addnew(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
 		if(req.method=='POST'){
 			data.form=Object.assign(data.form,req.body);
-			console.log('data.form:',data.form);
+			eventLog('data.form:',data.form);
 			api.post('/' + req.query.db + '/e-integrators',req,data.form,(err,resp)=>{
 				if(!err){
 					res.redirect('/settings/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);

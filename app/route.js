@@ -326,17 +326,17 @@ function errorPage(req,res,err){
 
 function loadPages(folder) {
 	var modules=fs.readdirSync(folder);
-	console.log('folder:',folder);
+	eventLog('folder:',folder);
 	for(var m=0;m<modules.length;m++){
 		if(fs.statSync(path_module.join(folder,modules[m])).isDirectory() && modules[m][0]!='_'){
 			var pageFolders=fs.readdirSync(path_module.join(folder,modules[m]));
-			console.log('-modules:',modules[m]);
+			eventLog('-modules:',modules[m]);
 			pages[modules[m]]={}
 			for (var i = 0; i < pageFolders.length; i++) {
 				var pageDir = path_module.join(folder,modules[m], pageFolders[i]);
 				if(fs.statSync(pageDir).isDirectory() && pageFolders[i][0]!='_'){
-					console.log('--pageFolders:',pageFolders[i]);
-					// console.log('pageDir:',pageDir);
+					eventLog('--pageFolders:',pageFolders[i]);
+					// eventLog('pageDir:',pageDir);
 					var pageFiles=fs.readdirSync(pageDir);
 
 					if(pageFiles.findIndex((x)=>{return x==pageFolders[i]+'.js'})>-1){
@@ -350,10 +350,10 @@ function loadPages(folder) {
 							var funcP= loadFunctionPages(pageDir,modules[m],pageFolders[i]);
 							for(var k in funcP){
 								pages[modules[m]][pageFolders[i]]['view'][k]=funcP[k];
-								//console.log(k,funcP[k]);
+								//eventLog(k,funcP[k]);
 							}
 						}
-						console.log('page loaded:',requireFileName);
+						eventLog('page loaded:',requireFileName);
 					}
 				}
 			}
@@ -361,7 +361,7 @@ function loadPages(folder) {
 		
 	}
 
-	console.log('pages:',pages);
+	eventLog('pages:',pages);
 
 	// files=fs.readdirSync(folder + '/system');
 	// pageDir=''; l = files.length;
@@ -378,14 +378,14 @@ function loadPages(folder) {
 	// 				if(pageFiles.findIndex((x)=>{return x==files[i]+'.ejs'})>-1){
 	// 					pages['sys-' + files[i]]['view']=[];
 	// 					pages['sys-' + files[i]]['view']['index']=path_module.join('system',files[i], files[i]);
-	// 					console.log(pages['sys-' + files[i]]['view']['index']);
+	// 					eventLog(pages['sys-' + files[i]]['view']['index']);
 	// 					var funcP= loadFunctionSystemPages(pageDir, files[i]);
 	// 					for(var k in funcP){
 	// 						pages['sys-' + files[i]]['view'][k]=funcP[k];
-	// 						//console.log(k,funcP[k]);
+	// 						//eventLog(k,funcP[k]);
 	// 					}
 	// 				}
-	// 				console.log('sys page loaded:',requireFileName);
+	// 				eventLog('sys page loaded:',requireFileName);
 	// 			}
 	// 		}
 	// 	}

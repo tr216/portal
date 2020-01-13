@@ -43,7 +43,7 @@ function getList(req,res,data,callback){
 	}else{
 		// data.filter.page=1;
 		data.filter=Object.assign(data.filter,req.query);
-		console.log(data);
+		eventLog(data);
 		data.filter.db=undefined;
 		delete data.filter.db;
 		data.filter.sid=undefined;
@@ -63,7 +63,7 @@ function getList(req,res,data,callback){
 function addnew(req,res,data,callback){
 	if(req.method=='POST'){
 		var dbName=req.body.dbName || '';
-		console.log('dbName:',dbName);
+		eventLog('dbName:',dbName);
 
 		if(dbName.trim()==''){
 			data['message']='Veri ambari ismi bos olamaz!';

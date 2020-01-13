@@ -53,9 +53,9 @@ function load(req,res,data,callback){
 	api.get('/' + req.query.db + '/file-importers/' + req.params.id ,req,{fileId:data.form.fileId},(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
-			console.log('startFile=',data.form.startFile);
+			eventLog('startFile=',data.form.startFile);
 			data.form.files.forEach((f)=>{
-				console.log('isStart:',f.isStart);
+				eventLog('isStart:',f.isStart);
 				staticValues.localConnectorFileTypes.forEach((fType)=>{
 					if(f.extension==fType.value){
 						f['icon']=fType.icon;

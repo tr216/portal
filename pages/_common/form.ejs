@@ -92,7 +92,6 @@
   function openBack(){
     if(localStorage.getItem('returnUrl')){
       var returnUrl=localStorage.getItem('returnUrl');
-      console.log('returnUrl back:',returnUrl);
       localStorage.removeItem('returnUrl');
 
       if(returnUrl.indexOf('db=<%=db%>')>0 && returnUrl.indexOf('sid=<%=sid%>')>0){

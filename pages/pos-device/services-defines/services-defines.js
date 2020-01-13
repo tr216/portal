@@ -48,7 +48,7 @@ function getList(req,res,data,callback){
 		res.redirect('/pos-device/service-defines?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
-		console.log(data);
+		eventLog(data);
 		data.filter.db=undefined;
 		delete data.filter.db;
 		data.filter.sid=undefined;
@@ -68,7 +68,7 @@ function getList(req,res,data,callback){
 function addnew(req,res,data,callback){
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body);
-		console.log('data.form:',data.form);
+		eventLog('data.form:',data.form);
 		api.post('/' + req.query.db + '/pos-device-services',req,data.form,(err,resp)=>{
 			if(!err){
 				res.redirect('/pos-device/service-defines?db=' + req.query.db +'&sid=' + req.query.sid);

@@ -344,6 +344,7 @@
             fnCsvReport('grid1','<%=title%>');
         });
         $('#pageSize').change(function(e){
+            savePageFilter('<%=urlPath%>','pageSize',$('#pageSize').val());
             var filterUrl='<% for(let k in filterObjects){%><%=k%>=<%=filterObjects[k]%>&<%}%>';
             window.location.href='<%=urlPath%>?page=1&pageSize=' + $('#pageSize').val() + '&' + filterUrl + 'db=<%=db%>&sid=<%=sid%>';
         });

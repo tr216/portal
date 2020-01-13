@@ -125,8 +125,8 @@ function login(req,res,data,callback){
 
 			var userAgent=req.headers['user-agent'] || '';
 			var IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
-			console.log('resp:',resp);
-			console.log('resp.success:',resp.success);
+			eventLog('resp:',resp);
+			eventLog('resp.success:',resp.success);
 			var doc=new db.sessions({token:resp.data.token,
 				username:resp.data.username,
 				isSysUser:resp.data.isSysUser,

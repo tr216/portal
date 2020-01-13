@@ -31,7 +31,7 @@ function login(req,res,data, cb){
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form.username=req.body.username || '';
 		data.form.password=req.body.password || '';
-		console.log('data.form:',data.form);
+		eventLog('data.form:',data.form);
 		api.post('/login',req,data.form,(err,resp)=>{
 			if(!err){
 				var userAgent=req.headers['user-agent'] || '';
@@ -40,7 +40,7 @@ function login(req,res,data, cb){
 				var doc=new db.sessions({token:resp.data.token,username:resp.data.username,isSysUser:resp.data.isSysUser,isMember: resp.data.isMember, ip:IP,userAgent:userAgent});
 				doc.save((err,sessionDoc)=>{
 					if(!err){
-						console.log('res.redirect(/passport?sid=' + sessionDoc._id);
+						eventLog('res.redirect(/passport?sid=' + sessionDoc._id);
 						res.redirect('/passport?sid=' + sessionDoc._id);
 					}else{
 						data['message']=err.message;
@@ -88,7 +88,7 @@ function verify(req,res,data,cb){
 		cb(null,data);
 	}else{
 		data.form.username=req.query.username;
-		console.log('req.query.username:',req.query.username);
+		eventLog('req.query.username:',req.query.username);
 		if(req.method=='POST' || req.method=='PUT'){
 			data.form.authCode=req.body.authCode;
 			api.post('/verify',req,data.form,(err,resp)=>{

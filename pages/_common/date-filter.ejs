@@ -51,63 +51,65 @@
 <% } %>
 
 <script type="text/javascript">
+
+    var cboEasyDate=document.getElementById('cboEasyDate');
+    cboEasyDate.addEventListener("change", function () {
+        var date1=new Date();
+        var date2=new Date();
+
+        switch(cboEasyDate.value){
+            case 'today':break;
+            case 'thisWeek':
+                date1=date1.addDays(-1 * (date1.getDay()-1));
+                date2=date2.addDays(7- date2.getDay());
+            break;
+            case 'thisMonth': 
+                date1=date1.addDays(-1 * (date1.getDate()-1));
+                date2=date2.lastThisMonth();
+                //date2=date2.addDays(7- date2.getDay());
+            break;
+            case 'last1Week':
+                date1=date1.addDays(-7);
+            break;
+
+            case 'last1Month':
+                date1=new Date(date1.setMonth(date1.getMonth()-1))
+            break;
+            case 'last3Months':
+                date1=new Date(date1.setMonth(date1.getMonth()-3))
+            break;
+            case 'last6Months':
+                date1=new Date(date1.setMonth(date1.getMonth()-6))
+            break;
+            case 'thisYear':
+                date1=new Date(date1.getFullYear(),0,1);
+                date2=new Date(date2.getFullYear(),11,31);
+                break;
+            case 'last1Year':
+                date1=new Date(date1.setMonth(date1.getMonth()-12))
+            break;
+            default:
+            break;
+        }
+        document.getElementById('date1').value=date1.yyyymmdd();
+        document.getElementById('date2').value=date2.yyyymmdd();
+        savePageFilter('<%=urlPath%>','cboEasyDate',cboEasyDate.value);
+        
+
+      }, false);
+
     $(document).ready(function(){
-            $('.input-group.date').datepicker({
-                format: 'yyyy-mm-dd',
-                language: "tr",
-                orientation: "bottom auto",
-                // todayBtn: "linked",
-                autoclose: true,
-                todayHighlight: true,
-                clearBtn: true
+        $('.input-group.date').datepicker({
+            format: 'yyyy-mm-dd',
+            language: "tr",
+            orientation: "bottom auto",
+            // todayBtn: "linked",
+            autoclose: true,
+            todayHighlight: true,
+            clearBtn: true
 
-                // startDate: -4,
-                // endDate: +8,
-            });
-
-            $('#cboEasyDate').change(function(e){
-                console.log('val:',$('#cboEasyDate').val());
-                var date1=new Date();
-                var date2=new Date();
-
-                switch($('#cboEasyDate').val()){
-                    case 'today':break;
-                    case 'thisWeek':
-                        date1=date1.addDays(-1 * (date1.getDay()-1));
-                        date2=date2.addDays(7- date2.getDay());
-                    break;
-                    case 'thisMonth': 
-                        date1=date1.addDays(-1 * (date1.getDate()-1));
-                        date2=date2.lastThisMonth();
-                        //date2=date2.addDays(7- date2.getDay());
-                    break;
-                    case 'last1Week':
-                        date1=date1.addDays(-7);
-                    break;
-
-                    case 'last1Month':
-                        date1=new Date(date1.setMonth(date1.getMonth()-1))
-                    break;
-                    case 'last3Months':
-                        date1=new Date(date1.setMonth(date1.getMonth()-3))
-                    break;
-                    case 'last6Months':
-                        date1=new Date(date1.setMonth(date1.getMonth()-6))
-                    break;
-                    case 'thisYear':
-                        date1=new Date(date1.getFullYear(),0,1);
-                        date2=new Date(date2.getFullYear(),11,31);
-                        break;
-                    case 'last1Year':
-                        date1=new Date(date1.setMonth(date1.getMonth()-12))
-                    break;
-                    default:
-                    break;
-                }
-                $('#date1').val(date1.yyyymmdd());
-                $('#date2').val(date2.yyyymmdd());
-                console.log('Date1:',date1);
-                console.log('Date2:',date2);
-            });
+            // startDate: -4,
+            // endDate: +8,
+        });
     });
 </script>

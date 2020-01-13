@@ -66,9 +66,9 @@ function load(req,res,data,callback){
 	api.get('/' + req.query.db + '/e-integrators/' + req.params.id ,req,{fileId:data.form.fileId},(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
-			console.log('invoiceXslt=',data.form.invoiceXslt);
+			eventLog('invoiceXslt=',data.form.invoiceXslt);
 			data.form.invoiceXsltFiles.forEach((f)=>{
-				console.log('isDefault:',f.isDefault);
+				eventLog('isDefault:',f.isDefault);
 				staticValues.eInvoiceXsltFileTypes.forEach((fType)=>{
 					if(f.extension==fType.value){
 						f['icon']=fType.icon;
@@ -117,7 +117,7 @@ function xslt(req,res,data,callback){
 				data:req.body.fileDataBase64!=''?req.body.fileDataBase64:req.body.fileData
 			}
 			
-			console.log('fileInfo.type:', fileInfo.type);
+			eventLog('fileInfo.type:', fileInfo.type);
 			api.post('/' + req.query.db + '/e-integrators/' + _id + '/file',req,fileInfo,(err,resp)=>{
 				if(!err){
 					res.redirect('/settings/e-integrators/xslt/' + _id + '?db=' + req.query.db +'&sid=' + req.query.sid);

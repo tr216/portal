@@ -62,9 +62,9 @@ function load(req,res,data,callback){
 	api.get('/' + req.query.db + '/local-connectors/' + req.params.id ,req,{fileId:data.form.fileId},(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
-			console.log('startFile=',data.form.startFile);
+			eventLog('startFile=',data.form.startFile);
 			data.form.files.forEach((f)=>{
-				console.log('isStart:',f.isStart);
+				eventLog('isStart:',f.isStart);
 				staticValues.localConnectorFileTypes.forEach((fType)=>{
 					if(f.extension==fType.value){
 						f['icon']=fType.icon;
@@ -119,7 +119,7 @@ function code(req,res,data,callback){
 				data:req.body.fileDataBase64!=''?req.body.fileDataBase64:req.body.fileData
 			}
 			
-			console.log('fileInfo.type:', fileInfo.type);
+			eventLog('fileInfo.type:', fileInfo.type);
 			api.post('/' + req.query.db + '/local-connectors/' + _id + '/file',req,fileInfo,(err,resp)=>{
 				if(!err){
 					res.redirect('/settings/local-connectors/code/' + _id + '?db=' + req.query.db +'&sid=' + req.query.sid);

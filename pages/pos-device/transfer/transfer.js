@@ -103,7 +103,7 @@ function transfer(req,res,data,callback){
 							data.list.push(item);
 						}
 					}catch(err){
-						console.log('function transfer. error:',err);
+						eventLog('function transfer. error:',err);
 					}
 					
 				});
@@ -149,7 +149,7 @@ function rollback(req,res,data,callback){
 							data.list.push(item);
 						}
 					}catch(err){
-						console.log('function transfer. error:',err);
+						eventLog('function transfer. error:',err);
 					}
 					
 				});
@@ -195,7 +195,7 @@ function setTransferred(req,res,data,callback){
 							data.list.push(item);
 						}
 					}catch(err){
-						console.log('function transfer. error:',err);
+						eventLog('function transfer. error:',err);
 					}
 					
 				});

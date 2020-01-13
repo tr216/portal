@@ -120,12 +120,8 @@
       }, false);
 
       if (file) {
-        console.log('file.type:',file.type);
-        // if(extension=='xslt') {
-        //     file.type='application/xml';
-        // }else{
+       
         $('#fileType').val(file.type);
-        // }
         
         
         if(editorFileTypes.indexOf($('#fileType').val())>-1){
