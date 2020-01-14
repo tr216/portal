@@ -1,46 +1,46 @@
 <nav id="sidebar" class="">
 	<div class="sidebar-header">
-	  <img src="/images/tr216-black.png">
+		<a href="javascript:showMenuUrl('/general/dashboard');"><img src="/images/tr216-black.png"></a>
 	</div>
 	<ul class="list-unstyled components">
-	  <% leftMenu.forEach(function(mainItem,menuIndex){ %>
-		  <% if(mainItem.visible){ %>
-			  <li class="border-bottom">
-			  <% if(mainItem.nodes.length>0){ %>
-				<a href="#menu<%=menuIndex%>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-				  <i class="fas fa-<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %>
-				</a>
-				<ul class="collapse list-unstyled border" id="menu<%=menuIndex%>">
-				  <% mainItem.nodes.forEach(function(subItem,submenuIndex){ %>
-					  <% if(subItem.visible){ %>
-						<li >
-						  <% if(subItem.nodes.length>0){ %>
-							<a href="#submenu<%=submenuIndex%>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-							  <i class="fas fa-<%= subItem.icon %> fa-fw"></i> <%= subItem.text %>
-							</a>
-							<ul class="collapse list-unstyled pl-2" id="submenu<%=submenuIndex%>">
-							  <% subItem.nodes.forEach(function(sub2Item){ %>
-								  <% if(sub2Item.visible){ %>
-								<li><a href="javascript:showMenuUrl('<%= sub2Item.path %>')"><i class="fas fa-<%= sub2Item.icon %> fa-fw"></i> <%= sub2Item.text %></a></li>
-								  <% } %>
-							  <% }); %>
-							</ul>
-						  <% } else { %>
-							  <a href="javascript:showMenuUrl('<%= subItem.path %>');"><i class="fas fa-<%= subItem.icon %> fa-fw"></i> <%= subItem.text %></a>
-						  <% } %>
-						</li>
-					  <% } %>
-				  <% }); %>
-				</ul>
-			  <% } else { %>
-				  <a href="javascript:showMenuUrl('<%= mainItem.path %>');"><i class="fas fa-<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %></a>
-			  <% } %>
-			  </li>
-		  <% } %>
-	  <% }); %>
+		<% leftMenu.forEach(function(mainItem,menuIndex){ %>
+		<% if(mainItem.visible){ %>
+		<li class="border-bottom">
+			<% if(mainItem.nodes.length>0){ %>
+			<a href="#menu<%=menuIndex%>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+				<i class="fas fa-<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %>
+			</a>
+			<ul class="collapse list-unstyled border" id="menu<%=menuIndex%>">
+				<% mainItem.nodes.forEach(function(subItem,submenuIndex){ %>
+				<% if(subItem.visible){ %>
+				<li >
+					<% if(subItem.nodes.length>0){ %>
+					<a href="#submenu<%=submenuIndex%>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+						<i class="fas fa-<%= subItem.icon %> fa-fw"></i> <%= subItem.text %>
+					</a>
+					<ul class="collapse list-unstyled pl-2" id="submenu<%=submenuIndex%>">
+						<% subItem.nodes.forEach(function(sub2Item,submenu2Index){ %>
+						<% if(sub2Item.visible){ %>
+						<li><a href="javascript:showMenuUrl('<%= sub2Item.path %>','menulink<%=menuIndex%>.<%=submenuIndex%>.<%=submenu2Index%>')" id="menulink<%=menuIndex%>.<%=submenuIndex%>.<%=submenu2Index%>" class=""><i class="fas fa-<%= sub2Item.icon %> fa-fw"></i> <%= sub2Item.text %></a></li>
+						<% } %>
+						<% }); %>
+					</ul>
+					<% } else { %>
+					<a href="javascript:showMenuUrl('<%= subItem.path %>','menulink<%=menuIndex%>.<%=submenuIndex%>');"  id="menulink<%=menuIndex%>.<%=submenuIndex%>" class=""><i class="fas fa-<%= subItem.icon %> fa-fw"></i> <%= subItem.text %></a>
+					<% } %>
+				</li>
+				<% } %>
+				<% }); %>
+			</ul>
+			<% } else { %>
+			<a href="javascript:showMenuUrl('<%= mainItem.path %>','menulink<%=menuIndex%>');" id="menulink<%=menuIndex%>" class=""><i class="fas fa-<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %></a>
+			<% } %>
+		</li>
+		<% } %>
+		<% }); %>
 	</ul>
 </nav>
-		
+
 
 <script type="text/javascript">
 	var leftMenu=localStorage.leftMenu === undefined ? new Array() : JSON.parse(localStorage.leftMenu); 
@@ -51,9 +51,12 @@
 			if(ulMenu)
 				if(ulMenu.classList.contains('list-unstyled'))
 					ulMenu.classList.add('show');
-			
-			
+
 		});
+	}
+	if(localStorage.leftMenuActiveLinkId){
+		leftMenuActiveLink=document.getElementById(localStorage.leftMenuActiveLinkId);
+		leftMenuActiveLink.classList.add('active-menuitem');
 	}
 
 	$(document).ready(function () {
@@ -90,64 +93,60 @@
 				localStorage.leftMenu=JSON.stringify(leftMenu); //save array on localStorage
 			}
 		});
-
-		
-	   
 	});
 
 	
 	
 
-	function showMenuUrl(path){
-	  var url=path + '?db=<%=db%>&sid=<%=sid%>';
-	  if(localStorage.getItem(path + '_filter')){
-		try{
-		  var filter=JSON.parse(localStorage.getItem(path + '_filter'));
-		  for(var key in filter){
-			url+='&' + key + '=' + filter[key];
-			if(key=='cboEasyDate'){
-			  url +=cboEasyDateUrlParams(filter[key]);
-			}
-		  }
-		}catch(tryErr){}
-	  }
-	  window.location.href=url;
-
+	function showMenuUrl(path,leftMenuActiveLinkId){
+		var url=path + '?db=<%=db%>&sid=<%=sid%>';
+		if(localStorage.getItem(path + '_filter')){
+			try{
+				var filter=JSON.parse(localStorage.getItem(path + '_filter'));
+				for(var key in filter){
+					url+='&' + key + '=' + filter[key];
+					if(key=='cboEasyDate'){
+						url +=cboEasyDateUrlParams(filter[key]);
+					}
+				}
+			}catch(tryErr){}
+		}
+		localStorage.leftMenuActiveLinkId=leftMenuActiveLinkId || '';
+		window.location.href=url;
 	}
 
 	function cboEasyDateUrlParams(value){
-	  var date1=new Date();
-	  var date2=new Date();
-	  switch(value){
+		var date1=new Date();
+		var date2=new Date();
+		switch(value){
 			case 'today':break;
 			case 'thisWeek':
-				date1=date1.addDays(-1 * (date1.getDay()-1));
-				date2=date2.addDays(7- date2.getDay());
+			date1=date1.addDays(-1 * (date1.getDay()-1));
+			date2=date2.addDays(7- date2.getDay());
 			break;
 			case 'thisMonth': 
-				date1=date1.addDays(-1 * (date1.getDate()-1));
-				date2=date2.lastThisMonth();
-				//date2=date2.addDays(7- date2.getDay());
+			date1=date1.addDays(-1 * (date1.getDate()-1));
+			date2=date2.lastThisMonth();
 			break;
 			case 'last1Week':
-				date1=date1.addDays(-7);
+			date1=date1.addDays(-7);
 			break;
 
 			case 'last1Month':
-				date1=new Date(date1.setMonth(date1.getMonth()-1))
+			date1=new Date(date1.setMonth(date1.getMonth()-1))
 			break;
 			case 'last3Months':
-				date1=new Date(date1.setMonth(date1.getMonth()-3))
+			date1=new Date(date1.setMonth(date1.getMonth()-3))
 			break;
 			case 'last6Months':
-				date1=new Date(date1.setMonth(date1.getMonth()-6))
+			date1=new Date(date1.setMonth(date1.getMonth()-6))
 			break;
 			case 'thisYear':
-				date1=new Date(date1.getFullYear(),0,1);
-				date2=new Date(date2.getFullYear(),11,31);
-				break;
+			date1=new Date(date1.getFullYear(),0,1);
+			date2=new Date(date2.getFullYear(),11,31);
+			break;
 			case 'last1Year':
-				date1=new Date(date1.setMonth(date1.getMonth()-12))
+			date1=new Date(date1.setMonth(date1.getMonth()-12))
 			break;
 			default:
 			break;
