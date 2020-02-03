@@ -51,7 +51,7 @@ function addnew(req,res,data,callback){
 		data.form=Object.assign(data.form,req.body);
 		api.post('/system/members',req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/sys-members?sid=' + req.query.sid);
+				res.redirect('/admin/members?sid=' + req.query.sid);
 			}else{
 				data['message']=err.message;
 				callback(null,data);
@@ -68,7 +68,7 @@ function edit(req,res,data,callback){
 		data.form=Object.assign(data.form,req.body);
 		api.put('/system/members/' + _id,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/sys-members?sid=' + req.query.sid);
+				res.redirect('/admin/members?sid=' + req.query.sid);
 
 			}else{
 				data['message']=err.message;
@@ -107,7 +107,7 @@ function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
 	api.delete('/system/members/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/sys-members?sid=' + req.query.sid);
+			res.redirect('/admin/members?sid=' + req.query.sid);
 			
 		}else{
 			
@@ -139,7 +139,7 @@ function login(req,res,data,callback){
 			
 			doc.save((err,sessionDoc)=>{
 				if(!err){
-					res.redirect('/dashboard?db=&sid=' + sessionDoc._id);
+					res.redirect('/general/dashboard?db=&sid=' + sessionDoc._id);
 				}else{
 					data['message']=err.message;
 					callback(null,data);

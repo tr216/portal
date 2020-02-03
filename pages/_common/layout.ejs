@@ -1,3 +1,4 @@
+
 <% if(typeof funcTitle=='undefined') funcTitle=''; %>
 <!DOCTYPE html>
 <html lang="tr">
@@ -283,6 +284,11 @@
 			if(databases.length>0){
 				localStorage.setItem('activeDb',databases[0]._id);
 				localStorage.setItem('activeDbName',databases[0].dbName);
+				localStorage.setItem('activeDbModules','{}');
+				if(databases[0].owner!=undefined)
+					if(databases[0].owner.modules!=undefined){
+					  localStorage.setItem('activeDbModules',JSON.stringify(databases[0].owner.modules));
+					}
 				changeActiveDb(localStorage.getItem('activeDb'),localStorage.getItem('activeDbName'));
 				return;  
 			}
@@ -293,6 +299,12 @@
 						if(d._id==getUrlParameter('db')){
 							localStorage.setItem('activeDb',d._id);
 							localStorage.setItem('activeDbName',d.dbName);
+							localStorage.setItem('activeDbModules','{}');
+
+							if(d.owner!=undefined)
+								if(d.owner.modules!=undefined){
+								  localStorage.setItem('activeDbModules',JSON.stringify(d.owner.modules));
+								}
 							return;
 						}
 					});
@@ -301,11 +313,17 @@
 				if(databases.length>0){
 					localStorage.setItem('activeDb',databases[0]._id);
 					localStorage.setItem('activeDbName',databases[0].dbName);
+					localStorage.setItem('activeDbModules','{}');
+					if(databases[0].owner!=undefined)
+						if(databases[0].owner.modules!=undefined){
+						  localStorage.setItem('activeDbModules',JSON.stringify(databases[0].owner.modules));
+						}
 					changeActiveDb(localStorage.getItem('activeDb'),localStorage.getItem('activeDbName'));
 
 				}else{
 					localStorage.removeItem('activeDb');
 					localStorage.removeItem('activeDbName');
+					localStorage.removeItem('activeDbModules');
 				}
 			}
 		}
@@ -313,6 +331,11 @@
 		
 		$.each(databases, function(i, db) 
 		{ 
+			var modules='{}';
+			if(db.owner!=undefined)
+				if(db.owner.modules!=undefined){
+					modules=JSON.stringify(db.owner.modules);
+				}
 			var url=window.location.origin + window.location.pathname + '?db=' + db._id + '&sid=<%=sid%>';
 			if(localStorage.getItem('activeDb')==db._id){
 				//if(dbLabel) dbLabel.innerHTML=db.dbName;
@@ -348,6 +371,20 @@
 	function changeActiveDb(dbId,dbName){
 		localStorage.setItem('activeDb',dbId);
 		localStorage.setItem('activeDbName',dbName);
+		var databases=[];
+
+		if(localStorage.getItem('databases')!=null){
+			databases=JSON.parse(localStorage.getItem('databases'));
+			databases.forEach(function(e){
+				if(e._id==dbId){
+					if(e.owner!=undefined)
+						if(e.owner.modules!=undefined){
+							localStorage.setItem('activeDbModules',JSON.stringify(e.owner.modules));
+							return;
+						}
+				}
+			})
+		}
 		var url=window.location.origin + '/general/dashboard?db=' + dbId + '&sid=<%=sid%>';
 		window.location.href=url;
 	}

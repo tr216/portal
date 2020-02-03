@@ -27,9 +27,16 @@
         if(databases.length>0){
           localStorage.setItem('activeDb',databases[0]._id);
           localStorage.setItem('activeDbName',databases[0].dbName);
+          localStorage.setItem('activeDbModules','{}');
+          
+          if(databases[0].owner!=undefined)
+            if(databases[0].owner.modules!=undefined){
+              localStorage.setItem('activeDbModules',JSON.stringify(databases[0].owner.modules));
+            }
         }else{
           localStorage.removeItem('activeDb');
           localStorage.removeItem('activeDbName');
+          localStorage.removeItem('activeDbModules');
         }
       }
       window.location.href=window.location.origin + '/general/dashboard?db=' + (localStorage.getItem('activeDb') || '') + '&sid=<%=sid%>';

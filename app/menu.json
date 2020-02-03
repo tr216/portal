@@ -1,7 +1,7 @@
 [
 	{"_id":"1", "text":"Ana Sayfa",				"path":"/general/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
-	{"_id":"2", "text":"MRP",						"path":"",					"icon":"table", "visible":false, "nodes":[]},
-	{"_id":"3", "text":"E-Fatura",					"path":"",		"icon":"table", "visible":true, 
+	{"_id":"2", "text":"MRP",	"module":"mrp",			"path":"",					"icon":"table", "visible":true, "nodes":[]},
+	{"_id":"3", "text":"E-Fatura",	"module":"eInvoice",				"path":"",		"icon":"table", "visible":true, 
 		"nodes":[
 			{"_id":"1.1", "text":"Yeni Fatura Oluştur",			"path":"/e-invoice/outbox/addnew",		"icon":"file-alt", "visible":true, "nodes":[]},
 			{"_id":"1.2", "text":"Gelen Kutusu",					"path":"/e-invoice/inbox",		"icon":"table", "visible":true , "nodes":[]},
@@ -14,8 +14,8 @@
 			]}
 		]
 	},
-	{"_id":"4", "text":"E-Defter",					"path":"/eledger",		"icon":"table", 	"visible":false, "nodes":[]},
-	{"_id":"5", "text":"YazarKasa Pos",		"path":"",				"icon":"cash-register", "visible":true,
+	{"_id":"4", "text":"E-Defter",	"module":"eLedger",				"path":"/eledger",		"icon":"table", 	"visible":true, "nodes":[]},
+	{"_id":"5", "text":"YazarKasa Pos",	"module":"posDevice",	"path":"",				"icon":"cash-register", "visible":true,
 		"nodes":[
 			{"_id":"5.1", "text":"Aktarim",					"path":"/pos-device/transfer",	"icon":"cloud-upload-alt", "visible":true, "nodes":[]},
 			{"_id":"5.2", "text":"Raporlar",					"path":"",	"icon":"chart-bar", "visible":true, "nodes":[

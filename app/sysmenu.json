@@ -1,9 +1,9 @@
 [
-	{"text":"Ana Sayfa",				"path":"/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
-	{"text":"Members",					"path":"",		"icon":"table", "visible":true, 
+	{"_id":"1", "text":"Ana Sayfa",		"path":"/general/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
+	{"_id":"2",	"text":"Members",					"path":"",		"icon":"table", "visible":true, 
 		"nodes":[
-			{"text":"Uyeler",					"path":"/sys-members",		"icon":"users", "visible":true, "nodes":[]},
-			{"text":"Veri tabanlari",			"path":"/sys-databases",		"icon":"database", "visible":true, "nodes":[]}
+			{"_id":"2.1",	"text":"Uyeler",					"path":"/admin/members",		"icon":"users", "visible":true, "nodes":[]},
+			{"_id":"2.2",	"text":"Veri tabanlari",			"path":"/admin/databases",		"icon":"database", "visible":true, "nodes":[]}
 		]
 	},
 	{"text":"",		"path":"",					"icon":"", "visible":false,
