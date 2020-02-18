@@ -38,6 +38,11 @@ function editLine(index){
 				$('#invoiceLine-Tevkifat-percent').val(line.withholdingTaxTotal[0].taxSubtotal[0].percent.value);
 				$('#invoiceLine-Tevkifat-amount').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value);
 				$('#invoiceLine-tevkifat-taxTypeCode').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value);
+				if(line.withholdingTaxTotal[0].taxSubtotal[0].percent.value>0 || line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value>0){
+					$('#cbTevkifatPanel').prop('checked',true);
+					$('#tevkifatPanel').toggle();
+					
+				}
 			}
 
 
@@ -92,6 +97,7 @@ function editLine(index){
 				addIskontoRow(e);
 			}
 		});
+		$('#cbIskontoPanel').prop('checked',true);
 	}
 
 	if(artirimlar.length>0){
@@ -105,6 +111,7 @@ function editLine(index){
 				addArtirimRow(e);
 			}
 		});
+		$('#cbArtirimPanel').prop('checked',true);
 	}
 
 	
@@ -362,10 +369,124 @@ function saveInvoiceLine(index){
 }
 
 function saveInvoice(callback){
-    
-    // $(".invoiceLine").each(function() {
-    //     tempInvoice.invoiceLine.push(JSON.parse(decodeURIComponent(this.value)));
+	invoice.ID={ value:$("input[name='ID[value]']").val()}
+    invoice.issueDate={ value:$("input[name='issueDate[value]']").val()}
+    invoice.issueTime={ value:$("input[name='issueTime[value]']").val()}
+    invoice.profileId={ value:$("input[name='profileId[value]']").val()}
+    invoice.invoiceTypeCode={ value:$("input[name='invoiceTypeCode[value]']").val()}
+    invoice.uuid={ value:$("input[name='invoiceTypeCode[value]']").val()}
+    invoice.localDocumentId=$("input[name='localDocumentId']").val();
+    invoice.documentCurrencyCode={ value:$("input[name='documentCurrencyCode[value]']").val()}
+    invoice.pricingExchangeRate.calculationRate={ value:$("input[name='pricingExchangeRate[calculationRate][value]']").val()}
+    var party={}
+    if(invoice.ioType==0){
+        party=invoice.accountingCustomerParty.party;
+    }else{
+        party=invoice.accountingSupplierParty.party;
+    }
+    var vknTckn=$("input[name='vknTckn']").val();
+    var bFound=false;
+    party.partyIdentification=[];
+    if(vknTckn.length==11){
+        party.partyIdentification.push({ID:{value:vknTckn, attr:{schemeID:'TCKN'}}})
+    }else{
+        party.partyIdentification.push({ID:{value:vknTckn, attr:{schemeID:'VKN'}}})
+    }
+    party.partyName.name.value=$("input[name='party[partyName][name][value]']").val();
+    party.person.firstName.value=$("input[name='party[person][firstName][value]']").val();
+    party.person.familyName.value=$("input[name='party[person][familyName][value]']").val();
+    party.partyName.name.value=$("input[name='party[partyName][name][value]']").val();
+    party.partyTaxScheme.taxScheme.name.value=$("input[name='party[partyTaxScheme][taxScheme][name][value]']").val();
+
+    party.postalAddress.country.name.value=$("input[name='party[postalAddress][country][name][value]']").val();
+    party.postalAddress.cityName.value=$("input[name='party[postalAddress][cityName][value]']").val();
+    party.postalAddress.district.value=$("input[name='party[postalAddress][district][value]']").val();
+    party.postalAddress.streetName.value=$("input[name='party[postalAddress][streetName][value]']").val();
+    party.postalAddress.buildingName.value=$("input[name='party[postalAddress][buildingName][value]']").val();
+    party.postalAddress.blockName.value=$("input[name='party[postalAddress][blockName][value]']").val();
+    party.postalAddress.buildingNumber.value=$("input[name='party[postalAddress][buildingNumber][value]']").val();
+    party.postalAddress.room.value=$("input[name='party[postalAddress][room][value]']").val();
+    party.postalAddress.postbox.value=$("input[name='party[postalAddress][postbox][value]']").val();
+    party.contact.telephone.value=$("input[name='party[contact][telephone][value]']").val();
+    party.contact.telefax.value=$("input[name='party[contact][telefax][value]']").val();
+    party.contact.electronicMail.value=$("input[name='party[contact][electronicMail][value]']").val();
+    party.websiteURI.value=$("input[name='party[websiteURI][value]']").val();
+
+
+    if(invoice.ioType==0){
+        invoice.accountingCustomerParty.party=party;
+    }else{
+        invoice.accountingSupplierParty.party=party;
+    }
+
+    // var bSatirdaVergiVar=false;
+    // if(invoice.invoiceLine.length>0){
+    //     invoice.invoiceLine.forEach(function(line){
+    //         if(line.taxTotal!=undefined)
+    //             if(line.taxTotal.taxAmount.value>0){
+    //                 bSatirdaVergiVar=true;
+    //             }
+    //     });
+    // }
+
+    // if(bSatirdaVergiVar){
+    //     invoice.taxTotal=[];
+    //     invoice.withholdingTaxTotal=[];
+    //     invoice.invoiceLine.forEach(function(line){
+    //         if(line.taxTotal!=undefined)
+    //             if(line.taxTotal.taxAmount.value>0 && line.taxTotal.taxSubtotal.length>0){
+    //                 var bAyniVergiTuruBulundu=false;
+    //                 invoice.taxTotal.forEach(function(e){
+    //                     if(e.taxSubtotal.length>0)
+    //                         if(e.taxSubtotal[0].percent==line.taxTotal.taxSubtotal[0].percent && e.taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value==line.taxTotal.taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value){
+    //                             e.taxAmount.value +=line.taxTotal.taxAmount.value;
+    //                             e.taxSubtotal[0].taxableAmount.value += line.taxTotal.taxSubtotal[0].taxableAmount.value;
+    //                             e.taxSubtotal[0].taxAmount.value += line.taxTotal.taxSubtotal[0].taxAmount.value;
+    //                             bAyniVergiTuruBulundu=true;
+    //                             return;
+    //                         }
+    //                 });
+    //                 if(bAyniVergiTuruBulundu==false){
+    //                     invoice.taxTotal.push(JSON.parse(JSON.stringify(line.taxTotal)))
+    //                 }
+    //             }
+    //         if(line.withholdingTaxTotal!=undefined)
+    //             if(line.withholdingTaxTotal.length>0)
+    //                 if(line.withholdingTaxTotal[0].taxAmount.value>0 && line.withholdingTaxTotal[0].taxSubtotal.length>0){
+    //                     var bAyniVergiTuruBulundu=false;
+    //                     invoice.withholdingTaxTotal.forEach(function(e){
+    //                         if(e.taxSubtotal.length>0)
+    //                             if(e.taxSubtotal[0].percent==line.withholdingTaxTotal[0].taxSubtotal[0].percent && e.taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value==line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value){
+    //                                 e.taxAmount.value +=line.withholdingTaxTotal[0].taxAmount.value;
+    //                                 e.taxSubtotal[0].taxableAmount.value += line.withholdingTaxTotal[0].taxSubtotal[0].taxableAmount.value;
+    //                                 e.taxSubtotal[0].taxAmount.value += line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value;
+    //                                 bAyniVergiTuruBulundu=true;
+    //                                 return;
+    //                             }
+    //                     });
+    //                     if(bAyniVergiTuruBulundu==false){
+    //                         invoice.withholdingTaxTotal.push(JSON.parse(JSON.stringify(line.withholdingTaxTotal[0])))
+    //                     }
+    //                 }
+    //     });
+    // }
+
+    // invoice.lineCountNumeric.value=invoice.invoiceLine.length;
+
+    // invoice.legalMonetaryTotal.lineExtensionAmount.value=0;
+    // invoice.legalMonetaryTotal.taxExclusiveAmount.value=0;
+    // invoice.legalMonetaryTotal.taxInclusiveAmount.value=0;
+    // invoice.legalMonetaryTotal.allowanceTotalAmount.value=0;
+    // invoice.legalMonetaryTotal.chargeTotalAmount.value=0;
+    // invoice.legalMonetaryTotal.payableRoundingAmount.value=0;
+    // invoice.legalMonetaryTotal.payableAmount.value=0;
+
+    // invoice.invoiceLine.forEach(function(line){
+
+
     // });
+
+    
 
     if(ioType==0){
 		url='/dbapi/e-invoice/saveOutboxInvoice/' + _id + '?db=' + db + '&sid=' + sid;
@@ -380,6 +501,9 @@ function saveInvoice(callback){
         type:'PUT',
         success:function(result){
             if(result.success){
+            	invoice=result.data;
+            	reloadTotals();
+            	console.log('invoice.legalMonetaryTotal:',invoice.legalMonetaryTotal);
                 callback(null);
             }else{
                 callback(result.error)
@@ -387,6 +511,7 @@ function saveInvoice(callback){
         }
     });
 }
+
 
 
 function addIskontoRow(obj={oran:'',tutar:'',aciklama:''}){
@@ -490,8 +615,9 @@ function addNewLine(){
 }
 
 $(document).ready(function(){
-	console.log('buraya geldi1');
+	
 	formOrjinal=document.getElementById('invoiceLineModal').cloneNode(true);
+	
 	
 
 	// $('#invoiceLine-taxExemptionReason').autocomplete({

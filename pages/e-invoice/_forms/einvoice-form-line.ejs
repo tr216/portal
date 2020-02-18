@@ -26,16 +26,16 @@
                     <div class="tab-pane show active" id="invoiceLineTab1Content" role="tabpanel" aria-labelledby="invoiceLineTab1">
                         <div class="btn-toolbar justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
                             <label class="checkbox-inline border">
-                              <input type="checkbox" data-toggle="collapse" data-target="#iskontoPanel" aria-expanded="false" aria-controls="iskontoPanel"> Iskonto
+                              <input type="checkbox" data-toggle="collapse" id="cbIskontoPanel" data-target="#iskontoPanel" aria-expanded="false" aria-controls="iskontoPanel"> Iskonto
                             </label>
                             <label class="checkbox-inline border ml-3">
-                              <input type="checkbox" checked data-toggle="collapse" data-target="#kdvPanel" aria-expanded="true" aria-controls="kdvPanel"> Kdv
+                              <input type="checkbox" checked data-toggle="collapse" id="cbKdvPanel" data-target="#kdvPanel" aria-expanded="true" aria-controls="kdvPanel"> Kdv
                             </label>
                             <label class="checkbox-inline border ml-3">
-                              <input type="checkbox" data-toggle="collapse" data-target="#tevkifatPanel" aria-expanded="false" aria-controls="tevkifatPanel"> Tevkifat
+                              <input type="checkbox" data-toggle="collapse" id="cbTevkifatPanel" data-target="#tevkifatPanel" aria-expanded="false" aria-controls="tevkifatPanel"> Tevkifat
                             </label>
                             <label class="checkbox-inline border ml-3">
-                              <input type="checkbox" data-toggle="collapse" data-target="#artirimPanel" aria-expanded="false" aria-controls="artirimPanel"> Artirim
+                              <input type="checkbox" data-toggle="collapse" id="cbArtirimPanel" data-target="#artirimPanel" aria-expanded="false" aria-controls="artirimPanel"> Artirim
                             </label>
                         </div>
                         <div class="row">
@@ -45,7 +45,7 @@
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="" class="m-0">Miktar</label>
-                                <input type="number" class="form-control" id="invoiceLine-invoicedQuantity" placeholder="" autocomplete="off" value="">
+                                <input type="number" class="form-control" id="invoiceLine-invoicedQuantity" placeholder="" autocomplete="off" value="" onchange="calculateInvoiceLine()">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Birim</label>
@@ -59,11 +59,11 @@
                         <div id="kdvPanel" class="row collapse show">
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Kdv Oran</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-KDV-percent" placeholder="" autocomplete="off" value="0">
+                                <input type="number" class="form-control text-right" id="invoiceLine-KDV-percent" placeholder="" autocomplete="off" value="0" onchange="calculateInvoiceLine()">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Kdv Tutar</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-KDV-amount" placeholder="" autocomplete="off" value="0.00">
+                                <input type="number" class="form-control text-right" id="invoiceLine-KDV-amount" placeholder="" autocomplete="off" value="0.00" readonly="true">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="" class="w-100 m-0">Kdv Muafiyet Sebebi</label>
@@ -77,11 +77,11 @@
                         <div id="tevkifatPanel" class="row collapse">
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Tevkifat Oran</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-Tevkifat-percent" placeholder="" autocomplete="off" value="">
+                                <input type="number" class="form-control text-right" id="invoiceLine-Tevkifat-percent" placeholder="" autocomplete="off" value="" onchange="calculateInvoiceLine()">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Tevkifat Tutar</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-Tevkifat-amount" placeholder="" autocomplete="off" value="">
+                                <input type="number" class="form-control text-right" id="invoiceLine-Tevkifat-amount" placeholder="" autocomplete="off" value="" readonly="true">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="" class="w-100 m-0">Vergi Kodu</label>
@@ -95,15 +95,15 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Fiyat</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-price-priceAmount" placeholder="" autocomplete="off" value="0.00000000">
+                                <input type="number" class="form-control text-right" id="invoiceLine-price-priceAmount" placeholder="" autocomplete="off" value="0.00000000" onchange="calculateInvoiceLine()">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Tutar</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-lineExtensionAmount" placeholder="" autocomplete="off" value="0.00">
+                                <input type="number" class="form-control text-right" id="invoiceLine-lineExtensionAmount" placeholder="" autocomplete="off" value="0.00" readonly="true">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Kdv Dahil Tutar</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-taxInclusiveAmount" placeholder="" autocomplete="off" value="0.00">
+                                <input type="number" class="form-control text-right" id="invoiceLine-taxInclusiveAmount" placeholder="" autocomplete="off" value="0.00" readonly="true">
                             </div>
                         </div>
                         <div id="iskontoPanel" class="collapse">
@@ -258,3 +258,31 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    var bCalculating=false;
+
+    function calculateInvoiceLine(){
+        if(bCalculating) return;
+        bCalculating=true;
+        try{
+            var kdvOran=Number($('#invoiceLine-KDV-percent').val());
+            var tevkifatOran=Number($('#invoiceLine-Tevkifat-percent').val());
+            var miktar=Number($('#invoiceLine-invoicedQuantity').val());
+            var fiyat=Number($('#invoiceLine-price-priceAmount').val());
+            var kdvAmount=Math.floor(kdvOran*miktar*fiyat/100);
+            var tevkifatAmount=Math.floor(100*tevkifatOran*kdvAmount/100)/100;
+            var lineExtensionAmount=Math.floor(100*miktar*fiyat)/100;
+            var taxInclusiveAmount=lineExtensionAmount + kdvAmount - tevkifatAmount;
+            //if(!isNaN(miktar) && !isNaN(fiyat)  && !isNaN(kdvOran)) 
+            $('#invoiceLine-KDV-amount').val(kdvAmount.formatMoney());
+            $('#invoiceLine-Tevkifat-amount').val(tevkifatAmount.formatMoney());
+            $('#invoiceLine-lineExtensionAmount').val(lineExtensionAmount.formatMoney());
+            $('#invoiceLine-taxInclusiveAmount').val(taxInclusiveAmount.formatMoney());
+        }catch(tryErr){
+
+        }
+
+        bCalculating=false;
+    }
+
+</script>

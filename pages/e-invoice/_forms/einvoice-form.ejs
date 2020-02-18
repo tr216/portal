@@ -18,7 +18,7 @@
     headerButtons='';
     formName='form1';
 
-    headerButtons +='<button type="submit" form="' + formName + '" class="btn btn-primary" title="Kaydet"><i class="fas fa-save"></i></button>';
+    headerButtons +='<button type="button" class="btn btn-primary" title="Kaydet" onclick="faturaKaydet()"><i class="fas fa-save"></i></button>';
     
     headerButtons +='<a href="javascript:openBack();" class="btn btn-dark ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
 
@@ -39,6 +39,7 @@
     <% if(typeof form._id!='undefined'){
         if(form._id!=''){ %>
     invoice=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form))%>'));
+   
     <%  }
     } %>
     
@@ -254,133 +255,48 @@
                             <div class="row">
                                 <label for="" class="col-12 text-center bold">Tutarlar</label>
                             </div>
-                            <div class="row">
-                                <label for="" class="col-6 text-md-right pt-1">Satır Toplam</label>
-                                <input type="text" class="col-6 form-control text-right" name="legalMonetaryTotal[lineExtensionAmount][value]" autocomplete="off"  value="<%=form.legalMonetaryTotal.lineExtensionAmount.value.formatMoney()%>" readonly="true">
-                            </div>
-                            
-                            <div class="row">
-                                <label for="" class="col-6 text-md-right pt-1">Toplam İskonto</label>
-                                <input type="text" class="col-6 form-control text-right" name="legalMonetaryTotal[allowanceTotalAmount][value]" autocomplete="off"  value="<%=form.legalMonetaryTotal.allowanceTotalAmount.value.formatMoney()%>" readonly="true">
-                            </div>
-                            <div class="row">
-                                <label for="" class="col-6 text-md-right pt-1">Toplam Masraf</label>
-                                <input type="text" class="col-6 form-control text-right" name="legalMonetaryTotal[chargeTotalAmount][value]" autocomplete="off"  value="<%=form.legalMonetaryTotal.chargeTotalAmount.value.formatMoney()%>" readonly="true">
-                            </div>
-                            <div class="row">
-                                <label for="" class="col-6 text-md-right pt-1">Vergisiz Toplam</label>
-                                <input type="text" class="col-6 form-control text-right" name="legalMonetaryTotal[taxExclusiveAmount][value]" autocomplete="off"  value="<%=form.legalMonetaryTotal.taxExclusiveAmount.value.formatMoney()%>" readonly="true">
-                            </div>
-                            <div class="row">
-                                <label for="" class="col-6 text-md-right pt-1">Vergili Toplam</label>
-                                <input type="text" class="col-6 form-control text-right" name="legalMonetaryTotal[taxInclusiveAmount][value]" autocomplete="off"  value="<%=form.legalMonetaryTotal.taxInclusiveAmount.value.formatMoney()%>" readonly="true">
-                            </div>
-                            <div class="row">
-                                <label for="" class="col-6 text-md-right pt-1 bold">Ödenecek Tutar</label>
-                                <input type="text" class="col-6 form-control text-right bold" name="legalMonetaryTotal[payableAmount][value]" autocomplete="off"  value="<%=form.legalMonetaryTotal.payableAmount.value.formatMoney()%>" readonly="true">
-                            </div>
+                            <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+                                <tbody id="legalMonetaryTotalGrid">
+                                    <tr>
+                                        <td>Satır Toplam</td><td class="text-right" id="lineExtensionAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Toplam İskonto</td><td class="text-right" id="allowanceTotalAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Toplam Masraf</td><td class="text-right" id="chargeTotalAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Vergisiz Toplam</td><td class="text-right" id="taxExclusiveAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Vergili Toplam</td><td class="text-right" id="taxInclusiveAmount"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bold">Ödenecek Tutar</td><td class="text-right bold" id="payableAmount"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <div class="col-md-3 border-right pr-4">
                             <div class="row">
                                 <label for="" class="col-12 text-center bold">Vergiler</label>
                             </div>
-                            <% if(typeof form.taxTotal!='undefined'){ %>
-                            <% form.taxTotal.forEach((taxTotalItem)=>{ %>
-                            <% taxTotalItem.taxSubtotal.forEach((taxSubtotalItem)=>{ %>
-                            <div class="row">
-                                <label for="" class="col-6 text-md-right pt-1">
-                                    <% 
-                                    var vergiAdi=taxSubtotalItem.taxCategory.name.value || taxSubtotalItem.taxCategory.taxScheme.name.value || '';
-                                    %>
-                                    <%=vergiAdi%> % <%=taxSubtotalItem.percent.value %>
-                                </label>
-                                <input type="text" class="col-6 form-control text-right" value="<%=taxSubtotalItem.taxAmount.value.formatMoney()%>" readonly="true">
-                            </div>
-                            <% if(taxSubtotalItem.taxCategory.taxExemptionReasonCode.value!=''){ %>
-                            <div class="row">
-                                <label for="" class="col-12 text-md-right pt-1 text-secondary">
-                                    <span class="text-primary">Vergi istisna kodu:</span><b><%=taxSubtotalItem.taxCategory.taxExemptionReasonCode.value %>,</b> <span class="text-primary">Sebebi:</span> <b><%=taxSubtotalItem.taxCategory.taxExemptionReason.value %></b>
-                                </label>
-                            </div>
-                            <% } %>
-                            <% }) %>
-                            <% }); %>
-
-                            <% } %>
-                            <% if(typeof form.withholdingTaxTotal!='undefined'){ %>
-                            <% if(form.withholdingTaxTotal.length>0) { %>
-                            <div class="row">
-                                <label for="" class="col-12 text-center bold">Tevkifat</label>
-                            </div>
-                            <% } %>
-                            <% form.withholdingTaxTotal.forEach((taxTotalItem)=>{ %>
-                            <% taxTotalItem.taxSubtotal.forEach((taxSubtotalItem)=>{ %>
-                            <div class="row">
-                                <label for="" class="col-6 text-md-right pt-1">
-                                    <% 
-                                    var vergiAdi=taxSubtotalItem.taxCategory.name.value || taxSubtotalItem.taxCategory.taxScheme.name.value || '';
-                                    %>
-                                    <%=vergiAdi%> % <%=taxSubtotalItem.percent.value %>
-                                </label>
-                                <input type="text" class="col-6 form-control text-right" value="<%=taxSubtotalItem.taxAmount.value.formatMoney()%>" readonly="true">
-                            </div>
-                            <% if(taxSubtotalItem.taxCategory.taxExemptionReasonCode.value!=''){ %>
-                            <div class="row">
-                                <label for="" class="col-12 text-md-right pt-1 text-secondary">
-                                    Vergi istisna kodu:<%=taxSubtotalItem.taxCategory.taxExemptionReasonCode.value %>, Sebebi: <%=taxSubtotalItem.taxCategory.taxExemptionReason.value %>
-                                </label>
-                            </div>
-                            <% } %>
-                            <% }) %>
-                            <% }); %>
-
-                            <% } %>
+                            <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+                                <tbody id="vergiGrid">
+                                    
+                                </tbody>
+                            </table>
                         </div>
                         <div class="col-md-3 border-right">
                             <div class="row">
-                                <label for="" class="col-12 text-center bold">Alt Iskontolar</label>
+                                <label for="" class="col-12 text-center bold">Indirimler/Artirimlar</label>
                             </div>
-                            <div class="row">
-                                <label for="" class="col-3 text-right bold">Isk. Oran</label>
-                                <label for="" class="col-3 text-right bold">Isk. Tutar</label>
-                                <label for="" class="col-6 text-center bold">Isk. Aciklama</label>
-                            </div>
-                            <% 
-                            var icindeMasrafVar=false;
-                            form.allowanceCharge.forEach((allowanceChargeItem)=>{ 
-	                            if(allowanceChargeItem.chargeIndicator==false){
-	                            %>
-	                            <div class="row">
-	                                <input type="text" class="col-3 form-control text-right" value="<% if(allowanceChargeItem.multiplierFactorNumeric.value>0){%><%=(allowanceChargeItem.multiplierFactorNumeric.value<1?allowanceChargeItem.multiplierFactorNumeric.value*100:allowanceChargeItem.multiplierFactorNumeric.value)%><%}%>" readonly="true">
-	                                <input type="text" class="col-3 form-control text-right" value="<%=allowanceChargeItem.amount.value.formatMoney()%>" readonly="true">
-	                                <input type="text" class="col-3 form-control text-left" value="<%=allowanceChargeItem.allowanceChargeReason.value%>" readonly="true">
-	                            </div>
-	                            <% }else{
-	                            	icindeMasrafVar=true;
-		                        } %>
-	                        <% }); %>
-	                        <% if(icindeMasrafVar){ %>
-		                        <div class="row mt-2">
-		                            <label for="" class="col-12 text-center bold">Artirimlar</label>
-		                        </div>
-		                        <div class="row">
-		                            <label for="" class="col-3 text-right bold">Oran</label>
-		                            <label for="" class="col-3 text-right bold">Tutar</label>
-		                            <label for="" class="col-6 text-center bold">Aciklama</label>
-		                        </div>
-		                        <% 
-		                        form.allowanceCharge.forEach((allowanceChargeItem)=>{ 
-		                        	if(allowanceChargeItem.chargeIndicator==true){
-		                        %>
-			                        <div class="row">
-			                            <input type="text" class="col-3 form-control text-right" value="<% if(allowanceChargeItem.multiplierFactorNumeric.value>0){%><%=(allowanceChargeItem.multiplierFactorNumeric.value<1?allowanceChargeItem.multiplierFactorNumeric.value*100:allowanceChargeItem.multiplierFactorNumeric.value)%><%}%>" readonly="true">
-			                            <input type="text" class="col-3 form-control text-right" value="<%=allowanceChargeItem.amount.value.formatMoney()%>" readonly="true">
-			                            <input type="text" class="col-3 form-control text-left" value="<%=allowanceChargeItem.allowanceChargeReason.value%>" readonly="true">
-			                        </div>
-			                        <% } %>
-		                        <% }); %>
-
-	                        <% } %>
+                            <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+                                <tbody id="iskontoGrid">
+                                    
+                                </tbody>
+                            </table>
                     	</div>
                 	</div>
             	</div>
@@ -463,8 +379,21 @@
 		// }
 
         reloadLineGrid();
+        reloadTotals();
 	});
 
+    function faturaKaydet(){
+        
+        //console.log(invoice);
+
+        saveInvoice(function(err){
+            if(err){
+                alert(err.code + ' - ' + err.message);
+            }else{
+                history.back(-1);
+            }
+        });
+    }
 	function removeLine(index){
         if(index<0 || index>invoice.invoiceLine.length-1) return;
 		if(!confirm('Satiri silmek istediginizden emin misiniz?')) return;
@@ -611,6 +540,66 @@
                     '<a href="javascript:removeLine(' + index + ');"  class="btn btn-danger btn-sm fas fa-trash-alt ml-2" title="Sil"></a></div>';
             });
         }
+    }
+
+    function reloadTotals(){
+
+        if(!invoice) return;
+        if(!invoice.legalMonetaryTotal) return;
+        document.getElementById('lineExtensionAmount').innerHTML=Number(invoice.legalMonetaryTotal.lineExtensionAmount.value).formatMoney();
+        document.getElementById('allowanceTotalAmount').innerHTML=Number(invoice.legalMonetaryTotal.allowanceTotalAmount.value).formatMoney();
+        document.getElementById('chargeTotalAmount').innerHTML=Number(invoice.legalMonetaryTotal.chargeTotalAmount.value).formatMoney();
+        document.getElementById('taxExclusiveAmount').innerHTML=Number(invoice.legalMonetaryTotal.taxExclusiveAmount.value).formatMoney();
+        document.getElementById('taxInclusiveAmount').innerHTML=Number(invoice.legalMonetaryTotal.taxInclusiveAmount.value).formatMoney();
+        document.getElementById('payableAmount').innerHTML=Number(invoice.legalMonetaryTotal.payableAmount.value).formatMoney();
+
+      
+        $("#vergiGrid tr").remove();
+        var vergiGrid=document.getElementById('vergiGrid');
+
+        invoice.taxTotal.forEach(function(e){
+            var newRow=vergiGrid.insertRow(vergiGrid.rows.length);
+            newRow.classList.add('text-nowrap');
+            var vergi='';
+            if(e.taxSubtotal)
+                if(e.taxSubtotal.length>0){
+                    if(e.taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value=='9015'){
+                        vergi = 'Kdv %' + e.taxSubtotal[0].percent.value;
+                    }else{
+                        vergi = e.taxSubtotal[0].taxCategory.taxScheme.name.value + ' %' + e.taxSubtotal[0].percent.value;
+                    }
+                }
+            newRow.insertCell(0).innerHTML=vergi;
+            var cell1=newRow.insertCell(1);
+            cell1.classList.add('text-right');
+            cell1.innerHTML=Number(e.taxSubtotal[0].taxAmount.value).formatMoney();
+        });
+        
+        $("#iskontoGrid tr").remove();
+        var iskontoGrid=document.getElementById('iskontoGrid');
+
+        invoice.allowanceCharge.forEach(function(e){
+            var newRow=iskontoGrid.insertRow(iskontoGrid.rows.length);
+            newRow.classList.add('text-nowrap');
+            var sbuf='';
+            if(e.chargeIndicator.value){
+                sbuf='Artirim';
+            }else{
+                sbuf='Indirim';
+            }
+            if(e.multiplierFactorNumeric.value<1){
+                sbuf +=' %' + (e.multiplierFactorNumeric.value*100);
+            }else{
+                sbuf +=' %' + e.multiplierFactorNumeric.value;
+            }
+
+            newRow.insertCell(0).innerHTML=sbuf;
+            var cell1=newRow.insertCell(1);
+            cell1.classList.add('text-right');
+            cell1.innerHTML=Number(e.amount.value).formatMoney();
+            newRow.insertCell(2).innerHTML=e.allowanceChargeReason.value;
+        });
+
     }
 
     function fillGTIPNO(index){
