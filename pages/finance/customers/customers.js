@@ -53,6 +53,7 @@ module.exports = function(req,res,callback){
 	            title:{ value:''}
 	        },
 	        passive:false,
+	        tags:'',
 	        vknTckn:'',
 	        mersisNo:'',
 	        aboneNo:''
