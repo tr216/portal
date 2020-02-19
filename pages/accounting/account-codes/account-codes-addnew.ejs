@@ -1,0 +1,53 @@
+<%layout('../../_common/layout')%>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            <label class="control-label" for="">Ana Hesap</label>
+            <input type="text" form="form-general" name="parentAccountCode" placeholder="Bagli hesap kodu" id="parentAccountCode" class="form-control" autocomplete="off" value="">
+            <input type="text" form="form-general" name="parentAccount"  id="parentAccount" hidden="true" value="">
+        </div>
+    </div>
+</div>
+<%- partial('../../_common/form', {
+    formControls:{
+        code:{caption:'Hesap Kodu', type:'textbox'    ,required:true},
+        name:{caption:'Hesap Ismi', type:'textbox'    ,required:true}
+    },
+    action:'',
+    mode:'addnew'
+    }) 
+%>
+
+<script type="text/javascript">
+     $(document).ready(function(){
+        $('#parentAccountCode').autocomplete({
+            source:function(request,response){
+                    $.ajax({
+                    url:'/dbapi/accounts?accountCode=' +  encodeURIComponent(request.term) + '&db=<%=db%>&sid=<%=sid%>',
+                    type:'GET',
+                    dataType: 'json',
+                    success: function(result) {
+                            if(result.success){
+                                var dizi=[];
+                                for(var i=0;i<result.data.docs.length;i++){
+                                    var item=result.data.docs[i];
+                                    
+                                    dizi.push({label:(item.accountCode + ' - ' + item.name),value:item._id});
+                                }
+                                response(dizi);
+                            }
+                        },
+                    error:function(err){
+                        console.error('err:',err);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                    $("#parentAccountCode").val(ui.item.label); 
+                    $("#parentAccount").val(ui.item.value); 
+                    return false;
+                }
+        });
+
+    });
+</script>

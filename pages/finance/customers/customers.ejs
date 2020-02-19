@@ -1,11 +1,10 @@
 <%layout('../../_common/layout')%>
 <%- partial('../../_common/grid2',{
     fields:[
-        {name:'locationName',text:'Lokasyon Ismi',type:'label' , orderable:true},
-        {name:'locationTypeName',text:'Turu',type:'label', orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1, orderable:true}
+        {name:'name',text:'Isim',type:'label' , orderable:true},
+        {name:'addr',text:'Adres',type:'label' , orderable:true}
     ],
-    caption:'Lokasyon Listesi',
+    caption:'',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

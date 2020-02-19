@@ -1,0 +1,14 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'accountCode',text:'Hesap Kodu',type:'label' , filter:true, orderable:true , align:'left', width:'35%'},
+        {name:'name',text:'Hesap Ismi',type:'label' , filter:true, orderable:true}
+    ],
+    caption:'',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    deleteUrl:'/dbapi/accounts/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>
+

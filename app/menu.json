@@ -1,12 +1,12 @@
 [
 	{"text":"Ana Sayfa",				"path":"/general/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
 	{"text":"Üretim",	"module":"mrp",			"path":"",					"icon":"table", "visible":true, "nodes":[
-		{"text":"Üretim Emirleri",		"path":"/mrp/man-orders",		"icon":"file-alt", "visible":true, "nodes":[]},
-		{"text":"Mamul/Yarı Mamul",		"path":"/mrp/products",		"icon":"file-alt", "visible":true, "nodes":[]},
-		{"text":"Hammaddeler",		"path":"/mrp/raw-materials",		"icon":"file-alt", "visible":true, "nodes":[]},
+		{"text":"Üretim Emirleri",		"path":"/general/closed-module", "path1":"/mrp/man-orders",		"icon":"file-alt", "visible":true, "nodes":[]},
+		{"text":"Mamul/Yarı Mamul",		"path":"/general/closed-module", "path1":"/mrp/products",		"icon":"file-alt", "visible":true, "nodes":[]},
+		{"text":"Hammaddeler",		"path":"/general/closed-module", "path1":"/mrp/raw-materials",		"icon":"file-alt", "visible":true, "nodes":[]},
 		{"text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
-			{"text":"Makinalar",		"path":"/mrp/machines",	"icon":"cogs", "visible":true, "nodes":[]},
-			{"text":"Personel",		"path":"/mrp/staff",	"icon":"plug", "visible":true, "nodes":[]},
+			{"text":"Makinalar",	 "path":"/general/closed-module", "path1":"/mrp/machines",	"icon":"cogs", "visible":true, "nodes":[]},
+			{"text":"Personel",		"path":"/general/closed-module", "path1":"/mrp/staff",	"icon":"plug", "visible":true, "nodes":[]},
 			{"text":"Üretim Noktaları",	"path":"/mrp/file-importers",	"icon":"file-import", "visible":true, "nodes":[]}
 		]}
 	]},
@@ -15,8 +15,8 @@
 		{"text":"Tedarikçiler",		"path":"/finance/vendors",		"icon":"parachute-box", "visible":true, "nodes":[]}
 	]},
 	{"text":"Muhasebe",	"module":"accounting",	 "path":"",	"icon":"book", "visible":true, "nodes":[
-		{"text":"Hesap planı",		"path":"/accounting/accounts",		"icon":"users", "visible":true, "nodes":[]},
-		{"text":"Tedarikçiler",		"path":"/finance/vendors",		"icon":"parachute-box", "visible":true, "nodes":[]}
+		{"text":"Hesap planı",		"path":"/accounting/account-codes",		"icon":"cube", "visible":true, "nodes":[]},
+		{"text":"Muhasebe Fişleri",		"path":"/general/closed-module",		"icon":"parachute-box", "visible":true, "nodes":[]}
 	]},
 	{"text":"E-Fatura",	"module":"eInvoice",				"path":"",		"icon":"table", "visible":true, 
 		"nodes":[
@@ -31,7 +31,7 @@
 			]}
 		]
 	},
-	{"text":"E-Defter",	"module":"eLedger",				"path":"/eledger",		"icon":"table", 	"visible":true, "nodes":[]},
+	{"text":"E-Defter",	"module":"eLedger",				"path":"/general/closed-module", "path1":"/eledger",		"icon":"table", 	"visible":true, "nodes":[]},
 	{"text":"YazarKasa Pos",	"module":"posDevice",	"path":"",				"icon":"cash-register", "visible":true,
 		"nodes":[
 			{"text":"Aktarim",					"path":"/pos-device/transfer",	"icon":"cloud-upload-alt", "visible":true, "nodes":[]},
