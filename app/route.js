@@ -276,7 +276,7 @@ function setGeneralParams(req,data){
 	if(data.pageCount==undefined) data['pageCount']=1;
 	if(data.recordCount==undefined) data['recordCount']=0;
 
-	data['icon']=getMenuIcon(req,'/' + (req.params.page || ''));
+	data['icon']=getMenuIcon(req,'/' + req.params.module + '/' + (req.params.page || ''))
 	data['pageTitle']=getMenuText(req,'/' + req.params.module + '/' + (req.params.page || ''));
 	data['pagePath']='/' + req.params.module + '/' + req.params.page;
 				
@@ -436,51 +436,23 @@ function loadFunctionSystemPages(path,pageName){
 
 function getMenuIcon(req,urlPath){
 
-	var icon='circle';
-	var m0=[];
-	if(req.params.isSysUser){
-		m0=sysmenu;
-	}else{
-		m0=menu;
-	}
-	m0.forEach((m1)=>{
-		
-		if(m1.path){
-			if(m1.path==urlPath){
-				icon=m1.icon;
-				return;
-			}
-		}
-		if(m1.nodes){
-			if(m1.nodes.length>0){
-				m1.nodes.forEach((m2)=>{
-					if(m2.path){
-						if(m2.path==urlPath){
-							icon=m2.icon;
-							return;
-						}
-					}
-					if(m2.nodes){
-						if(m2.nodes.length>0){
-							m2.nodes.forEach((m3)=>{
-								if(m3.path==urlPath){
-									icon=m2.icon;
-									return;
-								}
-							});
-						}
-					}
-				});
-			}
-		}
-	});
+	var icon=getMenuItem(req, urlPath).icon ;
+	
 	return icon;
 
 }
 
 function getMenuText(req, urlPath){
 
-	var text='';
+	var text=getMenuItem(req,urlPath).text;
+	
+	return text;
+
+}
+
+function getMenuItem(req, urlPath){
+
+	var menuItem={text:'',icon:''};
 	var m0=[];
 	if((req.params.isSysUser || false)){
 		m0=sysmenu;
@@ -491,7 +463,8 @@ function getMenuText(req, urlPath){
 		
 		if(m1.path){
 			if(m1.path==urlPath){
-				text=m1.text;
+				menuItem.text=m1.text;
+				menuItem.icon=m1.icon;
 				return;
 			}
 		}
@@ -500,7 +473,8 @@ function getMenuText(req, urlPath){
 				m1.nodes.forEach((m2)=>{
 					if(m2.path){
 						if(m2.path==urlPath){
-							text=m2.text;
+							menuItem.text=m2.text;
+							menuItem.icon=m2.icon;
 							return;
 						}
 					}
@@ -508,14 +482,16 @@ function getMenuText(req, urlPath){
 						if(m2.nodes.length>0){
 							m2.nodes.forEach((m3)=>{
 								if(m3.path==urlPath){
-									text=m3.text;
+									menuItem.text=m3.text;
+									menuItem.icon=m3.icon;
 									return;
 								}
 								if(m3.nodes){
 									if(m3.nodes.length>0){
 										m3.nodes.forEach((m4)=>{
 											if(m4.path==urlPath){
-												text=m4.text;
+												menuItem.text=m4.text;
+												menuItem.icon=m4.icon;
 												return;
 											}
 										});
@@ -528,7 +504,7 @@ function getMenuText(req, urlPath){
 			}
 		}
 	});
-	return text;
+	return menuItem;
 
 }
 

@@ -1,0 +1,17 @@
+<%layout('../../_common/layout')%>
+
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'location.locationName',    text:'Lokasyon',    type:'lookup' , filter:true, filterField:'location', lookupList:locationList, textField:'locationName', valueField:'_id'}, 
+        {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
+        {name:'description',text:'Açıklama',type:'label', filter:true, orderable:true},
+        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+    ],
+    caption:'Istasyon Listesi',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    deleteUrl:'/dbapi/mrp-stations/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>

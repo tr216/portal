@@ -43,7 +43,9 @@
           %>
               <%- label(item,itemValue,level) %>
           <% break;
-
+      case 'textarea' : %>
+              <%- textarea(item,itemValue,level) %>
+          <% break;
       case 'checkbox' : %>
              <%- checkbox(item,itemValue,level) %>
           <% break;
@@ -77,6 +79,13 @@
   <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
     <label ><%=item.caption%></label>
     <input type="text" class="form-control <%=item.class %>" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
+  </div>
+<% } %>
+
+<% function textarea(item,itemValue,level){ %>
+  <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
+    <label ><%=item.caption%></label>
+    <textarea class="form-control <%=item.class %>" rows="<% if(typeof item.rows!='undefined'){%><%=item.rows%><%}else{%>4<%}%>" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>><%=itemValue%></textarea>
   </div>
 <% } %>
 

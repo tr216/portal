@@ -1,0 +1,16 @@
+<%layout('../../_common/layout')%>
+
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
+        {name:'useMaterial',text:'Malzeme Kullaniyor Mu?',type:'checkbox'},
+        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+    ],
+    caption:'Uretim Islemler',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    deleteUrl:'/dbapi/mrp-process-steps/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>

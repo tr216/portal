@@ -117,7 +117,13 @@
 	
 
 	function showMenuUrl(path,leftMenuActiveLinkId){
-		var url=path + '?db=<%=db%>&sid=<%=sid%>';
+		var url='';
+		if(path.indexOf('?')>-1){
+			url=path + '&db=<%=db%>&sid=<%=sid%>';
+		}else{
+			url=path + '?db=<%=db%>&sid=<%=sid%>';
+		}
+		
 		if(localStorage.getItem(path + '_filter')){
 			try{
 				var filter=JSON.parse(localStorage.getItem(path + '_filter'));

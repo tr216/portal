@@ -1,0 +1,12 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/form',{
+    formControls:{
+        name     :{caption:'Adı',                type:'textbox' ,required:true},
+        useMaterial  :{caption:'Malzeme Kullaniyor Mu?',        type:'checkbox'   },
+        passive         :{caption:'Pasif',                 type:'checkbox'}
+    },
+    action:'',
+    mode:'edit'
+    }) 
+%>
+

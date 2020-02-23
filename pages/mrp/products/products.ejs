@@ -1,0 +1,19 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'name.value',text:'Adı',type:'label' , filter:true, filterField:'name', orderable:true, width:'60%'},
+        {name:'description.value',text:'Açıklama',type:'label' , filter:true, filterField:'description', orderable:true},
+        {name:'passive',text:'Pasif',type:'checkbox',width:1, filter:true, orderable:true}
+    ],
+    caption:'',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    //addNewUrl:urlPath + '/addnew?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
+    //editUrl:urlPath + '/edit/{_id}?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
+    //viewUrl:urlPath + '/view/{_id}?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
+    deleteUrl:'/dbapi/items/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>
+

@@ -1,0 +1,38 @@
+<%layout('../../_common/layout')%>
+
+<%- partial('../../_common/form', {
+    tabs:[
+       {
+            caption:'Bilgiler',
+            formControls:{
+                name:{ name:'name.value', caption:'Adı', type:'textbox'    ,required:true},
+                description:{ name:'description.value', caption:'Açıklama', type:'textbox'},
+                brandName:{ name:'brandName.value', caption:'Marka', type:'textbox'},
+                modelName:{ name:'modelName.value', caption:'Model', type:'textbox'},
+                itemClassificationCode:{ name:'commodityClassification.0.itemClassificationCode.value', caption:'Sınıf kodu (GTIPNO)', type:'textbox'},
+                buyersItemIdentification:{ name:'buyersItemIdentification.ID.value', caption:'Alıcı kodu', type:'textbox'},
+                sellersItemIdentification:{ name:'sellersItemIdentification.ID.value', caption:'Satıcı kodu', type:'textbox'},
+                manufacturersItemIdentification:{ name:'manufacturersItemIdentification.ID.value', caption:'Üretici kodu', type:'textbox'},
+                originCountry:{ name:'originCountry.name.value', caption:'Menşei', type:'textbox'},
+                keyword:{ name:'keyword.value', caption:'Anahtar kelime', type:'textbox'},
+                
+                tags:{ name:'tags', caption:'Etiketler (virgulle ayrılmış)', type:'textbox'},
+                passive:{caption:'Pasif?', type:'checkbox'    }
+            }
+        },
+        {
+            caption:'Diger',
+            formControls:{
+                barkodlar:{ name:'barkodlar', caption:'Barkodlar (Carpanlari ";" ile barkod sonuna ekleyiniz)', type:'textarea' , rows:5}
+            }
+        },
+        {
+            caption:'Recete/Process',
+            partial:'../mrp/products/recipe.ejs'
+        }
+    ],
+    action:'',
+    mode:'edit'
+    }) 
+%>
+

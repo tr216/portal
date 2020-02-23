@@ -1,14 +1,27 @@
 [
 	{"text":"Ana Sayfa",				"path":"/general/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
-	{"text":"Üretim",	"module":"mrp",			"path":"",					"icon":"table", "visible":true, "nodes":[
-		{"text":"Üretim Emirleri",		"path":"/general/closed-module", "path1":"/mrp/man-orders",		"icon":"file-alt", "visible":true, "nodes":[]},
-		{"text":"Mamul/Yarı Mamul",		"path":"/general/closed-module", "path1":"/mrp/products",		"icon":"file-alt", "visible":true, "nodes":[]},
-		{"text":"Hammaddeler",		"path":"/general/closed-module", "path1":"/mrp/raw-materials",		"icon":"file-alt", "visible":true, "nodes":[]},
+	{"text":"Satış",	"module":"sale",			"path":"",					"icon":"shopping-cart", "visible":true, "nodes":[
+		{"text":"Siparişler",		"path":"/general/closed-module", "path1":"/sales/man-orders",		"icon":"file-alt", "visible":true, "nodes":[]}
+	]},
+	{"text":"Satın alma",	"module":"purchase",			"path":"",					"icon":"shopping-bag", "visible":true, "nodes":[
+		{"text":"Alım Siparişleri",		"path":"/general/closed-module", "path1":"/sales/man-orders",		"icon":"file-alt", "visible":true, "nodes":[]}
+	]},
+	{"text":"Üretim",	"module":"mrp",			"path":"",					"icon":"industry", "visible":true, "nodes":[
+		{"text":"Üretim Emirleri",		"path":"/general/closed-module", "path1":"/mrp/man-orders",		"icon":"file-alt", "visible":true, "nodes":[]},	
 		{"text":"Tanimlamalar",			"path":"",	"icon":"sliders-h", 		"visible":true, "nodes":[
-			{"text":"Makinalar",	 "path":"/general/closed-module", "path1":"/mrp/machines",	"icon":"cogs", "visible":true, "nodes":[]},
+			{"text":"Mamul/Yarı Mamul",		 	"path":"/mrp/products",				"icon":"cubes", "visible":true, "nodes":[]},
+			{"text":"Hammaddeler",		 		"path":"/inventory/items?itemType=raw-material",		"icon":"atom", 			"visible":true, "nodes":[]},
+			{"text":"Yardımcı Malzemeler",		"path":"/inventory/items?itemType=helper-material",		"icon":"thermometer-half", "visible":true, "nodes":[]},
+			{"text":"Üretim İstasyonları",	 	"path":"/mrp/stations", "icon":"bezier-curve", "visible":true, "nodes":[]},
+			{"text":"Makinalar",	 			"path":"/mrp/machines", "icon":"cogs", "visible":true, "nodes":[]},
+			{"text":"Üretim İşlem Adımları",	 			"path":"/mrp/process-steps", "icon":"shoe-prints", "visible":true, "nodes":[]},
 			{"text":"Personel",		"path":"/general/closed-module", "path1":"/mrp/staff",	"icon":"plug", "visible":true, "nodes":[]},
 			{"text":"Üretim Noktaları",	"path":"/mrp/file-importers",	"icon":"file-import", "visible":true, "nodes":[]}
 		]}
+	]},
+	{"text":"Stok",	"module":"purchase",			"path":"",					"icon":"box-open", "visible":true, "nodes":[
+		{"text":"Stok Kartlari",		"path":"/inventory/items?itemType=item",		"icon":"dolly-flatbed", "visible":true, "nodes":[]},
+		{"text":"Envanter",		"path":"/general/closed-module", "path1":"/sales/man-orders",		"icon":"file-alt", "visible":true, "nodes":[]}
 	]},
 	{"text":"Finans",	"module":"finance",	 "path":"",	"icon":"money-bill-wave", "visible":true, "nodes":[
 		{"text":"Müşteriler",		"path":"/finance/customers",		"icon":"users", "visible":true, "nodes":[]},
