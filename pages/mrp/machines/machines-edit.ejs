@@ -1,11 +1,22 @@
 <%layout('../../_common/layout')%>
 <%- partial('../../_common/form',{
-    formControls:{
-        station        :{caption:'Istasyon',             type:'lookup', lookup:stationList, textField:'name', valueField:'_id'    ,required:true},
-        name     :{caption:'Adı',                type:'textbox' ,required:true},
-        description  :{caption:'Açıklama',        type:'textbox'    },
-        passive         :{caption:'Pasif',                 type:'checkbox'}
-    },
+    tabs:[
+       {
+            caption:'Bilgiler',
+            formControls:{
+                station        :{caption:'Istasyon',             type:'lookup', lookup:stationList, textField:'name', valueField:'_id'    ,required:true},
+                name     :{caption:'Adı',                type:'textbox' ,required:true},
+                description  :{caption:'Açıklama',        type:'textbox'    },
+                minCapacity  :{caption:'Min. Kapasite',        type:'textbox'    },
+                maxCapacity  :{caption:'Max. Kapasite',        type:'textbox'    },
+                passive         :{caption:'Pasif',                 type:'checkbox'}
+            }
+        },
+        {
+            caption:'Makinanın üretim parametreleri',
+            partial:'../mrp/machines/parameters.ejs'
+        }
+    ],
     action:'',
     mode:'edit'
     }) 

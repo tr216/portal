@@ -5,7 +5,10 @@ module.exports = function(req,res,callback){
 			station:'',
 			name:'',
 			description:'',
-			passive:false
+			minCapacity:0,
+			maxCapacity:0,
+			passive:false,
+			machineParameters:[]
 		},
 		filter:{
 

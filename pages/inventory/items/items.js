@@ -30,6 +30,7 @@ module.exports = function(req,res,callback){
 	        tags:'',
 	        localDocumentId:'',
 	        passive:false,
+	        exceptInventory:false,
 	        barkodlar:''
 	        
 		},
