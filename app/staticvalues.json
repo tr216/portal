@@ -891,6 +891,13 @@
 			{"text":"e-invoice","value":"e-invoice"},
 			{"text":"e-ledger","value":"e-ledger"},
 			{"text":"zreport","value":"zreport"}
+		],
+		"printDesignModuleList":[
+			{"text":"Reçete","value":"recipe"},
+			{"text":"Reçete Listesi","value":"recipe-list"},
+			{"text":"Stok Kartı","value":"items"},
+			{"text":"Stok Kart Listesi","value":"items-list"},
+			{"text":"Ürün Kartı","value":"items-product"}
 		]
 }
 

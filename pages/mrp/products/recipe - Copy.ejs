@@ -3,7 +3,7 @@
 
 %>
 <div class="row">
-    <div class="form-group col-md-5">
+    <div class="form-group col-md-6">
         <label for="" class="m-0">Ürüne ait reçeteler</label>
         <select class="form-control" name="productRecipes" id="productRecipes" onchange="productRecipesChange()">
         </select>
@@ -12,10 +12,9 @@
         <label for="recipeIsDefault" class="m-0 mt-3">Varsayılan?</label>
         <input type="checkbox" class="ml-3 mt-3" name="recipeIsDefault" id="recipeIsDefault" checked="false">
     </div>
-    <div class="form-group col-md-4 text-right">
-        <a href="javascript:yazdir();" class="btn btn-info mt-3" title="Yazdir"><i class="fas fa-print"></i></a>
-        <a href="javascript:receteKaydet();" class="btn btn-primary mt-3"  title="Recete kaydet"><i class="fas fa-save"></i></a>
-        <a href="javascript:receteSil();" class="btn btn-danger mt-3 ml-2"  title="Recete sil"><i class="fas fa-trash-alt"></i></a>
+    <div class="form-group col-md-3 text-right">
+        <a href="javascript:receteKaydet();" class="btn btn-primary fas fa-save mt-3"  title="Recete kaydet"></a>
+        <a href="javascript:receteSil();" class="btn btn-danger fas fa-trash-alt mt-3 ml-2"  title="Recete sil"></a>
     </div>
     
 </div>
@@ -90,24 +89,6 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card mt-2">
-            <div class="card-header p-1 text-primary">Yan ürünler/katalizörler</div>
-            <div class="card-body p-1">
-                <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-                    <thead>
-                        <tr class="text-nowrap">
-                            <th width="70%">Yan ürün/Katalizör</th>
-                            <th width="30%">Miktar</th>
-                        </tr>
-                    </thead>
-                    <tbody id="outputSummaryGrid">
-                        
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="modal" id="recipeLineModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="recipeLineModalLabel" aria-hidden="true">
@@ -139,95 +120,42 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="" class="m-0">Parametreler/Notlar</label>
-                            <textarea id="parameters" class="form-control" rows="4"></textarea>
-                        </div>
+                    <div class="form-group col-md-12">
+                        <label for="" class="m-0">Parametreler/Notlar</label>
+                        <textarea id="parameters" class="form-control" rows="5"></textarea>
                     </div>
                 </div>
-                <div class="useMaterial">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#tab1" role="tab" data-toggle="tab" id="IDtab1" aria-controls="tab1" aria-selected="true">
-                                <i class="fas fa-file-alt"></i> Malzemeler
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#tab2" role="tab" data-toggle="tab" id="IDtab2" aria-controls="tab2" aria-selected="false">
-                                <i class="fas fa-table"></i> İşlem sonrası çıkan yan ürünler/malzemeler
-                            </a>
-                        </li>
-                        
-                    </ul>
-                    <div class="tab-content p-1 " style="min-height:35vh;overflow: auto;">
-                        <!-- IDtab1 -->
-                        <div class="tab-pane show active" id="tab1" role="tabpanel" aria-labelledby="IDtab1">
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="" class="m-0">Malzeme</label>
-                                    <select class="form-control" name="itemTypeInput" id="itemType" onchange="itemTypeChange()">
-                                        <option value="raw-material">Hammadde</option>
-                                        <option value="helper-material">Yardimci Malzeme</option>
-                                        <option value="product">Mamul/Yari mamul</option>
-                                        <option value="item">Stok Envanter</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="" class="m-0">Seç</label>
-                                    <input type="text" form="form-general" name="itemName" id="itemName" placeholder="ara"  class="form-control" autocomplete="off" value="">
-                                    <input type="text" form="form-general" name="itemId"  id="itemId" hidden="true" value="">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="" class="m-0">Miktar</label>
-                                    <input type="number" class="form-control" name="quantity" id="quantity" placeholder="" value="0">
-                                </div>
-                                <div class="form-group col-md-1">
-                                    <label for="" class="m-0">#</label>
-                                    <a href="javascript:addInputMaterial();" class="btn btn-primary fas fa-plus-square"  title="Malzeme Ekle"></a>
-                                </div>
-                            </div>
-                            <table class="table form-table table-bordered table-striped m-0 "  cellspacing="0" style="display: grid;overflow-y:scroll; max-height: 15rem;">
-                                
-                                <tbody id="materialInputGrid">
-                                    
-                                </tbody>
-                            </table>
+                <div id="material" style="display: none;">
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label for="" class="m-0">Malzeme</label>
+                            <select class="form-control" name="itemType" id="itemType" onchange="itemTypeChange()">
+                                <option value="raw-material">Hammadde</option>
+                                <option value="helper-material">Yardimci Malzeme</option>
+                                <option value="product">Mamul/Yari mamul</option>
+                                <option value="item">Stok Envanter</option>
+                            </select>
                         </div>
-
-                        <!-- IDtab2 -->
-                        <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="IDtab2">
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="" class="m-0">Yan ürün veya katalizör</label>
-                                    <select class="form-control" name="itemTypeOutput" id="itemTypeOutput" onchange="itemTypeOutputChange()">
-                                        <option value="raw-material">Hammadde</option>
-                                        <option value="helper-material" selected>Yardimci Malzeme</option>
-                                        <option value="product">Mamul/Yari mamul</option>
-                                        <option value="item">Stok Envanter</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="" class="m-0">Seç</label>
-                                    <input type="text" form="form-general" name="itemNameOutput" id="itemNameOutput" placeholder="ara"  class="form-control" autocomplete="off" value="">
-                                    <input type="text" form="form-general" name="itemIdOutput"  id="itemIdOutput" hidden="true" value="">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="" class="m-0">Miktar</label>
-                                    <input type="number" class="form-control" name="quantityOutput" id="quantityOutput" placeholder="" value="0">
-                                </div>
-                                <div class="form-group col-md-1">
-                                    <label for="" class="m-0">#</label>
-                                    <a href="javascript:addOutputMaterial();" class="btn btn-primary fas fa-plus-square"  title="Yan ürün Ekle"></a>
-                                </div>
-                            </div>
-                            <table class="table form-table table-bordered table-striped m-0 "  cellspacing="0" style="display: grid;overflow-y:scroll; max-height: 15rem;">
-                                <tbody id="materialOutputGrid">
-                                    
-                                </tbody>
-                            </table>
+                        <div class="form-group col-md-6">
+                            <label for="" class="m-0">Seç</label>
+                            <input type="text" form="form-general" name="itemName" id="itemName" placeholder="ara"  class="form-control" autocomplete="off" value="">
+                            <input type="text" form="form-general" name="itemId"  id="itemId" hidden="true" value="">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="" class="m-0">Miktar</label>
+                            <input type="number" class="form-control" name="quantity" id="quantity" placeholder="" value="0">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <label for="" class="m-0">#</label>
+                            <a href="javascript:addInputMaterial();" class="btn btn-primary fas fa-plus-square"  title="Malzeme Ekle"></a>
                         </div>
                     </div>
+                    <table class="table form-table table-bordered table-striped m-0 "  cellspacing="0" style="display: grid;overflow-y:scroll; max-height: 15rem;">
+                        
+                        <tbody id="materialInputGrid">
+                            
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="modal-footer">
@@ -246,13 +174,7 @@
     }
     var aktifReceteAdim=-1;
     var lineMaterialInputs=[];
-    var lineMaterialOutputs=[];
     var recipeList=[]
-
-    function yazdir(){
-        popupCenter('/general/print/preview?db=<%=db%>&sid=<%=sid%>&path=/recipes/' + (recipe._id || ''),'Recete','900','600');
-    }
-    
 
     function refreshRecipeList(recipeId=''){
         var productRecipes=document.getElementById("productRecipes");
@@ -320,21 +242,23 @@
     function reloadRecipe(){
         $('#recipe1 tr').remove();
         $('#materialSummaryGrid tr').remove();
-        $('#outputSummaryGrid tr').remove();
         var recipe1=document.getElementById('recipe1');
-
         var materialSummaryGrid=document.getElementById('materialSummaryGrid');
-        var outputSummaryGrid=document.getElementById('outputSummaryGrid');
 
         $('#recipeName').val((recipe.name || ''));
         $('#recipeDescription').val((recipe.description || ''));
         $('#recipeRevision').val((recipe.revision || 1));
+        console.log('recipe.isDefault:',recipe.isDefault);
         
         if(recipe.isDefault==true){
             $('#recipeIsDefault').prop('checked',true);
+            console.log('prop true');
         }else{
             $('#recipeIsDefault').prop('checked',false);
+            console.log('prop false');
         }
+        
+        
 
         if(recipe.process!=undefined){
             recipe.process.forEach(function(e,index){
@@ -361,17 +285,9 @@
                
             });
         }
-
         if(recipe.materialSummary!=undefined){
             recipe.materialSummary.forEach(function(e){
                 var newRow=materialSummaryGrid.insertRow(materialSummaryGrid.rows.length);
-                newRow.insertCell(0).innerHTML=e.item.name.value;
-                newRow.insertCell(1).innerHTML=e.quantity + ' ' + e.unitCode;
-            });
-        }
-        if(recipe.outputSummary!=undefined){
-            recipe.outputSummary.forEach(function(e){
-                var newRow=outputSummaryGrid.insertRow(outputSummaryGrid.rows.length);
                 newRow.insertCell(0).innerHTML=e.item.name.value;
                 newRow.insertCell(1).innerHTML=e.quantity + ' ' + e.unitCode;
             });
@@ -385,13 +301,8 @@
                 $('#itemId').val('');
                 $('#itemName').val('');
                 $('#quantity').val(0);
-                $('#itemIdOutput').val('');
-                $('#itemNameOutput').val('');
-                $('#quantityOutput').val(0);
                 lineMaterialInputs=[];
-                lineMaterialOutputs=[];
                 refresh_materialInputGrid();
-                refresh_materialOutputGrid();
                 $('#recipeLineModal').modal('show');
             }else{
                 alert(err.message);
@@ -404,9 +315,6 @@
         $('#itemId').val('');
         $('#itemName').val('');
         $('#quantity').val(0);
-        $('#itemIdOutput').val('');
-        $('#itemNameOutput').val('');
-        $('#quantityOutput').val(0);
         saveRecipe((err)=>{
             if(!err){
                 $('#station').val(recipe.process[index].station._id);
@@ -414,9 +322,7 @@
                 $('#parameters').val(recipe.process[index].parameters);
                 processStepChange();
                 lineMaterialInputs=recipe.process[index].input;
-                lineMaterialOutputs=recipe.process[index].output;
                 refresh_materialInputGrid();
-                refresh_materialOutputGrid();
                 $('#recipeLineModal').modal('show');
             }else{
                 alert(err.message);
@@ -477,6 +383,7 @@
             var newRow=materialInputGrid.insertRow(materialInputGrid.rows.length);
             //newRow.classList.add('text-nowrap');
             var itemTypeNickName='HM';
+            'item','raw-material','helper-material','product','semi-product','sales-service','purchasing-service','asset'
             switch(e.item.itemType){
                 
                 case 'raw-material': itemTypeNickName='Hammadde'; break;
@@ -503,79 +410,6 @@
         })
     }
 
-    function addOutputMaterial(){
-        if($('#itemIdOutput').val()=='') return;
-        if(Number($('#quantityOutput').val())<=0) return;
-        
-        var bFound=false;
-        lineMaterialOutputs.forEach(function(e){
-            if(e.item._id==$('#itemIdOutput').val()){
-                bFound=true;
-                return;
-            }
-        });
-        if(bFound){
-            alert('Bu malzeme zaten eklenmis');
-            return;
-        }
-        var obj={
-            item:{
-                _id:$('#itemIdOutput').val(),
-                name:{value:$('#itemNameOutput').val()},
-                itemType:$('#itemTypeOutput').val()
-            },
-            quantity:Number($('#quantityOutput').val()),
-            unitCode:'kg'
-        }
-        lineMaterialOutputs.push(obj);
-        $('#itemIdOutput').val('');
-        $('#itemNameOutput').val('');
-        $('#quantityOutput').val(0);
-        refresh_materialOutputGrid();
-        $('#itemNameOutput').focus();
-    }
-
-    function removeOutputMaterial(index){
-        if(confirm('Malzemeyi cikarmak istiyor musunuz?')==false) return;
-
-        lineMaterialOutputs.splice(index,1);
-        refresh_materialOutputGrid();
-    }
-    function refresh_materialOutputGrid(){
-        $("#materialOutputGrid tr").remove();
-        var materialOutputGrid=document.getElementById('materialOutputGrid');
-
-        lineMaterialOutputs.forEach(function(e,index){
-            var newRow=materialOutputGrid.insertRow(materialOutputGrid.rows.length);
-            //newRow.classList.add('text-nowrap');
-            var itemTypeNickName='HM';
-            
-            switch(e.item.itemType){
-                
-                case 'raw-material': itemTypeNickName='Hammadde'; break;
-                case 'helper-material': itemTypeNickName='Yardımcı Malz.'; break;
-                case 'product': itemTypeNickName='Mamul'; break;
-                case 'semi-product': itemTypeNickName='Yarı Mamul'; break;
-                default: itemTypeNickName='Stok'; break;
-            }
-            var cell0=newRow.insertCell(0);
-            cell0.width='20%';
-            cell0.innerHTML=itemTypeNickName;
-
-            var cell1=newRow.insertCell(1);
-            cell1.width='55%';
-            cell1.innerHTML=e.item.name.value;
-            
-            var cell2=newRow.insertCell(2);
-            cell2.width='20%';
-            cell2.innerHTML=e.quantity + ' ' + e.unitCode;
-
-            var cell3=newRow.insertCell(3);
-            cell3.width='60';
-            cell3.innerHTML='<a href="javascript:removeOutputMaterial(' + index + ');" class="btn btn-danger btn-sm fas fa-trash-alt" title="Sil"></a>';
-        })
-    }
-
     function saveRecipeLine(){
         if($('#station').val()==''){
             alert('Lütfen üretim istasyonu seçiniz!');
@@ -591,14 +425,10 @@
             station:$('#station').val(),
             step:$('#processStep').val(),
             input:[],
-            output:[],
             parameters:$('#parameters').val()
         }
         lineMaterialInputs.forEach(function(e){
             obj.input.push({item:e.item._id,quantity:e.quantity,unitCode:e.unitCode});
-        });
-        lineMaterialOutputs.forEach(function(e){
-            obj.output.push({item:e.item._id,quantity:e.quantity,unitCode:e.unitCode});
         });
         if(aktifReceteAdim<0){
             recipe.process.push(obj);
@@ -617,20 +447,15 @@
         $('#itemName').val('');
         $('#itemId').val('');
     }
-    function itemTypeOutputChange(){
-        $('#itemNameOutput').val('');
-        $('#itemIdOutput').val('');
-    }
     var stepList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(stepList)) %>'));
     if(stepList.length>0) stepList[0].name='---';
 
     function processStepChange(){
-
-        $('.useMaterial').hide();
+        $('#material').hide();
         stepList.forEach(function(e){
             if(e._id==$('#processStep').val()){
                 if(e.useMaterial){
-                    $('.useMaterial').show();
+                    $('#material').show();
                 }
                 return;
             }
@@ -683,25 +508,12 @@
             $( "#quantity").focus();
           }
         });
-        $( "#itemNameOutput" ).keypress(function( event ) {
-          if ( event.which == 13 ) {
-            event.preventDefault();
-            $( "#quantityOutput").focus();
-          }
-        });
         $( "#quantity" ).keypress(function( event ) {
           if ( event.which == 13 ) {
             event.preventDefault();
             addInputMaterial();
           }
         });
-        $( "#quantityOutput" ).keypress(function( event ) {
-          if ( event.which == 13 ) {
-            event.preventDefault();
-            addOutputMaterial();
-          }
-        });
-
         $('#itemName').autocomplete({
             source:function(request,response){
                     var itemType=$('#itemType').val();
@@ -731,37 +543,6 @@
                     return false;
                 }
         });
-
-        $('#itemNameOutput').autocomplete({
-            source:function(request,response){
-                    var itemType=$('#itemTypeOutput').val();
-                    $.ajax({
-                    url:'/dbapi/items?itemType=' + itemType + '&name=' +  encodeURIComponent(request.term) + '&db=<%=db%>&sid=<%=sid%>',
-                    type:'GET',
-                    dataType: 'json',
-                    success: function(result) {
-                            if(result.success){
-                                var dizi=[];
-                                for(var i=0;i<result.data.docs.length;i++){
-                                    var item=result.data.docs[i];
-                                    
-                                    dizi.push({label:(item.name.value),value:item._id});
-                                }
-                                response(dizi);
-                            }
-                        },
-                    error:function(err){
-                        console.error('err:',err);
-                    }
-                });
-            },
-            select: function (event, ui) {
-                    $("#itemNameOutput").val(ui.item.label); 
-                    $("#itemIdOutput").val(ui.item.value); 
-                    return false;
-                }
-        });
-
         refreshRecipeList();
     });
 </script>

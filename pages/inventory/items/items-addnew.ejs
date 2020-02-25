@@ -43,7 +43,8 @@
     }
 
     if(form.itemType=='helper-material'){
-        frmControl1['exceptInventory']={name:'exceptInventory', caption:'Envanter ve Recete hesaplarina dahil edilmesin', type:'checkbox'    }
+        frmControl1['exceptInventory']={name:'exceptInventory', caption:'Envanter/Stok tutulmasın', type:'checkbox'    }
+        frmControl1['exceptRecipeCalculation']={name:'exceptRecipeCalculation', caption:'Recete hesaplarina dahil edilmesin', type:'checkbox'    }
     }
 %>
 <%- partial('../../_common/form', {

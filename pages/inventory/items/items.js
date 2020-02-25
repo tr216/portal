@@ -31,6 +31,7 @@ module.exports = function(req,res,callback){
 	        localDocumentId:'',
 	        passive:false,
 	        exceptInventory:false,
+	        exceptRecipeCalculation:false,
 	        barkodlar:''
 	        
 		},

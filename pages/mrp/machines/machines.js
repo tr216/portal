@@ -7,6 +7,7 @@ module.exports = function(req,res,callback){
 			description:'',
 			minCapacity:0,
 			maxCapacity:0,
+			power:0,
 			passive:false,
 			machineParameters:[]
 		},

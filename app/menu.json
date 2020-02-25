@@ -64,7 +64,8 @@
 	{"text":"Ayarlar",		"path":"",					"icon":"wrench", "visible":true,
 		"nodes":[
 			{"text":"Lokasyonlar",			"path":"/settings/locations",		"icon":"map-marker", "visible":true, "nodes":[]},
-			{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]}
+			{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"plug", "visible":true, "nodes":[]},
+			{"text":"Yazdırma Tasarımları",	"path":"/settings/print-designs",	"icon":"print", "visible":true, "nodes":[]}
 		]
 	},
 	{"text":"System",		"path":"",					"icon":"shield-alt", "visible":true,

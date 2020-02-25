@@ -10,6 +10,7 @@ var engine = require('ejs-locals')
 var errorHandler = require('errorhandler');
 
 global.path_module = require('path');
+global.fs = require('fs');
 global.moment = require('moment');
 
 global.uuid = require('node-uuid');

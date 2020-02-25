@@ -1,0 +1,14 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/form',{
+    formControls:{
+        module      :{caption:'Modül',          type:'lookup',  lookup:printDesignModuleList, required:true},
+        name        :{caption:'Adı',            type:'textbox', required:true},
+        isDefault   :{caption:'Varsayılan',     type:'checkbox' },
+        design      :{caption:'Tasarım',        type:'textarea', rows:30  },
+        passive     :{caption:'Pasif',          type:'checkbox'}
+    },
+    action:'',
+    mode:'addnew'
+    }) 
+%>
+

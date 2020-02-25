@@ -1,0 +1,50 @@
+<%
+    title='Yazdir';
+
+%>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title><%=title%></title>
+
+    <link href="/css/fontawesome.v5.8.2.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <script type="text/javascript" src="/js/jquery.v3.4.1.min.js"></script>
+    
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap-datepicker3.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap-select.min.css" />
+    <link type="text/css" rel="stylesheet" href="/css/jquery-ui.min.css" />
+    <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/js/tr216-functions.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1><%=name%></h1>
+            </div>
+        </div>
+<div class="row">
+            <div class="col-md-12">
+                <img id='barcode' 
+            src="https://api.qrserver.com/v1/create-qr-code/?data=<%=name%>&size=100x100" 
+            alt="qr barcode tr216" 
+            title="Recete adi" 
+            width="100" 
+            height="100" />
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/js/bootstrap.bundle.v4.3.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-datepicker-locales/bootstrap-datepicker.tr.min.js"></script>
+    <script type="text/javascript" src="/js/tr216-ui.js"></script>
+</body>
+</html>

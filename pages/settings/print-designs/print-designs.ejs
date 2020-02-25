@@ -1,0 +1,17 @@
+<%layout('../../_common/layout')%>
+
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'module',    text:'Modul',    type:'lookup' , filter:true, lookupList:printDesignModuleList}, 
+        {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
+        {name:'isDefault',text:'Varsayılan?',type:'checkbox',width:1},
+        {name:'passive',text:'Pasif?',type:'checkbox',width:1},
+    ],
+    caption:'Yazdırma Tasarımları',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    deleteUrl:'/dbapi/print-designs/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>

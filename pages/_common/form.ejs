@@ -62,7 +62,7 @@
     <ul class="nav nav-tabs" role="tablist">
       <% for(var tabIndex=0;tabIndex<tabs.length;tabIndex++){ %>
       <li class="nav-item">
-          <a class="nav-link<%- tabs[tabIndex].active?' active':'' %>" href="#tab<%=tabIndex%>" role="tab" data-toggle="tab" id="IDtab<%=tabIndex%>" aria-controls="tab<%=tabIndex%>" aria-selected="<%- tabs[tabIndex].active?'true':'false' %>">
+          <a class="nav-link<%- tabs[tabIndex].active?' active':'' %>" href="#formTab<%=tabIndex%>" role="tab" data-toggle="tab" id="IDformTab<%=tabIndex%>" aria-controls="formTab<%=tabIndex%>" aria-selected="<%- tabs[tabIndex].active?'true':'false' %>">
               <% if(typeof tabs[tabIndex].icon!='undefined'){%><i class="fa fa-<%=tabs[tabIndex].icon %>"></i><%}%> <%=tabs[tabIndex].caption %>
           </a>
       </li>
@@ -70,7 +70,7 @@
     </ul>
     <div class="tab-content" style="min-height: 70vh;overflow: auto;">
       <% for(var tabIndex=0;tabIndex<tabs.length;tabIndex++){ %>
-        <div class="tab-pane<%- tabs[tabIndex].active?' show active':''%> " id="tab<%=tabIndex%>" role="tabpanel" aria-labelledby="IDtab<%=tabIndex%>">
+        <div class="tab-pane<%- tabs[tabIndex].active?' show active':''%> " id="formTab<%=tabIndex%>" role="tabpanel" aria-labelledby="IDformTab<%=tabIndex%>">
           <% if(typeof tabs[tabIndex].partial!='undefined'){ %>
           <%- partial(tabs[tabIndex].partial,form) %>
           <% } %>
