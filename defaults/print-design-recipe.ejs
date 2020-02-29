@@ -1,5 +1,7 @@
 <%
-    title='Yazdir';
+    // --------- Varsayilan Recete yazdirma tasarimi -------------
+    // EJS - html kodlama ile tasariminizi hazirlayabilirsiniz
+    title='Recete Yazdir';
 
 %>
 <!DOCTYPE html>
@@ -21,7 +23,6 @@
     <link type="text/css" rel="stylesheet" href="/css/bootstrap-datepicker3.min.css" />
     <link type="text/css" rel="stylesheet" href="/css/bootstrap-select.min.css" />
     <link type="text/css" rel="stylesheet" href="/css/jquery-ui.min.css" />
-    <link href="/css/tr216-portal.css" rel="stylesheet">
 
     <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/js/tr216-functions.js"></script>
@@ -35,20 +36,20 @@
 </style>
 </head>
 <body>
-    <div class="container m-1 p-1">
+    <div class="container" style="max-width: 100%!important;">
         <div class="row mb-3">
             <div class="col-md-6 offset-md-3 text-center"><h1>REÇETE</h1></div>
-            <div class="col-md-3 text-right"><img id='barcode' src="https://api.qrserver.com/v1/create-qr-code/?data=<%=_id%>&size=100x100" alt="qrbarcode tr216"  title="Recete ID" width="50" height="50" /></div>
+            <div class="col-md-3 text-right"><img id='barcode' src="https://api.qrserver.com/v1/create-qr-code/?data=<%=data._id%>&size=100x100" alt="qrbarcode tr216"  title="Recete ID" width="50" height="50" /></div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-bordered m-0"  cellspacing="0" width="100%">
                     <tbody>
                         <tr>
-                            <td width="70%" class="top">Mamül:<br><h2><%=item.name.value%></h2></td>
+                            <td width="70%" class="top">Mamül:<br><h2><%=data.item.name.value%></h2></td>
                             <td width="30%" class="top">
-                                Reçete:<b><%=name%></b><br>
-                                <h3>Revizyon:<b><%=revision%></b></h3>
+                                Reçete:<b><%=data.name%></b><br>
+                                <h3>Revizyon:<b><%=data.revision%></b></h3>
                             </td>
                         </tr>
                     </tbody>
@@ -68,8 +69,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <% if(typeof process!='undefined'){ %>
-                        <% process.forEach((e,index)=>{ %> 
+                    <% if(typeof data.process!='undefined'){ %>
+                        <% data.process.forEach((e,index)=>{ %> 
                         <tr>
                             <td class="top"><%=(index+1).toString()%></td>
                             <td class="top"><%=e.station.name%></td>
@@ -107,8 +108,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <% if(typeof materialSummary!='undefined'){ %>
-                        <% materialSummary.forEach((e,index)=>{ %> 
+                    <% if(typeof data.materialSummary!='undefined'){ %>
+                        <% data.materialSummary.forEach((e,index)=>{ %> 
                         <tr>
                             <td><%=e.item.name.value%></td>
                             <td><%=(e.quantity + ' ' + e.unitCode)%></td>
@@ -128,8 +129,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <% if(typeof outputSummary!='undefined'){ %>
-                        <% outputSummary.forEach((e,index)=>{ %> 
+                    <% if(typeof data.outputSummary!='undefined'){ %>
+                        <% data.outputSummary.forEach((e,index)=>{ %> 
                         <tr>
                             <td><%=e.item.name.value%></td>
                             <td><%=(e.quantity + ' ' + e.unitCode)%></td>

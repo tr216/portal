@@ -6,7 +6,8 @@
   if(typeof message=='undefined') message='';
 
   if(typeof tabs=='undefined') showTabs=false;
-  
+
+ 
   switch(mode){
     case 'edit':
       funcTitle='Değiştir'
@@ -23,13 +24,28 @@
   if(mode!='view'){
     headerButtons +='<button type="submit" form="' + formName + '" class="btn btn-primary" title="Kaydet"><i class="fas fa-save"></i></button>';
   }
+  if(typeof printUrl!='undefined'){
+    if(typeof form!='undefined'){
+      if(typeof form._id!='undefined'){
+        printUrl=printUrl.replaceAll('{_id}',form._id);
+      }
+    }
+    headerButtons +='<a href="javascript:printForm();" class="btn btn-info" title="Yazdır"><i class="fas fa-print"></i></a>';
+    
+  }
   headerButtons +='<a href="javascript:openBack();" class="btn btn-dark ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
-
+  console.log('headerButtons:',headerButtons);
 %>
 <script type="text/javascript">
     var headerButtons=document.getElementById('headerButtons');
     if(headerButtons){
       headerButtons.innerHTML='<%- headerButtons %>';
+    }
+
+    function printForm(){
+      <% if(typeof printUrl!='undefined') { %>
+      popupCenter('/general/print/preview?db=<%=db%>&sid=<%=sid%>&path=<%=printUrl%>','Yazdir - <%=title%>','900','600');
+      <% } %>
     }
 </script>
 <form action="<%=action%>" method="POST" role="form" name="<%=formName%>" id="<%=formName%>">

@@ -1,0 +1,32 @@
+<%layout('../../_common/layout')%>
+
+<% if(typeof message!='undefined') { %>
+    <% if(message!='') { %>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <%=message %>
+        </div>
+    </div>
+</div>
+    <% } %>
+<% } %>
+
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'identifier',text:'VknTckn',type:'label', filter:true,orderable:true,align:'left'},
+        {name:'title',text:'Ünvan',type:'label',filter:true, orderable:true},
+        {name:'postboxAlias',text:'postboxAlias',type:'label',filter:true, orderable:true},
+        {name:'systemCreateDate',text:'systemCreateDate',type:'label', format:'yyyy-mm-dd hh:mm:ss', filter:false, orderable:true, nowrap:true},
+        {name:'firstCreateDate',text:'firstCreateDate',type:'label', format:'yyyy-mm-dd hh:mm:ss', filter:false, orderable:true, nowrap:true},
+        {name:'enabled',text:'Aktif?',type:'checkbox',width:1, filter:true, orderable:false}
+    ],
+    caption:'E-Fatura Mükellefleri',
+    addNewButton:false,
+    viewButton:false,
+    editButton:false,
+    deleteButton:false,
+    selection:false,
+    
+    }) 
+%>

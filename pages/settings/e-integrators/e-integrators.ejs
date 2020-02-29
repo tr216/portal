@@ -3,25 +3,13 @@
     fields:[
         {name:'eIntegrator',text:'GIB Entegrator',type:'lookup',lookup:eIntegrators, orderable:true},
         {name:'name',text:'Adı',type:'label', orderable:true},
-        {name:'url',text:'url',type:'label', orderable:true},
-        {name:'firmNo',text:'Firma No',type:'label', orderable:true},
-        {name:'username',text:'username',type:'label', orderable:false},
-        {name:'password',text:'password',type:'label', orderable:false},
-        {name:'invoicePrefix',text:'Fat.ÖnEk',type:'label', orderable:false},
-        {name:'dispatchPrefix',text:'İrs.ÖnEk',type:'label', orderable:false},
-        <!-- {name:'postboxAlias',text:'Posta Kutusu',type:'label', orderable:false}, -->
-        <!-- {name:'senderboxAlias',text:'Gönderi Kutusu',type:'label', orderable:false}, -->
         {name:'isDefault',text:'Varsayılan',type:'checkbox',width:1, orderable:false},
-        {name:'localConnectorImportInvoice.localConnector.name',text:'LConn Import Fat.',type:'label', orderable:false},
-        {name:'localConnectorExportInvoice.localConnector.name',text:'LConn Export Fat.',type:'label', orderable:false},
-        {name:'localConnectorImportELedger.localConnector.name',text:'LConn Import E-Defter.',type:'label', orderable:false},
         {name:'passive',text:'Pasif',type:'checkbox',width:1, orderable:false}
     ],
     caption:'GIB Entegrator Tanimlari',
     addNewButton:true,
     editButton:true,
     deleteButton:true,
-    customButtons:[{path:'/settings/e-integrators/xslt/{_id}?db=' + db + '&sid=' + sid,text:'XSLT Tasarimlari',icon:'fas fa-file-code'}],
     deleteUrl:'/dbapi/e-integrators/{_id}?db='+db+'&sid=' + sid
     }) 
 %>

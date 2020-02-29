@@ -6,19 +6,87 @@ module.exports = function(req,res,callback){
 		form:{
 			eIntegrator:'',
 			name:'',
-			firmNo:0,
-			url:'',
-			username:'',
-			password:'',
-			invoicePrefix:'AAA',
-			dispatchPrefix:'AAA',
-			postboxAlias:'default',
-			senderboxAlias:'default',
+			eInvoice:{
+				url:'',
+				firmNo:0,
+				username:'',
+				password:'',
+				prefix:'AAA',
+				postboxAlias:'defaultpk',
+				senderboxAlias:'defaultpk',
+				localConnector:{
+					import:{
+						localConnector:''
+					},
+					export:{
+						localConnector:''
+					}
+				},
+				xslt:[{
+					fileName:'xsltfile001.xslt',
+					isDefault:true,
+					design:''
+				}]
+			},
+			eDespatch:{
+				url:'',
+				firmNo:0,
+				username:'',
+				password:'',
+				prefix:'AAA',
+				postboxAlias:'defaultpk',
+				senderboxAlias:'defaultpk',
+				localConnector:{
+					import:{
+						localConnector:''
+					},
+					export:{
+						localConnector:''
+					}
+				},
+				xslt:[{
+					fileName:'xsltfile001.xslt',
+					isDefault:true,
+					design:''
+				}]
+			},
+			eDocument:{
+				url:'',
+				firmNo:0,
+				username:'',
+				password:'',
+				prefix:'AAA',
+				postboxAlias:'defaultpk',
+				senderboxAlias:'defaultpk',
+				localConnector:{
+					import:{
+						localConnector:''
+					},
+					export:{
+						localConnector:''
+					}
+				},
+				xslt:[{
+					fileName:'xsltfile001.xslt',
+					isDefault:true,
+					design:''
+				}]
+			},
+			eLedger:{
+				url:'',
+				firmNo:0,
+				username:'',
+				password:'',
+				localConnector:{
+					import:{
+						localConnector:''
+					},
+					export:{
+						localConnector:''
+					}
+				}
+			},
 			isDefault:false,
-			localConnectorImportInvoice:{localConnector:''},
-			localConnectorExportInvoice:{localConnector:''},
-			localConnectorImportELedger:{localConnector:''},
-			
 			passive:false
 		},
 		list:[],
@@ -65,7 +133,6 @@ function getList(req,res,data,callback){
 		res.redirect('/settings/e-integrators?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
-		eventLog(data);
 		data.filter.db=undefined;
 		delete data.filter.db;
 		data.filter.sid=undefined;
@@ -98,7 +165,7 @@ function addnew(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
 		if(req.method=='POST'){
 			data.form=Object.assign(data.form,req.body);
-			eventLog('data.form:',data.form);
+			
 			api.post('/' + req.query.db + '/e-integrators',req,data.form,(err,resp)=>{
 				if(!err){
 					res.redirect('/settings/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);

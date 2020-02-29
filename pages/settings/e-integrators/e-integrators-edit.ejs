@@ -1,23 +1,75 @@
 <%layout('../../_common/layout')%>
 <%- partial('../../_common/form',{
-
-    formControls:{
-        eIntegrator:{caption:'GIB Entegrator', type:'lookup' , lookup:eIntegrators   ,required:true},
-        name:{caption:'Adı(nick name)', type:'textbox'    ,required:true},
-        url:{caption:'Web service url', type:'textbox'    },
-        firmNo:{caption:'Firma No', type:'textbox'    },
-        username:{caption:'Service Username', type:'textbox'    },
-        password:{caption:'Service Password', type:'textbox'    },
-        invoicePrefix:{caption:'Fatura Ön Ek', type:'textbox'  },
-        dispatchPrefix:{caption:'İrsaliye Ön Ek', type:'textbox' },
-        postboxAlias:{caption:'Posta Kutusu', type:'textbox'  },
-        senderboxAlias:{caption:'Gonderim Kutusu', type:'textbox'  },
-        isDefault:{caption:'Varsayilan?', type:'checkbox'    },
-        localConnector1:{name:'localConnectorImportInvoice.localConnector', caption:'Local Connector Import Fatura(Gidecek faturalari tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
-        localConnector2:{name:'localConnectorExportInvoice.localConnector',caption:'Local Connector Export Fatura(Gelen faturalari serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
-        localConnector3:{name:'localConnectorImportELedger.localConnector',caption:'Local Connector Import E-Defter(Gidecek E-Defterleri tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
-        passive:{caption:'Pasif?', type:'checkbox'    }
-    },
+   tabs:[
+        {
+            caption:'Bilgiler',
+            formControls:{
+                eIntegrator:{caption:'GIB Entegrator', type:'lookup' , lookup:eIntegrators   ,required:true},
+                name:{caption:'Adı(nick name)', type:'textbox'    ,required:true},
+                isDefault:{caption:'Varsayilan?', type:'checkbox'    },
+                passive:{caption:'Pasif?', type:'checkbox'    }
+            }
+        },
+        {
+            caption:'E-Fatura',
+            formControls:{
+                url:{ name:'eInvoice.url', caption:'Web service url', type:'textbox'    },
+                firmNo:{ name:'eInvoice.firmNo', caption:'Firma No', type:'textbox'    },
+                username:{ name:'eInvoice.username', caption:'Service Username', type:'textbox'    },
+                password:{ name:'eInvoice.password', caption:'Service Password', type:'textbox'    },
+                prefix:{ name:'eInvoice.prefix', caption:'Fatura Ön Ek', type:'textbox'  },
+                postboxAlias:{ name:'eInvoice.postboxAlias',caption:'Posta Kutusu', type:'textbox'  },
+                senderboxAlias:{ name:'eInvoice.senderboxAlias', caption:'Gonderim Kutusu', type:'textbox'  },
+                importLocalConnector:{name:'eInvoice.import.localConnector', caption:'Local Connector Import Fatura(Gidecek faturalari tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                exportLocalConnector:{name:'eInvoice.export.localConnector', caption:'Local Connector Export Fatura(Gelen faturalari serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                xslt0fileName  :{name:'eInvoice.xslt.0.fileName', caption:'XSLT Dosya adi',     type:'textbox'   },
+                xslt0design  :{name:'eInvoice.xslt.0.design', caption:'XSLT Tasarim',      type:'textarea',  rows:30  }
+            }
+        },
+        {
+            caption:'E-Irsaliye',
+            formControls:{
+                url:{ name:'eDespatch.url', caption:'Web service url', type:'textbox'    },
+                firmNo:{ name:'eDespatch.firmNo', caption:'Firma No', type:'textbox'    },
+                username:{ name:'eDespatch.username', caption:'Service Username', type:'textbox'    },
+                password:{ name:'eDespatch.password', caption:'Service Password', type:'textbox'    },
+                prefix:{ name:'eDespatch.prefix', caption:'Irsaliye Ön Ek', type:'textbox'  },
+                postboxAlias:{ name:'eDespatch.postboxAlias',caption:'Posta Kutusu', type:'textbox'  },
+                senderboxAlias:{ name:'eDespatch.senderboxAlias', caption:'Gonderim Kutusu', type:'textbox'  },
+                importLocalConnector:{name:'eDespatch.import.localConnector', caption:'Local Connector Import Irsaliye(Gidecek irsaliyeleri tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                exportLocalConnector:{name:'eDespatch.export.localConnector', caption:'Local Connector Export Irsaliye(Gelen irsaliyeleri serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                xslt0fileName  :{name:'eDespatch.xslt.0.fileName', caption:'XSLT Dosya adi',     type:'textbox'   },
+                xslt0design  :{name:'eDespatch.xslt.0.design', caption:'XSLT Tasarim',      type:'textarea',  rows:30  }
+            }
+        },
+        {
+            caption:'E-Defter',
+            formControls:{
+                url:{ name:'eLedger.url', caption:'Web service url', type:'textbox'    },
+                firmNo:{ name:'eLedger.firmNo', caption:'Firma No', type:'textbox'    },
+                username:{ name:'eLedger.username', caption:'Service Username', type:'textbox'    },
+                password:{ name:'eLedger.password', caption:'Service Password', type:'textbox'    },
+                importLocalConnector:{name:'eLedger.import.localConnector', caption:'Local Connector Import Defter(Gidecek defteri tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                exportLocalConnector:{name:'eLedger.export.localConnector', caption:'Local Connector Export Defter(Gelen defteri serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' }
+            }
+        },
+        {
+            caption:'E-Belge',
+            formControls:{
+                url:{ name:'eDocument.url', caption:'Web service url', type:'textbox'    },
+                firmNo:{ name:'eDocument.firmNo', caption:'Firma No', type:'textbox'    },
+                username:{ name:'eDocument.username', caption:'Service Username', type:'textbox'    },
+                password:{ name:'eDocument.password', caption:'Service Password', type:'textbox'    },
+                prefix:{ name:'eDocument.prefix', caption:'Irsaliye Ön Ek', type:'textbox'  },
+                postboxAlias:{ name:'eDocument.postboxAlias',caption:'Posta Kutusu', type:'textbox'  },
+                senderboxAlias:{ name:'eDocument.senderboxAlias', caption:'Gonderim Kutusu', type:'textbox'  },
+                importLocalConnector:{name:'eDocument.import.localConnector', caption:'Local Connector Import Belge(Gidecek belgeleri tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                exportLocalConnector:{name:'eDocument.export.localConnector', caption:'Local Connector Export Belge(Gelen belgeleri serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                xslt0fileName  :{name:'eDocument.xslt.0.fileName', caption:'XSLT Dosya adi',     type:'textbox'   },
+                xslt0design  :{name:'eDocument.xslt.0.design', caption:'XSLT Tasarim',      type:'textarea',  rows:30  }
+            }
+        }
+    ],
     action:'',
     mode:'edit'
     }) 

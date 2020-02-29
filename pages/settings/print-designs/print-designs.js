@@ -1,6 +1,6 @@
 module.exports = function(req,res,callback){
 	var data={
-		printDesignModuleList:staticValues.printDesignModuleList,
+		printDesignModuleList:JSON.parse(JSON.stringify(staticValues.printDesignModuleList)),
 		form:{
 			module:'',
 			name:'',
@@ -75,6 +75,7 @@ function getList(req,res,data,callback){
 
 
 function addnew(req,res,data,callback){
+	data.printDesignModuleList.unshift({text:'-- Seç --',value:''});
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body);
 		api.post('/' + req.query.db + '/print-designs',req,data.form,(err,resp)=>{
@@ -87,7 +88,15 @@ function addnew(req,res,data,callback){
 				}
 			});
 	}else{
-		fs.readFile(path_module.join(__dirname,'../../../defaults','print-design-empty.ejs'),'utf-8',(err,fileData)=>{
+		var fileName='print-design-empty.ejs'
+		switch((req.query.module || '')){
+			case 'recipe':
+				fileName='print-design-recipe.ejs';
+			break;
+			default:
+			break;
+		}
+		fs.readFile(path_module.join(__dirname,'../../../defaults',fileName),'utf-8',(err,fileData)=>{
 			if(!err){
 				data.form.design=fileData;
 			}

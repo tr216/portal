@@ -1,6 +1,6 @@
 [
 	{"text":"Ana Sayfa",				"path":"/general/dashboard",		"icon":"tachometer-alt", "visible":true, "nodes":[]},
-	{"text":"Satış",	"module":"sale",			"path":"",					"icon":"shopping-cart", "visible":true, "nodes":[
+	{"text":"Satış",	"module":"sales",			"path":"",					"icon":"shopping-cart", "visible":true, "nodes":[
 		{"text":"Siparişler",		"path":"/general/closed-module", "path1":"/sales/man-orders",		"icon":"file-alt", "visible":true, "nodes":[]}
 	]},
 	{"text":"Satın alma",	"module":"purchase",			"path":"",					"icon":"shopping-bag", "visible":true, "nodes":[
@@ -19,7 +19,7 @@
 			{"text":"Üretim Noktaları",	"path":"/mrp/file-importers",	"icon":"file-import", "visible":true, "nodes":[]}
 		]}
 	]},
-	{"text":"Stok",	"module":"purchase",			"path":"",					"icon":"box-open", "visible":true, "nodes":[
+	{"text":"Stok",	"module":"inventory",			"path":"",					"icon":"box-open", "visible":true, "nodes":[
 		{"text":"Stok Kartlari",		"path":"/inventory/items?itemType=item",		"icon":"dolly-flatbed", "visible":true, "nodes":[]},
 		{"text":"Envanter",		"path":"/general/closed-module", "path1":"/sales/man-orders",		"icon":"file-alt", "visible":true, "nodes":[]}
 	]},

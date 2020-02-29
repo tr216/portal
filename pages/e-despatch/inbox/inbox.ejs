@@ -1,0 +1,164 @@
+<%layout('../../_common/layout')%>
+<form action="" method="POST" role="form" name="form1">
+    <div class="row m-0 mt-2">
+        <div class="col-12 p-0">
+<%- partial('../../_common/date-filter',{includeForm:false,includeFilterButton:false}) %>
+    
+            <div class="float-left form-inline ml-md-4">
+                <label class="text-primary">Senaryo:</label>
+                <select class="form-control input-inline input-sm" name="profileId" id="profileId">
+                    <% eInvoiceProfileIdList.forEach((e)=>{ %> 
+                    <option value="<%=e.value%>"<% if(typeof filter.profileId!='undefined') if(filter.profileId==e.value){%>selected<% } %>><%=e.text%></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="float-left form-inline ml-md-2">
+                <label class="text-primary">Fatura Türü:</label>
+                <select class="form-control input-inline input-sm" name="invoiceTypeCode" id="invoiceTypeCode">
+                    <% eInvoiceTypeCodeList.forEach((e)=>{ %> 
+                    <option value="<%=e.value%>"<% if(typeof filter.invoiceTypeCode!='undefined') if(filter.invoiceTypeCode==e.value){%>selected<% } %>><%=e.text%></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="float-md-right">
+                <button type="submit" name="btnFilter" class="btn btn-primary" value="true"><i class="fa fa-filter"></i> Filtrele</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="btn-toolbar mt-2 border p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-primary" id="btnApprove">Onayla</button>
+  </div>
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-danger" id="btnDecline">Reddet</button>
+  </div>
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-info" id="btnExportToLocal" title="Faturalari Serverınıza gönder "><i class="fas fa-plug"></i> Entegrasyon</button>
+  </div>
+</div>
+
+<% if(typeof message!='undefined') { %>
+    <% if(message!='') { %>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <%=message %>
+        </div>
+    </div>
+</div>
+    <% } %>
+<% } %>
+
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'invoiceNo',text:'Fat.No',type:'label', filterField:'invoiceNo', filter:true,orderable:true},
+        {name:'issueDate',text:'Fat. Tarihi',type:'label', orderable:true},
+        {name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
+        {name:'amount',text:'Tutar',type:'label'},
+        {name:'tax',text:'Vergi',type:'label' },
+        {name:'currency',text:'Döviz',type:'lookup',filter:true, filterField:'documentCurrencyCode', lookupList:currencyList,textField:'text', valueField:'value', dontUseLookup:true },
+        {name:'invoiceStatus',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:eInvoiceStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
+    ],
+    caption:'Gelen Faturalar',
+    addNewButton:true,
+    viewButton:false,
+    editButton:true,
+    deleteButton:true,
+    selection:true,
+    customButtons:[
+        {path:'/e-invoice/inbox/view/{_id}?db=' + db + '&sid=' + sid,text:'Goruntule',icon:'fas fa-search-plus' , popup:true, target:'_blank'},
+        {path:'/e-invoice/inbox/pdf/{_id}?db=' + db + '&sid=' + sid,text:'Pdf',icon:'fas fa-file-pdf' , popup:false, target:'_blank'}
+    ]
+    ,
+    deleteUrl:'/dbapi/e-invoice/invoice/{_id}?db='+db+'&sid=' + sid
+    }) 
+%>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        $('#btnExportToLocal').click(function(){
+            $.ajax({
+                url:'/dbapi/e-invoice/transfer/export?db=<%=db%>&sid=<%=sid%>',
+                data:{},
+                type:'POST',
+                success:function(result){
+                    if(result.success){
+                        window.location.reload();
+                    }else{
+
+                        alert(result.error.code + '\n' + result.error.message);
+                        
+                    }
+                }
+            });
+            
+        });
+
+        $('#btnApprove').click(function(){
+            var data={list:[]};
+            $(".checkSingle").each(function() {
+                if(this.checked){
+                    var satir=JSON.parse(decodeURIComponent(this.value));
+                    if(satir.doc.invoiceStatus=='WaitingForAprovement'){
+                        data.list.push({_id:satir._id, ID:satir.doc.ID});
+                    }
+                    
+                }
+            });
+            if(data.list.length==0)  return alert('Kayit secilmemis!');
+            if(!confirm(data.list.length + ' adet ticari faturayi onayliyor musunuz?')) return;
+            $.ajax({
+                url:'/dbapi/e-invoice/approve?db=<%=db%>&sid=<%=sid%>',
+                data:data,
+                type:'POST',
+                success:function(result){
+                    if(result.success){
+                        
+                        window.location.reload();
+                    }else{
+                        alert(result.error.code + '\n' + result.error.message);
+                    }
+                }
+            });
+            
+        });
+
+        $('#btnDecline').click(function(){
+            var data={list:[]};
+            $(".checkSingle").each(function() {
+                if(this.checked){
+                    var satir=JSON.parse(decodeURIComponent(this.value));
+                    if(satir.doc.invoiceStatus=='WaitingForAprovement'){
+                        data.list.push({_id:satir._id, ID:satir.doc.ID});
+                    }
+                    
+                }
+            });
+            if(data.list.length==0)  return alert('Kayit secilmemis!');
+            if(!confirm(data.list.length + ' adet ticari faturayi reddediyor musunuz?')) return;
+            $.ajax({
+                url:'/dbapi/e-invoice/decline?db=<%=db%>&sid=<%=sid%>',
+                data:data,
+                type:'POST',
+                success:function(result){
+                    if(result.success){
+                        
+                        window.location.reload();
+                    }else{
+                        alert(result.error.code + '\n' + result.error.message);
+                    }
+                }
+            });
+            
+        });
+    });
+
+    function showErrors(_id){
+        var url='<%=urlPath%>/errors/'+ _id + '?db=<%=db%>&sid=<%=sid%>';
+        popupCenter(url,'Goster','900','600');
+    }
+</script>

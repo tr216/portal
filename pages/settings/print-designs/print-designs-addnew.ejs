@@ -4,7 +4,7 @@
         module      :{caption:'Modül',          type:'lookup',  lookup:printDesignModuleList, required:true},
         name        :{caption:'Adı',            type:'textbox', required:true},
         isDefault   :{caption:'Varsayılan',     type:'checkbox' },
-        design      :{caption:'Tasarım',        type:'textarea', rows:30  },
+        design      :{caption:'Tasarım(EJS/html)',        type:'textarea', rows:30  },
         passive     :{caption:'Pasif',          type:'checkbox'}
     },
     action:'',
@@ -12,3 +12,15 @@
     }) 
 %>
 
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        var urlParams=getAllUrlParams();
+        if(urlParams.module!=undefined){
+            $("select[name='module']").val(urlParams.module);
+        }
+        $("select[name='module']").on('change',function(){
+            window.location.href='<%=urlPath%>?db=<%=db%>&sid=<%=sid%>&module=' + $("select[name='module']").val();
+        });
+    })
+</script>
