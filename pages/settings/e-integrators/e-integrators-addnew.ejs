@@ -1,6 +1,6 @@
 <%layout('../../_common/layout')%>
 <%- partial('../../_common/form',{
-   tabs:[
+    tabs:[
         {
             caption:'Bilgiler',
             formControls:{
@@ -22,8 +22,7 @@
                 senderboxAlias:{ name:'eInvoice.senderboxAlias', caption:'Gonderim Kutusu', type:'textbox'  },
                 importLocalConnector:{name:'eInvoice.import.localConnector', caption:'Local Connector Import Fatura(Gidecek faturalari tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
                 exportLocalConnector:{name:'eInvoice.export.localConnector', caption:'Local Connector Export Fatura(Gelen faturalari serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
-                xslt0fileName  :{name:'eInvoice.xslt.0.fileName', caption:'XSLT Dosya adi',     type:'textbox'   },
-                xslt0design  :{name:'eInvoice.xslt.0.design', caption:'XSLT Tasarim',      type:'textarea',  rows:30  }
+                xsltFiles0  :{name:'eInvoice.xsltFiles.0', caption:'XSLT Dosya',     type:'fileBase64'   }
             }
         },
         {
@@ -38,8 +37,7 @@
                 senderboxAlias:{ name:'eDespatch.senderboxAlias', caption:'Gonderim Kutusu', type:'textbox'  },
                 importLocalConnector:{name:'eDespatch.import.localConnector', caption:'Local Connector Import Irsaliye(Gidecek irsaliyeleri tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
                 exportLocalConnector:{name:'eDespatch.export.localConnector', caption:'Local Connector Export Irsaliye(Gelen irsaliyeleri serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
-                xslt0fileName  :{name:'eDespatch.xslt.0.fileName', caption:'XSLT Dosya adi',     type:'textbox'   },
-                xslt0design  :{name:'eDespatch.xslt.0.design', caption:'XSLT Tasarim',      type:'textarea',  rows:30  }
+                xsltFiles0  :{name:'eDespatch.xsltFiles.0', caption:'XSLT Dosya',     type:'fileBase64'   }
             }
         },
         {
@@ -65,8 +63,7 @@
                 senderboxAlias:{ name:'eDocument.senderboxAlias', caption:'Gonderim Kutusu', type:'textbox'  },
                 importLocalConnector:{name:'eDocument.import.localConnector', caption:'Local Connector Import Belge(Gidecek belgeleri tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
                 exportLocalConnector:{name:'eDocument.export.localConnector', caption:'Local Connector Export Belge(Gelen belgeleri serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
-                xslt0fileName  :{name:'eDocument.xslt.0.fileName', caption:'XSLT Dosya adi',     type:'textbox'   },
-                xslt0design  :{name:'eDocument.xslt.0.design', caption:'XSLT Tasarim',      type:'textarea',  rows:30  }
+                xsltFiles0  :{name:'eDocument.xsltFiles.0', caption:'XSLT Dosya',     type:'fileBase64'   }
             }
         }
     ],

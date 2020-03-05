@@ -159,33 +159,35 @@ function edit(req,res,data,callback){
 		callback(null,data);
 		return;
 	}
-	if(req.method=='POST' || req.method=='PUT'){
-		data.form=Object.assign(data.form,req.body);
-		
-		data.form['accountingSupplierParty']={party:(data.form.party || {})}
+	initLookUpLists(req,res,data,(err,data)=>{
+		if(req.method=='POST' || req.method=='PUT'){
+			data.form=Object.assign(data.form,req.body);
+			
+			data.form['accountingSupplierParty']={party:(data.form.party || {})}
 
-		api.put('/' + req.query.db + '/e-invoice/invoice/' + _id,req,data.form,(err,resp)=>{
-			if(!err){
-				res.redirect('/e-invoice/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
-				return;
-			}else{
-				data['message']=err.message;
-				callback(null,data);
-			}
-		});
-	}else{
-		initLookUpLists(req,res,data,(err,data)=>{
-			api.get('/' + req.query.db + '/e-invoice/invoice/' + _id,req,null,(err,resp)=>{
+			api.put('/' + req.query.db + '/e-invoice/invoice/' + _id,req,data.form,(err,resp)=>{
 				if(!err){
-					data.form=Object.assign(data.form,resp.data);
-					callback(null,data);
+					res.redirect('/e-invoice/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
+					return;
 				}else{
 					data['message']=err.message;
 					callback(null,data);
 				}
 			});
-		})
-	}
+		}else{
+			
+				api.get('/' + req.query.db + '/e-invoice/invoice/' + _id,req,null,(err,resp)=>{
+					if(!err){
+						data.form=Object.assign(data.form,resp.data);
+						callback(null,data);
+					}else{
+						data['message']=err.message;
+						callback(null,data);
+					}
+				});
+			
+		}
+	})
 }
 
 function deleteItem(req,res,data,callback){

@@ -41,11 +41,11 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="" class="m-0">Mal/Hizmet</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-name" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-name" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="" class="m-0">Miktar</label>
-                                <input type="number" class="form-control" id="invoiceLine-invoicedQuantity" placeholder="" autocomplete="off" value="" onchange="calculateInvoiceLine()">
+                                <input type="number" class="form-control" id="invoiceLine-invoicedQuantity" placeholder="" value="" onchange="calculateInvoiceLine()">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Birim</label>
@@ -59,11 +59,11 @@
                         <div id="kdvPanel" class="row collapse show">
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Kdv Oran</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-KDV-percent" placeholder="" autocomplete="off" value="0" onchange="calculateInvoiceLine()">
+                                <input type="number" class="form-control text-right" id="invoiceLine-KDV-percent" placeholder="" value="0" onchange="calculateInvoiceLine()">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Kdv Tutar</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-KDV-amount" placeholder="" autocomplete="off" value="0.00" readonly="true">
+                                <input type="text" class="form-control text-right" id="invoiceLine-KDV-amount" placeholder="" value="0.00" readonly="true">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="" class="w-100 m-0">Kdv Muafiyet Sebebi</label>
@@ -77,11 +77,11 @@
                         <div id="tevkifatPanel" class="row collapse">
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Tevkifat Oran</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-Tevkifat-percent" placeholder="" autocomplete="off" value="" onchange="calculateInvoiceLine()">
+                                <input type="number" class="form-control text-right" id="invoiceLine-Tevkifat-percent" placeholder="" value="" onchange="calculateInvoiceLine()">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Tevkifat Tutar</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-Tevkifat-amount" placeholder="" autocomplete="off" value="" readonly="true">
+                                <input type="text" class="form-control text-right" id="invoiceLine-Tevkifat-amount" placeholder="" value="" readonly="true">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="" class="w-100 m-0">Vergi Kodu</label>
@@ -95,15 +95,15 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Fiyat</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-price-priceAmount" placeholder="" autocomplete="off" value="0.00000000" onchange="calculateInvoiceLine()">
+                                <input type="number" class="form-control text-right" id="invoiceLine-price-priceAmount" placeholder=""  value="0.00000000" onchange="calculateInvoiceLine()">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Tutar</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-lineExtensionAmount" placeholder="" autocomplete="off" value="0.00" readonly="true">
+                                <input type="text" class="form-control text-right" id="invoiceLine-lineExtensionAmount" placeholder="" value="0.00" readonly="true">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Kdv Dahil Tutar</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-taxInclusiveAmount" placeholder="" autocomplete="off" value="0.00" readonly="true">
+                                <input type="text" class="form-control text-right" id="invoiceLine-taxInclusiveAmount" placeholder="" value="0.00" readonly="true">
                             </div>
                         </div>
                         <div id="iskontoPanel" class="collapse">
@@ -115,9 +115,9 @@
                             </div>
                             <div id="iskontoRows">
                                 <div class="row" id="iskontoRow0">
-                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoOran" autocomplete="off" value=""></div>
-                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoTutar" autocomplete="off" value=""></div>
-                                    <div class="form-group col-4"><input type="text" class="form-control satirIskontoAciklama" autocomplete="off" value=""></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoOran" value=""></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoTutar" value=""></div>
+                                    <div class="form-group col-4"><input type="text" class="form-control satirIskontoAciklama" value=""></div>
                                     <div class="form-group col-1"><a class="btn btn-secondary btn-sm fas fa-plus-square" href="javascript:addIskontoRow()" title="iskonto ekle"></a></div>
                                 </div>
                             </div>
@@ -131,9 +131,9 @@
                             </div>
                             <div id="artirimRows">
                                 <div class="row" id="artirimRow0">
-                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimOran" autocomplete="off" value=""></div>
-                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimTutar" autocomplete="off" value=""></div>
-                                    <div class="form-group col-4"><input type="text" class="form-control satirArtirimAciklama" autocomplete="off" value=""></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimOran" value=""></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimTutar" value=""></div>
+                                    <div class="form-group col-4"><input type="text" class="form-control satirArtirimAciklama" value=""></div>
                                     <div class="form-group col-1"><a class="btn btn-secondary btn-sm fas fa-plus-square" href="javascript:addArtirimRow()" title="Artırım ekle"></a></div>
                                 </div>
                             </div>
@@ -146,28 +146,28 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Satıcı Mal/Hizmet Kodu</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-sellersItemIdentification" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-sellersItemIdentification" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Alıcı Mal/Hizmet Kodu</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-buyersItemIdentification" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-buyersItemIdentification" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Üretici Kodu(Barkod)</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-manufacturersItemIdentification" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-manufacturersItemIdentification" placeholder="" value="">
                             </div>
                             <div class="w-100"></div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Marka</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-brandName" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-brandName" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Model</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-modelName" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-modelName" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Açıklama</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-description" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-description" placeholder="" value="">
                             </div>
                             <div class="w-100"></div>
                             <div class="form-group col-md-4">
@@ -181,11 +181,11 @@
                             
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">GTIPNO</label>
-                                <input type="text" class="form-control" id="invoiceLine-GTIPNO" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-GTIPNO" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Sınıflandırma Kodu</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-itemClassificationCode" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-itemClassificationCode" placeholder="" value="">
                             </div>
                             <div class="w-100"></div>
                            
@@ -208,7 +208,7 @@
                             <div class="w-100"></div>
                             <div class="form-group col-12">
                                 <label for="" class="m-0">Anahtar Kelimeler(keywords)</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-keyword" placeholder="" autocomplete="off" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-keyword" placeholder="" value="">
                             </div>
                         </div>
                         <div class="row">

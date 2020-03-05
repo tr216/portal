@@ -356,7 +356,7 @@ function saveInvoiceLine(index){
 
 	// end of ihracat paketleri ---
 	invoice.invoiceLine[index]=line;
-	console.log('invoice.invoiceLine[index]:',invoice.invoiceLine[index]);
+	
     saveInvoice((err)=>{
     	if(!err){
     		reloadLineGrid();
@@ -369,14 +369,15 @@ function saveInvoiceLine(index){
 }
 
 function saveInvoice(callback){
+	invoice.eIntegrator=$("select[name='eIntegrator']").val();
 	invoice.ID={ value:$("input[name='ID[value]']").val()}
     invoice.issueDate={ value:$("input[name='issueDate[value]']").val()}
     invoice.issueTime={ value:$("input[name='issueTime[value]']").val()}
-    invoice.profileId={ value:$("input[name='profileId[value]']").val()}
-    invoice.invoiceTypeCode={ value:$("input[name='invoiceTypeCode[value]']").val()}
+    invoice.profileId={ value:$("select[name='profileId[value]']").val()}
+    invoice.invoiceTypeCode={ value:$("select[name='invoiceTypeCode[value]']").val()}
     invoice.uuid={ value:$("input[name='invoiceTypeCode[value]']").val()}
     invoice.localDocumentId=$("input[name='localDocumentId']").val();
-    invoice.documentCurrencyCode={ value:$("input[name='documentCurrencyCode[value]']").val()}
+    invoice.documentCurrencyCode={ value:$("select[name='documentCurrencyCode[value]']").val()}
     invoice.pricingExchangeRate.calculationRate={ value:$("input[name='pricingExchangeRate[calculationRate][value]']").val()}
     var party={}
     if(invoice.ioType==0){
@@ -419,18 +420,22 @@ function saveInvoice(callback){
         invoice.accountingSupplierParty.party=party;
     }
 
-
+    var url;
+    var type='PUT';
     if(ioType==0){
 		url='/dbapi/e-invoice/saveOutboxInvoice/' + _id + '?db=' + db + '&sid=' + sid;
 	}else{
 		url='/dbapi/e-invoice/saveInboxInvoice/' + _id + '?db=' + db + '&sid=' + sid;
 	}
 
+	 
+	if((invoice._id || '')=='') type='POST';
+
 	
     $.ajax({
         url:url,
         data:invoice,
-        type:'PUT',
+        type:type,
         success:function(result){
             if(result.success){
             	invoice=result.data;
@@ -539,8 +544,8 @@ function invoiceLinePackageGrid_RemoveRow(index){
 }
 
 function addNewLine(){
-	var invoiceTemplate=eInvoiceDocumentTemplate();
-	var line=JSON.parse(JSON.stringify(invoiceTemplate.invoiceLine));
+	var invoiceLine=eInvoiceDoumentTemplate.invoiceTemplate.invoiceLine;
+	var line=JSON.parse(JSON.stringify(invoiceLine));
 	line.ID.value=invoice.invoiceLine.length+1;
 	invoice.invoiceLine.push(line);
 	editLine(invoice.invoiceLine.length-1);
