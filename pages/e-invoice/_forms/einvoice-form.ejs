@@ -87,7 +87,7 @@
                 </div>
                 <div class="card-body p-1">
                     <div class="row">
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label for="" class="m-0">Fatura No</label>
                             <input type="text" class="form-control" name="ID[value]" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.ID.value%>">
                         </div>
@@ -464,7 +464,7 @@
                 if(line.allowanceCharge)
                     line.allowanceCharge.forEach((allowanceChargeItem,index2)=>{
                         if(allowanceChargeItem.amount.value>0){
-                            if(allowanceChargeItem.chargeIndicator==true){
+                            if(allowanceChargeItem.chargeIndicator.value==true){
                                 iskontoOran +='(M) ';
                                 iskontoTutar +='(M) ';
                             }

@@ -41,7 +41,9 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="" class="m-0">Mal/Hizmet</label>
-                                <input type="text" class="form-control" id="invoiceLine-item-name" placeholder="" value="">
+                                <input type="text" class="form-control" id="invoiceLine-item-name" autocomplete="off" placeholder="" value="">
+                                <input type="hidden" class="form-control" id="invoiceLine-item-id" autocomplete="off" value="">
+
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="" class="m-0">Miktar</label>
@@ -54,6 +56,20 @@
                                     <option value="<%=e.value%>"><%=e.text%></option>
                                     <% }) %>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Fiyat</label>
+                                <input type="number" class="form-control text-right" id="invoiceLine-price-priceAmount" placeholder=""  value="0.00000000" onchange="calculateInvoiceLine()">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Tutar</label>
+                                <input type="text" class="form-control text-right" id="invoiceLine-lineExtensionAmount" placeholder="" value="0.00" readonly="true">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Kdv Dahil Tutar</label>
+                                <input type="text" class="form-control text-right" id="invoiceLine-taxInclusiveAmount" placeholder="" value="0.00" readonly="true">
                             </div>
                         </div>
                         <div id="kdvPanel" class="row collapse show">
@@ -92,20 +108,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-3">
-                                <label for="" class="m-0">Fiyat</label>
-                                <input type="number" class="form-control text-right" id="invoiceLine-price-priceAmount" placeholder=""  value="0.00000000" onchange="calculateInvoiceLine()">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="" class="m-0">Tutar</label>
-                                <input type="text" class="form-control text-right" id="invoiceLine-lineExtensionAmount" placeholder="" value="0.00" readonly="true">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label for="" class="m-0">Kdv Dahil Tutar</label>
-                                <input type="text" class="form-control text-right" id="invoiceLine-taxInclusiveAmount" placeholder="" value="0.00" readonly="true">
-                            </div>
-                        </div>
+                        
                         <div id="iskontoPanel" class="collapse">
                             <div class="row">
                                 <div class="col-3 text-center">İskonto Oranı %</div>
@@ -115,8 +118,8 @@
                             </div>
                             <div id="iskontoRows">
                                 <div class="row" id="iskontoRow0">
-                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoOran" value=""></div>
-                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoTutar" value=""></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoOran" value="" onchange="calculateInvoiceLineAllowanceRate()"></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoTutar" value="" onchange="calculateInvoiceLineAllowanceAmount()"></div>
                                     <div class="form-group col-4"><input type="text" class="form-control satirIskontoAciklama" value=""></div>
                                     <div class="form-group col-1"><a class="btn btn-secondary btn-sm fas fa-plus-square" href="javascript:addIskontoRow()" title="iskonto ekle"></a></div>
                                 </div>
@@ -131,8 +134,8 @@
                             </div>
                             <div id="artirimRows">
                                 <div class="row" id="artirimRow0">
-                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimOran" value=""></div>
-                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimTutar" value=""></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimOran" value="" onchange="calculateInvoiceLineChargeRate()"></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimTutar" value="" onchange="calculateInvoiceLineChargeAmount()"></div>
                                     <div class="form-group col-4"><input type="text" class="form-control satirArtirimAciklama" value=""></div>
                                     <div class="form-group col-1"><a class="btn btn-secondary btn-sm fas fa-plus-square" href="javascript:addArtirimRow()" title="Artırım ekle"></a></div>
                                 </div>
@@ -284,5 +287,170 @@
 
         bCalculating=false;
     }
+    function calculateInvoiceLineAllowanceRate(){
 
+        if(bCalculating) return;
+        bCalculating=true;
+        try{
+            var miktar=Number($('#invoiceLine-invoicedQuantity').val());
+            var fiyat=Number($('#invoiceLine-price-priceAmount').val());
+            var lineExtensionAmount=Math.floor(100*miktar*fiyat)/100;
+            var iskontoToplam=0;
+
+            var iskontoRows=document.getElementById('iskontoRows');
+            for(var i=0;i<iskontoRows.getElementsByClassName('row').length;i++){
+                var row=iskontoRows.getElementsByClassName('row')[i];
+                
+                var oran=Number(row.getElementsByClassName('satirIskontoOran')[0].value);
+                var iskTutar=Math.floor((lineExtensionAmount-iskontoToplam)*oran)/100;
+                row.getElementsByClassName('satirIskontoTutar')[0].value=iskTutar;
+                iskontoToplam+=iskTutar;
+            }
+            
+        }catch(tryErr){
+
+        }
+
+        bCalculating=false;
+    }
+
+    function calculateInvoiceLineAllowanceAmount(){
+        if(bCalculating) return;
+        bCalculating=true;
+        try{
+            var miktar=Number($('#invoiceLine-invoicedQuantity').val());
+            var fiyat=Number($('#invoiceLine-price-priceAmount').val());
+            var lineExtensionAmount=Math.floor(100*miktar*fiyat)/100;
+            var iskontoToplam=0;
+
+            var iskontoRows=document.getElementById('iskontoRows');
+            
+            for(var i=0;i<iskontoRows.getElementsByClassName('row').length;i++){
+                var row=iskontoRows.getElementsByClassName('row')[i];
+                
+                var iskTutar=Number(row.getElementsByClassName('satirIskontoTutar')[0].value);
+
+                var oran=0;
+                if((lineExtensionAmount-iskontoToplam)>0){
+                    oran=Math.floor(100*100* iskTutar/(lineExtensionAmount-iskontoToplam))/100;
+                }
+                
+                row.getElementsByClassName('satirIskontoOran')[0].value=oran;
+                iskontoToplam+=iskTutar;
+                
+            }
+            
+        }catch(tryErr){
+
+        }
+
+        bCalculating=false;
+    }
+
+     function calculateInvoiceLineChargeRate(){
+
+        if(bCalculating) return;
+        bCalculating=true;
+        try{
+            var miktar=Number($('#invoiceLine-invoicedQuantity').val());
+            var fiyat=Number($('#invoiceLine-price-priceAmount').val());
+            var lineExtensionAmount=Math.floor(100*miktar*fiyat)/100;
+            var artirimToplam=0;
+
+            var artirimRows=document.getElementById('artirimRows');
+            for(var i=0;i<artirimRows.getElementsByClassName('row').length;i++){
+                var row=artirimRows.getElementsByClassName('row')[i];
+                
+                var oran=Number(row.getElementsByClassName('satirArtirimOran')[0].value);
+                var artirimTutar=Math.floor(lineExtensionAmount*oran)/100;
+                row.getElementsByClassName('satirArtirimTutar')[0].value=artirimTutar;
+                artirimToplam+=artirimTutar;
+            }
+            
+        }catch(tryErr){
+
+        }
+
+        bCalculating=false;
+    }
+
+    function calculateInvoiceLineChargeAmount(){
+        if(bCalculating) return;
+        bCalculating=true;
+        try{
+            var miktar=Number($('#invoiceLine-invoicedQuantity').val());
+            var fiyat=Number($('#invoiceLine-price-priceAmount').val());
+            var lineExtensionAmount=Math.floor(100*miktar*fiyat)/100;
+            var artirimToplam=0;
+
+            var artirimRows=document.getElementById('artirimRows');
+            
+            for(var i=0;i<artirimRows.getElementsByClassName('row').length;i++){
+                var row=artirimRows.getElementsByClassName('row')[i];
+                
+                var artirimTutar=Number(row.getElementsByClassName('satirArtirimTutar')[0].value);
+
+                var oran=0;
+                if((lineExtensionAmount)>0){
+                    oran=100*artirimTutar/lineExtensionAmount;
+                }
+                
+                row.getElementsByClassName('satirArtirimOran')[0].value=oran;
+                artirimToplam+=artirimTutar;
+                
+            }
+            
+        }catch(tryErr){
+
+        }
+
+        bCalculating=false;
+    }
+
+    function invoiceLineItemNameAutoComplete(){
+        $('#invoiceLine-item-name').autocomplete({
+            source:function(request,response){
+                    
+                    $.ajax({
+                    url:'/dbapi/items?itemType=all&name=' +  encodeURIComponent(request.term) + '&db=<%=db%>&sid=<%=sid%>',
+                    type:'GET',
+                    dataType: 'json',
+                    success: function(result) {
+                            if(result.success){
+                                var dizi=[];
+                                for(var i=0;i<result.data.docs.length;i++){
+                                    var item=result.data.docs[i];
+                                    
+                                    dizi.push({name:item.name.value, label:(getItemTypeName(item.itemType) + ' - ' + item.name.value),value:item._id});
+                                }
+                                response(dizi);
+                            }
+                        },
+                    error:function(err){
+                        console.error('err:',err);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                    $("#invoiceLine-item-name").val(ui.item.name); 
+                    $("#invoiceLine-item-id").val(ui.item.value); 
+                    return false;
+                }
+        });
+    }
+
+    function getItemTypeName(itemType){
+        switch(itemType){
+            case 'item': return 'Envanter';
+            case 'raw-material': return 'Hammadde';
+            case 'helper-material': return 'Yardımcı Malzeme';
+            case 'product': return 'Mamul';
+            case 'semi-product': return 'Yarı Mamul';
+            case 'sales-service': return 'Hizmet Satış';
+            case 'purchasing-service': return 'Hizmet Satış';
+            case 'asset': return 'Demirbaş';
+            case 'expense': return 'Masraf/Gider';
+            default: return 'Envanter';
+        }
+    }
 </script>

@@ -82,7 +82,7 @@ function editLine(index){
 	if(line.allowanceCharge)
 		if(line.allowanceCharge.length>0){
 			line.allowanceCharge.forEach((e)=>{
-				var obj={oran:(e.multiplierFactorNumeric.value<1?e.multiplierFactorNumeric.value*100:e.multiplierFactorNumeric.value),tutar:e.amount.value,aciklama:e.allowanceChargeReason.value}
+				var obj={oran:(e.multiplierFactorNumeric.value<1?e.multiplierFactorNumeric.value*100:e.multiplierFactorNumeric.value),tutar:e.amount.value,aciklama:(e.allowanceChargeReason.value || '')}
 				if(!e.chargeIndicator.value) iskontolar.push(obj); else artirimlar.push(obj);
 			});
 		}
@@ -98,6 +98,8 @@ function editLine(index){
 			}
 		});
 		$('#cbIskontoPanel').prop('checked',true);
+		$('#iskontoPanel').show();
+
 	}
 
 	if(artirimlar.length>0){
@@ -112,6 +114,8 @@ function editLine(index){
 			}
 		});
 		$('#cbArtirimPanel').prop('checked',true);
+		$('#artirimPanel').show();
+		
 	}
 
 	
@@ -137,8 +141,8 @@ function editLine(index){
 			}
 		}
 	}
-	
-
+	calculateInvoiceLine();
+	invoiceLineItemNameAutoComplete();
 	$('#invoiceLineModal').modal('show');
 }
 
@@ -162,11 +166,8 @@ function saveInvoiceLine(index){
 	line.lineExtensionAmount.value=line.invoicedQuantity.value * line.price.priceAmount.value;
 	line.taxTotal=JSON.parse(JSON.stringify(invoiceTemplate.taxTotal));
 	
-	console.log('kdv amount:',Number($('#invoiceLine-KDV-amount').val()))
-	console.log('kdv taxExemptionReasonCode:',$('#invoiceLine-taxExemptionReasonCode').val())
 	if(Number($('#invoiceLine-KDV-amount').val())>0 || ($('#invoiceLine-taxExemptionReasonCode').val() || '')!=''){
 		
-		console.log('line.taxTotal oncesi:',line.taxTotal)
 
 		line.taxTotal['taxAmount']={value:Number($('#invoiceLine-KDV-amount').val())};
 		
@@ -279,7 +280,7 @@ function saveInvoiceLine(index){
 			var obj=JSON.parse(JSON.stringify(invoiceTemplate.allowanceCharge));
 			sequence++;
 			obj.sequenceNumeric.value=sequence;
-			obj.chargeIndicator=false;
+			obj.chargeIndicator.value=false;
 			obj.amount.value=e.tutar;
 			obj.multiplierFactorNumeric.value=e.oran/100;
 			obj.baseAmount.value=line.lineExtensionAmount.value;
@@ -294,7 +295,7 @@ function saveInvoiceLine(index){
 			var obj=JSON.parse(JSON.stringify(invoiceTemplate.allowanceCharge));
 			sequence++;
 			obj.sequenceNumeric.value=sequence;
-			obj.chargeIndicator=true;
+			obj.chargeIndicator.value=true;
 			obj.amount.value=e.tutar;
 			obj.multiplierFactorNumeric.value=e.oran/100;
 			obj.baseAmount.value=line.lineExtensionAmount.value;
@@ -464,6 +465,7 @@ function addIskontoRow(obj={oran:'',tutar:'',aciklama:''}){
 	clone.getElementsByClassName('satirIskontoAciklama')[0].value=obj.aciklama;
 
 	clone.getElementsByTagName('a')[0].href='javascript:removeIskontoRow(\'' + clone.id + '\')';
+	
 	clone.getElementsByTagName('a')[0].setAttribute('title','Iskonto sil');
 	clone.getElementsByTagName('a')[0].setAttribute('class','btn btn-danger btn-sm fas fa-minus-square');
 
