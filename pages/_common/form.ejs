@@ -106,18 +106,19 @@
 
 <script type="text/javascript">
   function openBack(){
-    if(localStorage.getItem('returnUrl')){
-      var returnUrl=localStorage.getItem('returnUrl');
-      localStorage.removeItem('returnUrl');
+    window.location.href=document.referrer;
+    // if(localStorage.getItem('returnUrl')){
+    //   var returnUrl=localStorage.getItem('returnUrl');
+    //   localStorage.removeItem('returnUrl');
 
-      if(returnUrl.indexOf('db=<%=db%>')>0 && returnUrl.indexOf('sid=<%=sid%>')>0){
-        window.location.href=returnUrl;
-      }else{
-        history.back(1);
-      }
-    }else{
-      history.back(1);
-    }
+    //   if(returnUrl.indexOf('db=<%=db%>')>0 && returnUrl.indexOf('sid=<%=sid%>')>0){
+    //     window.location.href=returnUrl;
+    //   }else{
+    //     history.back(1);
+    //   }
+    // }else{
+    //   history.back(1);
+    // }
   }
 </script>
 

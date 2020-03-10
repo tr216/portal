@@ -384,13 +384,13 @@
 
     function faturaKaydet(){
         
-        console.log(invoice);
 
         saveInvoice(function(err){
             if(err){
                 alert(err.code + ' - ' + err.message);
             }else{
-                history.back(-1);
+                window.location.href=document.referrer;
+                //history.back(-1);
             }
         });
     }

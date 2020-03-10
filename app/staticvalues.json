@@ -898,6 +898,17 @@
 			{"text":"Stok Kartı","value":"item"},
 			{"text":"Stok Kart Listesi","value":"item-list"},
 			{"text":"Ürün Kartı","value":"item-product"}
+		],
+		"itemTypeList":[
+			{"text":"Stok/Envanter","value":"item"},
+			{"text":"Hammadde","value":"raw-material"},
+			{"text":"Yardımcı Malzeme","value":"helper-material"},
+			{"text":"Mamul","value":"product"},
+			{"text":"Yarı Mamul","value":"semi-product"},
+			{"text":"Hizmet satış","value":"sales-service"},
+			{"text":"Hizmet alım","value":"purchasing-service"},
+			{"text":"Demirbaş","value":"asset"},
+			{"text":"Masraf/gider","value":"expense"}
 		]
 }
 

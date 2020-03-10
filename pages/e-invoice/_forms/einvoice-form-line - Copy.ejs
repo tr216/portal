@@ -72,44 +72,40 @@
                                 <input type="text" class="form-control text-right" id="invoiceLine-taxInclusiveAmount" placeholder="" value="0.00" readonly="true">
                             </div>
                         </div>
-                        <div id="kdvPanel" class="collapse show">
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="" class="m-0">Kdv Oran</label>
-                                    <input type="number" class="form-control text-right" id="invoiceLine-KDV-percent" placeholder="" value="0" onchange="calculateInvoiceLine()">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="" class="m-0">Kdv Tutar</label>
-                                    <input type="text" class="form-control text-right" id="invoiceLine-KDV-amount" placeholder="" value="0.00" readonly="true">
-                                </div>
-                                <div id="kdvMuafiyetSebebi" class="form-group col-md-6" style="display: none;">
-                                    <label for="" class="w-100 m-0">Kdv Muafiyet Sebebi</label>
-                                    <select id="invoiceLine-taxExemptionReasonCode" class="form-control">
-                                    <% staticValues.taxExtemptionCodeList.forEach((e)=>{ %>
-                                        <option value="<%=e.value%>"><%=e.text%></option>
-                                    <% }) %>
-                                    </select> 
-                                </div>
+                        <div id="kdvPanel" class="row collapse show">
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Kdv Oran</label>
+                                <input type="number" class="form-control text-right" id="invoiceLine-KDV-percent" placeholder="" value="0" onchange="calculateInvoiceLine()">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Kdv Tutar</label>
+                                <input type="text" class="form-control text-right" id="invoiceLine-KDV-amount" placeholder="" value="0.00" readonly="true">
+                            </div>
+                            <div id="kdvMuafiyetSebebi" class="form-group col-md-6" style="display: none;">
+                                <label for="" class="w-100 m-0">Kdv Muafiyet Sebebi</label>
+                                <select id="invoiceLine-taxExemptionReasonCode" class="form-control">
+                                <% staticValues.taxExtemptionCodeList.forEach((e)=>{ %>
+                                    <option value="<%=e.value%>"><%=e.text%></option>
+                                <% }) %>
+                                </select> 
                             </div>
                         </div>
-                        <div id="tevkifatPanel" class="collapse">
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="" class="m-0">Tevkifat Oran</label>
-                                    <input type="number" class="form-control text-right" id="invoiceLine-Tevkifat-percent" placeholder="" value="" onchange="calculateInvoiceLine()">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="" class="m-0">Tevkifat Tutar</label>
-                                    <input type="text" class="form-control text-right" id="invoiceLine-Tevkifat-amount" placeholder="" value="" readonly="true">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="" class="w-100 m-0">Vergi Kodu</label>
-                                    <select id="invoiceLine-tevkifat-taxTypeCode" class="form-control">
-                                        <% staticValues.withholdingTaxTypeCodeList.forEach((e)=>{ %>
-                                        <option value="<%=e.value%>"><%=e.text%></option>
-                                        <% }) %>
-                                    </select>
-                                </div>
+                        <div id="tevkifatPanel" class="row collapse">
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Tevkifat Oran</label>
+                                <input type="number" class="form-control text-right" id="invoiceLine-Tevkifat-percent" placeholder="" value="" onchange="calculateInvoiceLine()">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Tevkifat Tutar</label>
+                                <input type="text" class="form-control text-right" id="invoiceLine-Tevkifat-amount" placeholder="" value="" readonly="true">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="" class="w-100 m-0">Vergi Kodu</label>
+                                <select id="invoiceLine-tevkifat-taxTypeCode" class="form-control">
+                                    <% staticValues.withholdingTaxTypeCodeList.forEach((e)=>{ %>
+                                    <option value="<%=e.value%>"><%=e.text%></option>
+                                    <% }) %>
+                                </select>
                             </div>
                         </div>
                         
@@ -258,32 +254,9 @@
                 </div>
                 
             </div>
-            <div class="modal-footer collapse p-0 m-0" id="newItemPanel">
-                <div class="row m-0 p-0" style="width: 100%;">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="" class="m-0">Birim</label>
-                            <select id="invoiceLine-new-itemType" class="form-control">
-                                <% staticValues.itemTypeList.forEach((e)=>{ %>
-                                <option value="<%=e.value%>"><%=e.text%></option>
-                                <% }) %>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer m-0 p-2">
-                <div class="row m-0 p-0" style="width: 100%;">
-                    <div class="col-md-3" style="text-align: start;">
-                        <label class="checkbox-inline border" id="cbNewItemPanel">
-                          <input type="checkbox" data-toggle="collapse" id="cbNewItem" data-target="#newItemPanel" aria-expanded="false" aria-controls="newItemPanel"> Yeni Kart ac
-                        </label>
-                    </div>
-                    <div class="col-md-9" style="text-align: end;">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
-                        <a id="invoiceLineModalSaveButton" class="btn btn-primary" href="javascript:saveInvoiceLine(-1)">Tamam</a>
-                    </div>
-                </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
+                <a id="invoiceLineModalSaveButton" class="btn btn-primary" href="javascript:saveInvoiceLine(-1)">Tamam</a>
             </div>
         </div>
     </div>

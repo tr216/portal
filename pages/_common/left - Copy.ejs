@@ -1,12 +1,7 @@
-<script type="text/javascript">
-	var query=getAllUrlParams();
-
-	localStorage.leftMenuActiveLinkId=query.mId || '';
-</script>
 
 <nav id="sidebar" class="">
 	<div class="sidebar-header">
-		<a href="/general/dashboard"><img src="/images/tr216-black.png"></a>
+		<a href="javascript:showMenuUrl('/general/dashboard');"><img src="/images/tr216-black.png"></a>
 	</div>
 	<ul class="list-unstyled components">
 		<% leftMenu.forEach(function(mainItem,menuIndex){ %>
@@ -27,19 +22,19 @@
 					<ul class="collapse list-unstyled pl-2" id="submenu<%=submenuIndex%>">
 						<% subItem.nodes.forEach(function(sub2Item,submenu2Index){ %>
 						<% if(sub2Item.visible){ %>
-						<li class="<% if(typeof sub2Item.module!='undefined'){%>module-<%=sub2Item.module%><%}%>"><a href="<%= sub2Item.path %>" id="mId<%=menuIndex%>.<%=submenuIndex%>.<%=submenu2Index%>" class=""><i class="fas fa-<%= sub2Item.icon %> fa-fw"></i> <%= sub2Item.text %></a></li>
+						<li class="<% if(typeof sub2Item.module!='undefined'){%>module-<%=sub2Item.module%><%}%>"><a href="javascript:showMenuUrl('<%= sub2Item.path %>','menulink<%=menuIndex%>.<%=submenuIndex%>.<%=submenu2Index%>')" id="menulink<%=menuIndex%>.<%=submenuIndex%>.<%=submenu2Index%>" class=""><i class="fas fa-<%= sub2Item.icon %> fa-fw"></i> <%= sub2Item.text %></a></li>
 						<% } %>
 						<% }); %>
 					</ul>
 					<% } else { %>
-					<a href="<%= subItem.path %>"  id="mId<%=menuIndex%>.<%=submenuIndex%>" class=""><i class="fas fa-<%= subItem.icon %> fa-fw"></i> <%= subItem.text %></a>
+					<a href="javascript:showMenuUrl('<%= subItem.path %>','menulink<%=menuIndex%>.<%=submenuIndex%>');"  id="menulink<%=menuIndex%>.<%=submenuIndex%>" class=""><i class="fas fa-<%= subItem.icon %> fa-fw"></i> <%= subItem.text %></a>
 					<% } %>
 				</li>
 				<% } %>
 				<% }); %>
 			</ul>
 			<% } else { %>
-			<a href="<%= mainItem.path %>" id="mId<%=menuIndex%>" class=""><i class="fas fa-<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %></a>
+			<a href="javascript:showMenuUrl('<%= mainItem.path %>','menulink<%=menuIndex%>');" id="menulink<%=menuIndex%>" class=""><i class="fas fa-<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %></a>
 			<% } %>
 		</li>
 		<% } %>
@@ -62,7 +57,7 @@
 	}
 	if(localStorage.leftMenuActiveLinkId){
 		leftMenuActiveLink=document.getElementById(localStorage.leftMenuActiveLinkId);
-		if(leftMenuActiveLink) leftMenuActiveLink.classList.add('active-menuitem');
+		leftMenuActiveLink.classList.add('active-menuitem');
 	}
 	var modules={}
 	if(localStorage.getItem('activeDbModules')!=null){
@@ -122,43 +117,9 @@
 				localStorage.leftMenu=JSON.stringify(leftMenu); //save array on localStorage
 			}
 		});
-
-		
 	});
 
-	menuLinkleriDuzenle();
 	
-	function menuLinkleriDuzenle(){
-		$('#sidebar ul li a').each(function(index){
-			if(this.id){
-				var path=this.href.replace(window.location.origin,'');
-				this.href=generateMenuLink(path,this.id);
-			}
-		});
-	}
-
-	function generateMenuLink(path,leftMenuActiveLinkId){
-		var url='';
-		if(path.indexOf('?')>-1){
-			url=path + '&db=<%=db%>&sid=<%=sid%>&mId=' + leftMenuActiveLinkId;
-		}else{
-			url=path + '?db=<%=db%>&sid=<%=sid%>&mId=' + leftMenuActiveLinkId;
-		}
-		
-		if(localStorage.getItem(path + '_filter')){
-			try{
-				var filter=JSON.parse(localStorage.getItem(path + '_filter'));
-				for(var key in filter){
-					url+='&' + key + '=' + filter[key];
-					if(key=='cboEasyDate'){
-						url +=cboEasyDateUrlParams(filter[key]);
-					}
-				}
-			}catch(tryErr){}
-		}
-		return url;
-		
-	}
 	
 
 	function showMenuUrl(path,leftMenuActiveLinkId){

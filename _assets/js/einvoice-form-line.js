@@ -40,7 +40,8 @@ function editLine(index){
 				$('#invoiceLine-tevkifat-taxTypeCode').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value);
 				if(line.withholdingTaxTotal[0].taxSubtotal[0].percent.value>0 || line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value>0){
 					$('#cbTevkifatPanel').prop('checked',true);
-					$('#tevkifatPanel').toggle();
+					//$('#cbTevkifatPanel').prop('checked',true);
+					$('#tevkifatPanel').show();
 					
 				}
 			}
@@ -140,6 +141,11 @@ function editLine(index){
 					}
 			}
 		}
+	}
+	if((line.item._id || '')!=''){
+		$('#cbNewItemPanel').hide();
+	}else{
+		$('#cbNewItemPanel').show();
 	}
 	calculateInvoiceLine();
 	invoiceLineItemNameAutoComplete();
@@ -357,15 +363,45 @@ function saveInvoiceLine(index){
 
 	// end of ihracat paketleri ---
 	invoice.invoiceLine[index]=line;
-	
-    saveInvoice((err)=>{
-    	if(!err){
-    		reloadLineGrid();
-    		$('#invoiceLineModal').modal('hide');
-    	}else{
-    		alert('Hata:' + err.message);
-    	}
-    });
+	if($('#cbNewItem').prop('checked')){
+		console.log('yeni urun eklenecektir.', $('#invoiceLine-new-itemType').val());
+		var newItem=eInvoiceDoumentTemplate.invoiceTemplate.item;
+		newItem=Object.assign(newItem,line.item);
+		newItem['itemType']=$('#invoiceLine-new-itemType').val();
+		
+	    $.ajax({
+	        url:'/dbapi/items?db=' + db + '&sid=' + sid,
+	        data:newItem,
+	        type:'POST',
+	        success:function(result){
+	            if(result.success){
+	            	console.log(result);
+	            	invoice.invoiceLine[index].item['_id']=result.data._id;
+	                
+	            }else{
+	            	alert('Hata:' + result.error.message);
+	            }
+	            saveInvoice((err)=>{
+			    	if(!err){
+			    		reloadLineGrid();
+			    		$('#invoiceLineModal').modal('hide');
+			    	}else{
+			    		alert('Hata:' + err.message);
+			    	}
+			    });
+	        }
+	    });
+	}else{
+		saveInvoice((err)=>{
+	    	if(!err){
+	    		reloadLineGrid();
+	    		$('#invoiceLineModal').modal('hide');
+	    	}else{
+	    		alert('Hata:' + err.message);
+	    	}
+	    });
+	}
+    
 
 }
 

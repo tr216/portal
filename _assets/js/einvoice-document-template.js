@@ -64,6 +64,26 @@ const actualPackageType={
 	packagingTypeCode:valueType
 }
 
+const itemType={
+
+	additionalItemIdentification:[],
+	brandName:valueType,
+	buyersItemIdentification:{ID:valueType},
+	commodityClassification:[
+		{ 
+			itemClassificationCode:valueType
+		}
+	],
+	description:valueType,
+	itemInstance:[],
+	keyword:valueType,
+	manufacturersItemIdentification:{ID:valueType},
+	modelName:valueType,
+	name:valueType,
+	sellersItemIdentification:{ID:valueType},
+	originCountry:countryType
+}
+
 function eInvoiceDocumentTemplate(){
 	return {
 		invoice:{
@@ -236,7 +256,8 @@ function eInvoiceDocumentTemplate(){
 			delivery:[],
 			taxTotal:{},
 			withholdingTaxTotal:[]
-		}
+		},
+		item:itemType
 	}
 }
 

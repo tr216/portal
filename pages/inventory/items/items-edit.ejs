@@ -44,8 +44,8 @@
     }
 
     if(form.itemType=='helper-material'){
-        frmControl1['exceptInventory']={name:'exceptInventory', caption:'Envanter/Stok tutulmasın', type:'checkbox'    }
-        frmControl1['exceptRecipeCalculation']={name:'exceptRecipeCalculation', caption:'Recete hesaplarina dahil edilmesin', type:'checkbox'    }
+        frmControl1['exceptInventory']={name:'exceptInventory', caption:'Envanter/Stok tutulmasın', type:'checkbox'    };
+        frmControl1['exceptRecipeCalculation']={name:'exceptRecipeCalculation', caption:'Recete hesaplarina dahil edilmesin', type:'checkbox'    };
     }
 %>
 <%- partial('../../_common/form', {
@@ -57,7 +57,8 @@
         {
             caption:'Diger',
             formControls:{
-                barkodlar:{ name:'barkodlar', caption:'Barkodlar (Carpanlari ";" ile barkod sonuna ekleyiniz)', type:'textarea' , rows:5}
+                barkodlar:{ name:'barkodlar', caption:'Barkodlar (Carpanlari ";" ile barkod sonuna ekleyiniz)', type:'textarea' , rows:5},
+                paketAgirliklari:{ name:'paketAgirliklari', caption:'Paket ağırlıkları', type:'textarea' , rows:5}
             }
         },
         {

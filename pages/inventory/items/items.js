@@ -21,6 +21,7 @@ module.exports = function(req,res,callback){
 	        itemInstance:[],
 	        account: null,
 	        similar:[],
+	        unitPacks:[],
 	        vendors:[{
 	            sequenceNumeric:{value:0 },
 	            vendor:null,
@@ -32,7 +33,8 @@ module.exports = function(req,res,callback){
 	        passive:false,
 	        exceptInventory:false,
 	        exceptRecipeCalculation:false,
-	        barkodlar:''
+	        barkodlar:'',
+	        paketAgirliklari:''
 	        
 		},
 		filter:{},
@@ -84,12 +86,22 @@ function addnew(req,res,data,callback){
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body);
 		var barkodList=data.form.barkodlar.split('\n');
+		
 		data.form.additionalItemIdentification=[];
-		if(barkodList.length>0){
+		if(barkodList.length>0)
 			barkodList.forEach((e)=>{
 				data.form.additionalItemIdentification.push({ID:{value:e}});
 			});
-		}
+		
+		var paketAgirliklari=data.form.paketAgirliklari.split('\n');
+		data.form.unitPacks=[];
+		if(paketAgirliklari.length>0)
+			paketAgirliklari.forEach((e)=>{
+				if(!isNaN(e)){
+					data.form.unitPacks.push(e);
+				}
+			});
+		
 		api.post('/' + req.query.db + '/items',req,data.form,(err,resp)=>{
 			if(!err){
 				res.redirect('/inventory/items?itemType=' + data.form.itemType + '&db=' + req.query.db +'&sid=' + req.query.sid);
@@ -113,13 +125,24 @@ function edit(req,res,data,callback){
 			callback(null,data);
 			return;
 		}
+		
 		var barkodList=data.form.barkodlar.split('\n');
 		data.form.additionalItemIdentification=[];
-		if(barkodList.length>0){
+
+		if(barkodList.length>0)
 			barkodList.forEach((e)=>{
 				data.form.additionalItemIdentification.push({ID:{value:e}});
 			});
-		}
+		
+		var paketAgirliklari=data.form.paketAgirliklari.split('\n');
+		data.form.unitPacks=[];
+		if(paketAgirliklari.length>0)
+			paketAgirliklari.forEach((e)=>{
+				if(!isNaN(e)){
+					data.form.unitPacks.push(e);
+				}
+			});
+
 		api.put('/' + req.query.db + '/items/' + _id, req,data.form,(err,resp)=>{
 			if(!err){
 				res.redirect('/inventory/items?itemType=' + data.form.itemType + '&db=' + req.query.db +'&sid=' + req.query.sid);
@@ -135,11 +158,17 @@ function edit(req,res,data,callback){
 			if(!err){
 				data.form=Object.assign(data.form,resp.data);
 				data.form.barkodlar='';
-				if(data.form.additionalItemIdentification.length>0){
+				if(data.form.additionalItemIdentification.length>0)
 					data.form.additionalItemIdentification.forEach((e)=>{
 						data.form.barkodlar +=e.ID.value + '\n';
 					})
-				}
+				data.form.paketAgirliklari='';
+				if(data.form.unitPacks)
+					if(data.form.unitPacks.length>0)
+						data.form.unitPacks.forEach((e)=>{
+							data.form.paketAgirliklari +=e + '\n';
+						})
+
 				callback(null,data);
 			}else{
 				data['message']=err.message;
@@ -155,11 +184,16 @@ function view(req,res,data,callback){
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			data.form.barkodlar='';
-			if(data.form.additionalItemIdentification.length>0){
+			if(data.form.additionalItemIdentification.length>0)
 				data.form.additionalItemIdentification.forEach((e)=>{
 					data.form.barkodlar +=e.ID.value + '\n';
 				})
-			}
+			data.form.paketAgirliklari='';
+			if(data.form.unitPacks)
+				if(data.form.unitPacks.length>0)
+					data.form.unitPacks.forEach((e)=>{
+						data.form.paketAgirliklari +=e + '\n';
+					})
 			callback(null,data);
 		}else{
 			data['message']=err.message;
