@@ -1,0 +1,12 @@
+<%layout('../../_common/plain-layout')%>
+<%- partial('../../_common/form',{
+    formControls:{
+        name     :{caption:'Adı',                type:'textbox' ,required:true},
+        zaman  :{caption:'Çalışma zamanları',        type:'partial', partial:'../settings/shifts/time-input.ejs'   },
+        passive         :{caption:'Pasif',                 type:'checkbox'}
+    },
+    action:'',
+    mode:'view'
+    }) 
+%>
+

@@ -14,7 +14,7 @@
 		<li class="border-bottom <% if(typeof mainItem.module!='undefined'){%> module-<%=mainItem.module%><%}%>">
 			<% if(mainItem.nodes.length>0){ %>
 			<a href="#menu<%=menuIndex%>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-				<i class="fas fa-<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %>
+				<i class="<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %>
 			</a>
 			<ul class="collapse list-unstyled border" id="menu<%=menuIndex%>">
 				<% mainItem.nodes.forEach(function(subItem,submenuIndex){ %>
@@ -22,24 +22,24 @@
 				<li class="<% if(typeof subItem.module!='undefined'){%>module-<%=subItem.module%><%}%>">
 					<% if(subItem.nodes.length>0){ %>
 					<a href="#submenu<%=submenuIndex%>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="fas fa-<%= subItem.icon %> fa-fw"></i> <%= subItem.text %>
+						<i class="<%= subItem.icon %> fa-fw"></i> <%= subItem.text %>
 					</a>
 					<ul class="collapse list-unstyled pl-2" id="submenu<%=submenuIndex%>">
 						<% subItem.nodes.forEach(function(sub2Item,submenu2Index){ %>
 						<% if(sub2Item.visible){ %>
-						<li class="<% if(typeof sub2Item.module!='undefined'){%>module-<%=sub2Item.module%><%}%>"><a href="<%= sub2Item.path %>" id="mId<%=menuIndex%>.<%=submenuIndex%>.<%=submenu2Index%>" class=""><i class="fas fa-<%= sub2Item.icon %> fa-fw"></i> <%= sub2Item.text %></a></li>
+						<li class="<% if(typeof sub2Item.module!='undefined'){%>module-<%=sub2Item.module%><%}%>"><a href="<%= sub2Item.path %>" id="mId<%=menuIndex%>.<%=submenuIndex%>.<%=submenu2Index%>" class=""><i class="<%= sub2Item.icon %> fa-fw"></i> <%= sub2Item.text %></a></li>
 						<% } %>
 						<% }); %>
 					</ul>
 					<% } else { %>
-					<a href="<%= subItem.path %>"  id="mId<%=menuIndex%>.<%=submenuIndex%>" class=""><i class="fas fa-<%= subItem.icon %> fa-fw"></i> <%= subItem.text %></a>
+					<a href="<%= subItem.path %>"  id="mId<%=menuIndex%>.<%=submenuIndex%>" class=""><i class="<%= subItem.icon %> fa-fw"></i> <%= subItem.text %></a>
 					<% } %>
 				</li>
 				<% } %>
 				<% }); %>
 			</ul>
 			<% } else { %>
-			<a href="<%= mainItem.path %>" id="mId<%=menuIndex%>" class=""><i class="fas fa-<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %></a>
+			<a href="<%= mainItem.path %>" id="mId<%=menuIndex%>" class=""><i class="<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %></a>
 			<% } %>
 		</li>
 		<% } %>
