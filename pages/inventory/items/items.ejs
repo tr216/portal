@@ -39,7 +39,25 @@
     addNewUrl:urlPath + '/addnew?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
     editUrl:urlPath + '/edit/{_id}?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
     viewUrl:urlPath + '/view/{_id}?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
+    customButtons:[
+        {href:'javascript:itemCopy("{_id}","{name.value}")', text:'Kopyala',icon:'far fa-copy' , divider:true},
+        {href:'/e-invoice/outbox/pdf/{_id}?db=' + db + '&sid=' + sid, text:'Pdf',icon:'fas fa-file-pdf'}
+    ],
     deleteUrl:'/dbapi/items/{_id}?db=' + db + '&sid=' + sid
     }) 
 %>
 
+<%- partial('../../_common/modal',{
+    modalId:'itemCopyModal',
+    caption:'Bilgiler',
+    formControls:{
+        newName:{caption:'Yeni isim', type:'textbox', default:'merhaba jinjin'}
+    },
+    mode:'addnew'
+}) %>
+<script type="text/javascript">
+    function itemCopy(_id, name){
+        $('#newName').val(name + ' kopya');
+        $('#itemCopyModal').modal('show');
+    }
+</script>

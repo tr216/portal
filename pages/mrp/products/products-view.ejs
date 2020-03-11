@@ -1,5 +1,5 @@
 
-<%layout('../../_common/layout')%>
+<%layout('../../_common/plain-layout')%>
 
 <%- partial('../../_common/form', {
     tabs:[
@@ -26,7 +26,7 @@
             caption:'Diger',
             formControls:{
                 barkodlar:{ name:'barkodlar', caption:'Barkodlar (Carpanlari ";" ile barkod sonuna ekleyiniz)', type:'textarea' , rows:5},
-                paketAgirliklari:{ name:'paketAgirliklari', caption:'Paket ağırlıkları', type:'textarea' , rows:5}
+                paketAgirliklari:{ name:'paketAgirliklari', caption:'Paket ağırlıkları/adetleri', type:'textarea' , rows:5}
             }
         }
     ],

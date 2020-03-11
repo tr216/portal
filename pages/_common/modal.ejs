@@ -1,0 +1,44 @@
+<%
+    if(typeof modalNo=='undefined'){
+        modalNo=1;
+    }else{
+        modalNo++;
+    }
+
+    if(typeof modalId=='undefined'){
+        modalId='modalId' + modalNo;
+    }
+
+    if(typeof caption=='undefined') caption='Form';
+
+%>
+<div class="modal" id="<%=modalId%>" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="<%=modalId%>Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-2 ">
+                <label class="modal-title" id="<%=modalId%>Label"><%=caption%></label>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-2">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <% 
+                          var partialData={};
+                          partialData.formControls=formControls;
+                          if(typeof mode=='undefined') mode='addnew';
+                          partialData.mode=mode;
+                          
+                        %>
+                        <%- partial('form-partial', partialData) %>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
+                <a id="<%=modalId%>SaveButton" class="btn btn-primary" href="javascript:tamamButton(-1)">Tamam</a>
+            </div>
+        </div>
+    </div>
+</div>

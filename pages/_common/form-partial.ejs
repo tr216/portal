@@ -81,23 +81,23 @@ if(item.hasChildren==true){ %>
 <% function textbox(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label ><%=item.caption%></label>
-	<input type="text" class="form-control <%=item.class %>" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
+	<input type="text" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" autocomplete="off"  value="<% if(mode=='addnew'){ if(typeof item.default!='undefined'){%><%=item.default%><%}}else{%><%=itemValue%><%}%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
 </div>
 <% } %>
 
 <% function textarea(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label ><%=item.caption%></label>
-	<textarea class="form-control <%=item.class %>" rows="<% if(typeof item.rows!='undefined'){%><%=item.rows%><%}else{%>4<%}%>" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>><%=itemValue%></textarea>
+	<textarea class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>"  rows="<% if(typeof item.rows!='undefined'){%><%=item.rows%><%}else{%>4<%}%>"  placeholder="<%=item.caption%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>><% if(mode=='addnew'){ if(typeof item.default!='undefined'){%><%=item.default%><%}}else{%><%=itemValue%><%}%></textarea>
 </div>
 <% } %>
 
 <% function label(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<% if(item.type=='label'){%>
-	<div class="<%=item.class %>"><b><%=item.caption%>:</b> <%=itemValue%></div>
+	<div class="<%=item.class %>" id="<%- generateFormId(item.name) %>"><b><%=item.caption%>:</b> <% if(mode=='addnew'){ if(typeof item.default!='undefined'){%><%=item.default%><%}}else{%><%=itemValue%><%}%></div>
 	<%} else { %>
-	<div class="<%=item.class %>"><%=item.caption%></div>
+	<div class="<%=item.class %>" id="<%- generateFormId(item.name) %>"><%=item.caption%></div>
 	<% } %>
 </div>
 <% } %>
@@ -105,7 +105,7 @@ if(item.hasChildren==true){ %>
 <% function checkbox(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label>
-		<input type="checkbox" class="" name="<%- generateFormName(item.name) %>" value="true" <%=(itemValue?'checked':'')%> <%- item.readonly?'disabled':'' %> />
+		<input type="checkbox" class="" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" value="true" <%=(itemValue?'checked':'')%> <%- item.readonly?'disabled':'' %> />
 		<%=item.caption%>
 	</label>
 </div>
@@ -114,7 +114,7 @@ if(item.hasChildren==true){ %>
 <% function lookup(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label for=""><%=item.caption%></label>
-	<select name="<%- generateFormName(item.name) %>" id="input" class="form-control" <%- item.required?'required="required"':'' %> <%- item.readonly?'disabled':'' %>>
+	<select id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" class="form-control" <%- item.required?'required="required"':'' %> <%- item.readonly?'disabled':'' %>>
 		<% item.lookup.forEach(function(e){ %>
 		<option value="<%=e[item.valueField]%>" <% if(e[item.valueField]==itemValue){%>selected<%} %> ><%=e[item.textField]%></option>
 		<% }); %>
@@ -147,7 +147,7 @@ if(item.hasChildren==true){ %>
 <% function jsonData(item,itemValue,level){ %>
 <div class="form-group<% if(typeof item.class!='undefined'){%> <%=item.class%><%}%>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label class="m-0"><%=item.caption%></label>
-	<textarea name="<%- generateFormName(item.name) %>" class="form-control" rows="10"  style="height: auto;font-family: monospace;" <%- item.readonly?'readonly':'' %>><%- JSON.stringify(itemValue, undefined, 4) %></textarea>
+	<textarea id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" class="form-control" rows="10"  style="height: auto;font-family: monospace;" <%- item.readonly?'readonly':'' %>><%- JSON.stringify(itemValue, undefined, 4) %></textarea>
 
 </div>
 <% } %>
@@ -193,56 +193,60 @@ if(item.hasChildren==true){ %>
 
 <% 
 function getSubObjectValue(targetObj, keyPath) { 
-var keys = keyPath.toString().split('.');
-if(keys.length == 0) return undefined; 
-keys = keys.reverse();
-var subObject = targetObj;
-while(keys.length) {
-var k = keys.pop();
-if(typeof subObject[k]=='undefined' || subObject[k]==null) {
-return undefined;
-} else {
-subObject = subObject[k];
-}
-}
-return subObject;
+	var keys = keyPath.toString().split('.');
+	if(keys.length == 0) return undefined; 
+	keys = keys.reverse();
+	var subObject = targetObj;
+	while(keys.length) {
+		var k = keys.pop();
+		if(typeof subObject[k]=='undefined' || subObject[k]==null) {
+			return undefined;
+		} else {
+			subObject = subObject[k];
+		}
+	}
+	return subObject;
 }
 
 function generateFormName(name) { 
-var keys = name.toString().split('.');
-if(keys.length<=1){
-return name;
-}else{
-var s='';
-for(let i=0;i<keys.length;i++){
-if(i==0){
-s=keys[i];
-}else{
-s=s + '[' + keys[i] + ']';
+	var keys = name.toString().split('.');
+	if(keys.length<=1){
+		return name;
+	}else{
+		var s='';
+		for(let i=0;i<keys.length;i++){
+			if(i==0){
+				s=keys[i];
+			}else{
+				s=s + '[' + keys[i] + ']';
+			}
+		}
+		return s;
+	}
 }
-}
-return s;
-}
+
+function generateFormId(name) { 
+	return generateFormName(name).replaceAll('.','_');
 }
 
 function ifNull(item,defaultValue){
-if(typeof item=='undefined'){
-if(typeof defaultValue!='undefined'){
-return defaultValue;
-}else{
-return '';
-}
-}else{
-if(item==null){
-if(typeof defaultValue!='undefined'){
-return defaultValue;
-}else{
-return '';
-}
-}else{
-return item;
-}
-}
+	if(typeof item=='undefined'){
+		if(typeof defaultValue!='undefined'){
+			return defaultValue;
+		}else{
+			return '';
+		}
+	}else{
+		if(item==null){
+			if(typeof defaultValue!='undefined'){
+				return defaultValue;
+			}else{
+				return '';
+			}
+		}else{
+			return item;
+		}
+	}
 }
 
 

@@ -1,8 +1,4 @@
 <%
-
-
-
-
     if(typeof dataSourceUrl=='undefined') dataSourceUrl='';
     if(typeof showSearch=='undefined') showSearch=false;
     if(typeof filter=='undefined') filter={};
@@ -21,11 +17,17 @@
     if(typeof customButtons!='undefined') {
         
         for(var i=0;i<customButtons.length;i++){
-            
+            if(ctrlCol<5){
+                ctrlCol++; 
+            }
             if(typeof customButtons[i].icon=='undefined') customButtons[i].icon='';
             if(typeof customButtons[i].text=='undefined') customButtons[i].text='';
             if(typeof customButtons[i].title=='undefined') customButtons[i].title='';
-
+            if(customButtons[i].icon!=''){
+                customButtons[i].icon=' fa fa-' + customButtons[i].icon;
+                customButtons[i].title=customButtons[i].text;
+                customButtons[i].text='';
+            }
         }
     }
     if(addNewButton){
@@ -179,15 +181,31 @@
             </thead>
             <tbody>
                 <% 
+                    function getPropertyByKeyPath(targetObj, field) { 
+                        var keyPath=field.name;
+                        var keys = keyPath.split('.');
+                        if(keys.length == 0) return undefined; 
+                        keys = keys.reverse();
+                        var subObject = targetObj;
+                        while(keys.length) {
+                           var k = keys.pop();
+                           if(typeof subObject[k]=='undefined' || subObject[k]==null) {
+                            return undefined;
+                           } else {
+                            subObject = subObject[k];
+                           }
+                        }
+                        return subObject;
+                    }
+
                     
                     
-                    
-                    list.forEach((item,index)=>{ %>
+                    list.forEach(function(item,index){ %>
                     <tr>
                         <% if(selection && typeof item._id!='undefined') { %>
                         <td><input type="checkbox" class="checkSingle" value="<%- encodeURIComponent(JSON.stringify(item))%>" name="selected[<%=index%>]"  id="selected[<%=index%>]"></td>
                         <% } %>
-                        <% fields.forEach((field)=>{
+                        <% fields.forEach(function(field){
                             var itemValue;
                             if(typeof item!='undefined'){
                                 itemValue=getPropertyByKeyPath(item,field);
@@ -224,71 +242,38 @@
                         
                         <%}); %>
                         <td class="text-nowrap">
-                            <div style="display: inline-flex;">
-                            <% 
-                            if(typeof customButtons!='undefined') { 
-                                if(customButtons.length>1){
-                            %>
-                            <div class="dropdown">
-
-                                <button class="btn btn-secondary btn-sm fas fa-caret-square-down" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Diğer işlemler"></button>
-                                <!-- <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Diğer işlemler"><i class="fas fa-caret-square-down"></i> </button> -->
-                                <div class="dropdown-menu">
+                            <% if(typeof customButtons!='undefined') { %>
                                 <% 
-                                    for(var i=0;i<customButtons.length;i++){ 
-                                    var target='_self';
-                                    var href='';
 
-                                    if(typeof customButtons[i].href!='undefined'){
-                                        //href=customButtons[i].href;
-                                        //href=customButtons[i].href.replaceAll('{_id}',item._id);
-                                        href=replaceUrlCurlyBracket(customButtons[i].href, item, fields);
+                                    for(var i=0;i<customButtons.length;i++){ 
+                                    var tmpUrl='';
+                                    var cusPath='';
+                                    var popup=false;
+                                    var target='_self';
+
+                                    if(customButtons[i].path.indexOf('?')<0){
+                                        tmpUrl='?db=' + db + '&sid=' + sid;
+                                    }else if(customButtons[i].path.indexOf('sid=')<0){
+                                        tmpUrl='&sid=' + sid;
                                     }
+                                    if(typeof customButtons[i].popup!='undefined') popup=customButtons[i].popup;
                                     if(typeof customButtons[i].target!='undefined') target=customButtons[i].target;
+
+                                    cusPath=customButtons[i].path.replaceAll("{_id}", item._id )  + tmpUrl;
                                     
                                 %>
-                                    <a class="dropdown-item" href="<%=href%>" title="<%=customButtons[i].title%>" target="<%=target%>"><% if(customButtons[i].icon!=''){%><i class="<%=customButtons[i].icon%>"></i> <%}%><%=customButtons[i].text%></a>
-                                    <% if(typeof customButtons[i].divider!='undefined'){
-                                        if(customButtons[i].divider==true){ %>
-                                    <div class="dropdown-divider my-1"></div>
-                                        <% } %>
-                                    <% } %>
-                                
-
-                                    <% } %>
-                                </div>
-                            </div>
-                                <% }else if(customButtons.length==1){ 
-                                    var target='_self';
-                                    var href='';
-                                    if(typeof customButtons[0].href!='undefined'){
-                                        //href=customButtons[0].href.replaceAll('{_id}',item._id);
-                                        href=replaceUrlCurlyBracket(customButtons[0].href, item, fields);
-                                    } 
-                                    if(typeof customButtons[0].target!='undefined') target=customButtons[0].target;
-                                    if(customButtons[0].title=='') customButtons[0].title=customButtons[0].text;
-                                    %> 
-                                    <a class="btn btn-secondary btn-sm" href="<%=href%>" title="<%=customButtons[0].title%>" target="<%=target%>"><% if(customButtons[0].icon!=''){%><i class="<%=customButtons[0].icon%>"></i><% }else{ %><i class="fas fa-chess-board"></i><% } %></a>
+                            <a href="javascript:openUrl('<%=cusPath%>','<%=item._id%>','<%=target%>',<%=popup%>);" class="btn btn-secondary btn-sm" title="<%=customButtons[i].title%>"><% if(customButtons[i].icon!=''){%><i class="<%=customButtons[i].icon%>"></i> <%}%><%=customButtons[i].text%></a>
                                 <% } %>
                             <% } %>
-                            <% 
-                               if(viewButton){ 
-                                var viewUrlRow=urlPath + '/view/{_id}?db=' + db + '&sid=' + sid;
-                                if(typeof viewUrl!='undefined') viewUrlRow=viewUrl;
-                                //viewUrlRow=viewUrlRow.replaceAll('{_id}',item._id);
-                                viewUrlRow=replaceUrlCurlyBracket(viewUrlRow,item,fields);
-                                
-
-                            %>
-                            <a href="javascript:popupCenter('<%=viewUrlRow%>','İncele','900','600');" class="btn btn-info btn-sm fa fa-eye ml-1" title="İncele"></a>
+                            <% if(viewButton){ %>
+                            <a href="javascript:openUrl('<% if(typeof viewUrl!='undefined'){%><%=viewUrl%><%}else{%><%=urlPath%>/view/{_id}?db=<%=db%>&sid=<%=sid%><%}%>','<%=item._id%>');" class="btn btn-info btn-sm fa fa-eye" title="İncele"></a>
                             <% } %>
                             <% if(editButton){ %>
-                            <a href="javascript:openUrl('<% if(typeof editUrl!='undefined'){%><%=editUrl%><%}else{%><%=urlPath%>/edit/{_id}?db=<%=db%>&sid=<%=sid%><%}%>','<%=item._id%>');" class="btn btn-primary btn-sm fas fa-edit ml-1"  title="Düzenle"></a>
+                            <a href="javascript:openUrl('<% if(typeof editUrl!='undefined'){%><%=editUrl%><%}else{%><%=urlPath%>/edit/{_id}?db=<%=db%>&sid=<%=sid%><%}%>','<%=item._id%>');" class="btn btn-primary btn-sm fas fa-edit"  title="Düzenle"></a>
                             <% } %>
                             <% if(deleteButton && typeof deleteUrl!='undefined'){ %>
-                            <a href="javascript:deleteItem('<%=deleteUrl%>','<%=item._id%>');"  class="btn btn-danger btn-sm fas fa-trash-alt ml-1" title="Sil"></a>
+                            <a href="javascript:deleteItem('<%=deleteUrl%>','<%=item._id%>');"  class="btn btn-danger btn-sm fas fa-trash-alt" title="Sil"></a>
                             <% } %>
-                            </div>
                         </td>
                     </tr>
                 <% }); %>
@@ -479,56 +464,6 @@
 </script>
 
 <%
-
-function getPropertyByKeyPath(targetObj, field) { 
-        var keyPath=field.name;
-        var keys = keyPath.split('.');
-        if(keys.length == 0) return undefined; 
-        keys = keys.reverse();
-        var subObject = targetObj;
-        while(keys.length) {
-           var k = keys.pop();
-           if(typeof subObject[k]=='undefined' || subObject[k]==null) {
-            return undefined;
-           } else {
-            subObject = subObject[k];
-           }
-        }
-        return subObject;
-    }
-
-    function replaceUrlCurlyBracket(url,item,fields){
-        
-        if(!(url.indexOf('{')>-1 && url.indexOf('}')>-1))  return;
-        if(typeof item!='undefined')
-            if(typeof item._id!='undefined'){
-                url=url.replaceAll('{_id}',item._id);
-            }
-        fields.forEach((field)=>{
-
-            if(!(url.indexOf('{')>-1 && url.indexOf('}')>-1)){
-                
-                return;
-            }
-            var itemValue;
-            if(typeof item!='undefined'){
-                itemValue=getPropertyByKeyPath(item,field);
-            }
-            
-            if(typeof itemValue=='undefined'){
-                itemValue='';
-            }
-            
-            if(url.indexOf('{' + field.name + '}')>-1){
-                url=url.replaceAll('{' + field.name + '}',itemValue);
-            }
-        })
-
-        return url;
-    }
-
-
-
 function pagination(c, m) {
     var current =Number(c),
         last = Number(m),
