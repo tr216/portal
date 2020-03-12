@@ -1,14 +1,13 @@
 var formOrjinal;
 
 function editLine(index){
-	var invoiceTemplate=eInvoiceDoumentTemplate.invoiceTemplate;
 	var old=document.getElementById('invoiceLineModal');
 	old.parentNode.replaceChild(formOrjinal.cloneNode(true),old);
 
 	var btnSave=document.getElementById('invoiceLineModalSaveButton');
 	btnSave.href='javascript:saveInvoiceLine(' + index + ')';
 	var line=invoice.invoiceLine[index];
-	line=Object.assign(JSON.parse(JSON.stringify(invoiceTemplate.invoiceLine)),line);
+	line=Object.assign({}, clone(dbType.invoiceLineType),line);
 	invoiceLinePackageGrid_clear();
 	$('#invoiceLinePackageGrid-Quantity').on('keyup',function(e){
 		if((e.keyCode ? e.keyCode : e.which)=='13'){
@@ -157,12 +156,9 @@ var artirimCount=1;
 
 function saveInvoiceLine(index){
 	if(index<0) return;
-	var invoiceTemplate=eInvoiceDoumentTemplate.invoiceTemplate;
-	
-	//var satir=$('input[name="invoiceLine['+index+']"]').val();
-	//var line=JSON.parse(decodeURIComponent(satir));
-	var line={};
-	line=Object.assign(JSON.parse(JSON.stringify(invoiceTemplate.invoiceLine)),invoice.invoiceLine[index]);
+	$('#invoiceLineModal').modal('hide');
+
+	var line=Object.assign({}, clone(dbType.invoiceLineType),invoice.invoiceLine[index]);
 	line.item.name.value=$('#invoiceLine-item-name').val();
 	
 	line.invoicedQuantity.value=$('#invoiceLine-invoicedQuantity').val();
@@ -170,7 +166,7 @@ function saveInvoiceLine(index){
 	line.price.priceAmount.value=$('#invoiceLine-price-priceAmount').val();
 
 	line.lineExtensionAmount.value=line.invoicedQuantity.value * line.price.priceAmount.value;
-	line.taxTotal=JSON.parse(JSON.stringify(invoiceTemplate.taxTotal));
+	line.taxTotal=clone(dbType.taxTotalType);
 	
 	if(Number($('#invoiceLine-KDV-amount').val())>0 || ($('#invoiceLine-taxExemptionReasonCode').val() || '')!=''){
 		
@@ -186,13 +182,12 @@ function saveInvoiceLine(index){
 		line.taxTotal.taxSubtotal[0].taxCategory.name.value='KDV';
 		line.taxTotal.taxSubtotal[0].taxCategory.taxScheme.name.value='Katma Değer Vergisi';
 		line.taxTotal.taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value='9015';
-		console.log('line.taxTotal sonrasi:',line.taxTotal)
 
 	}
 	
 	line.withholdingTaxTotal=[];
 	if(Number($('#invoiceLine-Tevkifat-percent').val())>0 || Number($('#invoiceLine-Tevkifat-amount').val())>0 || ($('#invoiceLine-tevkifat-taxTypeCode').val() || '')!=''){
-		line.withholdingTaxTotal=[JSON.parse(JSON.stringify(invoiceTemplate.taxTotal))];
+		line.withholdingTaxTotal=[clone(dbType.taxTotalType)];
 
 		line.withholdingTaxTotal[0].taxAmount.value=Number($('#invoiceLine-Tevkifat-amount').val());
 		line.withholdingTaxTotal[0].taxSubtotal[0].percent.value=Number($('#invoiceLine-Tevkifat-percent').val());
@@ -283,7 +278,7 @@ function saveInvoiceLine(index){
 
 	iskontolar.forEach((e)=>{
 		if(e.oran>0 || e.tutar>0){
-			var obj=JSON.parse(JSON.stringify(invoiceTemplate.allowanceCharge));
+			var obj=clone(dbType.allowanceChargeType);
 			sequence++;
 			obj.sequenceNumeric.value=sequence;
 			obj.chargeIndicator.value=false;
@@ -298,7 +293,7 @@ function saveInvoiceLine(index){
 	sequence=0;
 	artirimlar.forEach((e)=>{
 		if(e.oran>0 || e.tutar>0){
-			var obj=JSON.parse(JSON.stringify(invoiceTemplate.allowanceCharge));
+			var obj=clone(dbType.allowanceChargeType);
 			sequence++;
 			obj.sequenceNumeric.value=sequence;
 			obj.chargeIndicator.value=true;
@@ -339,7 +334,7 @@ function saveInvoiceLine(index){
 	line.delivery=[]
 
 	if(ihracatPaketleri.length>0 || $('#invoiceLine-deliveryTerms').val().trim()!='' || $('#invoiceLine-GTIPNO').val().trim()!='' || $('#invoiceLine-transportModeCode').val().trim()!=''){
-		line.delivery=[JSON.parse(JSON.stringify(invoiceTemplate.delivery))];
+		line.delivery=[clone(dbType.deliveryType)];
 		line.delivery[0].deliveryTerms=[{ID:{ value:$('#invoiceLine-deliveryTerms').val().trim()}}];
 
 		line.delivery[0].shipment.goodsItem=[{requiredCustomsId:{value:$('#invoiceLine-GTIPNO').val().trim()}}];
@@ -364,9 +359,9 @@ function saveInvoiceLine(index){
 	// end of ihracat paketleri ---
 	invoice.invoiceLine[index]=line;
 	if($('#cbNewItem').prop('checked')){
-		console.log('yeni urun eklenecektir.', $('#invoiceLine-new-itemType').val());
-		var newItem=eInvoiceDoumentTemplate.invoiceTemplate.item;
-		newItem=Object.assign(newItem,line.item);
+		
+		var newItem=Object.assign({}, clone(dbType.itemType),line.item);
+
 		newItem['itemType']=$('#invoiceLine-new-itemType').val();
 		
 	    $.ajax({
@@ -384,8 +379,8 @@ function saveInvoiceLine(index){
 	            saveInvoice((err)=>{
 			    	if(!err){
 			    		reloadLineGrid();
-			    		$('#invoiceLineModal').modal('hide');
 			    	}else{
+			    		$('#invoiceLineModal').modal('show');
 			    		alert('Hata:' + err.message);
 			    	}
 			    });
@@ -395,8 +390,9 @@ function saveInvoiceLine(index){
 		saveInvoice((err)=>{
 	    	if(!err){
 	    		reloadLineGrid();
-	    		$('#invoiceLineModal').modal('hide');
+	    		
 	    	}else{
+	    		$('#invoiceLineModal').modal('show');
 	    		alert('Hata:' + err.message);
 	    	}
 	    });
@@ -582,8 +578,7 @@ function invoiceLinePackageGrid_RemoveRow(index){
 }
 
 function addNewLine(){
-	var invoiceLine=eInvoiceDoumentTemplate.invoiceTemplate.invoiceLine;
-	var line=JSON.parse(JSON.stringify(invoiceLine));
+	var line=clone(dbType.invoiceLineType);
 	line.ID.value=invoice.invoiceLine.length+1;
 	invoice.invoiceLine.push(line);
 	editLine(invoice.invoiceLine.length-1);
@@ -593,17 +588,5 @@ $(document).ready(function(){
 	
 	formOrjinal=document.getElementById('invoiceLineModal').cloneNode(true);
 	
-	
-
-	// $('#invoiceLine-taxExemptionReason').autocomplete({
- //        source:taxExtemptionCodeList,
- //        select: function (event, ui) {
- //        	console.log('event:',event);
- //        	console.log('ui:',ui);
- //            $("#invoiceLine-taxExemptionReason").val(ui.item.text); // display the selected text
- //            $("#invoiceLine-taxExemptionReasonCode").val(ui.item.value); // save selected id to hidden input
- //        }
- //    });
-
 	
 });

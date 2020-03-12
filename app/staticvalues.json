@@ -56,18 +56,6 @@
 		{"text":"Logo","value": "logo"},
 		{"text":"Turkcell","value": "turkcell"}
 	],
-	"eInvoiceStatusTypes":[
-		{"text":"Taslak","value": "Draft"},
-		{"text":"Bekliyor","value": "Pending"},
-		{"text":"Kuyrukta","value": "Queued"},
-		{"text":"İşleniyor","value": "Processing"},
-		{"text":"GİB e iltildi","value": "SentToGib"},
-		{"text":"Onaylandı","value": "Approved"},
-		{"text":"Reddedildi","value": "Declined"},
-		{"text":"Onay bekliyor","value": "WaitingForAprovement"},
-		{"text":"Hata","value": "Error"}
-		
-	],
 	"currencyList":[
 		{"text":"TL","value": "TRY"},
 		{"text":"EUR","value": "EUR"},
@@ -78,6 +66,18 @@
 		{"text":"CHF","value": "CHF"},
 		{"text":"CNY","value": "CNY"},
 		{"text":"RON","value": "RON"}
+		
+	],
+	"eInvoiceStatusTypes":[
+		{"text":"Taslak","value": "Draft"},
+		{"text":"Bekliyor","value": "Pending"},
+		{"text":"Kuyrukta","value": "Queued"},
+		{"text":"İşleniyor","value": "Processing"},
+		{"text":"GİB e iltildi","value": "SentToGib"},
+		{"text":"Onaylandı","value": "Approved"},
+		{"text":"Reddedildi","value": "Declined"},
+		{"text":"Onay bekliyor","value": "WaitingForAprovement"},
+		{"text":"Hata","value": "Error"}
 		
 	],
 	"eInvoiceProfileIdList":[
@@ -97,7 +97,27 @@
 		{"text":"İhraç Kayıtlı","value": "IHRACKAYITLI"}
 		
 	],
-	"eInvoiceXsltFileTypes":[
+	"orderStatusTypes":[
+		{"text":"Taslak","value": "Draft"},
+		{"text":"Bekliyor","value": "Pending"},
+		{"text":"Kuyrukta","value": "Queued"},
+		{"text":"İşleniyor","value": "Processing"},
+		{"text":"Gönderildi","value": "SentToGib"},
+		{"text":"Onaylandı","value": "Approved"},
+		{"text":"Reddedildi","value": "Declined"},
+		{"text":"Onay bekliyor","value": "WaitingForAprovement"},
+		{"text":"Hata","value": "Error"}
+		
+	],
+	"orderProfileIdList":[
+		{"text":"Temel","value": "TEMELSIPARIS"}
+		
+	],
+	"orderTypeCodeList":[
+		{"text":"Satış","value": "SATIS"}
+		
+	],
+	"xsltFileTypes":[
 		{"text":".xslt","value": "xslt","icon":"file"},
 		{"text":".txt","value": "txt","icon":"file-alt"},
 		{"text":".xml","value": "xml","icon":"file"},

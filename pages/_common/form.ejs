@@ -33,7 +33,7 @@
     headerButtons +='<a href="javascript:printForm();" class="btn btn-info" title="Yazdır"><i class="fas fa-print"></i></a>';
     
   }
-  headerButtons +='<a href="javascript:openBack();" class="btn btn-dark ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
+  headerButtons +='<a href="javascript:goBack();" class="btn btn-dark ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
   console.log('headerButtons:',headerButtons);
 %>
 <script type="text/javascript">
@@ -103,24 +103,6 @@
  <% } %>
   
 </form>
-
-<script type="text/javascript">
-  function openBack(){
-    window.location.href=document.referrer;
-    // if(localStorage.getItem('returnUrl')){
-    //   var returnUrl=localStorage.getItem('returnUrl');
-    //   localStorage.removeItem('returnUrl');
-
-    //   if(returnUrl.indexOf('db=<%=db%>')>0 && returnUrl.indexOf('sid=<%=sid%>')>0){
-    //     window.location.href=returnUrl;
-    //   }else{
-    //     history.back(1);
-    //   }
-    // }else{
-    //   history.back(1);
-    // }
-  }
-</script>
 
 <% function standartForm(formObject){ %>
   <div class="row">

@@ -1,5 +1,3 @@
-
-<script type="text/javascript" src="/js/einvoice-document-template.js"></script>
 <%
     if(ioType==0){
         form.party=form.accountingCustomerParty.party;
@@ -20,10 +18,10 @@
 
     headerButtons +='<button type="button" class="btn btn-primary" title="Kaydet" onclick="faturaKaydet()"><i class="fas fa-save"></i></button>';
     
-    headerButtons +='<a href="javascript:openBack();" class="btn btn-dark ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
+    headerButtons +='<a href="javascript:goBack();" class="btn btn-dark ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
 
 %>
-
+<script type="text/javascript" src="/js/ui/invoice.js"></script>
 <script type="text/javascript">
     var headerButtons=document.getElementById('headerButtons');
     if(headerButtons){
@@ -33,7 +31,8 @@
     var db='<%=db%>';
     var sid='<%=sid%>';
     var _id='<%=form._id%>';
-    var invoice=eInvoiceDoumentTemplate.invoiceTemplate.invoice;
+    // var invoice=eInvoiceDoumentTemplate.invoiceTemplate.invoice;
+    var invoice=clone(dbType.invoiceType);
     var unitCodeList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(staticValues.unitCodeList)) %>'));
 
     <% if(typeof form._id!='undefined'){
@@ -407,21 +406,7 @@
         });
 	}
 
-	function openBack(){
-		if(localStorage.getItem('returnUrl')){
-			var returnUrl=localStorage.getItem('returnUrl');
-			
-			localStorage.removeItem('returnUrl');
-
-			if(returnUrl.indexOf('db=<%=db%>')>0 && returnUrl.indexOf('sid=<%=sid%>')>0){
-				window.location.href=returnUrl;
-			}else{
-				history.back(1);
-			}
-		}else{
-			history.back(1);
-		}
-	}
+	
     
     function reloadLineGrid(){
         $("#lineGrid tr").remove();
@@ -502,7 +487,8 @@
                             kdvTutar=line.taxTotal.taxAmount.value.formatMoney();
                             kdvDahilTutar +=line.taxTotal.taxAmount.value;
                         }
-                if(line.withholdingTaxTotal)
+
+                if(line.withholdingTaxTotal!=undefined)
                     if(line.withholdingTaxTotal.length>0){
                         line.withholdingTaxTotal.forEach((wTax)=>{
                             if(wTax.taxSubtotal.length>0){
@@ -574,6 +560,23 @@
             cell1.classList.add('text-right');
             cell1.innerHTML=Number(e.taxSubtotal[0].taxAmount.value).formatMoney();
         });
+        if(invoice.withholdingTaxTotal)
+        if(invoice.withholdingTaxTotal.length>0){
+            invoice.withholdingTaxTotal.forEach(function(e){
+                var newRow=vergiGrid.insertRow(vergiGrid.rows.length);
+                newRow.classList.add('text-nowrap');
+                var vergi='';
+                if(e.taxSubtotal)
+                    if(e.taxSubtotal.length>0){
+                        vergi = 'Tevkifat %' + e.taxSubtotal[0].percent.value;
+                    }
+                newRow.insertCell(0).innerHTML=vergi;
+                var cell1=newRow.insertCell(1);
+                cell1.classList.add('text-right');
+                cell1.innerHTML=Number(e.taxSubtotal[0].taxAmount.value).formatMoney();
+            });
+        }
+        
         
         $("#iskontoGrid tr").remove();
         var iskontoGrid=document.getElementById('iskontoGrid');

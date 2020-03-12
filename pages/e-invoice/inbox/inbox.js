@@ -1,4 +1,3 @@
-var template=require(path_module.join(rootDir,'_assets','js','einvoice-document-template.js'));
 
 module.exports = function(req,res,callback){
 	var data={
@@ -7,7 +6,7 @@ module.exports = function(req,res,callback){
 		currencyList:Array.from(staticValues.currencyList),
 		eInvoiceProfileIdList:Array.from(staticValues.eInvoiceProfileIdList),
 		eInvoiceTypeCodeList:Array.from(staticValues.eInvoiceTypeCodeList),
-		form:JSON.parse(JSON.stringify(template.invoiceTemplate.invoice)),
+		form:Object.assign({},dbType.invoiceType),
 		html:'Goruntulenemedi',
 		list:[],
 		filter:{}

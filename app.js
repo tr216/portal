@@ -28,8 +28,14 @@ global.ttext = require('./lib/language.js');
 global.api = require('./providers/api/api.js');
 
 global.eInvoiceHelper=require('./lib/einvoice_helper.js');
+global.orderHelper=require('./lib/order_helper.js');
 global.rootDir=__dirname;
-
+// global.dbType=require(path_module.join(rootDir,'_assets','js','dbtypes.js'));
+global.dbType=require('./_assets/js/dbtypes.js').types;
+var a=Object.assign({},dbType.valueType);
+a.value='merhaba';
+console.log('a:',a);
+console.log('dbType.valueType:', dbType.valueType);
 
 var app = express();
 var flash = require('connect-flash');
@@ -50,8 +56,8 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '_vendors'), { maxAge: (60 * 1000 * 60 * 24 * 365) }));
-// app.use(express.static(path.join(__dirname, '_assets'), { maxAge: (60 * 1000 * 60 * 2) })); //2saat cache
-app.use(express.static(path.join(__dirname, '_assets'))); //qwerty cache siz
+app.use(express.static(path.join(__dirname, '_assets'), { maxAge: (60 * 1000 * 60 * 2) })); //2saat cache
+// app.use(express.static(path.join(__dirname, '_assets'))); //qwerty cache siz
 
 app.use(flash());
 

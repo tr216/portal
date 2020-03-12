@@ -45,7 +45,7 @@ function getList(req,res,data,callback){
 			}
 		}
 
-		res.redirect('/pos-device/service-defines?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
+		res.redirect('/pos-device/services-defines?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
 		eventLog(data);
@@ -71,7 +71,7 @@ function addnew(req,res,data,callback){
 		eventLog('data.form:',data.form);
 		api.post('/' + req.query.db + '/pos-device-services',req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/pos-device/service-defines?db=' + req.query.db +'&sid=' + req.query.sid);
+				res.redirect('/pos-device/services-defines?db=' + req.query.db +'&sid=' + req.query.sid);
 				return;
 			}else{
 				data['message']=err.message;
@@ -96,7 +96,7 @@ function edit(req,res,data,callback){
 
 		api.put('/' + req.query.db + '/pos-device-services/' + _id,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/pos-device/service-defines?db=' + req.query.db +'&sid=' + req.query.sid);
+				res.redirect('/pos-device/services-defines?db=' + req.query.db +'&sid=' + req.query.sid);
 				return;
 			}else{
 				data['message']=err.message;

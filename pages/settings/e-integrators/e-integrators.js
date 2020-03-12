@@ -2,7 +2,7 @@ module.exports = function(req,res,callback){
 	var data={
 		eIntegrators:staticValues.eIntegrators,
 		localConnectorList:[],
-		fileTypes:staticValues.eInvoiceXsltFileTypes,
+		fileTypes:staticValues.xsltFileTypes,
 		form:{
 			eIntegrator:'',
 			name:'',
