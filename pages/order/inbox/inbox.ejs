@@ -1,22 +1,25 @@
+<%
+    title='Alım Şiparişleri';
+%>
 <%layout('../../_common/layout')%>
 <form action="" method="POST" role="form" name="form1">
     <div class="row m-0 mt-2">
         <div class="col-12 p-0">
-<%- partial('../../_common/date-filter',{includeForm:false,includeFilterButton:false}) %>
-    
+            <%- partial('../../_common/date-filter',{includeForm:false,includeFilterButton:false}) %>
+            
             <div class="float-left form-inline ml-md-4">
                 <label class="text-primary">Senaryo:</label>
                 <select class="form-control input-inline input-sm" name="profileId" id="profileId">
-                    <% eInvoiceProfileIdList.forEach((e)=>{ %> 
+                    <% docProfileIdList.forEach((e)=>{ %> 
                     <option value="<%=e.value%>"<% if(typeof filter.profileId!='undefined') if(filter.profileId==e.value){%>selected<% } %>><%=e.text%></option>
                     <% }) %>
                 </select>
             </div>
             <div class="float-left form-inline ml-md-2">
-                <label class="text-primary">Fatura Türü:</label>
-                <select class="form-control input-inline input-sm" name="invoiceTypeCode" id="invoiceTypeCode">
-                    <% eInvoiceTypeCodeList.forEach((e)=>{ %> 
-                    <option value="<%=e.value%>"<% if(typeof filter.invoiceTypeCode!='undefined') if(filter.invoiceTypeCode==e.value){%>selected<% } %>><%=e.text%></option>
+                <label class="text-primary">Sipariş Türü:</label>
+                <select class="form-control input-inline input-sm" name="orderTypeCode" id="orderTypeCode">
+                    <% docTypeCodeList.forEach((e)=>{ %> 
+                    <option value="<%=e.value%>"<% if(typeof filter.orderTypeCode!='undefined') if(filter.orderTypeCode==e.value){%>selected<% } %>><%=e.text%></option>
                     <% }) %>
                 </select>
             </div>
@@ -35,7 +38,7 @@
     <button type="button" class="btn btn-danger" id="btnDecline">Reddet</button>
   </div>
   <div class="btn-group mr-2" role="group" aria-label="">
-    <button type="button" class="btn btn-info" id="btnExportToLocal" title="Faturalari Serverınıza gönder "><i class="fas fa-plug"></i> Entegrasyon</button>
+    <button type="button" class="btn btn-info" id="btnExportToLocal" title="Siparişleri Lokal Servera gönder "><i class="fas fa-plug"></i> Entegrasyon</button>
   </div>
 </div>
 
@@ -53,27 +56,26 @@
 
 <%- partial('../../_common/grid2',{
     fields:[
-        {name:'invoiceNo',text:'Fat.No',type:'label', filterField:'invoiceNo', filter:true,orderable:true},
-        {name:'issueDate',text:'Fat. Tarihi',type:'label', orderable:true},
+        {name:'orderNo',text:'Sip.No',type:'label', filterField:'orderNo', filter:true,orderable:true},
+        {name:'issueDate',text:'Sip. Tarihi',type:'label', orderable:true},
         {name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
         {name:'amount',text:'Tutar',type:'label'},
         {name:'tax',text:'Vergi',type:'label' },
         {name:'currency',text:'Döviz',type:'lookup',filter:true, filterField:'documentCurrencyCode', lookupList:currencyList,textField:'text', valueField:'value', dontUseLookup:true },
-        {name:'invoiceStatus',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:eInvoiceStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
+        {name:'orderStatus',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
     ],
-    caption:'Gelen Faturalar',
+    caption:'Siparisler',
     addNewButton:true,
     viewButton:false,
     editButton:true,
     deleteButton:true,
     selection:true,
     customButtons:[
-        {href:'javascript:popupCenter("/e-invoice/inbox/view/{_id}?db=' + db + '&sid=' + sid + '","Ön izleme","900","600");', text:'Goruntule',icon:'fas fa-search-plus'},
-        {href:'/e-invoice/inbox/pdf/{_id}?db=' + db + '&sid=' + sid, text:'Pdf',icon:'fas fa-file-pdf'}
-    ]
-    ,
-    deleteUrl:'/dbapi/e-invoice/invoice/{_id}?db='+db+'&sid=' + sid
-    }) 
+        {href:'javascript:popupCenter("/order/inbox/view/{_id}?db=' + db + '&sid=' + sid + '","Ön izleme","900","600");', text:'Goruntule',icon:'fas fa-search-plus'},
+        {href:'/order/inbox/pdf/{_id}?db=' + db + '&sid=' + sid, text:'Pdf',icon:'fas fa-file-pdf'}
+    ],
+    deleteUrl:'/dbapi/order/order/{_id}?db='+db+'&sid=' + sid
+}) 
 %>
 
 <script type="text/javascript">
@@ -82,7 +84,7 @@
 
         $('#btnExportToLocal').click(function(){
             $.ajax({
-                url:'/dbapi/e-invoice/transfer/export?db=<%=db%>&sid=<%=sid%>',
+                url:'/dbapi/order/transfer/export?db=<%=db%>&sid=<%=sid%>',
                 data:{},
                 type:'POST',
                 success:function(result){
@@ -103,7 +105,7 @@
             $(".checkSingle").each(function() {
                 if(this.checked){
                     var satir=JSON.parse(decodeURIComponent(this.value));
-                    if(satir.doc.invoiceStatus=='WaitingForAprovement'){
+                    if(satir.doc.orderStatus=='WaitingForAprovement'){
                         data.list.push({_id:satir._id, ID:satir.doc.ID});
                     }
                     
@@ -112,7 +114,7 @@
             if(data.list.length==0)  return alert('Kayit secilmemis!');
             if(!confirm(data.list.length + ' adet ticari faturayi onayliyor musunuz?')) return;
             $.ajax({
-                url:'/dbapi/e-invoice/approve?db=<%=db%>&sid=<%=sid%>',
+                url:'/dbapi/order/approve?db=<%=db%>&sid=<%=sid%>',
                 data:data,
                 type:'POST',
                 success:function(result){
@@ -132,7 +134,7 @@
             $(".checkSingle").each(function() {
                 if(this.checked){
                     var satir=JSON.parse(decodeURIComponent(this.value));
-                    if(satir.doc.invoiceStatus=='WaitingForAprovement'){
+                    if(satir.doc.orderStatus=='WaitingForAprovement'){
                         data.list.push({_id:satir._id, ID:satir.doc.ID});
                     }
                     
@@ -141,7 +143,7 @@
             if(data.list.length==0)  return alert('Kayit secilmemis!');
             if(!confirm(data.list.length + ' adet ticari faturayi reddediyor musunuz?')) return;
             $.ajax({
-                url:'/dbapi/e-invoice/decline?db=<%=db%>&sid=<%=sid%>',
+                url:'/dbapi/order/decline?db=<%=db%>&sid=<%=sid%>',
                 data:data,
                 type:'POST',
                 success:function(result){

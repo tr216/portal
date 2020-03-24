@@ -17,6 +17,14 @@ Date.prototype.hhmmss = function () {
 	return (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0]); 
 };
 
+Date.prototype.hhmm = function () {
+	
+	var HH = this.getHours().toString();
+	var min = this.getMinutes().toString();
+	var sec = this.getSeconds().toString();
+	return (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]); 
+};
+
 Date.prototype.addDays = function(days)
 {
 	var dat = new Date(this.valueOf());
@@ -40,9 +48,11 @@ function getAllUrlParams(){
   var dizi=queryString.split('&');
   for(var i=0;i<dizi.length;i++){
 	var key=dizi[i].split('=')[0];
+
 	var value=getUrlParameter(key);
 	if(value!=''){
-	  q[key]=value;
+		if(key[0]=='?') key=key.substr(1);
+	  	q[key]=value;
 	}
   }
   return q;

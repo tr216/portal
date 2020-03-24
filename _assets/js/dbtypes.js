@@ -32,7 +32,7 @@ const documentReferenceType={
     documentDescription:[valueType],
     attachment: {
         embeddedDocumentBinaryObject: {
-            value:{ type: String, default: ''},
+            value:'',
             attr: {
                 format: '',
                 mimeCode:'application/xml',
@@ -264,7 +264,7 @@ const deliveryTermsType={
     amount : amountType,
     ID:{ 
         value:'',
-        attr:{ schemeID :{ type: String, default:'INCOTERMS'}}
+        attr:{ schemeID :'INCOTERMS'}
     },
     specialTerms:valueType
 }
@@ -558,8 +558,8 @@ const invoiceType={
     profileId: valueType,
     ID: valueType,
     uuid: valueType,
-    issueDate: valueType,
-    issueTime: valueType,
+    issueDate:valueType,
+    issueTime:valueType,
     invoiceTypeCode: valueType,
     invoicePeriod: periodType,
     note:[valueType],
@@ -590,18 +590,18 @@ const invoiceType={
         deliveryContact:contactType
     },
     accountingCost:valueType,
-    delivery:[deliveryType],
-    billingReference:[billingReferenceType],
-    contractDocumentReference:[documentReferenceType],
+    delivery:[],
+    billingReference:[],
+    contractDocumentReference:[],
     paymentTerms:paymentTermsType,
-    paymentMeans:[paymentMeansType],
+    paymentMeans:[],
     taxExchangeRate:exchangeRateType,
     pricingExchangeRate:exchangeRateType,
     paymentExchangeRate:exchangeRateType,
     paymentAlternativeExchangeRate:exchangeRateType,
-    taxTotal:[taxTotalType],
-    withholdingTaxTotal:[taxTotalType],
-    allowanceCharge:[allowanceChargeType],
+    taxTotal:[],
+    withholdingTaxTotal:[],
+    allowanceCharge:[],
     legalMonetaryTotal: { 
         lineExtensionAmount  :amountType,
         taxExclusiveAmount  : amountType,
@@ -611,7 +611,79 @@ const invoiceType={
         payableRoundingAmount : amountType,
         payableAmount :amountType
     },
-    invoiceLine:[invoiceLineType],
+    invoiceLine:[],
+    localDocumentId:''
+}
+
+const orderType={
+    //ioType : 0, // 0 - cikis , 1- giris
+    eIntegrator: '',
+    profileId: valueType,
+    ID: valueType,
+    salesOrderId:valueType,
+    uuid: valueType,
+    issueDate: valueType,
+    issueTime: valueType,
+    orderTypeCode: valueType,
+    note:[valueType],
+    requestedInvoiceCurrencyCode:valueType,
+    documentCurrencyCode:valueType,
+    pricingCurrencyCode:valueType,
+    taxCurrencyCode:valueType,
+    customerReference:valueType,
+    accountingCostCode:valueType,
+    accountingCost:valueType,
+    lineCountNumeric:numberValueType,
+    validityPeriod: periodType,
+    quotationDocumentReference:[],
+    orderDocumentReference:[],
+    originatorDocumentReference:[],
+    catalogueReference:[],
+    additionalDocumentReference:[],
+    contract:[],
+    projectReference:[],
+    sellerSupplierParty:{
+        customerAssignedAccountId:idType,
+        additionalAccountId:idType,
+        dataSendingCapability:valueType,
+        party:partyType,
+        despatchContact:contactType,
+        accountingContact:contactType,
+        sellerContact:contactType
+    },
+    buyerCustomerParty:{
+        customerAssignedAccountId:idType,
+        supplierAssignedAccountId:idType,
+        additionalAccountId:idType,
+        party:partyType,
+        deliveryContact:contactType,
+        accountingContact:contactType,
+        buyerContact:contactType
+    },
+    accountingCost:valueType,
+    delivery:[],
+    billingReference:[],
+    contractDocumentReference:[],
+    paymentTerms:paymentTermsType,
+    paymentMeans:[],
+    taxExchangeRate:exchangeRateType,
+    pricingExchangeRate:exchangeRateType,
+    paymentExchangeRate:exchangeRateType,
+    paymentAlternativeExchangeRate:exchangeRateType,
+    taxTotal:[],
+    withholdingTaxTotal:[],
+    allowanceCharge:[],
+    anticipatedMonetaryTotal: { 
+        lineExtensionAmount  :amountType,
+        taxExclusiveAmount  : amountType,
+        taxInclusiveAmount   : amountType,
+        allowanceTotalAmount   : amountType,
+        chargeTotalAmount : amountType,
+        payableRoundingAmount : amountType,
+        payableAmount :amountType,
+        payableAlternativeAmount :amountType
+    },
+    orderLine:[],
     localDocumentId:''
 }
 
@@ -670,7 +742,8 @@ exports.types = Object.freeze({
     orderLineType:orderLineType,
     transactionConditionsType:transactionConditionsType,
     deliveryTermsType:deliveryTermsType,
-    invoiceType:invoiceType
+    invoiceType:invoiceType,
+    orderType:orderType
 });
 
        

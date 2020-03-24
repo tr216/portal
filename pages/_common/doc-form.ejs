@@ -1,9 +1,18 @@
 <%
-    if(ioType==0){
-        form.party=form.accountingCustomerParty.party;
-    }else{
-        form.party=form.accountingSupplierParty.party;
+    if(typeof docFormType=='undefined') docFormType='';
+
+    switch(docFormType){
+        case 'order':
+            form.party=ioType==0?form.buyerCustomerParty.party:form.sellerSupplierParty.party;
+        break;
+        case 'invoice':
+            form.party=ioType==0?form.accountingCustomerParty.party:form.accountingSupplierParty.party;
+        break;
+        case 'despatch':
+            form.party=ioType==0?form.deliveryCustomerParty.party:form.despatchSupplierParty.party;
+        break;
     }
+   
     form['vknTckn']='';
     try{
         form.party.partyIdentification.forEach((e)=>{
@@ -16,12 +25,12 @@
     headerButtons='';
     formName='form1';
 
-    headerButtons +='<button type="button" class="btn btn-primary" title="Kaydet" onclick="faturaKaydet()"><i class="fas fa-save"></i></button>';
+    headerButtons +='<button type="button" class="btn btn-primary" title="Kaydet" onclick="formKaydet()"><i class="fas fa-save"></i></button>';
     
     headerButtons +='<a href="javascript:goBack();" class="btn btn-dark ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
 
 %>
-<script type="text/javascript" src="/js/ui/invoice.js"></script>
+<script type="text/javascript" src="<%- assetFile('/js/ui/doc-form.js') %>"></script>
 <script type="text/javascript">
     var headerButtons=document.getElementById('headerButtons');
     if(headerButtons){
@@ -30,56 +39,73 @@
     var ioType=<%=ioType%>;
     var db='<%=db%>';
     var sid='<%=sid%>';
-    var _id='<%=form._id%>';
-    // var invoice=eInvoiceDoumentTemplate.invoiceTemplate.invoice;
-    var invoice=clone(dbType.invoiceType);
+    var _id='<%=(form._id || '')%>';
+    var doc;
+    var docFormType='<%=docFormType%>';
+
+    
+    <% switch(docFormType){
+        case 'order': %>
+        doc=clone(dbType.orderType);
+        <% break;
+        case 'invoice': %>
+        doc=clone(dbType.invoiceType);
+        <% break;
+        case 'despatch': %>
+        doc=clone(dbType.despatchType);
+        <% break;
+    } %>
+    doc.ioType=<%=ioType%>;
+
+    doc.issueDate.value=(new Date()).yyyymmdd();
+    doc.issueTime.value=(new Date()).hhmm();
+
     var unitCodeList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(staticValues.unitCodeList)) %>'));
 
-    <% if(typeof form._id!='undefined'){
-        if(form._id!=''){ %>
-    invoice=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form))%>'));
-   
+    <% 
+        if(typeof form._id!='undefined'){
+        if((form._id || '')!=''){ 
+    %>
+    doc=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form))%>'));
+    
     <%  }
     } %>
-    
 </script>
 
 <form action="" method="POST" role="form" name="form1" id="form1">
-	<% if(typeof message!='undefined'){ if(message!=''){ %>
-	<div class="row">
-		<div class="col-lg-12 col-md-12">
-			<div class="alert alert-danger" role="alert">
-				<%=message %>
-			</div>
-		</div>
-	</div>
-	<% } } %>
-	<ul class="nav nav-tabs form-tabs" role="tablist">
-		<li class="nav-item">
-			<a class="nav-link active" href="#tab1" role="tab" data-toggle="tab" id="IDtab1" aria-controls="tab1" aria-selected="true">
-				<i class="fas fa-file-alt"></i> Fatura Bilgileri
-			</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#tab2" role="tab" data-toggle="tab" id="IDtab2" aria-controls="tab2" aria-selected="false">
-				<i class="fas fa-table"></i> Satirlar
-			</a>
-		</li>
-	</ul>
-	<div class="tab-content p-1" style="min-height: 70vh;overflow: auto;">
-		<!-- IDtab1 -->
-		<div class="tab-pane show active" id="tab1" role="tabpanel" aria-labelledby="IDtab1">
-			<div class="card">
+    <% if(typeof message!='undefined'){ if(message!=''){ %>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <%=message %>
+            </div>
+        </div>
+    </div>
+    <% } } %>
+    <ul class="nav nav-tabs form-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" href="#tab1" role="tab" data-toggle="tab" id="IDtab1" aria-controls="tab1" aria-selected="true">
+                <i class="fas fa-file-alt"></i> Bilgiler
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#tab2" role="tab" data-toggle="tab" id="IDtab2" aria-controls="tab2" aria-selected="false">
+                <i class="fas fa-table"></i> Satirlar
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content p-1" style="min-height: 70vh;overflow: auto;">
+        <!-- IDtab1 -->
+        <div class="tab-pane show active" id="tab1" role="tabpanel" aria-labelledby="IDtab1">
+            <div class="card">
                 <div class="card-header p-1">
                     <div class="float-left bold text-primary">Genel Bilgiler</div>
                     <div class="float-right bold text-primary form-inline">
                         <label>Entegrator:</label>
                         <select name="eIntegrator" class="form-control">
-                            <% eIntegratorList.forEach((e)=>{ 
-                                
-                            %>
+                            <% eIntegratorList.forEach((e)=>{ %>
                             <option value="<%=e._id%>" <% if(form.eIntegrator==e._id){%> selected <%}%>><%=e.name%></option>
-                            <%  }) %>
+                            <%  }); %>
                         </select>
                     </div>
                     
@@ -87,7 +113,7 @@
                 <div class="card-body p-1">
                     <div class="row">
                         <div class="form-group col-md-3">
-                            <label for="" class="m-0">Fatura No</label>
+                            <label for="" class="m-0"><%=title%> No</label>
                             <input type="text" class="form-control" name="ID[value]" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.ID.value%>">
                         </div>
                         <div class="form-group col-md-2">
@@ -101,8 +127,8 @@
                         </div>
                         <div class="form-group col-md-2">
                             <label for="" class="m-0">Saat</label>
-                            <div class="input-group">
-                                <input type="time" name="issueTime[value]" id="issueTime" class="form-control" value="<% if(typeof form.issueTime.value=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.value.substr(0,8)%><%}%>">
+                            <div class="input-group" id="issueTime1">
+                                <input type="text" name="issueTime[value]" id="issueTime" class="form-control" value="<% if(typeof form.issueTime.value=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.value.substr(0,8)%><%}%>">
                                 <div class="input-group-addon">
                                     <i class="fa fa-clock fa-2x"></i>
                                 </div>
@@ -111,18 +137,38 @@
                         <div class="form-group col-md-2">
                             <label for="" class="m-0">Senaryo</label>
                             <select name="profileId[value]" class="form-control">
-                                <% staticValues.eInvoiceProfileIdList.forEach(function(e){ %>
+                                <% docProfileIdList.forEach(function(e){ %>
                                 <option value="<%=e.value%>" <% if(e.value==form.profileId.value){%>selected<%} %> ><%=e.text%></option>
                                 <% }); %>
                             </select>
                         </div>
                         <div class="form-group col-md-2">
-                            <label for="" class="m-0">Fatura Tipi</label>
-                            <select name="invoiceTypeCode[value]" class="form-control">
-                                <% staticValues.eInvoiceTypeCodeList.forEach(function(e){ %>
-                                <option value="<%=e.value%>" <% if(e.value==form.invoiceTypeCode.value){%>selected<%} %> ><%=e.text%></option>
+                             <% switch(docFormType){
+                                case 'order':%>
+                            <label for="" class="m-0">Siparis Tipi</label>
+                            <select name="orderTypeCode[value]" class="form-control">
+                                <% docTypeCodeList.forEach(function(e){ %>
+                                    <option value="<%=e.value%>" <% if(e.value==form.orderTypeCode.value){%>selected<%} %> ><%=e.text%></option>
                                 <% }); %>
                             </select>
+                                <% break;
+                                case 'invoice':%>
+                            <label for="" class="m-0">Fatura Tipi</label>
+                            <select name="invoiceTypeCode[value]" class="form-control">
+                                <% docTypeCodeList.forEach(function(e){ %>
+                                <option value="<%=e.value%>" <% if(e.value==form.invoiceTypeCode.value){%>selected<%} %> ><%=e.text%></option>
+                             <% }); %>
+                            </select>
+                                <% break; 
+                                case 'despatch':%>
+                            <label for="" class="m-0">Irsaliye Tipi</label>
+                            <select name="despatchAdviceTypeCode[value]" class="form-control">
+                                <% docTypeCodeList.forEach(function(e){ %>
+                                    <option value="<%=e.value%>" <% if(e.value==form.despatchAdviceTypeCode.value){%>selected<%} %> ><%=e.text%></option>
+                                <% }); %>
+                            </select>
+                                <% break;
+                             } %>
                         </div>
                         <div class="w-100"></div>
                         <div class="form-group col-md-3">
@@ -156,7 +202,7 @@
                             </div>
                         </div>
                         <div class="form-group col-md-2 offset-md-3">
-                            <label for="" class="m-0">Yerel Fatura No</label>
+                            <label for="" class="m-0">Yerel <%=title%> No</label>
                             <input type="text" class="form-control" name="localDocumentId" placeholder="localDocumentId" autocomplete="on"  value="<%=form.localDocumentId%>">
                         </div>
                     </div>
@@ -247,7 +293,7 @@
             </div>
 
             <div class="card mt-2">
-                <div class="card-header p-1 text-primary"><b>Fatura Genel Toplamları</b></div>
+                <div class="card-header p-1 text-primary"><b>Genel Toplamları</b></div>
                 <div class="card-body p-1 pr-4">
                     <div class="row">
                         <div class="col-md-3 border-right pr-4">
@@ -255,7 +301,7 @@
                                 <label for="" class="col-12 text-center bold">Tutarlar</label>
                             </div>
                             <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-                                <tbody id="legalMonetaryTotalGrid">
+                                <tbody id="monetaryTotalGrid">
                                     <tr>
                                         <td>Satır Toplam</td><td class="text-right" id="lineExtensionAmount"></td>
                                     </tr>
@@ -296,9 +342,9 @@
                                     
                                 </tbody>
                             </table>
-                    	</div>
-                	</div>
-            	</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="card mt-2">
@@ -307,84 +353,89 @@
                     <div class="row">
                         <div class="col-12">
                             <textarea name="notes" class="form-control" rows="<% if(form.note.length>3){%><%=form.note.length%><%}else{%>3<%}%>"><% form.note.forEach((e)=>{%><%=(e.value + '\r\n')%><%});%></textarea>
-
                         </div>
                     </div>
                 </div>
             </div>
 
-		</div>
+        </div>
 
-		<!-- IDtab2 -->
-		<div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="IDtab2">
-			<table id="grid1" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-				<thead>
-					<tr class="text-nowrap">
-						<th width="30" class=""><input type="checkbox" class="mt-1" value="true" name="selectAll" id="selectAll"></th>
-						<th width="50" class="">No</th>
-						<th width="30%" class="">Mal/Hizmet</th>
-						<th width="5%" class="text-right">Miktar</th>
-						<th width="7%">Birim</th>
-						<th width="7%" class="text-right">B.Fiyat</th>
-						<th width="7%" class="text-right">Isk.%</th>
-						<th width="9%" class="text-right">Isk.Tutar</th>
-						<th width="10%" class="text-right">Tutar</th>
-						<th width="7%" class="text-right">Kdv%</th>
-						<th width="10%" class="text-right">Kdv Tutar</th>
-						<th width="10%" class="text-right">Kdv Dahil</th>
-						<th style="min-width:140px;" class="text-center">
+        <!-- IDtab2 -->
+        <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="IDtab2">
+            <table id="grid1" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+                <thead>
+                    <tr class="text-nowrap">
+                        <th width="30" class=""><input type="checkbox" class="mt-1" value="true" name="selectAll" id="selectAll"></th>
+                        <th width="50" class="">No</th>
+                        <th width="30%" class="">Mal/Hizmet</th>
+                        <th width="5%" class="text-right">Miktar</th>
+                        <th width="7%">Birim</th>
+                        <th width="7%" class="text-right">B.Fiyat</th>
+                        <th width="7%" class="text-right">Isk.%</th>
+                        <th width="9%" class="text-right">Isk.Tutar</th>
+                        <th width="10%" class="text-right">Tutar</th>
+                        <th width="7%" class="text-right">Kdv%</th>
+                        <th width="10%" class="text-right">Kdv Tutar</th>
+                        <th width="10%" class="text-right">Kdv Dahil</th>
+                        <th style="min-width:140px;" class="text-center">
                             <a href="javascript:addNewLine();" class="btn btn-primary far fa-plus-square"  title="Yeni satir"></a>                  
                         </th>
-					</tr>
-				</thead>
-				<tbody id="lineGrid">
-					
-				</tbody>
-			</table>
-		</div>
-	</div>
+                    </tr>
+                </thead>
+                <tbody id="lineGrid">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
 </form>
 
 <script type="text/javascript">
-	$(document).ready(function(){
-		$('select[name="profileId[value]"]').change(function(){
-			if($('select[name="profileId[value]"]').val()=='IHRACAT'){
-				$('select[name="invoiceTypeCode[value]"]').val('ISTISNA');
-			}
-		});
-		$('.input-group.date').datepicker({
-			format: 'yyyy-mm-dd',
-			language: "tr",
-			orientation: "bottom auto",
-			// todayBtn: "linked",
-			autoclose: true,
-			todayHighlight: true,
-			clearBtn: true
+    $(document).ready(function(){
+        $('select[name="profileId[value]"]').change(function(){
+            
+        });
 
-			// startDate: -4,
-			// endDate: +8,
-		});
+        $('.input-group.date').datepicker({
+            format: 'yyyy-mm-dd',
+            language: "tr",
+            orientation: "bottom auto",
+            // todayBtn: "linked",
+            autoclose: true,
+            todayHighlight: true,
+            clearBtn: true
 
-		$('#selectAll').change(function(e){
-			$('.checkSingle').not(this).prop('checked', this.checked);
-		});
+            // startDate: -4,
+            // endDate: +8,
+        });
+        $('#issueTime1').timepicker({
+            format: 'HH:mm:ss',
+            language: "tr",
+            orientation: "bottom auto",
+            // todayBtn: "linked",
+            autoclose: true,
+            //todayHighlight: true,
+            clearBtn: true
 
-		$('.form-tabs a').on('shown.bs.tab', function(event){
-			localStorage.setItem('eInvoiceForm.activeTab',$(this).attr('id'));
-		});
+            // startDate: -4,
+            // endDate: +8,
+        });
 
-		// if(localStorage.getItem('eInvoiceForm.activeTab')){
-		// 	$('#' + localStorage.getItem('eInvoiceForm.activeTab')).tab('show');
-		// }
+        $('#selectAll').change(function(e){
+            $('.checkSingle').not(this).prop('checked', this.checked);
+        });
+
+        $("input[name='issueDate[value]']").val(doc.issueDate.value);
+        $("input[name='issueTime[value]']").val(doc.issueTime.value);
 
         reloadLineGrid();
         reloadTotals();
-	});
+    });
 
-    function faturaKaydet(){
+    function formKaydet(){
         
 
-        saveInvoice(function(err){
+        saveDocument(function(err){
             if(err){
                 alert(err.code + ' - ' + err.message);
             }else{
@@ -393,224 +444,5 @@
             }
         });
     }
-	function removeLine(index){
-        if(index<0 || index>invoice.invoiceLine.length-1) return;
-		if(!confirm('Satiri silmek istediginizden emin misiniz?')) return;
-        index>invoice.invoiceLine.splice(index,1);
-		saveInvoice((err)=>{
-            if(!err){
-                reloadLineGrid();
-            }else{
-                alert('Hata:' + err.message);
-            }
-        });
-	}
-
-	
-    
-    function reloadLineGrid(){
-        $("#lineGrid tr").remove();
-        var lineGrid=document.getElementById('lineGrid');
-        
-        if(!invoice) return;
-        if(invoice.invoiceLine){
-            invoice.invoiceLine.forEach((line,index)=>{
-                var newRow=lineGrid.insertRow(lineGrid.rows.length);
-                newRow.classList.add('text-nowrap');
-                newRow.insertCell(0).innerHTML='<input type="hidden" class="invoiceLine" id="invoiceLine[' + index + ']" name="invoiceLine[' + index + ']" value="' + (JSON.stringify(line)) + '">';
-                newRow.insertCell(1).innerHTML=line.ID.value;
-                
-                var itemName=line.item.name.value + '<br>';
-                itemName +='<span class="text-primary">';
-                if(line.item.buyersItemIdentification.ID.value!='') itemName +=line.item.buyersItemIdentification.ID.value + ' ';
-                if(line.item.sellersItemIdentification.ID.value!='') itemName +=line.item.sellersItemIdentification.ID.value + ' ';
-                if(line.item.manufacturersItemIdentification.ID.value!='') itemName +=line.item.manufacturersItemIdentification.ID.value + ' ';
-                itemName +='</span>';
-                newRow.insertCell(2).innerHTML = itemName;
-
-                var cell3=newRow.insertCell(3);
-                cell3.classList.add('text-right');
-                cell3.innerHTML=line.invoicedQuantity.value;
-
-                var cell4=newRow.insertCell(4);
-                if(line.invoicedQuantity.attr){
-                    cell4.innerHTML=line.invoicedQuantity.attr.unitCode;
-                    var found=unitCodeList.find((e)=>{
-                        return e.value==line.invoicedQuantity.attr.unitCode;
-                    });
-                    if(found) cell4.innerHTML=found.text;
-                    
-                }
-
-                var cell5=newRow.insertCell(5);
-                cell5.classList.add('text-right');
-                cell5.innerHTML=line.price.priceAmount.value;
-                var iskontoOran='', iskontoTutar='';
-                if(line.allowanceCharge)
-                    line.allowanceCharge.forEach((allowanceChargeItem,index2)=>{
-                        if(allowanceChargeItem.amount.value>0){
-                            if(allowanceChargeItem.chargeIndicator.value==true){
-                                iskontoOran +='(M) ';
-                                iskontoTutar +='(M) ';
-                            }
-
-                            if(allowanceChargeItem.multiplierFactorNumeric.value>1){
-                                iskontoOran += '% ' + allowanceChargeItem.multiplierFactorNumeric.value;
-                            } else if(allowanceChargeItem.multiplierFactorNumeric.value>0 && allowanceChargeItem.multiplierFactorNumeric.value<1){
-                                iskontoOran += '% ' + (allowanceChargeItem.multiplierFactorNumeric.value*100)
-                            }
-                            iskontoTutar += allowanceChargeItem.amount.value.formatMoney();
-                            if(index2<line.allowanceCharge.length-1){
-                                iskontoOran +='<br>';
-                                iskontoTutar +='<br>';
-                            }
-                        }
-                    });
-                var cell6=newRow.insertCell(6);
-                cell6.classList.add('text-right');
-                cell6.innerHTML=iskontoOran;
-
-                var cell7=newRow.insertCell(7);
-                cell7.classList.add('text-right');
-                cell7.innerHTML=iskontoTutar;
-
-                var cell8=newRow.insertCell(8);
-                cell8.classList.add('text-right');
-                cell8.innerHTML=line.lineExtensionAmount.value.formatMoney();
-
-                var kdvOrani='', kdvTutar=''; 
-                var kdvDahilTutar=line.lineExtensionAmount.value;
-                if(line.taxTotal)
-                    if(line.taxTotal.taxSubtotal)
-                        if(line.taxTotal.taxSubtotal.length>0){
-                            kdvOrani='% ' + line.taxTotal.taxSubtotal[0].percent.value;
-                            kdvTutar=line.taxTotal.taxAmount.value.formatMoney();
-                            kdvDahilTutar +=line.taxTotal.taxAmount.value;
-                        }
-
-                if(line.withholdingTaxTotal!=undefined)
-                    if(line.withholdingTaxTotal.length>0){
-                        line.withholdingTaxTotal.forEach((wTax)=>{
-                            if(wTax.taxSubtotal.length>0){
-                                kdvOrani +='<br>Tevk:% ' + wTax.taxSubtotal[0].percent.value;
-                                kdvTutar +='<br>Tevk.:' + wTax.taxAmount.value.formatMoney();
-                                kdvDahilTutar -=wTax.taxAmount.value;
-                            }
-                        });
-                    }
-
-                var cell9=newRow.insertCell(9);
-                cell9.classList.add('text-right');
-                cell9.innerHTML=kdvOrani;
-
-                var cell10=newRow.insertCell(10);
-                cell10.classList.add('text-right');
-                cell10.innerHTML=kdvTutar;
-
-                var cell11=newRow.insertCell(11);
-                cell11.classList.add('text-right');
-                cell11.innerHTML=kdvDahilTutar.formatMoney();
-
-                var cell12=newRow.insertCell(12);
-                cell12.classList.add('text-center');
-                cell12.innerHTML='<div class="form-inline"><div class="dropdown">' + 
-                        '<button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Satır işlemleri"><i class="fas fa-table"></i> </button>' +
-                        '<div class="dropdown-menu">' +
-                            '<a class="dropdown-item" href="javascript:alert(' + index + ');">GTIP NO Boş olanları geçmişe bakarak doldur</a>'+
-                            '<a class="dropdown-item" href="javascript:alert(' + index + ');">Ihracat bilgilerini alt satirlara kopyala</a>'+
-                            '<div class="dropdown-divider"></div>' +
-                            '<a class="dropdown-item" href="javascript:alert(' + index + ');">qwerty yeni satir islemi eklenecek</a>'+
-                        '</div>' + 
-                    '</div>'+
-                    '<a href="javascript:editLine(' + index + ');"  class="btn btn-primary btn-sm fas fa-edit ml-2" title="Düzenle"></a>' +
-                    '<a href="javascript:removeLine(' + index + ');"  class="btn btn-danger btn-sm fas fa-trash-alt ml-2" title="Sil"></a></div>';
-            });
-        }
-    }
-
-    function reloadTotals(){
-
-        if(!invoice) return;
-        if(!invoice.legalMonetaryTotal) return;
-        document.getElementById('lineExtensionAmount').innerHTML=Number(invoice.legalMonetaryTotal.lineExtensionAmount.value).formatMoney();
-        document.getElementById('allowanceTotalAmount').innerHTML=Number(invoice.legalMonetaryTotal.allowanceTotalAmount.value).formatMoney();
-        document.getElementById('chargeTotalAmount').innerHTML=Number(invoice.legalMonetaryTotal.chargeTotalAmount.value).formatMoney();
-        document.getElementById('taxExclusiveAmount').innerHTML=Number(invoice.legalMonetaryTotal.taxExclusiveAmount.value).formatMoney();
-        document.getElementById('taxInclusiveAmount').innerHTML=Number(invoice.legalMonetaryTotal.taxInclusiveAmount.value).formatMoney();
-        document.getElementById('payableAmount').innerHTML=Number(invoice.legalMonetaryTotal.payableAmount.value).formatMoney();
-
-      
-        $("#vergiGrid tr").remove();
-        var vergiGrid=document.getElementById('vergiGrid');
-
-        invoice.taxTotal.forEach(function(e){
-            var newRow=vergiGrid.insertRow(vergiGrid.rows.length);
-            newRow.classList.add('text-nowrap');
-            var vergi='';
-            if(e.taxSubtotal)
-                if(e.taxSubtotal.length>0){
-                    if(e.taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value=='9015'){
-                        vergi = 'Kdv %' + e.taxSubtotal[0].percent.value;
-                    }else{
-                        vergi = e.taxSubtotal[0].taxCategory.taxScheme.name.value + ' %' + e.taxSubtotal[0].percent.value;
-                    }
-                }
-            newRow.insertCell(0).innerHTML=vergi;
-            var cell1=newRow.insertCell(1);
-            cell1.classList.add('text-right');
-            cell1.innerHTML=Number(e.taxSubtotal[0].taxAmount.value).formatMoney();
-        });
-        if(invoice.withholdingTaxTotal)
-        if(invoice.withholdingTaxTotal.length>0){
-            invoice.withholdingTaxTotal.forEach(function(e){
-                var newRow=vergiGrid.insertRow(vergiGrid.rows.length);
-                newRow.classList.add('text-nowrap');
-                var vergi='';
-                if(e.taxSubtotal)
-                    if(e.taxSubtotal.length>0){
-                        vergi = 'Tevkifat %' + e.taxSubtotal[0].percent.value;
-                    }
-                newRow.insertCell(0).innerHTML=vergi;
-                var cell1=newRow.insertCell(1);
-                cell1.classList.add('text-right');
-                cell1.innerHTML=Number(e.taxSubtotal[0].taxAmount.value).formatMoney();
-            });
-        }
-        
-        
-        $("#iskontoGrid tr").remove();
-        var iskontoGrid=document.getElementById('iskontoGrid');
-
-        invoice.allowanceCharge.forEach(function(e){
-            var newRow=iskontoGrid.insertRow(iskontoGrid.rows.length);
-            newRow.classList.add('text-nowrap');
-            var sbuf='';
-            if(e.chargeIndicator.value){
-                sbuf='Artirim';
-            }else{
-                sbuf='Indirim';
-            }
-            if(e.multiplierFactorNumeric.value<1){
-                sbuf +=' %' + (e.multiplierFactorNumeric.value*100);
-            }else{
-                sbuf +=' %' + e.multiplierFactorNumeric.value;
-            }
-
-            newRow.insertCell(0).innerHTML=sbuf;
-            var cell1=newRow.insertCell(1);
-            cell1.classList.add('text-right');
-            cell1.innerHTML=Number(e.amount.value).formatMoney();
-            newRow.insertCell(2).innerHTML=e.allowanceChargeReason.value;
-        });
-
-    }
-
-    function fillGTIPNO(index){
-        if(!invoice) return;
-        if(!invoice.invoiceLine) return;
-        if(invoice.invoiceLine.length==0) return;
-        if(!confirm('Satirlardaki GTIP Numaralari tespit edilip yuklenecektir. Onayliyor musunuz?')) return;
-        
-    }
 </script>
-<%- partial('./einvoice-form-line.ejs') %>
+<%- partial('./doc-form-line.ejs') %>

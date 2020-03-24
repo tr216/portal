@@ -26,6 +26,21 @@
             }
         },
         {
+            caption:'Siparis',
+            formControls:{
+                url:{ name:'order.url', caption:'Web service url', type:'textbox'    },
+                firmNo:{ name:'order.firmNo', caption:'Firma No', type:'textbox'    },
+                username:{ name:'order.username', caption:'Service Username', type:'textbox'    },
+                password:{ name:'order.password', caption:'Service Password', type:'textbox'    },
+                prefix:{ name:'order.prefix', caption:'Siparis Ön Ek', type:'textbox'  },
+                postboxAlias:{ name:'order.postboxAlias',caption:'Posta Kutusu', type:'textbox'  },
+                senderboxAlias:{ name:'order.senderboxAlias', caption:'Gonderim Kutusu', type:'textbox'  },
+                importLocalConnector:{name:'order.import.localConnector', caption:'Local Connector Import Siparis(Gidecek siparisleri tr216 ya çeker)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                exportLocalConnector:{name:'order.export.localConnector', caption:'Local Connector Export Siparis(Gelen siparisleri serverınıza aktarır)', type:'lookup' , lookup:localConnectorList , valueField:'_id', textField:'name' },
+                xsltFiles0  :{name:'order.xsltFiles.0', caption:'XSLT Dosya',     type:'fileBase64'   }
+            }
+        },
+        {
             caption:'E-Irsaliye',
             formControls:{
                 url:{ name:'eDespatch.url', caption:'Web service url', type:'textbox'    },

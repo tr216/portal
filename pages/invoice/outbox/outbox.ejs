@@ -7,7 +7,7 @@
 			<div class="float-left form-inline ml-md-4">
 				<label class="text-primary">Senaryo:</label>
 				<select class="form-control input-inline input-sm" name="profileId" id="profileId">
-					<% eInvoiceProfileIdList.forEach((e)=>{ %> 
+					<% docProfileIdList.forEach((e)=>{ %> 
 					<option value="<%=e.value%>"<% if(typeof filter.profileId!='undefined') if(filter.profileId==e.value){%>selected<% } %>><%=e.text%></option>
 					<% }) %>
 				</select>
@@ -15,7 +15,7 @@
 			<div class="float-left form-inline ml-md-2">
 				<label class="text-primary">Fatura Türü:</label>
 				<select class="form-control input-inline input-sm" name="invoiceTypeCode" id="invoiceTypeCode">
-					<% eInvoiceTypeCodeList.forEach((e)=>{ %> 
+					<% docTypeCodeList.forEach((e)=>{ %> 
 					<option value="<%=e.value%>"<% if(typeof filter.invoiceTypeCode!='undefined') if(filter.invoiceTypeCode==e.value){%>selected<% } %>><%=e.text%></option>
 					<% }) %>
 				</select>
@@ -64,7 +64,7 @@
 		{name:'amount',text:'Tutar',type:'label'},
 		{name:'tax',text:'Vergi',type:'label' },
 		{name:'currency',text:'Döviz',type:'lookup',filter:true, filterField:'documentCurrencyCode', lookupList:currencyList,textField:'text', valueField:'value', dontUseLookup:true },
-		{name:'invoiceStatus',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:eInvoiceStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
+		{name:'invoiceStatus',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
 	],
 	caption:'Giden Faturalar',
 	addNewButton:true,

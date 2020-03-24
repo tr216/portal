@@ -1,17 +1,17 @@
-
 module.exports = function(req,res,callback){
+	
 	var data={
 		eIntegratorList:[],
-		eInvoiceStatusTypes:Array.from(staticValues.eInvoiceStatusTypes),
+		docStatusTypes:Array.from(staticValues.eInvoiceStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
-		eInvoiceProfileIdList:Array.from(staticValues.eInvoiceProfileIdList),
-		eInvoiceTypeCodeList:Array.from(staticValues.eInvoiceTypeCodeList),
+		docProfileIdList:Array.from(staticValues.eInvoiceProfileIdList),
+		docTypeCodeList:Array.from(staticValues.eInvoiceTypeCodeList),
 		form:Object.assign({},dbType.invoiceType),
 		html:'Goruntulenemedi',
 		list:[],
 		filter:{}
 	}
-	
+	data.form.ioType=1;
 	
 	if(!req.query.db){
 		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
@@ -19,7 +19,7 @@ module.exports = function(req,res,callback){
 	switch(req.params.func || ''){
 		case 'addnew':
 		
-		addnew(req,res,data,callback);
+			addnew(req,res,data,callback);
 		break;
 		case 'edit':
 			edit(req,res,data,callback);
@@ -47,7 +47,7 @@ function showErrors(req,res,data,callback){
 		callback(null,data);
 		return;
 	}
-	api.get('/' + req.query.db + '/e-invoice/errors/' + _id,req,null,(err,resp)=>{
+	api.get('/' + req.query.db + '/invoice/errors/' + _id,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);
@@ -58,12 +58,11 @@ function showErrors(req,res,data,callback){
 	});
 }
 
-
 function getList(req,res,data,callback){
-	data.eInvoiceStatusTypes.unshift({text:'-Tümü-',value:''});
+	data.docStatusTypes.unshift({text:'-Tümü-',value:''});
 	data.currencyList.unshift({text:'-Tümü-',value:''});
-	data.eInvoiceProfileIdList.unshift({text:'-Tümü-',value:''});
-	data.eInvoiceTypeCodeList.unshift({text:'-Tümü-',value:''});
+	data.docProfileIdList.unshift({text:'-Tümü-',value:''});
+	data.docTypeCodeList.unshift({text:'-Tümü-',value:''});
 	if(req.method=='POST'){
 		var filter={};
 		filter=Object.assign(filter,req.query);
@@ -71,7 +70,7 @@ function getList(req,res,data,callback){
 		filter['btnFilter']=undefined;
 		delete filter['btnFilter'];
 		filter['page']=1;
-		res.redirect('/e-invoice/inbox?' + mrutil.encodeUrl(filter));
+		res.redirect('/invoice/inbox?' + mrutil.encodeUrl(filter));
 	}else{
 		data.filter=Object.assign(data.filter,req.query);
 		data.filter.db=undefined;
@@ -79,7 +78,8 @@ function getList(req,res,data,callback){
 		data.filter.sid=undefined;
 		delete data.filter.sid;
 		initLookUpLists(req,res,data,(err,data)=>{
-			api.get('/' + req.query.db + '/e-invoice/inboxInvoiceList',req,data.filter,(err,resp)=>{
+			data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
+			api.get('/' + req.query.db + '/invoice/inboxInvoiceList',req,data.filter,(err,resp)=>{
 				if(!err){
 					var docs=[]
 					resp.data.docs.forEach((e)=>{
@@ -102,33 +102,46 @@ function initLookUpLists(req,res,data,cb){
 	api.get('/' + req.query.db + '/e-integrators',req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
-			data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
+			if(data.eIntegratorList.length>0){
+				data.eIntegratorList.forEach((e)=>{
+					if(e.isDefault){
+						data.form.eIntegrator=e._id;
+					}
+				})
+			}
 		}
 		cb(null,data);
 	});
 }
 
 function addnew(req,res,data,callback){
-	if(req.method=='POST'){
-		data.form=Object.assign(data.form,req.body);
-		data.form['accountingCustomerParty']={party:(data.form.party || {})}
-		api.post('/' + req.query.db + '/e-invoice/invoice',req,data.form,(err,resp)=>{
-			if(!err){
-				res.redirect('/e-invoice/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
-				return;
-			}else{
-				data['message']=err.message;
-				callback(null,data);
+	initLookUpLists(req,res,data,(err,data)=>{
+		if(req.method=='POST' || req.method=='PUT'){
+			data.form=Object.assign(data.form,req.body);
+			data.form['accountingSupplierParty']={party:(data.form.party || {})}
+			data.form.ioType=1;
+			api.post('/' + req.query.db + '/invoice/invoice',req,data.form,(err,resp)=>{
+				if(!err){
+					res.redirect('/invoice/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
+					return;
+				}else{
+					data['message']=err.message;
+					callback(null,data);
+				}
+			});
+		}else{
+			if(data.eIntegratorList.length==1){
+				data.form.eIntegrator=data.eIntegratorList[0];
 			}
-		});
-	}else{
-		callback(null,data);
-	}
+			callback(null,data);
+			
+		}
+	});
 }
 
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.getFile('/' + req.query.db + '/e-invoice/invoiceView/' + _id,req,null,(err,resp)=>{
+	api.getFile('/' + req.query.db + '/invoice/invoiceView/' + _id,req,null,(err,resp)=>{
 		if(!err){
 			data['html']=resp;
 			callback(null,data);
@@ -138,9 +151,10 @@ function view(req,res,data,callback){
 		}
 	});
 }
+
 function pdf(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.downloadFile('/' + req.query.db + '/e-invoice/invoicePdf/' + _id,req,res,null,(err,resp)=>{
+	api.downloadFile('/' + req.query.db + '/invoice/invoicePdf/' + _id,req,res,null,(err,resp)=>{
 		return;
 		// if(!err){
 		// 	callback(null,data);
@@ -154,19 +168,18 @@ function pdf(req,res,data,callback){
 function edit(req,res,data,callback){
 	var _id=req.params.id || '';
 	if(_id.trim()==''){
-		data['message']='ID bos olamaz';
+		data['message']='id bos olamaz';
 		callback(null,data);
 		return;
 	}
 	initLookUpLists(req,res,data,(err,data)=>{
 		if(req.method=='POST' || req.method=='PUT'){
 			data.form=Object.assign(data.form,req.body);
-			
 			data.form['accountingSupplierParty']={party:(data.form.party || {})}
-
-			api.put('/' + req.query.db + '/e-invoice/invoice/' + _id,req,data.form,(err,resp)=>{
+			data.form.ioType=1;
+			api.put('/' + req.query.db + '/invoice/invoice/' + _id,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/e-invoice/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/invoice/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
 				}else{
 					data['message']=err.message;
@@ -175,25 +188,24 @@ function edit(req,res,data,callback){
 			});
 		}else{
 			
-				api.get('/' + req.query.db + '/e-invoice/invoice/' + _id,req,null,(err,resp)=>{
-					if(!err){
-						data.form=Object.assign(data.form,resp.data);
-						callback(null,data);
-					}else{
-						data['message']=err.message;
-						callback(null,data);
-					}
-				});
-			
+			api.get('/' + req.query.db + '/invoice/invoice/' + _id,req,null,(err,resp)=>{
+				if(!err){
+					data.form=Object.assign(data.form,resp.data);
+					callback(null,data);
+				}else{
+					data['message']=err.message;
+					callback(null,data);
+				}
+			});
 		}
 	})
 }
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/e-invoice/invoice/' + _id,req,(err,resp)=>{
+	api.delete('/' + req.query.db + '/invoice/invoice/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/e-invoice/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/invoice/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
 		}else{
 			data['message']=err.message;
 			callback(null,data);

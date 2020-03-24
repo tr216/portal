@@ -1,0 +1,288 @@
+<div class="modal" id="docLineModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="docLineModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-2 ">
+                <label class="modal-title" id="docLineModalLabel">Fatura Satiri</label>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-2">
+                <ul class="nav nav-tabs" id="docLineTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="docLineTab1" data-toggle="tab" href="#docLineTab1Content" role="tab" aria-controls="docLineTab1Content" aria-selected="true">Genel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="docLineTab2" data-toggle="tab" href="#docLineTab2Content" role="tab" aria-controls="docLineTab2Content" aria-selected="false">Diğer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="docLineTab3" data-toggle="tab" href="#orderLineTab3Content" role="tab" aria-controls="docLineTab3Content" aria-selected="false">Paketler</a>
+                    </li>
+                </ul>
+                <div class="tab-content p-1" id="docLineTabContent" style="height: 40em;overflow: auto;">
+                    <!-- Genel -->
+                    <div class="tab-pane show active" id="docLineTab1Content" role="tabpanel" aria-labelledby="docLineTab1">
+                        <div class="btn-toolbar justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
+                            <label class="checkbox-inline border">
+                              <input type="checkbox" data-toggle="collapse" id="cbIskontoPanel" data-target="#iskontoPanel" aria-expanded="false" aria-controls="iskontoPanel"> Iskonto
+                            </label>
+                            <label class="checkbox-inline border ml-3">
+                              <input type="checkbox" checked data-toggle="collapse" id="cbKdvPanel" data-target="#kdvPanel" aria-expanded="true" aria-controls="kdvPanel"> Kdv
+                            </label>
+                            <label class="checkbox-inline border ml-3">
+                              <input type="checkbox" data-toggle="collapse" id="cbTevkifatPanel" data-target="#tevkifatPanel" aria-expanded="false" aria-controls="tevkifatPanel"> Tevkifat
+                            </label>
+                            <label class="checkbox-inline border ml-3">
+                              <input type="checkbox" data-toggle="collapse" id="cbArtirimPanel" data-target="#artirimPanel" aria-expanded="false" aria-controls="artirimPanel"> Artirim
+                            </label>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="" class="m-0">Mal/Hizmet</label>
+                                <input type="text" class="form-control" id="docLine-item-name" autocomplete="off" placeholder="" value="">
+                                <input type="hidden" class="form-control" id="docLine-item-id" autocomplete="off" value="">
+
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="" class="m-0">Miktar</label>
+                                <input type="number" class="form-control" id="docLine-quantity" placeholder="" value="" onchange="calculateDocLine()">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Birim</label>
+                                <select id="docLine-quantity-unitCode" class="form-control">
+                                    <% staticValues.unitCodeList.forEach((e)=>{ %>
+                                    <option value="<%=e.value%>"><%=e.text%></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Fiyat</label>
+                                <input type="number" class="form-control text-right" id="docLine-price-priceAmount" placeholder=""  value="0.00000000" onchange="calculateDocLine()">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Tutar</label>
+                                <input type="text" class="form-control text-right" id="docLine-lineExtensionAmount" placeholder="" value="0.00" readonly="true">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="" class="m-0">Kdv Dahil Tutar</label>
+                                <input type="text" class="form-control text-right" id="docLine-taxInclusiveAmount" placeholder="" value="0.00" readonly="true">
+                            </div>
+                        </div>
+                        <div id="kdvPanel" class="collapse show">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="" class="m-0">Kdv Oran</label>
+                                    <input type="number" class="form-control text-right" id="docLine-KDV-percent" placeholder="" value="0" onchange="calculateDocLine()">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="" class="m-0">Kdv Tutar</label>
+                                    <input type="text" class="form-control text-right" id="docLine-KDV-amount" placeholder="" value="0.00" readonly="true">
+                                </div>
+                                <div id="kdvMuafiyetSebebi" class="form-group col-md-6" style="display: none;">
+                                    <label for="" class="w-100 m-0">Kdv Muafiyet Sebebi</label>
+                                    <select id="docLine-taxExemptionReasonCode" class="form-control">
+                                    <% staticValues.taxExtemptionCodeList.forEach((e)=>{ %>
+                                        <option value="<%=e.value%>"><%=e.text%></option>
+                                    <% }) %>
+                                    </select> 
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tevkifatPanel" class="collapse">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="" class="m-0">Tevkifat Oran</label>
+                                    <input type="number" class="form-control text-right" id="docLine-Tevkifat-percent" placeholder="" value="" onchange="calculateDocLine()">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="" class="m-0">Tevkifat Tutar</label>
+                                    <input type="text" class="form-control text-right" id="docLine-Tevkifat-amount" placeholder="" value="" readonly="true">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="" class="w-100 m-0">Vergi Kodu</label>
+                                    <select id="docLine-tevkifat-taxTypeCode" class="form-control">
+                                        <% staticValues.withholdingTaxTypeCodeList.forEach((e)=>{ %>
+                                        <option value="<%=e.value%>"><%=e.text%></option>
+                                        <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="iskontoPanel" class="collapse">
+                            <div class="row">
+                                <div class="col-3 text-center">İskonto Oranı %</div>
+                                <div class="col-3 text-center">İskonto Tutarı</div>
+                                <div class="col-4 text-center">İskonto Açıklama</div>
+                                <div class="col-1 text-center">#</div>
+                            </div>
+                            <div id="iskontoRows">
+                                <div class="row" id="iskontoRow0">
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoOran" value="" onchange="calculateDocLineAllowanceRate()"></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirIskontoTutar" value="" onchange="calculateDocLineAllowanceAmount()"></div>
+                                    <div class="form-group col-4"><input type="text" class="form-control satirIskontoAciklama" value=""></div>
+                                    <div class="form-group col-1"><a class="btn btn-secondary btn-sm fas fa-plus-square" href="javascript:addIskontoRow()" title="iskonto ekle"></a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="artirimPanel" class="collapse">
+                            <div class="row">
+                                <div class="col-3 text-center">Artırım Oranı %</div>
+                                <div class="col-3 text-center">Artırım Tutarı</div>
+                                <div class="col-4 text-center">Artırım Açıklama</div>
+                                <div class="col-1 text-center">#</div>
+                            </div>
+                            <div id="artirimRows">
+                                <div class="row" id="artirimRow0">
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimOran" value="" onchange="calculateDocLineChargeRate()"></div>
+                                    <div class="form-group col-3"><input type="number" class="form-control text-right satirArtirimTutar" value="" onchange="calculateDocLineChargeAmount()"></div>
+                                    <div class="form-group col-4"><input type="text" class="form-control satirArtirimAciklama" value=""></div>
+                                    <div class="form-group col-1"><a class="btn btn-secondary btn-sm fas fa-plus-square" href="javascript:addArtirimRow()" title="Artırım ekle"></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Genel -->
+
+                    <!-- Diger -->
+                    <div class="tab-pane" id="docLineTab2Content" role="tabpanel" aria-labelledby="docLineTab2">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Satıcı Mal/Hizmet Kodu</label>
+                                <input type="text" class="form-control" id="docLine-item-sellersItemIdentification" placeholder="" value="">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Alıcı Mal/Hizmet Kodu</label>
+                                <input type="text" class="form-control" id="docLine-item-buyersItemIdentification" placeholder="" value="">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Üretici Kodu(Barkod)</label>
+                                <input type="text" class="form-control" id="docLine-item-manufacturersItemIdentification" placeholder="" value="">
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Marka</label>
+                                <input type="text" class="form-control" id="docLine-item-brandName" placeholder="" value="">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Model</label>
+                                <input type="text" class="form-control" id="docLine-item-modelName" placeholder="" value="">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Açıklama</label>
+                                <input type="text" class="form-control" id="docLine-item-description" placeholder="" value="">
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Menşei</label>
+                                <select id="docLine-originCountry-identificationCode" class="form-control">
+                                    <% staticValues.countryList.forEach((e)=>{ %>
+                                    <option value="<%=e.value%>"><%=e.text%></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">GTIPNO</label>
+                                <input type="text" class="form-control" id="docLine-GTIPNO" placeholder="" value="">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Sınıflandırma Kodu</label>
+                                <input type="text" class="form-control" id="docLine-item-itemClassificationCode" placeholder="" value="">
+                            </div>
+                            <div class="w-100"></div>
+                           
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Teslimat Şartı(Delivery Terms)</label>
+                                <select id="docLine-deliveryTerms" class="form-control">
+                                    <% staticValues.deliveryTerms.forEach((e)=>{ %>
+                                    <option value="<%=e%>"><%=e%></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="m-0">Taşıma Modu(Transport mode)</label>
+                                <select id="docLine-transportModeCode" class="form-control">
+                                    <% staticValues.transportModeCodeList.forEach((e)=>{ %>
+                                    <option value="<%=e.value%>"><%=e.text%></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="form-group col-12">
+                                <label for="" class="m-0">Anahtar Kelimeler(keywords)</label>
+                                <input type="text" class="form-control" id="docLine-item-keyword" placeholder="" value="">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <label for="" class="m-0">Satır notları</label>
+                                <textarea class="form-control" id="docLine-notes" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Diger -->
+
+                    <!-- Paketler -->
+                    <div class="tab-pane" id="docLineTab3Content" role="tabpanel" aria-labelledby="docLineTab3">
+                        <table id="docLinePackageGrid" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+                            <thead>
+                                <tr class="text-nowrap">
+                                    <th width="50" class="">ID(Paket No)</th>
+                                    <th width="25%" class="text-right">Miktar</th>
+                                    <th width="65%">Paketleme Turu</th>
+                                    <th width="50">#</th>
+                                </tr>
+                            </thead>
+                            <tbody id="docLinePackageGridBody">
+                                <tr>
+                                    <td><input type="text" class="form-control" id="docLinePackageGrid-ID" value="1" readonly="true"></td>
+                                    <td><input type="text" class="form-control text-right" id="docLinePackageGrid-Quantity" value=""></td>
+                                    <td>
+                                        <select id="docLinePackageGrid-packagingTypeCode" class="form-control">
+                                            <% staticValues.packagingTypeCodeList.forEach((e)=>{ %>
+                                            <option value="<%=e.value%>"><%=e.text%></option>
+                                            <% }) %>
+                                        </select>
+                                    </td>
+                                    <td><a class="btn btn-secondary btn-sm fas fa-plus-square" href="javascript:docLinePackageGrid_AddRow()" title="Paket Ekle"></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- End of Paketler -->
+                </div>
+                
+            </div>
+            <div class="modal-footer collapse p-0 m-0" id="newItemPanel">
+                <div class="row m-0 p-0" style="width: 100%;">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="" class="m-0">Birim</label>
+                            <select id="docLine-new-itemType" class="form-control">
+                                <% staticValues.itemTypeList.forEach((e)=>{ %>
+                                <option value="<%=e.value%>"><%=e.text%></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer m-0 p-2">
+                <div class="row m-0 p-0" style="width: 100%;">
+                    <div class="col-md-3" style="text-align: start;">
+                        <label class="checkbox-inline border" id="cbNewItemPanel">
+                          <input type="checkbox" data-toggle="collapse" id="cbNewItem" data-target="#newItemPanel" aria-expanded="false" aria-controls="newItemPanel"> Yeni Kart ac
+                        </label>
+                    </div>
+                    <div class="col-md-9" style="text-align: end;">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
+                        <a id="docLineModalSaveButton" class="btn btn-primary" href="javascript:saveDocLine(-1)">Tamam</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

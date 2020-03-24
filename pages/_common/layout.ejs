@@ -22,11 +22,11 @@
 	<link type="text/css" rel="stylesheet" href="/css/jquery-ui.min.css" />
 	<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
 	
-	<script type="text/javascript" src="/js/dbtypes.js"></script>
-	<script type="text/javascript" src="/js/functions.js"></script>
+	<script type="text/javascript" src="<%- assetFile('/js/dbtypes.js') %>"></script>
+	<script type="text/javascript" src="<%- assetFile('/js/functions.js') %>"></script>
 	
-	<link href="/css/portal.css" rel="stylesheet">
-	<link href="/css/menu.css" rel="stylesheet">
+	<link href="<%- assetFile('/css/portal.css') %>" rel="stylesheet">
+	<link href="<%- assetFile('/css/menu.css') %>" rel="stylesheet">
 </head>
 <body id="page-top" style="scroll-behavior: smooth;">
 
@@ -263,9 +263,10 @@
 <script type="text/javascript" src="/js/bootstrap-select.min.js"></script>
 
 <script type="text/javascript" src="/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-timepicker.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap-datepicker-locales/bootstrap-datepicker.tr.min.js"></script>
 <script type="text/javascript" src="/datatables/datatables.min.js"></script>
-<script type="text/javascript" src="/js/ui/portal.js"></script>
+<script type="text/javascript" src="<%- assetFile('/js/ui/portal.js') %>"></script>
 
 <script type="text/javascript">
 	//$(document).ready(function(){
