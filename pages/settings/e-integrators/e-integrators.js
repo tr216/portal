@@ -6,12 +6,13 @@ module.exports = function(req,res,callback){
 		form:{
 			eIntegrator:'',
 			name:'',
-			eInvoice:{
+			invoice:{
 				url:'',
 				firmNo:0,
 				username:'',
 				password:'',
-				prefix:'AAA',
+				prefixOutbox:'FAT',
+				prefixInbox:'AFT',
 				postboxAlias:'defaultpk',
 				senderboxAlias:'defaultpk',
 				localConnector:{
@@ -22,18 +23,15 @@ module.exports = function(req,res,callback){
 						localConnector:''
 					}
 				},
-				xslt:[{
-					fileName:'xsltfile001.xslt',
-					isDefault:true,
-					design:''
-				}]
+				xslt:[{ data: '', type: '', fileName: '' }]
 			},
-			eDespatch:{
+			despatch:{
 				url:'',
 				firmNo:0,
 				username:'',
 				password:'',
-				prefix:'AAA',
+				prefixOutbox:'IRS',
+				prefixInbox:'AIR',
 				postboxAlias:'defaultpk',
 				senderboxAlias:'defaultpk',
 				localConnector:{
@@ -44,18 +42,15 @@ module.exports = function(req,res,callback){
 						localConnector:''
 					}
 				},
-				xslt:[{
-					fileName:'xsltfile001.xslt',
-					isDefault:true,
-					design:''
-				}]
+				xslt:[{ data: '', type: '', fileName: '' }]
 			},
-			eDocument:{
+			order:{
 				url:'',
 				firmNo:0,
 				username:'',
 				password:'',
-				prefix:'AAA',
+				prefixOutbox:'SIP',
+				prefixInbox:'ASP',
 				postboxAlias:'defaultpk',
 				senderboxAlias:'defaultpk',
 				localConnector:{
@@ -66,13 +61,28 @@ module.exports = function(req,res,callback){
 						localConnector:''
 					}
 				},
-				xslt:[{
-					fileName:'xsltfile001.xslt',
-					isDefault:true,
-					design:''
-				}]
+				xslt:[{ data: '', type: '', fileName: '' }]
 			},
-			eLedger:{
+			document:{
+				url:'',
+				firmNo:0,
+				username:'',
+				password:'',
+				prefixOutbox:'BEL',
+				prefixInbox:'GBE',
+				postboxAlias:'defaultpk',
+				senderboxAlias:'defaultpk',
+				localConnector:{
+					import:{
+						localConnector:''
+					},
+					export:{
+						localConnector:''
+					}
+				},
+				xslt:[{ data: '', type: '', fileName: '' }]
+			},
+			ledger:{
 				url:'',
 				firmNo:0,
 				username:'',
@@ -108,9 +118,7 @@ module.exports = function(req,res,callback){
 		
 		deleteItem(req,res,data,callback);
 		break;
-		case 'xslt':
-			require('./e-integrators-xslt.js')(req,res,callback);
-		break;
+		
 		default:
 			getList(req,res,data,callback);
 		break;

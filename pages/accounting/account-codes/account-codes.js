@@ -53,7 +53,7 @@ function getList(req,res,data,callback){
 
 function addnew(req,res,data,callback){
 	if(req.method=='POST'){
-		data.form=Object.assign(data.form,req.body);
+		data.form=Object.assign({}, data.form,req.body);
 		if(data.form.code.trim()==''){
 			data['message']='Hesap kodu boş olamaz!';
 			return callback(null,data);

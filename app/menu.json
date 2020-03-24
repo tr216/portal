@@ -52,12 +52,7 @@
 			{"text":"Yeni Fatura Oluştur",			"path":"/invoice/outbox/addnew",		"icon":"fas fa-file-alt", "visible":true, "nodes":[]},
 			{"text":"Gelen Kutusu",					"path":"/invoice/inbox",		"icon":"fas fa-table", "visible":true , "nodes":[]},
 			{"text":"Giden Kutusu",					"path":"/invoice/outbox",		"icon":"fas fa-table", "visible":true, "nodes":[]},
-			{"text":"E-Fatura Mükellefleri",		"path":"/invoice/gib-users",	"icon":"fas fa-users", "visible":true, "nodes":[]},
-			{"text":"Tanimlamalar",			"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
-				{"text":"GIB Entegrator Tanimlari",		"path":"/settings/e-integrators",	"icon":"fas fa-cogs", "visible":true, "nodes":[]},
-				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"fas fa-plug", "visible":true, "nodes":[]},
-				{"text":"File Importer",	"path":"/settings/file-importers",	"icon":"fas fa-file-import", "visible":true, "nodes":[]}
-			]}
+			{"text":"E-Fatura Mükellefleri",		"path":"/invoice/gib-users",	"icon":"fas fa-users", "visible":true, "nodes":[]}
 		]
 	},
 	{"text":"E-Defter",	"module":"eLedger",				"path":"/general/closed-module", "icon":"fas fa-table", 	"visible":true, "nodes":[]},
@@ -82,7 +77,9 @@
 			{"text":"Lokasyonlar",			"path":"/settings/locations",			"icon":"fas fa-map-marker", "visible":true, "nodes":[]},
 			{"text":"Vardiya Tanımları",	"path":"/settings/shifts",				"icon":"far fa-clock", "visible":true, "nodes":[]},
 			{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"fas fa-plug", "visible":true, "nodes":[]},
-			{"text":"Yazdırma Tasarımları",	"path":"/settings/print-designs",		"icon":"fas fa-print", "visible":true, "nodes":[]}
+			{"text":"Yazdırma Tasarımları",	"path":"/settings/print-designs",		"icon":"fas fa-print", "visible":true, "nodes":[]},
+			{"text":"Evrak Seri ve GIB Entegrator",		"path":"/settings/e-integrators",	"icon":"fas fa-cogs", "visible":true, "nodes":[]},
+			{"text":"File Importer",	"path":"/settings/file-importers",	"icon":"fas fa-file-import", "visible":true, "nodes":[]}
 		]
 	},
 	{"text":"System",		"path":"",					"icon":"fas fa-shield-alt", "visible":true,

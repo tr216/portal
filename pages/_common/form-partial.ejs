@@ -4,98 +4,98 @@ if(typeof level=='undefined') level=0;
 
 
 for(let key in formControls){ 
-var item=formControls[key];
-item['caption']=ifNull(item['caption'],'');
-item['type']=ifNull(item['type'],'textbox');
-item['required']=ifNull(item['required'],false);
-item['lookup']=ifNull(item['lookup'],[]);
-item['textField']=ifNull(item['textField'],'text');
-item['valueField']=ifNull(item['valueField'],'value');
-item['class']=ifNull(item['class'],'');
-item['name']=ifNull(item['name'],key);
-item['hasChildren']=false;
-if(typeof item.formControls!='undefined'){
-item.hasChildren=true;
-}
-var itemValue;
+	var item=formControls[key];
+	item['caption']=ifNull(item['caption'],'');
+	item['type']=ifNull(item['type'],'textbox');
+	item['required']=ifNull(item['required'],false);
+	item['lookup']=ifNull(item['lookup'],[]);
+	item['textField']=ifNull(item['textField'],'text');
+	item['valueField']=ifNull(item['valueField'],'value');
+	item['class']=ifNull(item['class'],'');
+	if(typeof item['name']=='undefined')item['name']=key;
+		
+	
+	item['hasChildren']=false;
+	if(typeof item.formControls!='undefined') item.hasChildren=true;
+	
+	var itemValue;
 
-itemValue=getSubObjectValue(form,item.name);
+	itemValue=getSubObjectValue(form,item.name);
 
-if(typeof itemValue=='undefined'){
-itemValue='';
-}
+	if(typeof itemValue=='undefined') itemValue='';
 
-if(mode=='view'){
-item['readonly']=true;
-}
 
-if(item.hasChildren==true){ %>
-<div class="panel panel-info">
-	<div class="panel-heading">
-		<% }
-		switch(item.type) {
-		case 'textbox' : %>
-		<%- textbox(item,itemValue,level) %>
-		<% break;
+	if(mode=='view') item['readonly']=true;
 
-		case 'label': 
-		case 'div': 
-		%>
-		<%- label(item,itemValue,level) %>
-		<% break;
-		case 'textarea' : %>
-		<%- textarea(item,itemValue,level) %>
-		<% break;
-		case 'fileBase64' : %>
-		<%- fileBase64(item,itemValue,level) %>
-		<% break;
-		case 'checkbox' : %>
-		<%- checkbox(item,itemValue,level) %>
-		<% break;
-		case 'partial' : %>
-		<%- partialItem(item,itemValue,level) %>
-		<% break;
-		case 'lookup': 
-		case 'combobox': 
-		%>
-		<%- lookup(item,itemValue,level) %>
-		<% break;
-		case 'json': 
-		%>
-		<%- jsonData(item,itemValue,level) %>
-		<% break;
-		default : %>
-		<%- textbox(item,itemValue,level) %>
-		<%  break;
-	} 
+	if(mode=='addnew' && typeof item.default!='undefined') itemValue=item.default;
 
-	if(item.hasChildren){ %>
-</div>
-<div class="panel-body">
-	<%- partial('form-partial',{formControls:item.formControls,level:level+1}) %>
-</div>
-</div>
-<% } %>
+	if(item.hasChildren==true){ %>
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<% }
+			switch(item.type) {
+			case 'textbox' : %>
+			<%- textbox(item,itemValue,level) %>
+			<% break;
+
+			case 'label': 
+			case 'div': 
+			%>
+			<%- label(item,itemValue,level) %>
+			<% break;
+			case 'textarea' : %>
+			<%- textarea(item,itemValue,level) %>
+			<% break;
+			case 'fileBase64' : %>
+			<%- fileBase64(item,itemValue,level) %>
+			<% break;
+			case 'checkbox' : %>
+			<%- checkbox(item,itemValue,level) %>
+			<% break;
+			case 'partial' : %>
+			<%- partialItem(item,itemValue,level) %>
+			<% break;
+			case 'lookup': 
+			case 'combobox': 
+			%>
+			<%- lookup(item,itemValue,level) %>
+			<% break;
+			case 'json': 
+			%>
+			<%- jsonData(item,itemValue,level) %>
+			<% break;
+			default : %>
+			<%- textbox(item,itemValue,level) %>
+			<%  break;
+		} 
+
+		if(item.hasChildren){ %>
+	</div>
+	<div class="panel-body">
+		<%- partial('form-partial',{formControls:item.formControls,level:level+1}) %>
+	</div>
+	</div>
+	<% } %>
 <% } %>
 
 <% function textbox(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label ><%=item.caption%></label>
-	<input type="text" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" autocomplete="off"  value="<% if(mode=='addnew'){ if(typeof item.default!='undefined'){%><%=item.default%><%}}else{%><%=itemValue%><%}%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
+	<input type="text" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
 </div>
 <% } %>
 
 <% function textarea(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label ><%=item.caption%></label>
-	<textarea class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>"  rows="<% if(typeof item.rows!='undefined'){%><%=item.rows%><%}else{%>4<%}%>"  placeholder="<%=item.caption%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>><% if(mode=='addnew'){ if(typeof item.default!='undefined'){%><%=item.default%><%}}else{%><%=itemValue%><%}%></textarea>
+	<textarea class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>"  rows="<% if(typeof item.rows!='undefined'){%><%=item.rows%><%}else{%>4<%}%>"  placeholder="<%=item.caption%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>><%=itemValue%></textarea>
 </div>
 <% } %>
 
 <% function label(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<% if(item.type=='label'){%>
-	<div class="<%=item.class %>" id="<%- generateFormId(item.name) %>"><b><%=item.caption%>:</b> <% if(mode=='addnew'){ if(typeof item.default!='undefined'){%><%=item.default%><%}}else{%><%=itemValue%><%}%></div>
+	<div class="<%=item.class %>" id="<%- generateFormId(item.name) %>"><b><%=item.caption%>:</b> <%=itemValue%></div>
 	<%} else { %>
 	<div class="<%=item.class %>" id="<%- generateFormId(item.name) %>"><%=item.caption%></div>
 	<% } %>
