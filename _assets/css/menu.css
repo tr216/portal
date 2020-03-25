@@ -59,7 +59,7 @@ a, a:hover, a:focus {
     max-width: 14rem;
     /*background: #7386D5;*/
     background: #55859f;
-    color: #F0F0F0;
+    color: #F9F9F9;
     /*transition: all 0.6s cubic-bezier(0.945, 0.020, 0.270, 0.665);*/
     /*transform-origin: bottom left;*/
     display: initial;
@@ -260,4 +260,8 @@ a.article, a.article:hover {
 
 .active-menuitem {
     background-color:navy;
+}
+
+.closed-module {
+    color:#c0c0c0;
 }

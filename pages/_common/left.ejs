@@ -27,19 +27,19 @@
 					<ul class="collapse list-unstyled pl-2" id="submenu<%=submenuIndex%>">
 						<% subItem.nodes.forEach(function(sub2Item,submenu2Index){ %>
 						<% if(sub2Item.visible){ %>
-						<li class="<% if(typeof sub2Item.module!='undefined'){%>module-<%=sub2Item.module%><%}%>"><a href="<%= sub2Item.path %>" id="mId<%=menuIndex%>.<%=submenuIndex%>.<%=submenu2Index%>" class=""><i class="<%= sub2Item.icon %> fa-fw"></i> <%= sub2Item.text %></a></li>
+						<li class="<% if(typeof sub2Item.module!='undefined'){%>module-<%=sub2Item.module%><%}%>"><a href="<%= sub2Item.path %>" id="mId<%=menuIndex%>.<%=submenuIndex%>.<%=submenu2Index%>" class="<% if(sub2Item.path=='/general/closed-module'){%>closed-module<%}%>"><i class="<%= sub2Item.icon %> fa-fw"></i> <%= sub2Item.text %></a></li>
 						<% } %>
 						<% }); %>
 					</ul>
 					<% } else { %>
-					<a href="<%= subItem.path %>"  id="mId<%=menuIndex%>.<%=submenuIndex%>" class=""><i class="<%= subItem.icon %> fa-fw"></i> <%= subItem.text %></a>
+					<a href="<%= subItem.path %>"  id="mId<%=menuIndex%>.<%=submenuIndex%>" class="<% if(subItem.path=='/general/closed-module'){%>closed-module<%}%>"><i class="<%= subItem.icon %> fa-fw"></i> <%= subItem.text %></a>
 					<% } %>
 				</li>
 				<% } %>
 				<% }); %>
 			</ul>
 			<% } else { %>
-			<a href="<%= mainItem.path %>" id="mId<%=menuIndex%>" class=""><i class="<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %></a>
+			<a href="<%= mainItem.path %>" id="mId<%=menuIndex%>" class="<% if(mainItem.path=='/general/closed-module'){%>closed-module<%}%>"><i class="<%= mainItem.icon %> fa-fw"></i> <%= mainItem.text %></a>
 			<% } %>
 		</li>
 		<% } %>
