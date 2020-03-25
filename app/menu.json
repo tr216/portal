@@ -44,7 +44,8 @@
 	]},
 	{"text":"Muhasebe",	"module":"accounting",	 "path":"",	"icon":"fas fa-book", "visible":true, "nodes":[
 		{"text":"Hesap planı",		"path":"/accounting/account-codes",		"icon":"fas fa-cube", "visible":true, "nodes":[]},
-		{"text":"Muhasebe Fişleri",		"path":"/general/closed-module",		"icon":"fas fa-parachute-box", "visible":true, "nodes":[]},
+		{"text":"Hesap grupları",		"path":"/accounting/account-groups",		"icon":"fas fa-hands", "visible":true, "nodes":[]},
+		{"text":"Muhasebe fişleri",		"path":"/general/closed-module",		"icon":"fas fa-parachute-box", "visible":true, "nodes":[]},
 		{"text":"Hesap hareketleri",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]}
 	]},
 	{"text":"Fatura",	"module":"eInvoice",				"path":"",		"icon":"fas fa-file-invoice", "visible":true, 

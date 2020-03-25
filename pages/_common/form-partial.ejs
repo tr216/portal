@@ -12,6 +12,8 @@ for(let key in formControls){
 	item['textField']=ifNull(item['textField'],'text');
 	item['valueField']=ifNull(item['valueField'],'value');
 	item['class']=ifNull(item['class'],'');
+	item['readonly']=false;
+
 	if(typeof item['name']=='undefined')item['name']=key;
 		
 	
@@ -135,7 +137,8 @@ for(let key in formControls){
 			<%- partial(item.partial,item.data) %>
 			<% 
 		}else{ 
-		item.value='itemValue';
+		item.value=itemValue;
+		item.itemValue=itemValue;
 		%>
 		<%- partial(item.partial,item) %>
 		<% } %>

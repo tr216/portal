@@ -1,0 +1,74 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'name',text:'Grup adı',type:'label' , filter:true, orderable:true},
+        {name:'account.accountCode', text:'Muh. Kodu', type:'label' , filter:false },
+        {name:'salesAccount.accountCode', text:'Satış', type:'label' , filter:false },
+        {name:'returnAccount.accountCode', text:'Iade', type:'label' , filter:false },
+        {name:'exportSalesAccount.accountCode', text:'İhracat', type:'label' , filter:false },
+        {name:'salesDiscountAccount.accountCode', text:'Şatış indirim', type:'label' , filter:false },
+        {name:'buyingDiscountAccount.accountCode', text:'Alım indirim', type:'label' , filter:false },
+        {name:'costOfGoodsSoldAccount.accountCode', text:'S.M.Maliyeti', type:'label' , filter:false }
+    ],
+    caption:'',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    customButtons:[
+        {href:'javascript:copyConfirm("{_id}","{name}")', text:'Kopyala',icon:'far fa-copy'}
+    ],
+    deleteUrl:'/dbapi/account-groups/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>
+
+
+<%- partial('../../_common/modal',{
+    modalId:'copyModal',
+    caption:'Kopya',
+    formControls:{
+        newName:{caption:'Yeni isim', type:'textbox', default:''}
+    },
+    mode:'addnew',
+    buttons:[
+        {isCancelButton:true},
+        {href:'javascript:copySave()', text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+    ]
+}) %>
+
+<script type="text/javascript">
+    var temp_id, temp_name;
+    function copyConfirm(id, name){
+        temp_id=id;
+        temp_name=name;
+        $('#newName').val(name + ' kopya');
+        $('#copyModal').modal('show');
+    }
+
+    function copySave(){
+        if($('#newName').val().trim()==''){
+            alert('Isim bos olamaz');
+            return;
+        }
+        $('#copyModal').modal('hide');
+
+        var data={id:temp_id, newName:$('#newName').val()}
+        
+        $.ajax({
+            url:'/dbapi/account-groups/copy?db=<%=db%>&sid=<%=sid%>',
+            data:data,
+            type:'POST',
+            success:function(result){
+                
+                if(result.success){
+                    window.location.reload();
+                }else{
+                    $('#copyModal').modal('show');
+
+                    alert(result.error.code + ' - ' + result.error.message);
+                }
+            }
+        });
+       
+    }
+</script>
