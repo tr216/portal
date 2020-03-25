@@ -114,7 +114,7 @@ function initLookUpLists(req,res,data,cb){
 
 function addnew(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.accountGroupList.unshift({name:'-- Seçiniz --',_id:null});
+		data.accountGroupList.unshift({name:'-- Seçiniz --',_id:''});
 		if(req.method=='POST'){
 			data.form=Object.assign(data.form,req.body);
 			var barkodList=data.form.barkodlar.split('\n');
@@ -150,7 +150,7 @@ function addnew(req,res,data,callback){
 
 function edit(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.accountGroupList.unshift({name:'-- Seçiniz --',_id:null});
+		data.accountGroupList.unshift({name:'-- Seçiniz --',_id:''});
 		var _id=req.params.id || '';
 		if(req.method=='POST' || req.method=='PUT'){
 			data.form=Object.assign(data.form,req.body);

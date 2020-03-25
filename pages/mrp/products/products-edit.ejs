@@ -16,7 +16,7 @@
                 manufacturersItemIdentification:{ name:'manufacturersItemIdentification.ID.value', caption:'Üretici kodu', type:'textbox'},
                 originCountry:{ name:'originCountry.name.value', caption:'Menşei', type:'textbox'},
                 keyword:{ name:'keyword.value', caption:'Anahtar kelime', type:'textbox'},
-                
+                accountGroup:{ name:'accountGroup', caption:'Muhasebe Grubu', type:'lookup', lookup:accountGroupList, textField:'name',valueField:'_id'},
                 tags:{ name:'tags', caption:'Etiketler (virgulle ayrılmış)', type:'textbox'},
                 passive:{caption:'Pasif?', type:'checkbox'    }
             }

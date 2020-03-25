@@ -2,8 +2,9 @@
 <%- partial('../../_common/grid2',{
     fields:[
         {name:'itemType',text:'Turu',type:'lookup', lookupList:productTypeList , filter:true, filterField:'itemType', orderable:true},
-        {name:'name.value',text:'Adı',type:'label' , filter:true, filterField:'name', orderable:true, width:'60%'},
+        {name:'name.value',text:'Adı',type:'label' , filter:true, filterField:'name', orderable:true},
         {name:'description.value',text:'Açıklama',type:'label' , filter:true, filterField:'description', orderable:true},
+        {name:'accountGroup',text:'Muh.Grup',type:'lookup' ,lookupList:accountGroupList, filter:true, textField:'name',valueField:'_id', orderable:true},
         {name:'passive',text:'Pasif',type:'checkbox',width:1, filter:true, orderable:true}
     ],
     caption:'',
