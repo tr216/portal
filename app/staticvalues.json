@@ -117,6 +117,21 @@
 		{"text":"Satış","value": "SATIS"}
 		
 	],
+	"productionTypeCodeList":[
+		{"text":"Müşteri","value": "MUSTERI"},
+		{"text":"Depo","value": "DEPO"}
+		
+	],
+	"productionStatusTypes":[
+		{"text":"Taslak","value": "Draft"},
+		{"text":"İşleniyor","value": "Processing"},
+		{"text":"Onaylandı","value": "Approved"},
+		{"text":"Reddedildi","value": "Declined"},
+		{"text":"İptal Edildi","value": "Cancelled"},
+		{"text":"Tamamlandı","value": "Completed"},
+		{"text":"Hata","value": "Error"}
+		
+	],
 	"xsltFileTypes":[
 		{"text":".xslt","value": "xslt","icon":"file"},
 		{"text":".txt","value": "txt","icon":"file-alt"},

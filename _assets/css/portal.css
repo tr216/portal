@@ -70,6 +70,9 @@ hr {
     border-color: #0E6DEF;
 }
 
+.btn-sm {
+    font-size: 0.875rem!important;
+}
 .topbar {
     height: 3.375rem;
     background-color: #040043;

@@ -12,15 +12,15 @@
 		{"text":"Gelen Faturalar",	 "path":"/invoice/inbox",		"icon":"fas fa-table", "visible":true , "nodes":[]},
 		{"text":"Tedarikçiler",		"path":"/finance/vendors",		"icon":"fas fa-parachute-box", "visible":true, "nodes":[]}
 	]},
-	{"text":"Üretim",	"module":"mrp",			"path":"",					"icon":"fas fa-industry", "visible":true, "nodes":[
-		{"text":"Üretim Emirleri",		"path":"/general/closed-module","icon":"fas fa-file-alt", "visible":true, "nodes":[]},	
+	{"text":"Üretim",	"module":"mrp",			"path":"",	"icon":"fas fa-industry", "visible":true, "nodes":[
+		{"text":"Üretim Emirleri",		"path":"/mrp/production-orders","icon":"fas fa-fill-drip", "visible":true, "nodes":[]},
+		{"text":"Mamul/Yarı Mamul",		 	"path":"/mrp/products",				"icon":"fas fa-cubes", "visible":true, "nodes":[]},
 		{"text":"Malzeme Planlama",		"path":"/general/closed-module","icon":"fas fa-file-alt", "visible":true, "nodes":[]},	
 		{"text":"Raporlar",			"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
 			{"text":"Üretim analizi",		 	"path":"/general/closed-module",				"icon":"fas fa-table", "visible":true, "nodes":[]},
 			{"text":"Maliyet analizi",		 	"path":"/general/closed-module",				"icon":"fas fa-table", "visible":true, "nodes":[]}
 		]},
 		{"text":"Tanimlamalar",			"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
-			{"text":"Mamul/Yarı Mamul",		 	"path":"/mrp/products",				"icon":"fas fa-cubes", "visible":true, "nodes":[]},
 			{"text":"Hammaddeler",		 		"path":"/inventory/items?itemType=raw-material",		"icon":"fas fa-atom", 			"visible":true, "nodes":[]},
 			{"text":"Yardımcı Malzemeler",		"path":"/inventory/items?itemType=helper-material",		"icon":"fas fa-thermometer-half", "visible":true, "nodes":[]},
 			{"text":"Üretim İstasyonları",	 	"path":"/mrp/stations", "icon":"fas fa-bezier-curve", "visible":true, "nodes":[]},

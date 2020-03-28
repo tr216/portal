@@ -255,6 +255,26 @@ const orderLineReferenceType={
     }
 }
 
+const orderLineReferenceType2={
+    lineId:idType,
+    orderedQuantity:quantityType,
+    producedQuantity:quantityType,
+    deliveredQuantity:quantityType,
+    orderReference:{
+        order:'',
+        ID:idType,
+        issueDate:valueType,
+        orderTypeCode:valueType,
+        salesOrderId:idType,
+        buyerCustomerParty:{
+            party:partyType,
+            deliveryContact:contactType,
+            accountingContact:contactType,
+            buyerContact:contactType
+        }
+    }
+}
+
 const locationType={
     ID:idType,
     address:addressType
@@ -480,8 +500,10 @@ const invoiceLineType={
 
 const orderLineType={
     ID:idType,
+    salesOrderLineId:idType,
     note:[valueType],
     orderedQuantity:quantityType,
+    producedQuantity:quantityType,
     deliveredQuantity:quantityType,
     price : {
         priceAmount:amountType
@@ -687,6 +709,68 @@ const orderType={
     localDocumentId:''
 }
 
+const productionOrderType={
+    item: '',
+    sourceRecipe: '',
+    productionTypeCode:'MUSTERI',
+    productionId:'',
+    issueDate: '',
+    issueTime: '',
+    plannedPeriod: {
+        startDate: '',
+        startTime: '',
+        endDate: '',
+        endTime: ''
+    },
+    producedPeriod: {
+        startDate: '',
+        startTime: '',
+        endDate: '',
+        endTime: ''
+    },
+    plannedQuantity:0,
+    producedQuantity:0,
+    unitCode:'',
+    orderLineReference:[],
+    description:'',
+    process:[{
+        sequence:0,
+        station: '',
+        step: '',
+        machines: [ {
+            machine:''
+        }],
+        input: [{
+            item:'',
+            quantity:0,
+            unitCode:''
+        }],
+        output: [{  //yan urunler
+            item:'',
+            quantity:0,
+            unitCode:''
+        }],
+        parameters:''
+    }],
+    materialSummary:[{
+        item:'',
+        quantity:0,
+        unitCode:''
+    }],
+    outputSummary:[{
+        item:'',
+        quantity:0,
+        unitCode:''
+    }],
+    qualityControl:[{
+        param:'',
+        value:''
+    }],
+    finishNotes:'',
+    status:'',
+    cancelled: false
+}
+
 exports.types = Object.freeze({
     valueType:valueType,
     idType:idType,
@@ -743,7 +827,8 @@ exports.types = Object.freeze({
     transactionConditionsType:transactionConditionsType,
     deliveryTermsType:deliveryTermsType,
     invoiceType:invoiceType,
-    orderType:orderType
+    orderType:orderType,
+    productionOrderType:productionOrderType
 });
 
        

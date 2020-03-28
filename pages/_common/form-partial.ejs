@@ -83,14 +83,14 @@ for(let key in formControls){
 <% function textbox(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label ><%=item.caption%></label>
-	<input type="text" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%=item.caption%>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
+	<input type="text" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%- item.readonly==true?'':item.caption %>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
 </div>
 <% } %>
 
 <% function textarea(item,itemValue,level){ %>
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label ><%=item.caption%></label>
-	<textarea class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>"  rows="<% if(typeof item.rows!='undefined'){%><%=item.rows%><%}else{%>4<%}%>"  placeholder="<%=item.caption%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>><%=itemValue%></textarea>
+	<textarea class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>"  rows="<% if(typeof item.rows!='undefined'){%><%=item.rows%><%}else{%>4<%}%>"  placeholder="<%- item.readonly==true?'':item.caption %>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>><%=itemValue%></textarea>
 </div>
 <% } %>
 

@@ -48,7 +48,7 @@
         }
         $('#itemCopyModal').modal('hide');
 
-        var data={_id:temp_id, newName:$('#newName').val()}
+        var data={id:temp_id, newName:$('#newName').val()}
         $.ajax({
             url:'/dbapi/items/copy?db=<%=db%>&sid=<%=sid%>',
             data:data,

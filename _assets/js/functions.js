@@ -264,6 +264,16 @@ function b64EncodeUnicode(str) {
 	})));
 }
 
+Number.prototype.formatDecimal = function(){
+	var c=0;
+	var d=whatDecimalPointer();
+	var t=d==','?'.':',';
+	
+	var s= _formatMoney(this,c,d,t);
+
+	return s;
+};
+
 Number.prototype.formatMoney = function(){
 	var c=2;
 	var d=whatDecimalPointer();
@@ -320,4 +330,19 @@ function clone(obj){
 function goBack(){
 	//if(document.referrer)
 	window.location.href=document.referrer;
+}
+
+function getItemTypeName(itemType){
+    switch(itemType){
+        case 'item': return 'Envanter';
+        case 'raw-material': return 'Hammadde';
+        case 'helper-material': return 'Yardımcı Malzeme';
+        case 'product': return 'Mamul';
+        case 'semi-product': return 'Yarı Mamul';
+        case 'sales-service': return 'Hizmet Satış';
+        case 'purchasing-service': return 'Hizmet Satış';
+        case 'asset': return 'Demirbaş';
+        case 'expense': return 'Masraf/Gider';
+        default: return 'Envanter';
+    }
 }

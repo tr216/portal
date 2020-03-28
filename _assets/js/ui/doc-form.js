@@ -33,6 +33,8 @@ function editLine(index){
 	$('#docLineModalLabel').text('Satir: #' + line.ID.value);
 
 	$('#docLine-item-name').val(line.item.name.value);
+	$('#docLine-item-id').val(line.item._id);
+	$('#docLine-item-itemType').val(line.item.itemType);
 	
 	switch(docFormType){
 		case 'order':
@@ -249,6 +251,8 @@ function saveDocLine(index){
 		line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value=($('#docLine-tevkifat-taxTypeCode').val() || '');
 
 	}
+	line.item._id=$('#docLine-item-id').val();
+	line.item.itemType=$('#docLine-item-itemType').val();
 	line.item.sellersItemIdentification.ID.value=$('#docLine-item-sellersItemIdentification').val().trim();
 	line.item.buyersItemIdentification.ID.value=$('#docLine-item-buyersItemIdentification').val().trim();
 	line.item.manufacturersItemIdentification.ID.value=$('#docLine-item-manufacturersItemIdentification').val().trim();
@@ -1176,6 +1180,9 @@ function docLineItemNameAutoComplete(){
 
     $('#docLine-item-name').autocomplete({
         source:function(request,response){
+        	//$("#docLine-item-name").val(''); 
+            $("#docLine-item-id").val(''); 
+            $("#docLine-item-itemType").val(''); 
             $.ajax({
                 url:'/dbapi/items?itemType=all&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
                 type:'GET',
@@ -1186,7 +1193,7 @@ function docLineItemNameAutoComplete(){
                             for(var i=0;i<result.data.docs.length;i++){
                                 var item=result.data.docs[i];
                                 
-                                dizi.push({name:item.name.value, label:(getItemTypeName(item.itemType) + ' - ' + item.name.value),value:item._id});
+                                dizi.push({name:item.name.value, label:(getItemTypeName(item.itemType) + ' - ' + item.name.value),value:item._id,itemType:item.itemType});
                             }
                             if(dizi.length>0){
                             	$('#cbNewItemPanel').hide();
@@ -1204,25 +1211,13 @@ function docLineItemNameAutoComplete(){
         select: function (event, ui) {
                 $("#docLine-item-name").val(ui.item.name); 
                 $("#docLine-item-id").val(ui.item.value); 
+                $("#docLine-item-itemType").val(ui.item.itemType); 
                 return false;
             }
     });
 }
 
-function getItemTypeName(itemType){
-    switch(itemType){
-        case 'item': return 'Envanter';
-        case 'raw-material': return 'Hammadde';
-        case 'helper-material': return 'Yardımcı Malzeme';
-        case 'product': return 'Mamul';
-        case 'semi-product': return 'Yarı Mamul';
-        case 'sales-service': return 'Hizmet Satış';
-        case 'purchasing-service': return 'Hizmet Satış';
-        case 'asset': return 'Demirbaş';
-        case 'expense': return 'Masraf/Gider';
-        default: return 'Envanter';
-    }
-}
+
 
 $(document).ready(function(){
 	
