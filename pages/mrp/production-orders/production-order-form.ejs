@@ -52,7 +52,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#tab2" role="tab" data-toggle="tab" id="IDtab2" aria-controls="tab2" aria-selected="false">
-                <i class="fas fa-table"></i> Satirlar
+                <i class="fas fa-table"></i> Üretim Prosesi
             </a>
         </li>
     </ul>
@@ -100,9 +100,26 @@
                                 <% }); %>
                             </select>
                         </div>
-                        
                     </div>
-
+					<div class="row">
+                    	<div class="form-group col-md-4">
+                            <label for="" class="m-0">Uretilecek Mamul</label>
+                            <input type="text" class="form-control" id="main-item-name" autocomplete="off" placeholder="" value="" readonly="true">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="" class="m-0">Reçete</label>
+                            <select id="main-recipe" class="form-control">
+                            	
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="" class="m-0">Planlanan Miktar</label>
+                            <input type="number" class="form-control" id="plannedQuantity-quantity" autocomplete="off" value="0" readonly="true">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <a href="javascript:receteUygula()" class="btn btn-primary mt-3"><i class="fas fa-fill-drip" title="Reçeteyi uygula"></i> Uygula</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="forCustomerPanel" class="card mt-2">
@@ -152,38 +169,12 @@
 
                 </div>
             </div>
-            <div class="card mt-2">
-                <div class="card-header p-1">
-                    <div class="bold text-primary">Mamul/Recete</div>
-                </div>
-                <div class="card-body p-1" style="overflow: auto;">
-                    <div class="row">
-                    	<div class="form-group col-md-4">
-                            <label for="" class="m-0">Uretilecek Mamul</label>
-                            <input type="text" class="form-control" id="main-item-name" autocomplete="off" placeholder="" value="" readonly="true">
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="" class="m-0">Reçete</label>
-                            <select id="main-recipe" class="form-control">
-                            	
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Planlanan Miktar</label>
-                            <input type="number" class="form-control" id="plannedQuantity-quantity" autocomplete="off" value="0" readonly="true">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <a href="javascript:receteUygula()" class="btn btn-primary mt-3"><i class="fas fa-fill-drip" title="Reçeteyi uygula"></i> Uygula</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+            
         </div>
 
         <!-- IDtab2 -->
         <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="IDtab2">
-            tab2
+            <%- partial('../../_common/recipe.ejs',{recipeFormType:'production-orders'}) %>
         </div>
     </div>
 </form>
@@ -468,8 +459,57 @@
 		if((doc.item || '')=='') return alert('Urun secilmemis.');
 		if((doc.sourceRecipe || '')=='') return alert('Recete secilmemis.');
 		if(doc.plannedQuantity<=0) return alert('Planlanan miktar sifir dan buyuk olmalidir.');
-		
+		$.ajax({
+	        url:'/dbapi/recipes/' + doc.sourceRecipe + '?db=' + q.db + '&sid=' + q.sid,
+	        type:'GET',
+	        dataType: 'json',
+	        success: function(result) {
+	                if(result.success){
+	                    var recete=result.data;
+	                    var oran=0;
+	                    if(recete.totalQuantity>0) oran=doc.plannedQuantity/recete.totalQuantity;
+	                    if(oran==0) return alert('Recete orani "0" olamaz. Recete miktarlarini kontrol ediniz.');
+	                    doc.description=recete.description;
+	                    doc.process=[];
+	                    doc.materialSummary=[];
+	                    doc.outputSummary=[];
+	                    doc.qualityControl=[];
+	                    recete.process.forEach(function(e){
+	                    	var obj=JSON.parse(JSON.stringify(e));
+	                    	obj.input.forEach(function(e2){
+	                    		e2.quantity=e2.quantity*oran;
+	                    	})
+	                    	obj.output.forEach(function(e2){
+	                    		e2.quantity=e2.quantity*oran;
+	                    	})
+	                    	doc.process.push(obj);
+	                    });
+
+	                    recete.materialSummary.forEach(function(e){
+	                    	var obj=JSON.parse(JSON.stringify(e));
+	                    	obj.quantity=obj.quantity * oran;
+	                    	doc.materialSummary.push(obj);
+	                    });
+
+        				recete.outputSummary.forEach(function(e){
+	                    	var obj=JSON.parse(JSON.stringify(e));
+	                    	obj.quantity=obj.quantity * oran;
+	                    	doc.outputSummary.push(obj);
+	                    })
+        				
+        				doc.qualityControl=JSON.parse(JSON.stringify(recete.qualityControl));
+        
+        				console.log('doc:',doc);
+        				reloadRecipe();
+	                }
+	            },
+	        error:function(err){
+	            console.error('err recipes:',err);
+	        }
+	    });
 	}
+
+
 
     $(document).ready(function(){
 

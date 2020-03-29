@@ -1,5 +1,7 @@
 <%layout('../../_common/layout')%>
-
+<% 
+recipeFormType='products';
+%>
 <%- partial('../../_common/form', {
     tabs:[
        {
@@ -30,7 +32,7 @@
         },
         {
             caption:'Recete/Process',
-            partial:'../mrp/products/recipe.ejs'
+            partial:'./recipe.ejs'
         }
     ],
     action:'',

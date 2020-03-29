@@ -174,7 +174,6 @@ exports.put=(endpoint,req, jsonData, callback)=>{
 			    rejectUnauthorized: false,
 			    json:jsonData
 			}
-
 			request(options, function (error, response, body) {
 			    if (!error && response.statusCode==200) {
 			        callback(null,body);
@@ -183,6 +182,7 @@ exports.put=(endpoint,req, jsonData, callback)=>{
 			    }
 			});
 		}else{
+			console.log('err:',err);
 			callback(err);
 		}
 	});

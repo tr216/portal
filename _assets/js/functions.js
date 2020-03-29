@@ -321,7 +321,7 @@ function savePageFilter(path,key,value){
 	localStorage.setItem(path + '_filter',JSON.stringify(filter));
 }
 
-const dbType=types.types;
+const dbType=typeof types!='undefined'?types.types:'';
 
 function clone(obj){
 	return JSON.parse(JSON.stringify(obj));

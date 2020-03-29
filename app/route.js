@@ -67,6 +67,7 @@ module.exports = function(app){
 	});
 
 	app.all('/dbapi/:func', function(req, res) {
+
 		localApi(req,res,true);
 	});
 	app.all('/dbapi/:func/:param1', function(req, res) {

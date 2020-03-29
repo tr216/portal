@@ -771,6 +771,51 @@ const productionOrderType={
     cancelled: false
 }
 
+const recipeType={
+    item: '',
+    name:'',
+    description:'',
+    revision:1,
+    process:[{
+        sequence:0,
+        station: '',
+        step: '',
+        machines: [ {
+            machine:''
+        }],
+        input: [{
+            item:'',
+            quantity:0,
+            unitCode:''
+        }],
+        output: [{  //yan urunler
+            item:'',
+            quantity:0,
+            unitCode:''
+        }],
+        parameters:''
+    }],
+    materialSummary:[{
+        item:'',
+        quantity:0,
+        unitCode:''
+    }],
+    outputSummary:[{
+        item:'',
+        quantity:0,
+        unitCode:''
+    }],
+    qualityControl:[{
+        param:'',
+        value:''
+    }],
+    isDefault: true,
+    totalQuantity:100,
+    passive: false
+    
+}
+
+
 exports.types = Object.freeze({
     valueType:valueType,
     idType:idType,
@@ -828,7 +873,8 @@ exports.types = Object.freeze({
     deliveryTermsType:deliveryTermsType,
     invoiceType:invoiceType,
     orderType:orderType,
-    productionOrderType:productionOrderType
+    productionOrderType:productionOrderType,
+    recipeType:recipeType
 });
 
        

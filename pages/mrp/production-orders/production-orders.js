@@ -1,6 +1,8 @@
 module.exports = function(req,res,callback){
 	
 	var data={
+		stationList:[],
+		stepList:[],
 		productionTypeCodeList:Array.from(staticValues.productionTypeCodeList),
 		productionStatusTypes:Array.from(staticValues.productionStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
@@ -66,10 +68,23 @@ function getList(req,res,data,callback){
 	}
 }
 
-
-
 function initLookUpLists(req,res,data,cb){
-	cb(null,data);
+	data.stationList=[];
+	data.stepList=[];
+	
+	api.get('/' + req.query.db + '/mrp-stations',req,{passive:false},(err,resp)=>{
+		if(!err){
+			data.stationList=resp.data.docs;
+			data.stationList.unshift({_id:'',name:'-Tümü-'})
+		}
+		api.get('/' + req.query.db + '/mrp-process-steps',req,{passive:false},(err,resp)=>{
+			if(!err){
+				data.stepList=resp.data.docs;
+				data.stepList.unshift({_id:'',name:'-Tümü-'})
+			}
+			cb(null,data);
+		});
+	});
 }
 
 function addnew(req,res,data,callback){
