@@ -29,6 +29,7 @@ module.exports = function(req,res,callback){
 		break;
 		
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
 		break;
 	}
@@ -41,45 +42,47 @@ function getList(req,res,data,callback){
 	data.productionTypeCodeList.unshift({text:'-Tümü-',value:''});
 	data.productionStatusTypes.unshift({text:'-Tümü-',value:''});
 	
-	if(req.method=='POST'){
-		var filter={};
-		filter=Object.assign(filter,req.query);
-		filter=Object.assign(filter,req.body);
-		filter['btnFilter']=undefined;
-		delete filter['btnFilter'];
-		filter['page']=1;
-		res.redirect('/mrp/production-orders?' + mrutil.encodeUrl(filter));
-	}else{
-		data.filter=Object.assign(data.filter,req.query);
-		data.filter.db=undefined;
-		delete data.filter.db;
-		data.filter.sid=undefined;
-		delete data.filter.sid;
-		initLookUpLists(req,res,data,(err,data)=>{
-			
-			api.get('/' + req.query.db + '/production-orders',req,data.filter,(err,resp)=>{
-				if(!err){
-					resp.data.docs.forEach((e)=>{
-						e['musteri']='';
-						if(e.productionTypeCode=='DEPO'){
-							e['musteri']='DEPO';
-						}else{
-							if(e.orderLineReference){
-								e.orderLineReference.forEach((e2,index)=>{
-									e['musteri']+=e2.orderReference.buyerCustomerParty.party.partyName.name.value;
-									if(index<e.orderLineReference.length-1){
-										e['musteri']+='<br>';
-									}
-								});
-							}
+	// if(req.method=='POST'){
+	// 	var filter={};
+	// 	filter=Object.assign(filter,req.query);
+	// 	filter=Object.assign(filter,req.body);
+	// 	filter['btnFilter']=undefined;
+	// 	delete filter['btnFilter'];
+	// 	filter['page']=1;
+	// 	data.filter=filter;
+	// }else{
+	// 	data.filter=Object.assign(data.filter,req.query);
+	// 	data.filter.db=undefined;
+	// 	delete data.filter.db;
+	// 	data.filter.sid=undefined;
+	// 	delete data.filter.sid;
+	// }
+
+	initLookUpLists(req,res,data,(err,data)=>{
+		
+		api.get('/' + req.query.db + '/production-orders',req,data.filter,(err,resp)=>{
+			if(!err){
+				resp.data.docs.forEach((e)=>{
+					e['musteri']='';
+					if(e.productionTypeCode=='DEPO'){
+						e['musteri']='DEPO';
+					}else{
+						if(e.orderLineReference){
+							e.orderLineReference.forEach((e2,index)=>{
+								e['musteri']+=e2.orderReference.buyerCustomerParty.party.partyName.name.value;
+								if(index<e.orderLineReference.length-1){
+									e['musteri']+='<br>';
+								}
+							});
 						}
-					});
-					data=mrutil.setGridData(data,resp);
-				}
-				callback(null,data);
-			});
-		})
-	}
+					}
+				});
+				data=mrutil.setGridData(data,resp);
+			}
+			callback(null,data);
+		});
+	})
+	
 }
 
 function initLookUpLists(req,res,data,cb){

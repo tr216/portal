@@ -62,40 +62,23 @@ module.exports = function(req,res,callback){
 		deleteItem(req,res,data,callback);
 		break;
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
-		
+		break;
 	}
 	
 }
 
 function getList(req,res,data,callback){
-	
+	data.filter['itemType']=data.form.itemType;
 	initLookUpLists(req,res,data,(err,data)=>{
-
-		if(req.method=='POST'){
-			var filter={};
-			filter=Object.assign(filter,req.query);
-			filter=Object.assign(filter,req.body);
-			filter['btnFilter']=undefined;
-			delete filter['btnFilter'];
-			filter['page']=1;
-			res.redirect('/inventory/items?itemType=' + data.form.itemType + '&' + mrutil.encodeUrl(filter));
-		}else{
-			data.accountGroupList.unshift({name:'',_id:''});
-			data.filter=Object.assign(data.filter,req.query);
-				
-			data.filter.db=undefined;
-			delete data.filter.db;
-			data.filter.sid=undefined;
-			delete data.filter.sid;
-			data.filter['itemType']=data.form.itemType;
-			api.get('/' + req.query.db + '/items',req,data.filter,(err,resp)=>{
-				if(!err){
-					data=mrutil.setGridData(data,resp);
-				}
-				callback(null,data);
-			});
-		}
+		data.accountGroupList.unshift({name:'',_id:''});
+		api.get('/' + req.query.db + '/items',req,data.filter,(err,resp)=>{
+			if(!err){
+				data=mrutil.setGridData(data,resp);
+			}
+			callback(null,data);
+		});
 	});
 }
 

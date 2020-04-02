@@ -32,41 +32,20 @@ module.exports = function(req,res,callback){
 			require('./file-importers-code.js')(req,res,callback);
 		break;
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
-		
+		break;
 	}
 	
 }
 
 function getList(req,res,data,callback){
-	if(req.method=='POST'){
-		var filter={};
-		
-		for(let k in req.body){
-			if(req.body[k] && k!='btnFilter'){
-				filter[k]=req.body[k];
-			}
+	api.get('/' + req.query.db + '/file-importers',req,data.filter,(err,resp)=>{
+		if(!err){
+			data=mrutil.setGridData(data,resp);
 		}
-
-		res.redirect('/settings/file-importers?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid  + '&importerType=' + (req.query.importerType || ''));
-	}else{
-		// data.filter.page=1;
-		data.filter=Object.assign(data.filter,req.query);
-
-		data.filter.db=undefined;
-		delete data.filter.db;
-		data.filter.sid=undefined;
-		delete data.filter.sid;
-
-		api.get('/' + req.query.db + '/file-importers',req,data.filter,(err,resp)=>{
-			if(!err){
-				data=mrutil.setGridData(data,resp);
-			}
-			callback(null,data);
-		});
-		
-	}
-	
+		callback(null,data);
+	});
 }
 
 function addnew(req,res,data,callback){

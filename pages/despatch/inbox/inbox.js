@@ -1,24 +1,24 @@
 module.exports = function(req,res,callback){
-	
 	var data={
 		eIntegratorList:[],
-		docStatusTypes:Array.from(staticValues.eInvoiceStatusTypes),
+		docStatusTypes:Array.from(staticValues.orderStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
-		docProfileIdList:Array.from(staticValues.eInvoiceProfileIdList),
-		docTypeCodeList:Array.from(staticValues.eInvoiceTypeCodeList),
-		form:Object.assign({},dbType.invoiceType),
+		docProfileIdList:Array.from(staticValues.orderProfileIdList),
+		docTypeCodeList:Array.from(staticValues.orderTypeCodeList),
+		form:Object.assign({},dbType.orderType),
 		html:'Goruntulenemedi',
 		list:[],
 		filter:{}
 	}
-	data.form.ioType=0;
-	
+
+	data.form.ioType=1;
+
 	if(!req.query.db){
 		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
 	}
+
 	switch(req.params.func || ''){
 		case 'addnew':
-		
 			addnew(req,res,data,callback);
 		break;
 		case 'edit':
@@ -34,11 +34,9 @@ module.exports = function(req,res,callback){
 			showErrors(req,res,data,callback);
 		break;
 		default:
-			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
 		break;
 	}
-	
 }
 
 function showErrors(req,res,data,callback){
@@ -48,7 +46,7 @@ function showErrors(req,res,data,callback){
 		callback(null,data);
 		return;
 	}
-	api.get('/' + req.query.db + '/invoice/errors/' + _id,req,null,(err,resp)=>{
+	api.get('/' + req.query.db + '/order/errors/' + _id,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);
@@ -59,6 +57,7 @@ function showErrors(req,res,data,callback){
 	});
 }
 
+
 function getList(req,res,data,callback){
 	data.docStatusTypes.unshift({text:'-Tümü-',value:''});
 	data.currencyList.unshift({text:'-Tümü-',value:''});
@@ -67,36 +66,44 @@ function getList(req,res,data,callback){
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
-		api.get('/' + req.query.db + '/invoice/outboxInvoiceList',req,data.filter,(err,resp)=>{
-			if(!err){
-				var docs=[]
-				resp.data.docs.forEach((e)=>{
-					docs.push(eInvoiceHelper.makeSimpleInvoiceList(e));
-				});
-				resp.data.docs=docs;
-				data=mrutil.setGridData(data,resp);
-			}
-			callback(null,data);
-		});
+		if(req.method=='POST'){
+			var filter={};
+			filter=Object.assign(filter,req.query);
+			filter=Object.assign(filter,req.body);
+			filter['btnFilter']=undefined;
+			delete filter['btnFilter'];
+			filter['page']=1;
+			res.redirect('/order/inbox?' + mrutil.encodeUrl(filter));
+		}else{
+			data.filter=Object.assign(data.filter,req.query);
+			data.filter.db=undefined;
+			delete data.filter.db;
+			data.filter.sid=undefined;
+			delete data.filter.sid;
+			
+			api.get('/' + req.query.db + '/order/inboxOrderList',req,data.filter,(err,resp)=>{
+				if(!err){
+					var docs=[];
+					resp.data.docs.forEach((e)=>{
+						docs.push(orderHelper.makeSimpleOrderList(e));
+					});
+					resp.data.docs=docs;
+					data=mrutil.setGridData(data,resp);
+				}
+				callback(null,data);
+			});
+			
+		}
 	})
-	
 }
 
 
 
 function initLookUpLists(req,res,data,cb){
 	data.eIntegratorList=[];
-	
 	api.get('/' + req.query.db + '/e-integrators',req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
-			if(data.eIntegratorList.length>0){
-				data.eIntegratorList.forEach((e)=>{
-					if(e.isDefault){
-						data.form.eIntegrator=e._id;
-					}
-				})
-			}
 		}
 		cb(null,data);
 	});
@@ -104,13 +111,13 @@ function initLookUpLists(req,res,data,cb){
 
 function addnew(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		if(req.method=='POST' || req.method=='PUT'){
+		if(req.method=='POST'){
 			data.form=Object.assign(data.form,req.body);
-			data.form['accountingCustomerParty']={party:(data.form.party || {})}
-			data.form.ioType=0;
-			api.post('/' + req.query.db + '/invoice/invoice',req,data.form,(err,resp)=>{
+			data.form['sellerSupplierParty']={party:(data.form.party || {})}
+			data.form.ioType=1;
+			api.post('/' + req.query.db + '/order/order',req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/invoice/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/order/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
 				}else{
 					data['message']=err.message;
@@ -118,18 +125,18 @@ function addnew(req,res,data,callback){
 				}
 			});
 		}else{
+			console.log('data.eIntegratorList:',data.eIntegratorList);
 			if(data.eIntegratorList.length==1){
 				data.form.eIntegrator=data.eIntegratorList[0];
 			}
 			callback(null,data);
-			
 		}
 	});
 }
 
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.getFile('/' + req.query.db + '/invoice/invoiceView/' + _id,req,null,(err,resp)=>{
+	api.getFile('/' + req.query.db + '/order/orderView/' + _id,req,null,(err,resp)=>{
 		if(!err){
 			data['html']=resp;
 			callback(null,data);
@@ -142,7 +149,7 @@ function view(req,res,data,callback){
 
 function pdf(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.downloadFile('/' + req.query.db + '/invoice/invoicePdf/' + _id,req,res,null,(err,resp)=>{
+	api.downloadFile('/' + req.query.db + '/order/orderPdf/' + _id,req,res,null,(err,resp)=>{
 		return;
 		// if(!err){
 		// 	callback(null,data);
@@ -156,18 +163,19 @@ function pdf(req,res,data,callback){
 function edit(req,res,data,callback){
 	var _id=req.params.id || '';
 	if(_id.trim()==''){
-		data['message']='id bos olamaz';
+		data['message']='ID bos olamaz';
 		callback(null,data);
 		return;
 	}
 	initLookUpLists(req,res,data,(err,data)=>{
 		if(req.method=='POST' || req.method=='PUT'){
 			data.form=Object.assign(data.form,req.body);
-			data.form['accountingCustomerParty']={party:(data.form.party || {})}
-			data.form.ioType=0;
-			api.put('/' + req.query.db + '/invoice/invoice/' + _id,req,data.form,(err,resp)=>{
+			
+			data.form['buyerCustomerParty']={party:(data.form.party || {})}
+			data.form.ioType=1;
+			api.put('/' + req.query.db + '/order/order/' + _id,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/invoice/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/order/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
 				}else{
 					data['message']=err.message;
@@ -176,7 +184,7 @@ function edit(req,res,data,callback){
 			});
 		}else{
 			
-			api.get('/' + req.query.db + '/invoice/invoice/' + _id,req,null,(err,resp)=>{
+			api.get('/' + req.query.db + '/order/order/' + _id,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					callback(null,data);
@@ -185,15 +193,16 @@ function edit(req,res,data,callback){
 					callback(null,data);
 				}
 			});
+			
 		}
 	})
 }
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/invoice/invoice/' + _id,req,(err,resp)=>{
+	api.delete('/' + req.query.db + '/order/order/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/invoice/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/order/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
 		}else{
 			data['message']=err.message;
 			callback(null,data);

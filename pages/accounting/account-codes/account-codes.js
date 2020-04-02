@@ -30,19 +30,14 @@ module.exports = function(req,res,callback){
 		deleteItem(req,res,data,callback);
 		break;
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
-		
+		break;
 	}
 	
 }
 
 function getList(req,res,data,callback){
-	data.filter=Object.assign(data.filter,req.query);
-		
-	data.filter.db=undefined;
-	delete data.filter.db;
-	data.filter.sid=undefined;
-	delete data.filter.sid;
 	api.get('/' + req.query.db + '/accounts',req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp);

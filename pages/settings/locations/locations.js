@@ -6,7 +6,8 @@ module.exports = function(req,res,callback){
 			locationType:0,
 			passive:false
 		},
-		list:[]
+		list:[],
+		filter:{}
 	}
 
 	if(!req.query.db){
@@ -25,28 +26,23 @@ module.exports = function(req,res,callback){
 		deleteItem(req,res,data,callback);
 		break;
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
-		
+		break;
 	}
 	
 }
 
 function getList(req,res,data,callback){
-	api.get('/' + req.query.db + '/locations',req,{page:req.query.page},(err,resp)=>{
+	api.get('/' + req.query.db + '/locations',req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp);
-			// data['recordCount']=resp.data.recordCount;
-			// data['page']=resp.data.page;
-			// data['pageCount']=resp.data.pageCount;
-			// data['pageSize']=resp.data.pageSize;
-			// data['list']=resp.data.docs;
 		}
 		callback(null,data);
 	});
 }
 
 function addnew(req,res,data,callback){
-	//data['title']='Yeni Lokasyon';
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body);
 		if(data.form.locationName.trim()==''){

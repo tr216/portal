@@ -120,6 +120,7 @@ module.exports = function(req,res,callback){
 		break;
 		
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
 		break;
 	}
@@ -129,30 +130,12 @@ module.exports = function(req,res,callback){
 var editorFileTypes=['text/plain', 'application/json','text/javascript','text/html','application/xml'];
 
 function getList(req,res,data,callback){
-	if(req.method=='POST'){
-		var filter={};
-		
-		for(let k in req.body){
-			if(req.body[k] && k!='btnFilter'){
-				filter[k]=req.body[k];
-			}
+	api.get('/' + req.query.db + '/e-integrators',req,data.filter,(err,resp)=>{
+		if(!err){
+			data=mrutil.setGridData(data,resp);
 		}
-
-		res.redirect('/settings/e-integrators?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
-	}else{
-		data.filter=Object.assign(data.filter,req.query);
-		data.filter.db=undefined;
-		delete data.filter.db;
-		data.filter.sid=undefined;
-		delete data.filter.sid;
-
-		api.get('/' + req.query.db + '/e-integrators',req,data.filter,(err,resp)=>{
-			if(!err){
-				data=mrutil.setGridData(data,resp);
-			}
-			callback(null,data);
-		});
-	}
+		callback(null,data);
+	});
 }
 
 function initLookUpLists(req,res,data,cb){

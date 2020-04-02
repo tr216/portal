@@ -1,7 +1,6 @@
 module.exports = function(req,res,callback){
 	var data={
-		list:[],
-		filter:{},
+		
 		dbName:'',
 		form:{
 			memberId:'',
@@ -10,7 +9,9 @@ module.exports = function(req,res,callback){
 			canWrite:false,
 			canDelete:false
 		},
-		returnUrl:''
+		returnUrl:'',
+		list:[],
+		filter:{}
 
 	}
 
@@ -35,6 +36,7 @@ module.exports = function(req,res,callback){
 			deleteItem(req,res,data,callback);
 		break;
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
 		break;
 	}
@@ -42,31 +44,17 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
-	if(req.method=='POST' && req.body.btnFilter!=undefined){
-		var filter={page:1};
-		
-		for(let k in req.body){
-			if(req.body[k]){
-				filter[k]=req.body[k];
-			}
+	api.get('/dbinvite/' +  req.query.db,req,data.filter,(err,resp)=>{
+		if(!err){
+			data['recordCount']=resp.data.authorizedMembers.length;
+			data['list']=resp.data.authorizedMembers;
+			data['dbName']=resp.data.dbName;
+		}else{
+			
+			data['message']=err.message;
 		}
-
-		res.redirect('/dbinvite?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
-	}else{
-
-		api.get('/dbinvite/' +  req.query.db,req,data.filter,(err,resp)=>{
-			if(!err){
-				data['recordCount']=resp.data.authorizedMembers.length;
-				data['list']=resp.data.authorizedMembers;
-				data['dbName']=resp.data.dbName;
-			}else{
-				
-				data['message']=err.message;
-			}
-			callback(null,data);
-		});
-	}
-
+		callback(null,data);
+	});
 }
 
 

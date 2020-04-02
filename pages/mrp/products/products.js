@@ -64,6 +64,7 @@ module.exports = function(req,res,callback){
 		deleteItem(req,res,data,callback);
 		break;
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
 		break;
 	}
@@ -71,12 +72,6 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
-	data.filter=Object.assign(data.filter,req.query);
-		
-	data.filter.db=undefined;
-	delete data.filter.db;
-	data.filter.sid=undefined;
-	delete data.filter.sid;
 	if(!data.filter['itemType']) data.filter['itemType']=data.form.itemType;
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.accountGroupList.unshift({name:'',_id:''});

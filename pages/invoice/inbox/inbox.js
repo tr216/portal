@@ -34,6 +34,7 @@ module.exports = function(req,res,callback){
 			showErrors(req,res,data,callback);
 		break;
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
 		break;
 	}
@@ -63,35 +64,22 @@ function getList(req,res,data,callback){
 	data.currencyList.unshift({text:'-Tümü-',value:''});
 	data.docProfileIdList.unshift({text:'-Tümü-',value:''});
 	data.docTypeCodeList.unshift({text:'-Tümü-',value:''});
-	if(req.method=='POST'){
-		var filter={};
-		filter=Object.assign(filter,req.query);
-		filter=Object.assign(filter,req.body);
-		filter['btnFilter']=undefined;
-		delete filter['btnFilter'];
-		filter['page']=1;
-		res.redirect('/invoice/inbox?' + mrutil.encodeUrl(filter));
-	}else{
-		data.filter=Object.assign(data.filter,req.query);
-		data.filter.db=undefined;
-		delete data.filter.db;
-		data.filter.sid=undefined;
-		delete data.filter.sid;
-		initLookUpLists(req,res,data,(err,data)=>{
-			data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
-			api.get('/' + req.query.db + '/invoice/inboxInvoiceList',req,data.filter,(err,resp)=>{
-				if(!err){
-					var docs=[]
-					resp.data.docs.forEach((e)=>{
-						docs.push(eInvoiceHelper.makeSimpleInvoiceList(e));
-					});
-					resp.data.docs=docs;
-					data=mrutil.setGridData(data,resp);
-				}
-				callback(null,data);
-			});
-		})
-	}
+	
+	initLookUpLists(req,res,data,(err,data)=>{
+		data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
+		api.get('/' + req.query.db + '/invoice/inboxInvoiceList',req,data.filter,(err,resp)=>{
+			if(!err){
+				var docs=[]
+				resp.data.docs.forEach((e)=>{
+					docs.push(eInvoiceHelper.makeSimpleInvoiceList(e));
+				});
+				resp.data.docs=docs;
+				data=mrutil.setGridData(data,resp);
+			}
+			callback(null,data);
+		});
+	})
+	
 }
 
 

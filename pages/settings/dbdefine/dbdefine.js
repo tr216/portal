@@ -22,42 +22,20 @@ module.exports = function(req,res,callback){
 		deleteItem(req,res,data,callback);
 		break;
 		default:
-		
-		getList(req,res,data,callback);
+			data.filter=getFilter(data.filter,req);
+			getList(req,res,data,callback);
 		break;
 	}
 	
 }
 
 function getList(req,res,data,callback){
-	if(req.method=='POST'){
-		var filter={};
-		
-		for(let k in req.body){
-			if(req.body[k] && k!='btnFilter'){
-				filter[k]=req.body[k];
-			}
+	api.get('/dbdefine',req,data.filter,(err,resp)=>{
+		if(!err){
+			data=mrutil.setGridData(data,resp);
 		}
-
-		res.redirect('/settings/dbdefine?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
-	}else{
-		// data.filter.page=1;
-		data.filter=Object.assign(data.filter,req.query);
-		eventLog(data);
-		data.filter.db=undefined;
-		delete data.filter.db;
-		data.filter.sid=undefined;
-		delete data.filter.sid;
-
-		api.get('/dbdefine',req,data.filter,(err,resp)=>{
-			if(!err){
-				data=mrutil.setGridData(data,resp);
-			}
-			callback(null,data);
-		});
-	
-	}
-
+		callback(null,data);
+	});
 }
 
 function addnew(req,res,data,callback){
