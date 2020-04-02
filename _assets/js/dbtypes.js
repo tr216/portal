@@ -709,6 +709,24 @@ const orderType={
     localDocumentId:''
 }
 
+const qualityControlType={
+        param:'',
+        value:''
+    }
+const materialType={
+        item:'',
+        quantity:0,
+        unitCode:''
+    }
+const recipeProcessType={
+    sequence:0,
+    station: '',
+    step: '',
+    machines: [],
+    input: [],  //materialType
+    output: [], //materialType
+    parameters:''
+}
 const productionOrderType={
     item: '',
     sourceRecipe: '',
@@ -733,41 +751,12 @@ const productionOrderType={
     unitCode:'',
     orderLineReference:[],
     description:'',
-    process:[{
-        sequence:0,
-        station: '',
-        step: '',
-        machines: [ {
-            machine:''
-        }],
-        input: [{
-            item:'',
-            quantity:0,
-            unitCode:''
-        }],
-        output: [{  //yan urunler
-            item:'',
-            quantity:0,
-            unitCode:''
-        }],
-        parameters:''
-    }],
-    materialSummary:[{
-        item:'',
-        quantity:0,
-        unitCode:''
-    }],
-    outputSummary:[{
-        item:'',
-        quantity:0,
-        unitCode:''
-    }],
-    qualityControl:[{
-        param:'',
-        value:''
-    }],
+    process:[],
+    materialSummary:[], //materialType
+    outputSummary:[], //materialType
+    qualityControl:[], //qualityControlType
     finishNotes:'',
-    status:'',
+    status:'Draft',
     cancelled: false
 }
 
@@ -776,39 +765,10 @@ const recipeType={
     name:'',
     description:'',
     revision:1,
-    process:[{
-        sequence:0,
-        station: '',
-        step: '',
-        machines: [ {
-            machine:''
-        }],
-        input: [{
-            item:'',
-            quantity:0,
-            unitCode:''
-        }],
-        output: [{  //yan urunler
-            item:'',
-            quantity:0,
-            unitCode:''
-        }],
-        parameters:''
-    }],
-    materialSummary:[{
-        item:'',
-        quantity:0,
-        unitCode:''
-    }],
-    outputSummary:[{
-        item:'',
-        quantity:0,
-        unitCode:''
-    }],
-    qualityControl:[{
-        param:'',
-        value:''
-    }],
+    process:[], //recipeProcessType
+    materialSummary:[], //materialType
+    outputSummary:[],  //materialType
+    qualityControl:[], //qualityControlType
     isDefault: true,
     totalQuantity:100,
     passive: false
@@ -874,7 +834,10 @@ exports.types = Object.freeze({
     invoiceType:invoiceType,
     orderType:orderType,
     productionOrderType:productionOrderType,
-    recipeType:recipeType
+    recipeType:recipeType,
+    recipeProcessType:recipeProcessType,
+    materialType:materialType,
+    qualityControlType:qualityControlType
 });
 
        
