@@ -775,6 +775,44 @@ const recipeType={
     
 }
 
+const despatchAdviceType={
+    eIntegrator: '',
+    profileId: valueType,
+    ID: idType,
+    uuid: valueType,
+    issueDate: valueType,
+    issueTime: valueType,
+    despatchAdviceTypeCode: valueType,
+    despatchPeriod: periodType,
+    note:[valueType],
+    additionalDocumentReference:[], //documentReferenceType
+    orderReference:[], //orderReferenceType
+    originatorDocumentReference:[], //documentReferenceType
+    despatchSupplierParty:{
+        party:partyType,
+        despatchContact:contactType
+    },
+    deliveryCustomerParty:{
+        party:partyType,
+        deliveryContact:contactType
+    },
+    originatorCustomerParty:{
+        party:partyType,
+        deliveryContact:contactType
+    },
+    sellerSupplierParty:{
+        party:partyType,
+        despatchContact:contactType
+    },
+    buyerCustomerParty:{
+        party:partyType,
+        deliveryContact:contactType
+    },
+    shipment:shipmentType,
+    lineCountNumeric:numberValueType,
+    despatchLine:[], //despatchLineType
+    localDocumentId: '',
+}
 
 exports.types = Object.freeze({
     valueType:valueType,
@@ -837,7 +875,8 @@ exports.types = Object.freeze({
     recipeType:recipeType,
     recipeProcessType:recipeProcessType,
     materialType:materialType,
-    qualityControlType:qualityControlType
+    qualityControlType:qualityControlType,
+    despatchAdviceType:despatchAdviceType
 });
 
        

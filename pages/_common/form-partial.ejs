@@ -39,7 +39,11 @@ for(let key in formControls){
 			case 'textbox' : %>
 			<%- textbox(item,itemValue,level) %>
 			<% break;
-
+			case 'number' :
+			case 'numberbox' :
+			 %>
+			<%- numberbox(item,itemValue,level) %>
+			<% break;
 			case 'label': 
 			case 'div': 
 			%>
@@ -84,6 +88,13 @@ for(let key in formControls){
 <div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 	<label ><%=item.caption%></label>
 	<input type="text" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%- item.readonly==true?'':item.caption %>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
+</div>
+<% } %>
+
+<% function numberbox(item,itemValue,level){ %>
+<div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
+	<label ><%=item.caption%></label>
+	<input type="number" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%- item.readonly==true?'':item.caption %>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
 </div>
 <% } %>
 

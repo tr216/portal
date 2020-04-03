@@ -16,13 +16,13 @@
                         <a class="nav-link" id="docLineTab2" data-toggle="tab" href="#docLineTab2Content" role="tab" aria-controls="docLineTab2Content" aria-selected="false">Diğer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="docLineTab3" data-toggle="tab" href="#orderLineTab3Content" role="tab" aria-controls="docLineTab3Content" aria-selected="false">Paketler</a>
+                        <a class="nav-link" id="docLineTab3" data-toggle="tab" href="#docLineTab3Content" role="tab" aria-controls="docLineTab3Content" aria-selected="false">Paketler</a>
                     </li>
                 </ul>
                 <div class="tab-content p-1" id="docLineTabContent" style="height: 40em;overflow: auto;">
                     <!-- Genel -->
                     <div class="tab-pane show active" id="docLineTab1Content" role="tabpanel" aria-labelledby="docLineTab1">
-                        <div class="btn-toolbar justify-content-end" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-toolbar justify-content-end" role="toolbar" aria-label="Toolbar with button groups" <% if(docFormType=='despatch'){%>style="display:none;"<%}%>>
                             <label class="checkbox-inline border">
                               <input type="checkbox" data-toggle="collapse" id="cbIskontoPanel" data-target="#iskontoPanel" aria-expanded="false" aria-controls="iskontoPanel"> Iskonto
                             </label>
@@ -46,7 +46,7 @@
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="" class="m-0">Miktar</label>
-                                <input type="number" class="form-control" id="docLine-quantity" placeholder="" value="" onchange="calculateDocLine()">
+                                <input type="number" class="form-control" id="docLine-quantity" placeholder="" autocomplete="off" value="" onchange="calculateDocLine()">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="" class="m-0">Birim</label>
@@ -62,16 +62,16 @@
                                 <label for="" class="m-0">Fiyat</label>
                                 <input type="number" class="form-control text-right" id="docLine-price-priceAmount" placeholder=""  value="0.00000000" onchange="calculateDocLine()">
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-3"  <% if(docFormType=='despatch'){%>style="display:none;"<%}%>>
                                 <label for="" class="m-0">Tutar</label>
                                 <input type="text" class="form-control text-right" id="docLine-lineExtensionAmount" placeholder="" value="0.00" readonly="true">
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-3"  <% if(docFormType=='despatch'){%>style="display:none;"<%}%>>
                                 <label for="" class="m-0">Kdv Dahil Tutar</label>
                                 <input type="text" class="form-control text-right" id="docLine-taxInclusiveAmount" placeholder="" value="0.00" readonly="true">
                             </div>
                         </div>
-                        <div id="kdvPanel" class="collapse show">
+                        <div id="kdvPanel" class="collapse show"  <% if(docFormType=='despatch'){%>style="display:none;"<%}%>>
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="" class="m-0">Kdv Oran</label>
@@ -91,7 +91,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="tevkifatPanel" class="collapse">
+                        <div id="tevkifatPanel" class="collapse"  <% if(docFormType=='despatch'){%>style="display:none;"<%}%>>
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="" class="m-0">Tevkifat Oran</label>
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                         
-                        <div id="iskontoPanel" class="collapse">
+                        <div id="iskontoPanel" class="collapse"  <% if(docFormType=='despatch'){%>style="display:none;"<%}%>>
                             <div class="row">
                                 <div class="col-3 text-center">İskonto Oranı %</div>
                                 <div class="col-3 text-center">İskonto Tutarı</div>
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="artirimPanel" class="collapse">
+                        <div id="artirimPanel" class="collapse"  <% if(docFormType=='despatch'){%>style="display:none;"<%}%>>
                             <div class="row">
                                 <div class="col-3 text-center">Artırım Oranı %</div>
                                 <div class="col-3 text-center">Artırım Tutarı</div>
@@ -152,28 +152,28 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Satıcı Mal/Hizmet Kodu</label>
-                                <input type="text" class="form-control" id="docLine-item-sellersItemIdentification" placeholder="" value="">
+                                <input type="text" class="form-control" id="docLine-item-sellersItemIdentification" autocomplete="off" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Alıcı Mal/Hizmet Kodu</label>
-                                <input type="text" class="form-control" id="docLine-item-buyersItemIdentification" placeholder="" value="">
+                                <input type="text" class="form-control" id="docLine-item-buyersItemIdentification" autocomplete="off" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Üretici Kodu(Barkod)</label>
-                                <input type="text" class="form-control" id="docLine-item-manufacturersItemIdentification" placeholder="" value="">
+                                <input type="text" class="form-control" id="docLine-item-manufacturersItemIdentification" autocomplete="off" placeholder="" value="">
                             </div>
                             <div class="w-100"></div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Marka</label>
-                                <input type="text" class="form-control" id="docLine-item-brandName" placeholder="" value="">
+                                <input type="text" class="form-control" id="docLine-item-brandName" autocomplete="off" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Model</label>
-                                <input type="text" class="form-control" id="docLine-item-modelName" placeholder="" value="">
+                                <input type="text" class="form-control" id="docLine-item-modelName" autocomplete="off" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Açıklama</label>
-                                <input type="text" class="form-control" id="docLine-item-description" placeholder="" value="">
+                                <input type="text" class="form-control" id="docLine-item-description" autocomplete="off" placeholder="" value="">
                             </div>
                             <div class="w-100"></div>
                             <div class="form-group col-md-4">
@@ -187,11 +187,11 @@
                             
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">GTIPNO</label>
-                                <input type="text" class="form-control" id="docLine-GTIPNO" placeholder="" value="">
+                                <input type="text" class="form-control" id="docLine-GTIPNO" autocomplete="off" placeholder="" value="">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="" class="m-0">Sınıflandırma Kodu</label>
-                                <input type="text" class="form-control" id="docLine-item-itemClassificationCode" placeholder="" value="">
+                                <input type="text" class="form-control" id="docLine-item-itemClassificationCode" autocomplete="off" placeholder="" value="">
                             </div>
                             <div class="w-100"></div>
                            
@@ -214,13 +214,13 @@
                             <div class="w-100"></div>
                             <div class="form-group col-12">
                                 <label for="" class="m-0">Anahtar Kelimeler(keywords)</label>
-                                <input type="text" class="form-control" id="docLine-item-keyword" placeholder="" value="">
+                                <input type="text" class="form-control" id="docLine-item-keyword" autocomplete="off" placeholder="" value="">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-12">
                                 <label for="" class="m-0">Satır notları</label>
-                                <textarea class="form-control" id="docLine-notes" rows="3"></textarea>
+                                <textarea class="form-control" id="docLine-notes" autocomplete="off" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
@@ -239,8 +239,8 @@
                             </thead>
                             <tbody id="docLinePackageGridBody">
                                 <tr>
-                                    <td><input type="text" class="form-control" id="docLinePackageGrid-ID" value="1" readonly="true"></td>
-                                    <td><input type="text" class="form-control text-right" id="docLinePackageGrid-Quantity" value=""></td>
+                                    <td><input type="text" class="form-control" id="docLinePackageGrid-ID" autocomplete="off" value="1" readonly="true"></td>
+                                    <td><input type="text" class="form-control text-right" id="docLinePackageGrid-Quantity" autocomplete="off" value=""></td>
                                     <td>
                                         <select id="docLinePackageGrid-packagingTypeCode" class="form-control">
                                             <% staticValues.packagingTypeCodeList.forEach((e)=>{ %>

@@ -18,7 +18,7 @@
 	<script type="text/javascript" src="/js/jquery.v3.4.1.min.js"></script>
 	
 	<link type="text/css" rel="stylesheet" href="/css/bootstrap-datepicker3.min.css" />
-	<link type="text/css" rel="stylesheet" href="/css/bootstrap-select.min.css" />
+
 	<link type="text/css" rel="stylesheet" href="/css/jquery-ui.min.css" />
 	<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
 	
@@ -257,23 +257,16 @@
 </div>
 
 <script type="text/javascript" src="/js/bootstrap.bundle.v4.3.1.min.js"></script>
-<!-- <script type="text/javascript" src="/js/jquery.easing.v1.4.1.min.js"></script> -->
 
 
-<script type="text/javascript" src="/js/bootstrap-select.min.js"></script>
 
 <script type="text/javascript" src="/js/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript" src="/js/bootstrap-timepicker.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap-datepicker-locales/bootstrap-datepicker.tr.min.js"></script>
-<script type="text/javascript" src="/datatables/datatables.min.js"></script>
 <script type="text/javascript" src="<%- assetFile('/js/ui/portal.js') %>"></script>
 
 <script type="text/javascript">
-	//$(document).ready(function(){
 	var dbLabel=document.getElementById('dbLabel');
-	// if(dbLabel && localStorage.getItem('activeDbName')){
-	// 	dbLabel.innerHTML=localStorage.getItem('activeDbName');
-	// }
+	
 	loadDatabases();
 
 	function loadDatabases(){

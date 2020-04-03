@@ -28,8 +28,8 @@ global.ttext = require('./lib/language.js');
 
 global.api = require('./providers/api/api.js');
 
-global.eInvoiceHelper=require('./lib/einvoice_helper.js');
-global.orderHelper=require('./lib/order_helper.js');
+global.docFormHelper=require('./lib/doc_form_helper.js');
+
 
 // global.dbType=require(path_module.join(rootDir,'_assets','js','dbtypes.js'));
 global.dbType=require('./_assets/js/dbtypes.js').types;

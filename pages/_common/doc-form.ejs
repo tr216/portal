@@ -3,12 +3,15 @@
 
     switch(docFormType){
         case 'order':
+            title=ioType==0?'Satış Şipariş':'Alım Sipariş';
             form.party=ioType==0?form.buyerCustomerParty.party:form.sellerSupplierParty.party;
         break;
         case 'invoice':
+            title=ioType==0?'Giden Fatura':'Gelen Fatura';
             form.party=ioType==0?form.accountingCustomerParty.party:form.accountingSupplierParty.party;
         break;
         case 'despatch':
+            title=ioType==0?'Giden İrsaliye':'Gelen İrsaliye';
             form.party=ioType==0?form.deliveryCustomerParty.party:form.despatchSupplierParty.party;
         break;
     }
@@ -52,7 +55,7 @@
         doc=clone(dbType.invoiceType);
         <% break;
         case 'despatch': %>
-        doc=clone(dbType.despatchType);
+        doc=clone(dbType.despatchAdviceType);
         <% break;
     } %>
     doc.ioType=<%=ioType%>;
@@ -175,6 +178,7 @@
                             <label for="" class="m-0">ETTN(uuid)</label>
                             <input type="text" class="form-control" name="uuid[value]" placeholder="ETTN(uuid)" autocomplete="off"  value="<%=form.uuid.value%>" readonly="true">
                         </div>
+                        <% if(docFormType!='despatch'){ %>
                         <div class="form-group col-md-2">
                             <label for="" class="m-0">Para Birimi</label>
                             <select name="documentCurrencyCode[value]" class="form-control">
@@ -201,7 +205,8 @@
 
                             </div>
                         </div>
-                        <div class="form-group col-md-2 offset-md-3">
+                         <% } %>
+                        <div class="form-group col-md-3">
                             <label for="" class="m-0">Yerel <%=title%> No</label>
                             <input type="text" class="form-control" name="localDocumentId" placeholder="localDocumentId" autocomplete="on"  value="<%=form.localDocumentId%>">
                         </div>
@@ -408,18 +413,7 @@
             // startDate: -4,
             // endDate: +8,
         });
-        $('#issueTime1').timepicker({
-            format: 'HH:mm:ss',
-            language: "tr",
-            orientation: "bottom auto",
-            // todayBtn: "linked",
-            autoclose: true,
-            //todayHighlight: true,
-            clearBtn: true
-
-            // startDate: -4,
-            // endDate: +8,
-        });
+        
 
         $('#selectAll').change(function(e){
             $('.checkSingle').not(this).prop('checked', this.checked);

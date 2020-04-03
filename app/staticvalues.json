@@ -97,6 +97,10 @@
 		{"text":"İhraç Kayıtlı","value": "IHRACKAYITLI"}
 		
 	],
+	"orderTypeCodeList":[
+		{"text":"Satış","value": "SATIS"}
+		
+	],
 	"orderStatusTypes":[
 		{"text":"Taslak","value": "Draft"},
 		{"text":"Bekliyor","value": "Pending"},
@@ -113,10 +117,29 @@
 		{"text":"Temel","value": "TEMELSIPARIS"}
 		
 	],
-	"orderTypeCodeList":[
-		{"text":"Satış","value": "SATIS"}
+
+	"despatchAdviceTypeCodeList":[
+		{"text":"Sevk","value": "SEVK"},
+		{"text":"Matbudan","value": "MATBUDAN"}
 		
 	],
+	"despatchStatusTypes":[
+		{"text":"Taslak","value": "Draft"},
+		{"text":"Bekliyor","value": "Pending"},
+		{"text":"Kuyrukta","value": "Queued"},
+		{"text":"İşleniyor","value": "Processing"},
+		{"text":"Gönderildi","value": "SentToGib"},
+		{"text":"Onaylandı","value": "Approved"},
+		{"text":"Reddedildi","value": "Declined"},
+		{"text":"Onay bekliyor","value": "WaitingForAprovement"},
+		{"text":"Hata","value": "Error"}
+		
+	],
+	"despatchProfileIdList":[
+		{"text":"Temel","value": "TEMELIRSALIYE"}
+		
+	],
+	
 	"productionTypeCodeList":[
 		{"text":"Müşteri","value": "MUSTERI"},
 		{"text":"Depo","value": "DEPO"}
@@ -944,6 +967,17 @@
 			{"text":"Hizmet alım","value":"purchasing-service"},
 			{"text":"Demirbaş","value":"asset"},
 			{"text":"Masraf/gider","value":"expense"}
+		],
+		"bloodGroups":[
+			{"text":"Belirtilmemiş","value":"none"},
+			{"text":"0+","value":"0+"},
+			{"text":"0-","value":"0-"},
+			{"text":"A+","value":"A+"},
+			{"text":"A-","value":"A-"},
+			{"text":"B+","value":"B+"},
+			{"text":"B-","value":"B-"},
+			{"text":"AB+","value":"AB+"},
+			{"text":"AB-","value":"AB-"}
 		]
 }
 

@@ -72,7 +72,7 @@ function getList(req,res,data,callback){
 			if(!err){
 				var docs=[];
 				resp.data.docs.forEach((e)=>{
-					docs.push(orderHelper.makeSimpleOrderList(e));
+					docs.push(docFormHelper.makeSimpleOrderList(e));
 				});
 				resp.data.docs=docs;
 				data=mrutil.setGridData(data,resp);

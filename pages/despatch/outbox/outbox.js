@@ -1,11 +1,11 @@
 module.exports = function(req,res,callback){
 	var data={
 		eIntegratorList:[],
-		docStatusTypes:Array.from(staticValues.orderStatusTypes),
+		docStatusTypes:Array.from(staticValues.despatchStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
-		docProfileIdList:Array.from(staticValues.orderProfileIdList),
-		docTypeCodeList:Array.from(staticValues.orderTypeCodeList),
-		form:Object.assign({},dbType.orderType),
+		docProfileIdList:Array.from(staticValues.despatchProfileIdList),
+		docTypeCodeList:Array.from(staticValues.despatchAdviceTypeCodeList),
+		form:Object.assign({},dbType.despatchAdviceType),
 		html:'Goruntulenemedi',
 		list:[],
 		filter:{}
@@ -33,6 +33,7 @@ module.exports = function(req,res,callback){
 			showErrors(req,res,data,callback);
 		break;
 		default:
+			data.filter=getFilter(data.filter,req);
 			getList(req,res,data,callback);
 		break;
 	}
@@ -46,7 +47,7 @@ function showErrors(req,res,data,callback){
 		callback(null,data);
 		return;
 	}
-	api.get('/' + req.query.db + '/order/errors/' + _id,req,null,(err,resp)=>{
+	api.get('/' + req.query.db + '/despatch/errors/' + _id,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);
@@ -66,35 +67,18 @@ function getList(req,res,data,callback){
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
-		if(req.method=='POST'){
-			var filter={};
-			filter=Object.assign(filter,req.query);
-			filter=Object.assign(filter,req.body);
-			filter['btnFilter']=undefined;
-			delete filter['btnFilter'];
-			filter['page']=1;
-			res.redirect('/order/outbox?' + mrutil.encodeUrl(filter));
-		}else{
-			data.filter=Object.assign(data.filter,req.query);
-			data.filter.db=undefined;
-			delete data.filter.db;
-			data.filter.sid=undefined;
-			delete data.filter.sid;
-			
-			api.get('/' + req.query.db + '/order/outboxOrderList',req,data.filter,(err,resp)=>{
-				if(!err){
-					var docs=[];
-					resp.data.docs.forEach((e)=>{
-						docs.push(orderHelper.makeSimpleOrderList(e));
-						
-					});
-					resp.data.docs=docs;
-					data=mrutil.setGridData(data,resp);
-				}
-				callback(null,data);
-			});
-			
-		}
+		api.get('/' + req.query.db + '/despatch/outboxDespatchList',req,data.filter,(err,resp)=>{
+			if(!err){
+				var docs=[];
+				resp.data.docs.forEach((e)=>{
+					docs.push(docFormHelper.makeSimpleDespatchList(e));
+					
+				});
+				resp.data.docs=docs;
+				data=mrutil.setGridData(data,resp);
+			}
+			callback(null,data);
+		});
 	})
 }
 
@@ -116,9 +100,9 @@ function addnew(req,res,data,callback){
 			data.form=Object.assign(data.form,req.body);
 			data.form['buyerCustomerParty']={party:(data.form.party || {})}
 			data.form.ioType=0;
-			api.post('/' + req.query.db + '/order/order',req,data.form,(err,resp)=>{
+			api.post('/' + req.query.db + '/despatch/despatch',req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/order/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/despatch/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
 				}else{
 					data['message']=err.message;
@@ -136,7 +120,7 @@ function addnew(req,res,data,callback){
 
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.getFile('/' + req.query.db + '/order/orderView/' + _id,req,null,(err,resp)=>{
+	api.getFile('/' + req.query.db + '/despatch/despatchView/' + _id,req,null,(err,resp)=>{
 		if(!err){
 			data['html']=resp;
 			callback(null,data);
@@ -148,7 +132,7 @@ function view(req,res,data,callback){
 }
 function pdf(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.downloadFile('/' + req.query.db + '/order/orderPdf/' + _id,req,res,null,(err,resp)=>{
+	api.downloadFile('/' + req.query.db + '/despatch/despatchPdf/' + _id,req,res,null,(err,resp)=>{
 		return;
 	});
 }
@@ -166,9 +150,9 @@ function edit(req,res,data,callback){
 			
 			data.form['buyerCustomerParty']={party:(data.form.party || {})}
 			data.form.ioType=0;
-			api.put('/' + req.query.db + '/order/order/' + _id,req,data.form,(err,resp)=>{
+			api.put('/' + req.query.db + '/despatch/despatch/' + _id,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/order/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/despatch/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
 				}else{
 					data['message']=err.message;
@@ -176,7 +160,7 @@ function edit(req,res,data,callback){
 				}
 			});
 		}else{
-			api.get('/' + req.query.db + '/order/order/' + _id,req,null,(err,resp)=>{
+			api.get('/' + req.query.db + '/despatch/despatch/' + _id,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					callback(null,data);
@@ -191,9 +175,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/order/order/' + _id,req,(err,resp)=>{
+	api.delete('/' + req.query.db + '/despatch/despatch/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/order/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/despatch/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
 		}else{
 			data['message']=err.message;
 			callback(null,data);

@@ -50,36 +50,101 @@ function editLine(index){
 			$('#docLine-quantity-unitCode').val(line.deliveredQuantity.attr.unitCode);
 		break;
 	}
-
 	
-
-	$('#docLine-price-priceAmount').val(line.price.priceAmount.value);
-
-	if(line.taxTotal)
-		if(line.taxTotal.taxSubtotal)
-			if(line.taxTotal.taxSubtotal.length>0){
-				$('#docLine-taxExemptionReasonCode').val(line.taxTotal.taxSubtotal[0].taxCategory.taxExemptionReasonCode.value);
-				
-				$('#docLine-KDV-percent').val(line.taxTotal.taxSubtotal[0].percent.value);
-				$('#docLine-KDV-amount').val(line.taxTotal.taxSubtotal[0].taxAmount.value);
-			}
-	if(line.withholdingTaxTotal)
-		if(line.withholdingTaxTotal.length>0)
-			if(line.withholdingTaxTotal[0].taxSubtotal.length>0){
-				$('#docLine-Tevkifat-percent').val(line.withholdingTaxTotal[0].taxSubtotal[0].percent.value);
-				$('#docLine-Tevkifat-amount').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value);
-				$('#docLine-tevkifat-taxTypeCode').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value);
-				if(line.withholdingTaxTotal[0].taxSubtotal[0].percent.value>0 || line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value>0){
-					$('#cbTevkifatPanel').prop('checked',true);
-					//$('#cbTevkifatPanel').prop('checked',true);
-					$('#tevkifatPanel').show();
+	if(docFormType!='despatch'){
+		$('#docLine-price-priceAmount').val(line.price.priceAmount.value);
+		if(line.taxTotal)
+			if(line.taxTotal.taxSubtotal)
+				if(line.taxTotal.taxSubtotal.length>0){
+					$('#docLine-taxExemptionReasonCode').val(line.taxTotal.taxSubtotal[0].taxCategory.taxExemptionReasonCode.value);
 					
+					$('#docLine-KDV-percent').val(line.taxTotal.taxSubtotal[0].percent.value);
+					$('#docLine-KDV-amount').val(line.taxTotal.taxSubtotal[0].taxAmount.value);
+				}
+		if(line.withholdingTaxTotal)
+			if(line.withholdingTaxTotal.length>0)
+				if(line.withholdingTaxTotal[0].taxSubtotal.length>0){
+					$('#docLine-Tevkifat-percent').val(line.withholdingTaxTotal[0].taxSubtotal[0].percent.value);
+					$('#docLine-Tevkifat-amount').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value);
+					$('#docLine-tevkifat-taxTypeCode').val(line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value);
+					if(line.withholdingTaxTotal[0].taxSubtotal[0].percent.value>0 || line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value>0){
+						$('#cbTevkifatPanel').prop('checked',true);
+						//$('#cbTevkifatPanel').prop('checked',true);
+						$('#tevkifatPanel').show();
+						
+					}
+				}
+
+
+
+		$('#docLine-lineExtensionAmount').val(line.lineExtensionAmount.value);
+		var iskontolar=[];
+		var artirimlar=[];
+
+		if(line.allowanceCharge)
+			if(line.allowanceCharge.length>0){
+				line.allowanceCharge.forEach((e)=>{
+					var obj={oran:(e.multiplierFactorNumeric.value<1?e.multiplierFactorNumeric.value*100:e.multiplierFactorNumeric.value),tutar:e.amount.value,aciklama:(e.allowanceChargeReason.value || '')}
+					if(!e.chargeIndicator.value) iskontolar.push(obj); else artirimlar.push(obj);
+				});
+			}
+		if(iskontolar.length>0){
+			iskontolar.forEach((e,index)=>{
+				if(index==0){
+					var iskontoRow0=document.getElementById('iskontoRow0');
+					iskontoRow0.getElementsByClassName('satirIskontoOran')[0].value=e.oran;
+					iskontoRow0.getElementsByClassName('satirIskontoTutar')[0].value=e.tutar;
+					iskontoRow0.getElementsByClassName('satirIskontoAciklama')[0].value=e.aciklama;
+				}else{
+					addIskontoRow(e);
+				}
+			});
+			$('#cbIskontoPanel').prop('checked',true);
+			$('#iskontoPanel').show();
+
+		}
+
+		if(artirimlar.length>0){
+			artirimlar.forEach((e,index)=>{
+				if(index==0){
+					var artirimRow0=document.getElementById('artirimRow0');
+					artirimRow0.getElementsByClassName('satirArtirimOran')[0].value=e.oran;
+					artirimRow0.getElementsByClassName('satirArtirimTutar')[0].value=e.tutar;
+					artirimRow0.getElementsByClassName('satirArtirimAciklama')[0].value=e.aciklama;
+				}else{
+					addArtirimRow(e);
+				}
+			});
+			$('#cbArtirimPanel').prop('checked',true);
+			$('#artirimPanel').show();
+			
+		}
+		if(line.delivery){
+			if(line.delivery.length>0){
+				if(line.delivery[0].deliveryTerms)
+					if(line.delivery[0].deliveryTerms.length>0)
+						$('#docLine-deliveryTerms').val(line.delivery[0].deliveryTerms[0].ID.value);
+				if(line.delivery[0].shipment){
+					if(line.delivery[0].shipment.goodsItem)
+						if(line.delivery[0].shipment.goodsItem.length>0)
+							$('#docLine-GTIPNO').val(line.delivery[0].shipment.goodsItem[0].requiredCustomsId.value);
+					if(line.delivery[0].shipment.shipmentStage)
+						if(line.delivery[0].shipment.shipmentStage.length>0)
+							$('#docLine-transportModeCode').val(line.delivery[0].shipment.shipmentStage[0].transportModeCode.value);
+					if(line.delivery[0].shipment.transportHandlingUnit)
+						if(line.delivery[0].shipment.transportHandlingUnit.length>0)
+							if(line.delivery[0].shipment.transportHandlingUnit[0].actualPackage.length>0){
+								line.delivery[0].shipment.transportHandlingUnit[0].actualPackage.forEach((e)=>{
+									docLinePackageGrid_AddRow({quantity:e.quantity.value, packagingTypeCode:e.packagingTypeCode.value});
+								})
+						}
 				}
 			}
+		}
+	}
+	
 
-
-
-	$('#docLine-lineExtensionAmount').val(line.lineExtensionAmount.value);
+	
 	$('#docLine-item-sellersItemIdentification').val(line.item.sellersItemIdentification.ID.value);
 	$('#docLine-item-buyersItemIdentification').val(line.item.buyersItemIdentification.ID.value);
 	$('#docLine-item-manufacturersItemIdentification').val(line.item.manufacturersItemIdentification.ID.value);
@@ -108,71 +173,10 @@ function editLine(index){
 		}
 	
 
-	var iskontolar=[];
-	var artirimlar=[];
-
-	if(line.allowanceCharge)
-		if(line.allowanceCharge.length>0){
-			line.allowanceCharge.forEach((e)=>{
-				var obj={oran:(e.multiplierFactorNumeric.value<1?e.multiplierFactorNumeric.value*100:e.multiplierFactorNumeric.value),tutar:e.amount.value,aciklama:(e.allowanceChargeReason.value || '')}
-				if(!e.chargeIndicator.value) iskontolar.push(obj); else artirimlar.push(obj);
-			});
-		}
-	if(iskontolar.length>0){
-		iskontolar.forEach((e,index)=>{
-			if(index==0){
-				var iskontoRow0=document.getElementById('iskontoRow0');
-				iskontoRow0.getElementsByClassName('satirIskontoOran')[0].value=e.oran;
-				iskontoRow0.getElementsByClassName('satirIskontoTutar')[0].value=e.tutar;
-				iskontoRow0.getElementsByClassName('satirIskontoAciklama')[0].value=e.aciklama;
-			}else{
-				addIskontoRow(e);
-			}
-		});
-		$('#cbIskontoPanel').prop('checked',true);
-		$('#iskontoPanel').show();
-
-	}
-
-	if(artirimlar.length>0){
-		artirimlar.forEach((e,index)=>{
-			if(index==0){
-				var artirimRow0=document.getElementById('artirimRow0');
-				artirimRow0.getElementsByClassName('satirArtirimOran')[0].value=e.oran;
-				artirimRow0.getElementsByClassName('satirArtirimTutar')[0].value=e.tutar;
-				artirimRow0.getElementsByClassName('satirArtirimAciklama')[0].value=e.aciklama;
-			}else{
-				addArtirimRow(e);
-			}
-		});
-		$('#cbArtirimPanel').prop('checked',true);
-		$('#artirimPanel').show();
-		
-	}
+	
 
 	
-	if(line.delivery){
-		if(line.delivery.length>0){
-			if(line.delivery[0].deliveryTerms)
-				if(line.delivery[0].deliveryTerms.length>0)
-					$('#docLine-deliveryTerms').val(line.delivery[0].deliveryTerms[0].ID.value);
-			if(line.delivery[0].shipment){
-				if(line.delivery[0].shipment.goodsItem)
-					if(line.delivery[0].shipment.goodsItem.length>0)
-						$('#docLine-GTIPNO').val(line.delivery[0].shipment.goodsItem[0].requiredCustomsId.value);
-				if(line.delivery[0].shipment.shipmentStage)
-					if(line.delivery[0].shipment.shipmentStage.length>0)
-						$('#docLine-transportModeCode').val(line.delivery[0].shipment.shipmentStage[0].transportModeCode.value);
-				if(line.delivery[0].shipment.transportHandlingUnit)
-					if(line.delivery[0].shipment.transportHandlingUnit.length>0)
-						if(line.delivery[0].shipment.transportHandlingUnit[0].actualPackage.length>0){
-							line.delivery[0].shipment.transportHandlingUnit[0].actualPackage.forEach((e)=>{
-								docLinePackageGrid_AddRow({quantity:e.quantity.value, packagingTypeCode:e.packagingTypeCode.value});
-							})
-					}
-			}
-		}
-	}
+	
 	if((line.item._id || '')!=''){
 		$('#cbNewItemPanel').hide();
 	}else{
@@ -212,45 +216,174 @@ function saveDocLine(index){
 	}
 	
 	line.item.name.value=$('#docLine-item-name').val();
-	line.price.priceAmount.value=$('#docLine-price-priceAmount').val();
 
-	line.lineExtensionAmount.value=quantity * line.price.priceAmount.value;
-	
-	
-	line.taxTotal=clone(dbType.taxTotalType);
-	
-	if(Number($('#docLine-KDV-amount').val())>0 || ($('#docLine-taxExemptionReasonCode').val() || '')!=''){
+	if(docFormType!='despatch'){
+		line.price.priceAmount.value=$('#docLine-price-priceAmount').val();
+		line.lineExtensionAmount.value=quantity * line.price.priceAmount.value;
+		line.taxTotal=clone(dbType.taxTotalType);
+		if(Number($('#docLine-KDV-amount').val())>0 || ($('#docLine-taxExemptionReasonCode').val() || '')!=''){
+			line.taxTotal['taxAmount']={value:Number($('#docLine-KDV-amount').val())};
+			line.taxTotal.taxSubtotal[0].percent.value=Number($('#docLine-KDV-percent').val());
+			line.taxTotal.taxSubtotal[0].taxAmount.value=Number($('#docLine-KDV-amount').val());
+			line.taxTotal.taxSubtotal[0].taxableAmount.value=line.lineExtensionAmount.value;
+			line.taxTotal.taxSubtotal[0].calculationSequenceNumeric.value=1;
+			line.taxTotal.taxSubtotal[0].taxCategory.taxExemptionReasonCode.value=($('#docLine-taxExemptionReasonCode').val() || '');
+			line.taxTotal.taxSubtotal[0].taxCategory.taxExemptionReason.value=($('#docLine-taxExemptionReasonCode option:selected').text() || '');
+			line.taxTotal.taxSubtotal[0].taxCategory.name.value='KDV';
+			line.taxTotal.taxSubtotal[0].taxCategory.taxScheme.name.value='Katma Değer Vergisi';
+			line.taxTotal.taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value='9015';
 
-		line.taxTotal['taxAmount']={value:Number($('#docLine-KDV-amount').val())};
+		}
 		
-		line.taxTotal.taxSubtotal[0].percent.value=Number($('#docLine-KDV-percent').val());
-		line.taxTotal.taxSubtotal[0].taxAmount.value=Number($('#docLine-KDV-amount').val());
-		line.taxTotal.taxSubtotal[0].taxableAmount.value=line.lineExtensionAmount.value;
-		line.taxTotal.taxSubtotal[0].calculationSequenceNumeric.value=1;
-		line.taxTotal.taxSubtotal[0].taxCategory.taxExemptionReasonCode.value=($('#docLine-taxExemptionReasonCode').val() || '');
-		line.taxTotal.taxSubtotal[0].taxCategory.taxExemptionReason.value=($('#docLine-taxExemptionReasonCode option:selected').text() || '');
-		line.taxTotal.taxSubtotal[0].taxCategory.name.value='KDV';
-		line.taxTotal.taxSubtotal[0].taxCategory.taxScheme.name.value='Katma Değer Vergisi';
-		line.taxTotal.taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value='9015';
+		line.withholdingTaxTotal=[];
+		if(Number($('#docLine-Tevkifat-percent').val())>0 || Number($('#docLine-Tevkifat-amount').val())>0 || ($('#docLine-tevkifat-taxTypeCode').val() || '')!=''){
+			line.withholdingTaxTotal=[clone(dbType.taxTotalType)];
 
+			line.withholdingTaxTotal[0].taxAmount.value=Number($('#docLine-Tevkifat-amount').val());
+			line.withholdingTaxTotal[0].taxSubtotal[0].percent.value=Number($('#docLine-Tevkifat-percent').val());
+			line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value=Number($('#docLine-Tevkifat-amount').val());
+			line.withholdingTaxTotal[0].taxSubtotal[0].taxableAmount.value=line.lineExtensionAmount.value;
+			line.withholdingTaxTotal[0].taxSubtotal[0].calculationSequenceNumeric.value=1;
+			line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxExemptionReasonCode.value='';
+			line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxExemptionReason.value='';
+			line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.name.value='TEVKIFAT';
+			line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.name.value='Tevkif edilen Kdv';
+			line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value=($('#docLine-tevkifat-taxTypeCode').val() || '');
+
+		}
+		var iskontolar=[];
+		var orjinal=document.getElementById('iskontoRows');
+		var iskontoRows=orjinal.cloneNode(true);
+		for(var i=0;i<iskontoRows.getElementsByClassName('row').length;i++){
+			var row=iskontoRows.getElementsByClassName('row')[i];
+			var iskonto={oran:0,tutar:0,aciklama:''};
+			iskonto.oran=Number(row.getElementsByClassName('satirIskontoOran')[0].value);
+			iskonto.tutar=Number(row.getElementsByClassName('satirIskontoTutar')[0].value);
+			iskonto.aciklama=row.getElementsByClassName('satirIskontoAciklama')[0].value;
+			if(iskonto.tutar>0){
+				iskontolar.push(iskonto);
+			}
+		   
+			if(i>0) 
+				document.getElementById(row.id).remove();
+			else {
+				document.getElementById(row.id).getElementsByClassName('satirIskontoOran')[0].value='';
+				document.getElementById(row.id).getElementsByClassName('satirIskontoTutar')[0].value='';
+				document.getElementById(row.id).getElementsByClassName('satirIskontoAciklama')[0].value='';
+			}
+
+		}
+		
+		var artirimlar=[];
+		var orjinal2=document.getElementById('artirimRows');
+		var artirimRows=orjinal2.cloneNode(true);
+		for(var i=0;i<artirimRows.getElementsByClassName('row').length;i++){
+			var row=artirimRows.getElementsByClassName('row')[i];
+			var artirim={oran:0,tutar:0,aciklama:''};
+			artirim.oran=Number(row.getElementsByClassName('satirArtirimOran')[0].value);
+			artirim.tutar=Number(row.getElementsByClassName('satirArtirimTutar')[0].value);
+			artirim.aciklama=row.getElementsByClassName('satirArtirimAciklama')[0].value;
+			if(artirim.tutar>0){
+				artirimlar.push(artirim);
+			}
+		   
+			if(i>0) 
+				document.getElementById(row.id).remove();
+			else {
+				document.getElementById(row.id).getElementsByClassName('satirArtirimOran')[0].value='';
+				document.getElementById(row.id).getElementsByClassName('satirArtirimTutar')[0].value='';
+				document.getElementById(row.id).getElementsByClassName('satirArtirimAciklama')[0].value='';
+			}
+		}
+
+		line.allowanceCharge=[];
+
+		var sequence=0;
+
+		iskontolar.forEach((e)=>{
+			if(e.oran>0 || e.tutar>0){
+				var obj=clone(dbType.allowanceChargeType);
+				sequence++;
+				obj.sequenceNumeric.value=sequence;
+				obj.chargeIndicator.value=false;
+				obj.amount.value=e.tutar;
+				obj.multiplierFactorNumeric.value=e.oran/100;
+				obj.baseAmount.value=line.lineExtensionAmount.value;
+				obj.allowanceChargeReason.value=e.aciklama;
+				line.allowanceCharge.push(obj)
+			}
+			
+		});
+		sequence=0;
+		artirimlar.forEach((e)=>{
+			if(e.oran>0 || e.tutar>0){
+				var obj=clone(dbType.allowanceChargeType);
+				sequence++;
+				obj.sequenceNumeric.value=sequence;
+				obj.chargeIndicator.value=true;
+				obj.amount.value=e.tutar;
+				obj.multiplierFactorNumeric.value=e.oran/100;
+				obj.baseAmount.value=line.lineExtensionAmount.value;
+				obj.allowanceChargeReason.value=e.aciklama;
+				line.allowanceCharge.push(obj)
+			}
+		});
+
+		// -- ihracat paketleri ---
+		var ihracatPaketleri=[];
+		var table1=document.getElementById('docLinePackageGridBody');
+		if(table1.rows){
+			if(table1.rows.length>0){
+				for(var i=0;i<table1.rows.length-1;i++){
+					if(!isNaN(table1.rows[i].cells[1].innerHTML) && table1.rows[i].cells[2].innerHTML!=''){
+						if(Number(table1.rows[i].cells[1].innerHTML)>0){
+							var obj={
+								quantity:Number(table1.rows[i].cells[1].innerHTML),
+								packagingTypeCode:table1.rows[i].cells[2].innerHTML
+							}
+							ihracatPaketleri.push(obj);
+						}
+					}
+				}
+				if(!isNaN((document.getElementById('docLinePackageGrid-Quantity').value)) && document.getElementById('docLinePackageGrid-packagingTypeCode').value!=''){
+					if(Number(document.getElementById('docLinePackageGrid-Quantity').value)>0){
+						var obj={
+							quantity:Number(document.getElementById('docLinePackageGrid-Quantity').value),
+							packagingTypeCode:document.getElementById('docLinePackageGrid-packagingTypeCode').value
+						}
+						ihracatPaketleri.push(obj);
+					}
+				}
+			}
+		}
+		line.delivery=[]
+
+		if(ihracatPaketleri.length>0 || $('#docLine-deliveryTerms').val().trim()!='' || $('#docLine-GTIPNO').val().trim()!='' || $('#docLine-transportModeCode').val().trim()!=''){
+			line.delivery=[clone(dbType.deliveryType)];
+			line.delivery[0].deliveryTerms=[{ID:{ value:$('#docLine-deliveryTerms').val().trim()}}];
+
+			line.delivery[0].shipment.goodsItem=[{requiredCustomsId:{value:$('#docLine-GTIPNO').val().trim()}}];
+			line.delivery[0].shipment.shipmentStage=[{transportModeCode:{value:$('#docLine-transportModeCode').val().trim()}}];
+			if(ihracatPaketleri.length>0){
+				line.delivery[0].shipment.totalTransportHandlingUnitQuantity.value=0;
+				line.delivery[0].shipment.transportHandlingUnit=[{actualPackage:[]}]
+				ihracatPaketleri.forEach((e,index)=>{
+					var actualPackage={
+						ID:{value:(index+1)},
+						quantity:{value:e.quantity},
+						packagingTypeCode:{value:e.packagingTypeCode}
+					}
+					line.delivery[0].shipment.transportHandlingUnit[0].actualPackage.push(actualPackage);
+					line.delivery[0].shipment.totalTransportHandlingUnitQuantity.value+=actualPackage.quantity.value;
+				});
+			}
+			
+		}
+
+
+		// end of ihracat paketleri ---
 	}
 	
-	line.withholdingTaxTotal=[];
-	if(Number($('#docLine-Tevkifat-percent').val())>0 || Number($('#docLine-Tevkifat-amount').val())>0 || ($('#docLine-tevkifat-taxTypeCode').val() || '')!=''){
-		line.withholdingTaxTotal=[clone(dbType.taxTotalType)];
-
-		line.withholdingTaxTotal[0].taxAmount.value=Number($('#docLine-Tevkifat-amount').val());
-		line.withholdingTaxTotal[0].taxSubtotal[0].percent.value=Number($('#docLine-Tevkifat-percent').val());
-		line.withholdingTaxTotal[0].taxSubtotal[0].taxAmount.value=Number($('#docLine-Tevkifat-amount').val());
-		line.withholdingTaxTotal[0].taxSubtotal[0].taxableAmount.value=line.lineExtensionAmount.value;
-		line.withholdingTaxTotal[0].taxSubtotal[0].calculationSequenceNumeric.value=1;
-		line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxExemptionReasonCode.value='';
-		line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxExemptionReason.value='';
-		line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.name.value='TEVKIFAT';
-		line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.name.value='Tevkif edilen Kdv';
-		line.withholdingTaxTotal[0].taxSubtotal[0].taxCategory.taxScheme.taxTypeCode.value=($('#docLine-tevkifat-taxTypeCode').val() || '');
-
-	}
 	line.item._id=$('#docLine-item-id').val();
 	line.item.itemType=$('#docLine-item-itemType').val();
 	line.item.sellersItemIdentification.ID.value=$('#docLine-item-sellersItemIdentification').val().trim();
@@ -279,136 +412,8 @@ function saveDocLine(index){
 	}
 	
 
-	var iskontolar=[];
-	var orjinal=document.getElementById('iskontoRows');
-	var iskontoRows=orjinal.cloneNode(true);
-	for(var i=0;i<iskontoRows.getElementsByClassName('row').length;i++){
-		var row=iskontoRows.getElementsByClassName('row')[i];
-		var iskonto={oran:0,tutar:0,aciklama:''};
-		iskonto.oran=Number(row.getElementsByClassName('satirIskontoOran')[0].value);
-		iskonto.tutar=Number(row.getElementsByClassName('satirIskontoTutar')[0].value);
-		iskonto.aciklama=row.getElementsByClassName('satirIskontoAciklama')[0].value;
-		if(iskonto.tutar>0){
-			iskontolar.push(iskonto);
-		}
-	   
-		if(i>0) 
-			document.getElementById(row.id).remove();
-		else {
-			document.getElementById(row.id).getElementsByClassName('satirIskontoOran')[0].value='';
-			document.getElementById(row.id).getElementsByClassName('satirIskontoTutar')[0].value='';
-			document.getElementById(row.id).getElementsByClassName('satirIskontoAciklama')[0].value='';
-		}
-
-	}
 	
-	var artirimlar=[];
-	var orjinal2=document.getElementById('artirimRows');
-	var artirimRows=orjinal2.cloneNode(true);
-	for(var i=0;i<artirimRows.getElementsByClassName('row').length;i++){
-		var row=artirimRows.getElementsByClassName('row')[i];
-		var artirim={oran:0,tutar:0,aciklama:''};
-		artirim.oran=Number(row.getElementsByClassName('satirArtirimOran')[0].value);
-		artirim.tutar=Number(row.getElementsByClassName('satirArtirimTutar')[0].value);
-		artirim.aciklama=row.getElementsByClassName('satirArtirimAciklama')[0].value;
-		if(artirim.tutar>0){
-			artirimlar.push(artirim);
-		}
-	   
-		if(i>0) 
-			document.getElementById(row.id).remove();
-		else {
-			document.getElementById(row.id).getElementsByClassName('satirArtirimOran')[0].value='';
-			document.getElementById(row.id).getElementsByClassName('satirArtirimTutar')[0].value='';
-			document.getElementById(row.id).getElementsByClassName('satirArtirimAciklama')[0].value='';
-		}
-	}
-
-	line.allowanceCharge=[];
-
-	var sequence=0;
-
-	iskontolar.forEach((e)=>{
-		if(e.oran>0 || e.tutar>0){
-			var obj=clone(dbType.allowanceChargeType);
-			sequence++;
-			obj.sequenceNumeric.value=sequence;
-			obj.chargeIndicator.value=false;
-			obj.amount.value=e.tutar;
-			obj.multiplierFactorNumeric.value=e.oran/100;
-			obj.baseAmount.value=line.lineExtensionAmount.value;
-			obj.allowanceChargeReason.value=e.aciklama;
-			line.allowanceCharge.push(obj)
-		}
-		
-	});
-	sequence=0;
-	artirimlar.forEach((e)=>{
-		if(e.oran>0 || e.tutar>0){
-			var obj=clone(dbType.allowanceChargeType);
-			sequence++;
-			obj.sequenceNumeric.value=sequence;
-			obj.chargeIndicator.value=true;
-			obj.amount.value=e.tutar;
-			obj.multiplierFactorNumeric.value=e.oran/100;
-			obj.baseAmount.value=line.lineExtensionAmount.value;
-			obj.allowanceChargeReason.value=e.aciklama;
-			line.allowanceCharge.push(obj)
-		}
-	});
-	// -- ihracat paketleri ---
-	var ihracatPaketleri=[];
-	var table1=document.getElementById('docLinePackageGridBody');
-	if(table1.rows){
-		if(table1.rows.length>0){
-			for(var i=0;i<table1.rows.length-1;i++){
-				if(!isNaN(table1.rows[i].cells[1].innerHTML) && table1.rows[i].cells[2].innerHTML!=''){
-					if(Number(table1.rows[i].cells[1].innerHTML)>0){
-						var obj={
-							quantity:Number(table1.rows[i].cells[1].innerHTML),
-							packagingTypeCode:table1.rows[i].cells[2].innerHTML
-						}
-						ihracatPaketleri.push(obj);
-					}
-				}
-			}
-			if(!isNaN((document.getElementById('docLinePackageGrid-Quantity').value)) && document.getElementById('docLinePackageGrid-packagingTypeCode').value!=''){
-				if(Number(document.getElementById('docLinePackageGrid-Quantity').value)>0){
-					var obj={
-						quantity:Number(document.getElementById('docLinePackageGrid-Quantity').value),
-						packagingTypeCode:document.getElementById('docLinePackageGrid-packagingTypeCode').value
-					}
-					ihracatPaketleri.push(obj);
-				}
-			}
-		}
-	}
-	line.delivery=[]
-
-	if(ihracatPaketleri.length>0 || $('#docLine-deliveryTerms').val().trim()!='' || $('#docLine-GTIPNO').val().trim()!='' || $('#docLine-transportModeCode').val().trim()!=''){
-		line.delivery=[clone(dbType.deliveryType)];
-		line.delivery[0].deliveryTerms=[{ID:{ value:$('#docLine-deliveryTerms').val().trim()}}];
-
-		line.delivery[0].shipment.goodsItem=[{requiredCustomsId:{value:$('#docLine-GTIPNO').val().trim()}}];
-		line.delivery[0].shipment.shipmentStage=[{transportModeCode:{value:$('#docLine-transportModeCode').val().trim()}}];
-		if(ihracatPaketleri.length>0){
-			line.delivery[0].shipment.totalTransportHandlingUnitQuantity.value=0;
-			line.delivery[0].shipment.transportHandlingUnit=[{actualPackage:[]}]
-			ihracatPaketleri.forEach((e,index)=>{
-				var actualPackage={
-					ID:{value:(index+1)},
-					quantity:{value:e.quantity},
-					packagingTypeCode:{value:e.packagingTypeCode}
-				}
-				line.delivery[0].shipment.transportHandlingUnit[0].actualPackage.push(actualPackage);
-				line.delivery[0].shipment.totalTransportHandlingUnitQuantity.value+=actualPackage.quantity.value;
-			});
-		}
-		
-	}
-
-
-	// end of ihracat paketleri ---
+	
 	switch(docFormType){
 		case 'order':
 			doc.orderLine[index]=line;
@@ -495,8 +500,11 @@ function saveDocument(callback){
     
     doc.uuid={ value:$("input[name='orderTypeCode[value]']").val()}
     doc.localDocumentId=$("input[name='localDocumentId']").val();
-    doc.documentCurrencyCode={ value:$("select[name='documentCurrencyCode[value]']").val()}
-    doc.pricingExchangeRate.calculationRate={ value:$("input[name='pricingExchangeRate[calculationRate][value]']").val()}
+    if(docFormType!='despatch'){
+    	doc.documentCurrencyCode={ value:$("select[name='documentCurrencyCode[value]']").val()}
+    	doc.pricingExchangeRate.calculationRate={ value:$("input[name='pricingExchangeRate[calculationRate][value]']").val()}
+    }
+    
     var party={}
     
     switch(docFormType){
@@ -578,15 +586,15 @@ function saveDocument(callback){
 			if(doc.ioType==0){
 		        doc.deliveryCustomerParty.party=party;
 		        if((doc._id || '')=='')
-			 			url='/dbapi/e-despatch/saveOutboxDespatch?db=' + db + '&sid=' + sid;
+			 			url='/dbapi/despatch/saveOutboxDespatch?db=' + db + '&sid=' + sid;
 			 		else
-			 			url='/dbapi/e-despatch/saveOutboxDespatch/' + doc._id  + '?db=' + db + '&sid=' + sid;
+			 			url='/dbapi/despatch/saveOutboxDespatch/' + doc._id  + '?db=' + db + '&sid=' + sid;
 		    }else{
 		        doc.despatchSupplierParty.party=party;
 		        if((doc._id || '')=='')
-				        url='/dbapi/e-despatch/saveInboxDespatch?db=' + db + '&sid=' + sid;
+				        url='/dbapi/despatch/saveInboxDespatch?db=' + db + '&sid=' + sid;
 				   	else
-				        url='/dbapi/e-despatch/saveInboxDespatch/' + doc._id  + '?db=' + db + '&sid=' + sid;
+				        url='/dbapi/despatch/saveInboxDespatch/' + doc._id  + '?db=' + db + '&sid=' + sid;
 		    }
 		break;
 	}
@@ -845,7 +853,7 @@ function reloadLineGrid(){
 
         var cell5=newRow.insertCell(5);
         cell5.classList.add('text-right');
-        cell5.innerHTML=line.price.priceAmount.value;
+        cell5.innerHTML=docFormType!='despatch'?line.price.priceAmount.value:'';
         var iskontoOran='', iskontoTutar='';
         if(line.allowanceCharge)
             line.allowanceCharge.forEach((allowanceChargeItem,index2)=>{
@@ -869,18 +877,18 @@ function reloadLineGrid(){
             });
         var cell6=newRow.insertCell(6);
         cell6.classList.add('text-right');
-        cell6.innerHTML=iskontoOran;
+        cell6.innerHTML=docFormType!='despatch'?iskontoOran:'';
 
         var cell7=newRow.insertCell(7);
         cell7.classList.add('text-right');
-        cell7.innerHTML=iskontoTutar;
+        cell7.innerHTML=docFormType!='despatch'?iskontoTutar:'';
 
         var cell8=newRow.insertCell(8);
         cell8.classList.add('text-right');
-        cell8.innerHTML=line.lineExtensionAmount.value.formatMoney();
+        cell8.innerHTML=docFormType!='despatch'?line.lineExtensionAmount.value.formatMoney():'';
 
         var kdvOrani='', kdvTutar=''; 
-        var kdvDahilTutar=line.lineExtensionAmount.value;
+        var kdvDahilTutar=docFormType!='despatch'?line.lineExtensionAmount.value:0;
         if(line.taxTotal)
             if(line.taxTotal.taxSubtotal)
                 if(line.taxTotal.taxSubtotal.length>0){
@@ -902,15 +910,15 @@ function reloadLineGrid(){
 
         var cell9=newRow.insertCell(9);
         cell9.classList.add('text-right');
-        cell9.innerHTML=kdvOrani;
+        cell9.innerHTML=docFormType!='despatch'?kdvOrani:'';
 
         var cell10=newRow.insertCell(10);
         cell10.classList.add('text-right');
-        cell10.innerHTML=kdvTutar;
+        cell10.innerHTML=docFormType!='despatch'?kdvTutar:'';
 
         var cell11=newRow.insertCell(11);
         cell11.classList.add('text-right');
-        cell11.innerHTML=kdvDahilTutar.formatMoney();
+        cell11.innerHTML=docFormType!='despatch'?kdvDahilTutar.formatMoney():'';
 
         var cell12=newRow.insertCell(12);
         cell12.classList.add('text-center');
