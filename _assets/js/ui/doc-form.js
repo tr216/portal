@@ -453,26 +453,31 @@ function saveDocLine(index){
 	            }else{
 	            	alert('Hata:' + result.error.message);
 	            }
-	            saveDocument((err)=>{
-			    	if(!err){
-			    		reloadLineGrid();
-			    	}else{
-			    		$('#docLineModal').modal('show');
-			    		alert('Hata:' + err.message);
-			    	}
-			    });
+
+	            reloadLineGrid();
+	            //qwerty documanlarda online satir kaydetme ayari yapilacak, localStorage tan alinacak
+	      //       saveDocument((err)=>{
+			    // 	if(!err){
+			    // 		reloadLineGrid();
+			    // 	}else{
+			    // 		$('#docLineModal').modal('show');
+			    // 		alert('Hata:' + err.message);
+			    // 	}
+			    // });
 	        }
 	    });
 	}else{
-		saveDocument((err)=>{
-	    	if(!err){
-	    		reloadLineGrid();
+		reloadLineGrid();
+		//qwerty documanlarda online satir kaydetme ayari yapilacak, localStorage tan alinacak
+		// saveDocument((err)=>{
+	 //    	if(!err){
+	 //    		reloadLineGrid();
 	    		
-	    	}else{
-	    		$('#docLineModal').modal('show');
-	    		alert('Hata:' + err.message);
-	    	}
-	    });
+	 //    	}else{
+	 //    		$('#docLineModal').modal('show');
+	 //    		alert('Hata:' + err.message);
+	 //    	}
+	 //    });
 	}
     
 
@@ -744,26 +749,37 @@ function removeLine(index){
 			if(index<0 || index>doc.orderLine.length-1) return;
 			if(!confirm('Satiri silmek istediginizden emin misiniz?')) return;
 	        doc.orderLine.splice(index,1);
+	        doc.orderLine.forEach(function(e,lineIndex){
+	        	e.ID.value=lineIndex+1;
+	        })
 		break;
 		case 'invoice':
 			if(index<0 || index>doc.invoiceLine.length-1) return;
 			if(!confirm('Satiri silmek istediginizden emin misiniz?')) return;
 	        doc.invoiceLine.splice(index,1);
+	        doc.invoiceLine.forEach(function(e,lineIndex){
+	        	e.ID.value=lineIndex+1;
+	        })
 		break;
 		case 'despatch':
 			if(index<0 || index>doc.despatchLine.length-1) return;
 			if(!confirm('Satiri silmek istediginizden emin misiniz?')) return;
 	        doc.despatchLine.splice(index,1);
+	        doc.despatchLine.forEach(function(e,lineIndex){
+	        	e.ID.value=lineIndex+1;
+	        })
 		break;
 	}
-        
-	saveDocument((err)=>{
-        if(!err){
-            reloadLineGrid();
-        }else{
-            alert('Hata:' + err.message);
-        }
-    });
+    
+    reloadLineGrid();
+    //qwerty documanlarda online satir kaydetme ayari yapilacak, localStorage tan alinacak
+	// saveDocument((err)=>{
+ //        if(!err){
+ //            reloadLineGrid();
+ //        }else{
+ //            alert('Hata:' + err.message);
+ //        }
+ //    });
 }
 
 	
