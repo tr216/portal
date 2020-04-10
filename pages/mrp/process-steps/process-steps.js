@@ -3,7 +3,11 @@ module.exports = function(req,res,callback){
 		locationList:[],
 		form:{
 			name:'',
-			useMaterial:false,
+			useMaterialInput:false,
+			useMaterialOutput:false,
+			useMachine:false,
+			useMold:false,
+			useParameters:false,
 			passive:false
 		},
 		filter:{

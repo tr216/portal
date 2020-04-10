@@ -346,3 +346,12 @@ function getItemTypeName(itemType){
         default: return 'Envanter';
     }
 }
+
+function getUnitCodeText(unitCode){
+	switch(unitCode){
+		case 'NIU': return 'Adet';
+		case 'D62': return 'sn';
+		case 'D61': return 'dk';
+	}
+	return '';
+}

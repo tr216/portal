@@ -2,7 +2,11 @@
 <%- partial('../../_common/form',{
     formControls:{
         name     :{caption:'Adı',                type:'textbox' ,required:true},
-        useMaterial  :{caption:'Malzeme Kullaniyor Mu?',        type:'checkbox'   },
+        useMaterialInput  :{caption:'Malzeme Kullaniyor Mu?',        type:'checkbox'   },
+        useMaterialOutput  :{caption:'Yan ürün çıkıyor mu?',        type:'checkbox'   },
+        useMachine  :{caption:'Makine Kullanıyor mu?',        type:'checkbox'   },
+        useMold :{caption:'Kalıp Kullanıyor mu?',        type:'checkbox'   },
+        useParameters :{caption:'Not/Parametre Kullanıyor mu?',        type:'checkbox'   },
         passive         :{caption:'Pasif',                 type:'checkbox'}
     },
     action:'',

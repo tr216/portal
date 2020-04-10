@@ -24,7 +24,10 @@
 			{"text":"Hammaddeler",		 		"path":"/inventory/items?itemType=raw-material",		"icon":"fas fa-atom", 			"visible":true, "nodes":[]},
 			{"text":"Yardımcı Malzemeler",		"path":"/inventory/items?itemType=helper-material",		"icon":"fas fa-thermometer-half", "visible":true, "nodes":[]},
 			{"text":"Üretim İstasyonları",	 	"path":"/mrp/stations", "icon":"fas fa-bezier-curve", "visible":true, "nodes":[]},
+			{"text":"Makina Grupları",	 			"path":"/mrp/machine-groups", "icon":"fas fa-layer-group", "visible":true, "nodes":[]},
 			{"text":"Makinalar",	 			"path":"/mrp/machines", "icon":"fas fa-cogs", "visible":true, "nodes":[]},
+			{"text":"Kalıp Grupları",	 			"path":"/mrp/mold-groups", "icon":"fas fa-layer-group", "visible":true, "nodes":[]},
+			{"text":"Kalıplar",	 			"path":"/mrp/molds", "icon":"fas fa-swatchbook", "visible":true, "nodes":[]},
 			{"text":"Üretim İşlem Adımları",	 			"path":"/mrp/process-steps", "icon":"fas fa-shoe-prints", "visible":true, "nodes":[]}
 			
 		]}

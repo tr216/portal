@@ -1,0 +1,24 @@
+<%layout('../../_common/plain-layout')%>
+<%- partial('../../_common/form',{
+    tabs:[
+       {
+            caption:'Bilgiler',
+            formControls:{
+                moldGroup :{caption:'Kalıp Grubu',             type:'lookup', lookup:moldGroupList, textField:'name', valueField:'_id'    ,required:true},
+                machineGroup :{caption:'Makine Grubu',             type:'lookup', lookup:machineGroupList, textField:'name', valueField:'_id'  ,required:true  },
+                name     :{caption:'Adı',                type:'textbox' ,required:true},
+                description  :{caption:'Açıklama',        type:'textbox'    },
+                account:{caption:'Muhasebe Hesap Kodu', type:'partial', partial:'account-selection.ejs' },
+                passive         :{caption:'Pasif',                 type:'checkbox'}
+            }
+        },
+        {
+            caption:'Kalıp parametreleri',
+            partial:'../mrp/molds/parameters.ejs'
+        }
+    ],
+    action:'',
+    mode:'view'
+    }) 
+%>
+

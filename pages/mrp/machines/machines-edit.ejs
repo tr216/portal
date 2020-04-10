@@ -4,6 +4,7 @@
        {
             caption:'Bilgiler',
             formControls:{
+                machineGroup :{caption:'Grubu',             type:'lookup', lookup:machineGroupList, textField:'name', valueField:'_id'    ,required:true},
                 station        :{caption:'Istasyon',             type:'lookup', lookup:stationList, textField:'name', valueField:'_id'    ,required:true},
                 name     :{caption:'Adı',                type:'textbox' ,required:true},
                 description  :{caption:'Açıklama',        type:'textbox'    },

@@ -3,7 +3,11 @@
 <%- partial('../../_common/grid2',{
     fields:[
         {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
-        {name:'useMaterial',text:'Malzeme Kullaniyor Mu?',type:'checkbox'},
+        {name:'useMaterialInput',text:'Malzeme Kullanıyor?',type:'checkbox'},
+        {name:'useMaterialOutput',text:'Yan ürün?',type:'checkbox'},
+        {name:'useMachine',text:'Makine Kullanıyor?',type:'checkbox'},
+        {name:'useMold',text:'Kalıp Kullanıyor?',type:'checkbox'},
+        {name:'useParameters',text:'Not/Parametre?',type:'checkbox'},
         {name:'passive',text:'Pasif',type:'checkbox',width:1}
     ],
     caption:'Uretim Islemler',

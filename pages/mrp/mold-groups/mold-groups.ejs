@@ -1,0 +1,14 @@
+<%layout('../../_common/layout')%>
+
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'name',text:'Adı',type:'label',filter:true, orderable:true}
+    ],
+    caption:'Makina Grupları',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    deleteUrl:'/dbapi/mrp-machine-groups/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>

@@ -22,7 +22,7 @@
                 <a href="javascript:receteSil();" class="btn btn-danger mt-3 ml-2"  title="Recete sil"><i class="fas fa-trash-alt"></i></a>
             </div>
         </div>
-        <% } %>
+       
         <div class="row">
             <div class="form-group col-md-6">
                 <label for="" class="m-0">Recete Adı</label>
@@ -33,9 +33,7 @@
                 <input type="number" class="form-control" name="recipeRevision" id="recipeRevision"  value="1" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
             </div>
             <div class="form-group col-md-3">
-                <label for="" class="m-0"><% if(recipeFormType=='production-orders'){%>Planlanan Miktar<%}%>
-                    <% if(recipeFormType=='products'){%>Reçete Miktarı<%}%>
-                </label>
+                <label for="" class="m-0">Reçete Miktarı</label>
                 <input type="number" class="form-control" name="recipeTotalQuantity" id="recipeTotalQuantity"  value="<% if(recipeFormType=='products'){%>100<%}%>" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
             </div>
             <div class="form-group col-md-12">
@@ -43,199 +41,189 @@
                 <input type="text" class="form-control" name="recipeDescription" id="recipeDescription" autocomplete="off" placeholder="Açıklama" value="">
             </div>
         </div>
+        <% } else if(recipeFormType=='production-orders'){ %>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="" class="m-0">Planlanan Miktar</label>
+                <input type="number" class="form-control" name="recipeTotalQuantity" id="recipeTotalQuantity"  value="" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
+            </div>
+            <div class="form-group col-md-9">
+                <label for="" class="m-0">Açıklama</label>
+                <input type="text" class="form-control" name="recipeDescription" id="recipeDescription" autocomplete="off" placeholder="Açıklama" value="">
+            </div>
+        </div>
+        <% } %>
     </div>
 </div>
-<div class="card mt-2">
-    <div class="card-header p-1 text-primary">Proses</div>
+
+<div id="sablonAdim" class="card mt-2" style="display: none;">
+    <div class="card-header p-1 text-primary">
+        <div class="row m-0 p-0">
+            <div class="col-6 m-0 p-0 mt-1">
+                <div id="baslik"></div>
+            </div>
+            <div class="col-6 m-0 p-0 text-right">
+                <a href="javascript:yeniProcess();" id="yeniProcessButton" class="btn btn-primary"><i class="fas fa-plus-square"></i> Yeni Adim Ekle</a>
+                <a href="javascript:silProcess();" id="silProcessButton" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Adım Sil</a>
+            </div>
+        </div>
+    </div>
     <div class="card-body p-1">
-        <div class="row">
-            <div class="col-md-12 p-0">
+        <div class="row m-0 p-0">
+            <div class="col-md-4 m-0 p-0 ">
+                <label class="p-0 m-0">Istasyon</label>
+                <select class="form-control" name="station" id="station" <% if(recipeFormType=='production-orders'){%>disabled<%}%> >
+                    <% stationList.forEach((e)=>{ %>
+                    <option value="<%=e._id%>"><% if(e._id==''){%>---<%}else{%><%=e.name%><%}%></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="col-md-3 m-0 p-0 pl-md-4">
+                <label for="" class="m-0">İşlem/Adım</label>
+                <select class="form-control" name="processStep" id="processStep" <% if(recipeFormType=='production-orders'){%>disabled<%}%> >
+                    <% stepList.forEach((e)=>{ %>
+                    <option value="<%=e._id%>"><% if(e._id==''){%>---<%}else{%><%=e.name%><%}%></option>
+                    <% }); %>
+                </select>
+            </div>
+        </div>
+        <div id="useMaterialInput" class="row m-0 p-0 mt-2">
+            <div class="col-md-12 m-0 p-0">
                 <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
                     <thead>
                         <tr class="text-nowrap">
-                            <th width="30" class=""><input type="checkbox" class="mt-1" value="true" name="selectAll" id="selectAll"></th>
-                            <th width="50" class="">No</th>
-                            <th width="15%" class="">Istasyon</th>
-                            <th width="15%" class="">Adım</th>
-                            <th width="20%" class="">Malzeme</th>
-                            <th width="30%">Parametreler</th>
-                            <th class="text-center" style="width: 100px;min-width: 100px;max-width: 100px;">
-                                <a href="javascript:addNewRecipeLine();" class="btn btn-primary far fa-plus-square"  title="Yeni satir"></a>
-                            </th>
+                            <th width="60%" class="">Malzeme</th>
+                            <th width="40%" class="text-right">Miktar</th>
+                            <th style="min-width: 60px;" class="text-center">#</th>
                         </tr>
                     </thead>
-                    <tbody id="processGridTBody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row mt-2">
-    <div class="col-md-6 p-0">
-        <div class="card mr-1">
-            <div class="card-header p-1 text-primary">Malzeme Toplami</div>
-            <div class="card-body p-1">
-                <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-                    <thead>
-                        <tr class="text-nowrap">
-                            <th width="70%">Malzeme</th>
-                            <th width="30%">Miktar</th>
-                        </tr>
-                    </thead>
-                    <tbody id="materialSummaryGrid">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 p-0">
-        <div class="card ml-1">
-            <div class="card-header p-1 text-primary">Yan ürünler/katalizörler</div>
-            <div class="card-body p-1">
-                <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-                    <thead>
-                        <tr class="text-nowrap">
-                            <th width="70%">Yan ürün/Katalizör</th>
-                            <th width="30%">Miktar</th>
-                        </tr>
-                    </thead>
-                    <tbody id="outputSummaryGrid">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="recipeLineModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="recipeLineModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-scrollable modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header p-2 ">
-                <label class="modal-title" id="recipeLineModalLabel">Recete/Proses Adım</label>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body p-2">
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label for="" class="m-0">Üretim İstasyonu/Prosess</label>
-                        <select class="form-control" name="station" id="station">
-                            <% stationList.forEach((e)=>{ %>
-                            <option value="<%=e._id%>"><% if(e._id==''){%>---<%}else{%><%=e.name%><%}%></option>
-                            <% }); %>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="" class="m-0">İşlem/Adım</label>
-                        <select class="form-control" name="processStep" id="processStep" onchange="processStepChange()">
-                            <% stepList.forEach((e)=>{ %>
-                            <option value="<%=e._id%>"><% if(e._id==''){%>---<%}else{%><%=e.name%><%}%></option>
-                            <% }); %>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="" class="m-0">Parametreler/Notlar</label>
-                            <textarea id="parameters" class="form-control" rows="4"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="useMaterial">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#tab1" role="tab" data-toggle="tab" id="IDtab1" aria-controls="tab1" aria-selected="true">
-                                <i class="fas fa-file-alt"></i> Malzemeler
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#tab2" role="tab" data-toggle="tab" id="IDtab2" aria-controls="tab2" aria-selected="false">
-                                <i class="fas fa-table"></i> İşlem sonrası çıkan yan ürünler/malzemeler
-                            </a>
-                        </li>
+                    <tbody id="malzemeGrid">
                         
-                    </ul>
-                    <div class="tab-content p-1 " style="min-height:35vh;overflow: auto;">
-                        <!-- IDtab1 -->
-                        <div class="tab-pane show active" id="tab1" role="tabpanel" aria-labelledby="IDtab1">
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="" class="m-0">Malzeme</label>
-                                    <select class="form-control" name="itemTypeInput" id="itemTypeInput" onchange="itemTypeChange()">
-                                        <option value="raw-material">Hammadde</option>
-                                        <option value="helper-material">Yardimci Malzeme</option>
-                                        <option value="product">Mamul/Yari mamul</option>
-                                        <option value="item">Stok Envanter</option>
+                        <tr id="addProcessInputMaterialRow" class="text-nowrap" >
+                            <td class="">
+                                <div class="row p-0 m-0">
+                                    <div class="col-4 m-0 p-0">
+                                        <select class="form-control" name="itemTypeInput" id="itemTypeInput">
+                                            <option value="raw-material">Hammadde</option>
+                                            <option value="helper-material">Yardimci Malzeme</option>
+                                            <option value="product">Mamul/Yari mamul</option>
+                                            <option value="item">Stok Envanter</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-8 m-0 p-0 pl-1">
+                                        <input type="text" form="form-general" name="itemName" id="itemName" placeholder="ara"  class="form-control itemName" autocomplete="off" value="">
+                                        <input type="text" form="form-general" name="itemId" id="itemId"  class="itemId" hidden="true" value="">
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <div class="form-inline">
+                                    <input type="number" class="form-control" name="quantity" id="quantity" placeholder="" value="0" style="width: 50%;">
+                                    <select class="form-control" name="quantity-unitCode" id="quantity-unitCode" style="width: 50%;">
+                                        <option value="NIU">Adet</option>
+                                        <option value="GRM">Gr</option>
+                                        <option value="KG">kg</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="" class="m-0">Seç</label>
-                                    <input type="text" form="form-general" name="itemName" id="itemName" placeholder="ara"  class="form-control" autocomplete="off" value="">
-                                    <input type="text" form="form-general" name="itemId"  id="itemId" hidden="true" value="">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="" class="m-0">Miktar</label>
-                                    <input type="number" class="form-control" name="quantity" id="quantity" placeholder="" value="0">
-                                </div>
-                                <div class="form-group col-md-1">
-                                    <label for="" class="m-0">#</label>
-                                    <a href="javascript:addInputMaterial();" class="btn btn-primary fas fa-plus-square"  title="Malzeme Ekle"></a>
-                                </div>
-                            </div>
-                            <table class="table form-table table-bordered table-striped m-0 "  cellspacing="0" style="display: grid;overflow-y:scroll; max-height: 15rem;">
-                                
-                                <tbody id="materialInputGrid">
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- IDtab2 -->
-                        <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="IDtab2">
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="" class="m-0">Yan ürün veya katalizör</label>
-                                    <select class="form-control" name="itemTypeOutput" id="itemTypeOutput" onchange="itemTypeOutputChange()">
-                                        <option value="raw-material">Hammadde</option>
-                                        <option value="helper-material" selected>Yardimci Malzeme</option>
-                                        <option value="product">Mamul/Yari mamul</option>
-                                        <option value="item">Stok Envanter</option>
+                            </td>
+                            <td class="text-center"><a href="javascript:addProcessInputMaterial();" id="addProcessInputMaterialButton" class="btn btn-primary far fa-plus-square"  title="Malzeme ekle"></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="useMachineOrMold" class="row m-0 p-0 mt-2">
+            <div class="col-md-12 m-0 p-0">
+                <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
+                    <thead>
+                        <tr class="text-nowrap">
+                            <th width="30%" class="">Makine ve Kalıplar</th>
+                            <th width="25%" class="">Kalip</th>
+                            <th width="15%" class="text-right">Kavite</th>
+                            <th width="15%" class="text-right">Cycle</th>
+                            <th width="15%" class="text-right">Per hour</th>
+                            <th style="min-width: 60px;" class="text-center">#</th>
+                        </tr>
+                    </thead>
+                    <tbody id="machineGrid">
+                        <tr id="addProcessMachineRow" class="text-nowrap">
+                            <td class="">
+                                <select class="form-control" id="select-machine">
+                                </select>
+                            </td>
+                            <td class="">
+                                <select class="form-control"  id="select-mold">
+                                </select>
+                            </td>
+                            <td class=""><input type="number" class="form-control" name="cavity" id="cavity" placeholder="" value="0"></td>
+                            <td class="text-right">
+                                <div class="form-inline">
+                                    <input type="number" class="form-control" name="cycle" id="cycle" placeholder="" value="0" style="width: 50%;">
+                                    <select class="form-control" name="cycle-unitCode" id="cycle-unitCode" style="width: 50%;">
+                                        <option value="D62">sn</option>
+                                        <option value="D61">dk</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="" class="m-0">Seç</label>
-                                    <input type="text" form="form-general" name="itemNameOutput" id="itemNameOutput" placeholder="ara"  class="form-control" autocomplete="off" value="">
-                                    <input type="text" form="form-general" name="itemIdOutput"  id="itemIdOutput" hidden="true" value="">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="" class="m-0">Miktar</label>
-                                    <input type="number" class="form-control" name="quantityOutput" id="quantityOutput" placeholder="" value="0">
-                                </div>
-                                <div class="form-group col-md-1">
-                                    <label for="" class="m-0">#</label>
-                                    <a href="javascript:addOutputMaterial();" class="btn btn-primary fas fa-plus-square"  title="Yan ürün Ekle"></a>
-                                </div>
-                            </div>
-                            <table class="table form-table table-bordered table-striped m-0 "  cellspacing="0" style="display: grid;overflow-y:scroll; max-height: 15rem;">
-                                <tbody id="materialOutputGrid">
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                            </td>
+                            <td class="text-center">.</td>
+                            <td class="text-center"><a href="javascript:addProcessMachine();" id="addProcessMachineButton" class="btn btn-primary far fa-plus-square"  title="Makine/Kalip ekle"></a></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
-                <a id="recipeLineModalSaveButton" class="btn btn-primary" href="javascript:saveRecipeLine(-1)">Tamam</a>
+        </div>
+        <div id="useMaterialOutput" class="row m-0 p-0 mt-2">
+            <div class="col-md-12 m-0 p-0">
+                <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
+                    <thead>
+                        <tr class="text-nowrap">
+                            <th width="60%" class="">Yan ürünler</th>
+                            <th width="40%" class="text-right">Miktar</th>
+                            <th style="min-width: 60px;" class="text-center">#</th>
+                        </tr>
+                    </thead>
+                    <tbody id="malzemeGridOutput">
+                        
+                        <tr id="addProcessOutputMaterialRow" class="text-nowrap">
+                            <td class="">
+                                <div class="row p-0 m-0">
+                                    <div class="col-4 m-0 p-0">
+                                        <select class="form-control" name="itemTypeOutput" id="itemTypeOutput">
+                                            <option value="raw-material">Hammadde</option>
+                                            <option value="helper-material">Yardimci Malzeme</option>
+                                            <option value="product">Mamul/Yari mamul</option>
+                                            <option value="item">Stok Envanter</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-8 m-0 p-0 pl-1">
+                                        <input type="text" form="form-general" name="itemNameOutput" id="itemNameOutput" placeholder="ara"  class="form-control" autocomplete="off" value="">
+                                        <input type="text" form="form-general" name="itemIdOutput" id="itemIdOutput"  hidden="true" value="">
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <div class="form-inline">
+                                    <input type="number" class="form-control" name="quantityOutput" id="quantityOutput" placeholder="" value="0" style="width: 50%;">
+                                    <select class="form-control" name="quantity-unitCodeOutput" id="quantity-unitCodeOutput" style="width: 50%;">
+                                        <option value="NIU">Adet</option>
+                                        <option value="GRM">Gr</option>
+                                        <option value="KG">kg</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="text-center"><a href="javascript:addProcessOutputMaterial();" id="addProcessOutputMaterialButton" class="btn btn-primary far fa-plus-square"  title="Yan ürün ekle"></a></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
+        <div id="useParameters" class="mt-2">
+            <textarea class="form-control" id="processNotlar" rows="3" placeholder="Notlar/parametreler"></textarea>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="<%- assetFile('/js/ui/recipe.js') %>"></script>
+
+<div id="processGrid"></div>
 
 <script type="text/javascript">
     var q=getAllUrlParams();
@@ -248,7 +236,10 @@
     var aktifReceteAdim=-1;
     var lineMaterialInputs=[];
     var lineMaterialOutputs=[];
+    var lineMachines=[];
     var recipeList=[];
     var stepList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(stepList)) %>'));
     if(stepList.length>0) stepList[0].name='---';
 </script>
+
+<script type="text/javascript" src="<%- assetFile('/js/ui/recipe.js') %>"></script>
