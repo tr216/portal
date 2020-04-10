@@ -35,6 +35,8 @@ module.exports = function(req,res,callback){
 	        }],
 	        supplyDuration:{value:0 },
 	        tags:'',
+	        images:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
+	        files:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
 	        localDocumentId:'',
 	        passive:false,
 	        barkodlar:'',

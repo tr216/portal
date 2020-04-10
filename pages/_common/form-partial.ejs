@@ -55,6 +55,9 @@ for(let key in formControls){
 			case 'fileBase64' : %>
 			<%- fileBase64(item,itemValue,level) %>
 			<% break;
+			case 'fileBase64Image' : %>
+			<%- fileBase64Image(item,itemValue,level) %>
+			<% break;
 			case 'checkbox' : %>
 			<%- checkbox(item,itemValue,level) %>
 			<% break;
@@ -193,6 +196,48 @@ for(let key in formControls){
 						$('#fileToUpload_<%=item.name.replaceAll('.','_')%>_type').val(file.type);
 						$('#fileToUpload_<%=item.name.replaceAll('.','_')%>_fileName').val(filename);
 						$('#fileToUpload_download_<%=item.name.replaceAll('.','_')%>').attr('href',$('#fileDataBase64_<%=item.name.replaceAll('.','_')%>').val());
+						
+				}, false);
+
+				if (file) {
+					reader.readAsDataURL(file);
+				}
+			});
+		})
+	</script>
+</div>
+<% } %>
+
+<% function fileBase64Image(item,itemValue,level){ %>
+<div class="form-group" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
+	<label for="fileToUpload_<%=item.name.replaceAll('.','_')%>" class="btn btn-primary"><i class="fas fa-images"></i> <%=item.caption%></label>
+	<br>
+	<img id="fileToUpload_download_<%=item.name.replaceAll('.','_')%>" src="<% if(typeof itemValue.data!='undefined'){%><%=itemValue.data%><%}else{%>/images/placehold-place.jpg<%}%>" download="<% if(typeof itemValue.fileName!='undefined'){%><%=itemValue.fileName%><%}%>" style="width: 300px;height: 300px;">
+	
+	<input type="file" name="fileToUpload_<%=item.name%>" id="fileToUpload_<%=item.name.replaceAll('.','_')%>" style="visibility:hidden;" accept="" >
+	<input type="hidden" name="<%- generateFormName(item.name) %>[data]" id="fileDataBase64_<%=item.name.replaceAll('.','_')%>" value="<% if(typeof itemValue.data!='undefined'){%><%=itemValue.data%><%}%>">
+	<input type="hidden" name="<%- generateFormName(item.name)%>[type]" id="fileToUpload_<%=item.name.replaceAll('.','_')%>_type" value="<% if(typeof itemValue.type!='undefined'){%><%=itemValue.type%><%}%>">
+	<input type="hidden" name="<%- generateFormName(item.name)%>[fileName]" id="fileToUpload_<%=item.name.replaceAll('.','_')%>_fileName" value="<% if(typeof itemValue.fileName!='undefined'){%><%=itemValue.fileName%><%}%>">
+	
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			
+			$("#fileToUpload_<%=item.name.replaceAll('.','_')%>").change(function() {
+				var filename = this.files[0].name;
+				console.log('filename:',filename);
+				console.log('this.files[0].type:',this.files[0].type);
+
+				$('#fileToUpload_download_<%=item.name.replaceAll('.','_')%>').attr('download',filename);
+				//$('#fileToUpload_download_<%=item.name.replaceAll('.','_')%>').html('<i class="fa fa-file"></i> ' + filename);
+				var file =this.files[0]; 
+
+				var reader  = new FileReader();
+				reader.addEventListener("load", function () {
+						$('#fileDataBase64_<%=item.name.replaceAll('.','_')%>').val(reader.result);
+						$('#fileToUpload_<%=item.name.replaceAll('.','_')%>_type').val(file.type);
+						$('#fileToUpload_<%=item.name.replaceAll('.','_')%>_fileName').val(filename);
+						$('#fileToUpload_download_<%=item.name.replaceAll('.','_')%>').attr('src',$('#fileDataBase64_<%=item.name.replaceAll('.','_')%>').val());
 						
 				}, false);
 

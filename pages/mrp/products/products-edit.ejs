@@ -31,6 +31,17 @@ recipeFormType='products';
             }
         },
         {
+            caption:'Resimler/dosyalar',
+            formControls:{
+                image0  :{name:'images.0', caption:'Resim 1',     type:'fileBase64Image'   },
+                image1  :{name:'images.1', caption:'Resim 2',     type:'fileBase64Image'   },
+                image2  :{name:'images.2', caption:'Resim 3',     type:'fileBase64Image'   },
+                file0  :{name:'files.0', caption:'Dosya/dokuman 1',     type:'fileBase64'   },
+                file1  :{name:'files.1', caption:'Dosya/dokuman 2',     type:'fileBase64'   },
+                file2  :{name:'files.2', caption:'Dosya/dokuman 3',     type:'fileBase64'   }
+            }
+        },
+        {
             caption:'Recete/Process',
             partial:'./recipe.ejs'
         }
