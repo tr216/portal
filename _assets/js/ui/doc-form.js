@@ -485,6 +485,7 @@ function saveDocLine(index){
 
 function saveDocument(callback){
 	doc.eIntegrator=$("select[name='eIntegrator']").val();
+	
 	doc.ID={ value:$("input[name='ID[value]']").val()}
     doc.issueDate={ value:$("input[name='issueDate[value]']").val()}
     doc.issueTime={ value:$("input[name='issueTime[value]']").val()}
@@ -496,10 +497,13 @@ function saveDocument(callback){
 
     	case 'invoice':
     		doc.invoiceTypeCode={ value:$("select[name='invoiceTypeCode[value]']").val()}
+    		doc.location=$("select[name='location']").val();
     	break;
 
     	case 'despatch':
     		doc.despatchAdviceTypeCode={ value:$("select[name='despatchAdviceTypeCode[value]']").val()}
+    		doc.location=$("select[name='location']").val();
+			doc.location2=$("select[name='location']").val();
     	break;
     }
     

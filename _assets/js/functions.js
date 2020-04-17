@@ -350,8 +350,16 @@ function getItemTypeName(itemType){
 function getUnitCodeText(unitCode){
 	switch(unitCode){
 		case 'NIU': return 'Adet';
+		case 'GRM': return 'gr';
+		case 'KGM': return 'kg';
+		case 'LTR': return 'lt';
+		case 'MTR': return 'm';
+		case 'CMT': return 'cm';
+		case 'MMT': return 'mm';
+		case 'MTK': return 'm2';
+		case 'HUR': return 'sa';
 		case 'D62': return 'sn';
 		case 'D61': return 'dk';
 	}
-	return '';
+	return unitCode;
 }

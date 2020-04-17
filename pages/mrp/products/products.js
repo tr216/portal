@@ -125,14 +125,7 @@ function addnew(req,res,data,callback){
 					data.form.additionalItemIdentification.push({ID:{value:e}});
 				});
 			
-			var paketAgirliklari=data.form.paketAgirliklari.split('\n');
-			data.form.unitPacks=[];
-			if(paketAgirliklari.length>0)
-				paketAgirliklari.forEach((e)=>{
-					if(!isNaN(e)){
-						data.form.unitPacks.push(e);
-					}
-				});
+			
 
 			api.post('/' + req.query.db + '/items',req,data.form,(err,resp)=>{
 				if(!err){
@@ -176,14 +169,7 @@ function edit(req,res,data,callback){
 						data.form.additionalItemIdentification.push({ID:{value:e}});
 					});
 				
-				var paketAgirliklari=data.form.paketAgirliklari.split('\n');
-				data.form.unitPacks=[];
-				if(paketAgirliklari.length>0)
-					paketAgirliklari.forEach((e)=>{
-						if(!isNaN(e)){
-							data.form.unitPacks.push(e);
-						}
-					});
+				
 
 				api.put('/' + req.query.db + '/items/' + _id, req,data.form,(err,resp)=>{
 					if(!err){

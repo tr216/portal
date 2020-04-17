@@ -24,7 +24,7 @@
         </div>
        
         <div class="row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label for="" class="m-0">Recete Adı</label>
                 <input type="text" class="form-control" name="recipeName" id="recipeName" placeholder="Recete Adı" autocomplete="off"  value="" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
             </div>
@@ -34,13 +34,22 @@
             </div>
             <div class="form-group col-md-3">
                 <label for="" class="m-0">Reçete Miktarı</label>
-                <input type="number" class="form-control" name="recipeTotalQuantity" id="recipeTotalQuantity"  value="<% if(recipeFormType=='products'){%>100<%}%>" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
+                <input type="number" class="form-control" name="recipeTotalQuantity" id="recipeTotalQuantity"  value="100" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-3">
+                <label for="" class="m-0">Birim Ağırlık</label>
+                <input type="text" class="form-control" name="birimAgirlik" id="birimAgirlik"  value="1 <% if(form.unitPacks.length>0){%><%- getUnitCodeText(form.unitPacks[0].unitCode)%> <%=form.unitPacks[0].netWeight.value%><%- getUnitCodeText(form.unitPacks[0].netWeight.attr.unitCode)%><%}%>" readonly="true">
+            </div>
+            <div class="form-group col-md-6">
                 <label for="" class="m-0">Açıklama</label>
                 <input type="text" class="form-control" name="recipeDescription" id="recipeDescription" autocomplete="off" placeholder="Açıklama" value="">
             </div>
+            <div class="form-group col-md-3 offset-md-3">
+                <label for="" class="m-0">#</label>
+                <a href="javascript:yeniProcess();" id="yeniProcessButton" class="btn btn-primary" style="width: 100%;"><i class="fas fa-plus-square"></i> Yeni Adim Ekle</a>
+            </div>
         </div>
+        
         <% } else if(recipeFormType=='production-orders'){ %>
         <div class="row">
             <div class="form-group col-md-3">
@@ -63,7 +72,7 @@
                 <div id="baslik"></div>
             </div>
             <div class="col-6 m-0 p-0 text-right">
-                <a href="javascript:yeniProcess();" id="yeniProcessButton" class="btn btn-primary"><i class="fas fa-plus-square"></i> Yeni Adim Ekle</a>
+                <!-- <a href="javascript:yeniProcess();" id="yeniProcessButton" class="btn btn-primary"><i class="fas fa-plus-square"></i> Yeni Adim Ekle</a> -->
                 <a href="javascript:silProcess();" id="silProcessButton" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Adım Sil</a>
             </div>
         </div>
@@ -92,7 +101,8 @@
                 <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
                     <thead>
                         <tr class="text-nowrap">
-                            <th width="60%" class="">Malzeme</th>
+                            <th width="45%" class="">Malzeme</th>
+                            <th width="15%" class=""><div class="float-left">Oran(%)</div><div class="float-right" id="totalPercentInput"></div></th>
                             <th width="40%" class="text-right">Miktar</th>
                             <th style="min-width: 60px;" class="text-center">#</th>
                         </tr>
@@ -118,11 +128,17 @@
                             </td>
                             <td class="text-right">
                                 <div class="form-inline">
+                                    <input type="number" class="form-control" name="percent" id="percent" placeholder="" value="0">
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <div class="form-inline">
                                     <input type="number" class="form-control" name="quantity" id="quantity" placeholder="" value="0" style="width: 50%;">
                                     <select class="form-control" name="quantity-unitCode" id="quantity-unitCode" style="width: 50%;">
+                                        <option value="GRM">gr</option>
                                         <option value="NIU">Adet</option>
-                                        <option value="GRM">Gr</option>
-                                        <option value="KG">kg</option>
+                                        <option value="KGM">kg</option>
+                                        <option value="LTR">lt</option>
                                     </select>
                                 </div>
                             </td>
@@ -206,8 +222,9 @@
                                     <input type="number" class="form-control" name="quantityOutput" id="quantityOutput" placeholder="" value="0" style="width: 50%;">
                                     <select class="form-control" name="quantity-unitCodeOutput" id="quantity-unitCodeOutput" style="width: 50%;">
                                         <option value="NIU">Adet</option>
-                                        <option value="GRM">Gr</option>
-                                        <option value="KG">kg</option>
+                                        <option value="GRM">gr</option>
+                                        <option value="KGM">kg</option>
+                                        <option value="LTR">lt</option>
                                     </select>
                                 </div>
                             </td>
@@ -238,8 +255,22 @@
     var lineMaterialOutputs=[];
     var lineMachines=[];
     var recipeList=[];
+    var defaultUnit={unitCode:'NIU',netWeight:{value:1,attr:{unitCode:'NIU'}}};
+    var birimler=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.unitPacks)) %>'));
     var stepList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(stepList)) %>'));
+    
     if(stepList.length>0) stepList[0].name='---';
+    if(birimler){
+        if(birimler.length>0){
+            if(birimler[0].unitCode){
+                defaultUnit.unitCode=birimler[0].unitCode;
+                defaultUnit.netWeight.value=birimler[0].netWeight.value;
+                defaultUnit.netWeight.attr.unitCode=birimler[0].netWeight.attr.unitCode;
+                
+            }
+            
+        }
+    }
 </script>
 
 <script type="text/javascript" src="<%- assetFile('/js/ui/recipe.js') %>"></script>

@@ -4,6 +4,7 @@ module.exports = function(req,res,callback){
 		accountGroupList:[],
 		form:{
 			itemType:(req.query.itemType || 'item'),
+	        code:{ value:''},
 	        name:{ value:''},
 	        additionalItemIdentification:[{ID:{ value:''}}],
 	        brandName:{ value:''},
@@ -30,6 +31,8 @@ module.exports = function(req,res,callback){
 	        }],
 	        supplyDuration:{value:0 },
 	        tags:'',
+	        images:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
+	        files:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
 	        localDocumentId:'',
 	        passive:false,
 	        exceptInventory:false,
@@ -102,20 +105,15 @@ function addnew(req,res,data,callback){
 			data.form=Object.assign(data.form,req.body);
 			var barkodList=data.form.barkodlar.split('\n');
 			
+			var dizi=[];
+
 			data.form.additionalItemIdentification=[];
 			if(barkodList.length>0)
 				barkodList.forEach((e)=>{
-					data.form.additionalItemIdentification.push({ID:{value:e}});
+					data.form.additionalItemIdentification.push({ID:{value:e,attr:{schemeID:'BARCODE'}}});
 				});
 			
-			var paketAgirliklari=data.form.paketAgirliklari.split('\n');
-			data.form.unitPacks=[];
-			if(paketAgirliklari.length>0)
-				paketAgirliklari.forEach((e)=>{
-					if(!isNaN(e)){
-						data.form.unitPacks.push(e);
-					}
-				});
+			
 			
 			api.post('/' + req.query.db + '/items',req,data.form,(err,resp)=>{
 				if(!err){
@@ -151,14 +149,7 @@ function edit(req,res,data,callback){
 					data.form.additionalItemIdentification.push({ID:{value:e}});
 				});
 			
-			var paketAgirliklari=data.form.paketAgirliklari.split('\n');
-			data.form.unitPacks=[];
-			if(paketAgirliklari.length>0)
-				paketAgirliklari.forEach((e)=>{
-					if(!isNaN(e)){
-						data.form.unitPacks.push(e);
-					}
-				});
+			
 
 			api.put('/' + req.query.db + '/items/' + _id, req,data.form,(err,resp)=>{
 				if(!err){
@@ -179,12 +170,7 @@ function edit(req,res,data,callback){
 						data.form.additionalItemIdentification.forEach((e)=>{
 							data.form.barkodlar +=e.ID.value + '\n';
 						})
-					data.form.paketAgirliklari='';
-					if(data.form.unitPacks)
-						if(data.form.unitPacks.length>0)
-							data.form.unitPacks.forEach((e)=>{
-								data.form.paketAgirliklari +=e + '\n';
-							})
+					
 
 					callback(null,data);
 				}else{

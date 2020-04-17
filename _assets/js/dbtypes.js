@@ -577,6 +577,7 @@ const transactionConditionsType={
 const invoiceType={
     ioType : 0, // 0 - cikis , 1- giris
     eIntegrator: '',
+    location:'',
     profileId: valueType,
     ID: valueType,
     uuid: valueType,
@@ -777,6 +778,8 @@ const recipeType={
 
 const despatchAdviceType={
     eIntegrator: '',
+    location:'',
+    location2:'',
     profileId: valueType,
     ID: idType,
     uuid: valueType,

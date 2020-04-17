@@ -197,9 +197,9 @@ function yeniProcess(process=undefined){
         
         adim.querySelector('#silProcessButton').href='javascript:silProcess(' + index + ');';
 
-        if(index==0){
-            adim.querySelector('#silProcessButton').style.display='none';
-        }
+        // if(index==0){
+        //     adim.querySelector('#silProcessButton').style.display='none';
+        // }
     }else if(recipeFormType=='production-orders'){
         adim.querySelector('#addProcessInputMaterialRow').style.display='none';
         adim.querySelector('#addProcessOutputMaterialRow').style.display='none';
@@ -242,26 +242,51 @@ function refreshProcessInputMaterialGrid(adimIndex){
     if(!doc.process[adimIndex]) return;
 
     if(doc.process[adimIndex].input==undefined) doc.process[adimIndex].input=[];
-    
+    var toplamOran=0;
+    var receteMiktari=0;
+    if(recipeFormType=='products') receteMiktari=doc.totalQuantity;
+
     doc.process[adimIndex].input.forEach(function(e,index2){
+
         var newRow=malzemeGrid.insertRow(malzemeGrid.rows.length-1);
         var cell0=newRow.insertCell(0);
         cell0.innerHTML=e.item.name.value;
 
         var cell1=newRow.insertCell(1);
         cell1.classList.add('text-right');
-        cell1.innerHTML=e.quantity + ' ' + e.unitCode;
 
-        var cell2=newRow.insertCell(2);
-        cell2.classList.add('text-center');
-        if(recipeFormType=='products'){
-            cell2.innerHTML='<a href="javascript:removeProcessInputMaterial(' + adimIndex + ',' + index2 + ');" class="btn btn-danger fas fa-trash-alt"  title="sil"></a>';    
+        var oran=0;
+        if(defaultUnit.netWeight.attr.unitCode==e.unitCode){
+            if(receteMiktari*defaultUnit.netWeight.value>0){
+                oran=Math.round(100*100*e.quantity/(receteMiktari*defaultUnit.netWeight.value))/100;
+            }
+            
+            cell1.innerHTML='%' + oran;
+            toplamOran +=Math.round(100*oran)/100;
         }else{
-            cell2.innerHTML='';
+            cell1.innerHTML='';
         }
         
+
+        var cell2=newRow.insertCell(2);
+        cell2.classList.add('text-right');
+        cell2.innerHTML=e.quantity + ' ' + getUnitCodeText(e.unitCode);
+
+        var cell3=newRow.insertCell(3);
+        cell3.classList.add('text-center');
+        if(recipeFormType=='products'){
+            cell3.innerHTML='<a href="javascript:removeProcessInputMaterial(' + adimIndex + ',' + index2 + ');" class="btn btn-danger fas fa-trash-alt"  title="sil"></a>';    
+        }else{
+            cell3.innerHTML='';
+        }
+       
     });
-    
+
+    if(recipeFormType=='products'){
+        adimDiv.querySelector('#totalPercentInput').innerHTML='%' + toplamOran.formatMoney();
+        
+    }
+   
 }
 
 function removeProcessInputMaterial(adimIndex,rowIndex){
@@ -554,6 +579,20 @@ function autoCompleteItemName(adimIndex){
     $('#adim' + adimIndex + ' #itemName' ).keypress(function( event ) {
       if ( event.which == 13 ) {
         event.preventDefault();
+        $( '#adim' + adimIndex + ' #percent').focus();
+        $( '#adim' + adimIndex + ' #percent').select();
+      }
+    });
+    $('#adim' + adimIndex + ' #percent').change(function() {
+        var oran=Number($('#adim' + adimIndex + ' #percent').val());
+        var receteMiktari=doc.totalQuantity * defaultUnit.netWeight.value;
+        var miktar=Math.round(100*receteMiktari*oran/100)/100;
+        $('#adim' + adimIndex + ' #quantity').val(miktar);
+
+    });
+    $('#adim' + adimIndex + ' #percent').keypress(function( event ) {
+      if ( event.which == 13 ) {
+        event.preventDefault();
         $( '#adim' + adimIndex + ' #quantity').focus();
         $( '#adim' + adimIndex + ' #quantity').select();
       }
@@ -612,7 +651,7 @@ function autoCompleteItemName(adimIndex){
     $('#adim' + adimIndex + ' #station').change(function() {
         doc.process[adimIndex].station={
             _id:$( '#adim' + adimIndex + ' #station').val(),
-            name:$( '#adim' + adimIndex + ' #station option:selected').text(),
+            name:$( '#adim' + adimIndex + ' #station option:selected').text()
         }
     });
 

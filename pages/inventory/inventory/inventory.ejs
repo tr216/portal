@@ -1,0 +1,10 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'item.name.value',text:'Adı',type:'label' , filter:true, orderable:true, width:'60%'},
+        {name:'quantity',text:'Miktar',type:'label' , filter:true, orderable:true}
+    ],
+    caption:'',
+    viewButton:true
+    }) 
+%>

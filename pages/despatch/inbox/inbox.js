@@ -1,6 +1,7 @@
 module.exports = function(req,res,callback){
 	var data={
 		eIntegratorList:[],
+		locationList:[],
 		docStatusTypes:Array.from(staticValues.despatchStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
 		docProfileIdList:Array.from(staticValues.despatchProfileIdList),
@@ -85,11 +86,25 @@ function getList(req,res,data,callback){
 
 function initLookUpLists(req,res,data,cb){
 	data.eIntegratorList=[];
+	data.locationList=[];
+
 	api.get('/' + req.query.db + '/e-integrators',req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
+			if(data.eIntegratorList.length>0){
+				data.eIntegratorList.forEach((e)=>{
+					if(e.isDefault){
+						data.form.eIntegrator=e._id;
+					}
+				})
+			}
 		}
-		cb(null,data);
+		api.get('/' + req.query.db + '/locations',req,{passive:false},(err,resp)=>{
+			if(!err){
+				data.locationList=resp.data.docs;
+			}
+			cb(null,data);
+		});
 	});
 }
 

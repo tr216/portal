@@ -7,6 +7,7 @@
             caption:'Bilgiler',
             formControls:{
                 itemType:{ name:'itemType', caption:'Türü', type:'lookup' , lookup:productTypeList, required:true},
+                code:{ name:'code.value', caption:'Kod', type:'textbox'    ,required:true},
                 name:{ name:'name.value', caption:'Adı', type:'textbox'    ,required:true},
                 description:{ name:'description.value', caption:'Açıklama', type:'textbox'},
                 brandName:{ name:'brandName.value', caption:'Marka', type:'textbox'},
@@ -23,6 +24,13 @@
             }
         },
         {
+            caption:'Birimler/Barkodlar',
+            formControls:{
+                unitPacks:{ name:'unitPacks', caption:'Birimler', type:'partial' ,partial:'./unitpacks.ejs'},
+                barkodlar:{ name:'barkodlar', caption:'Barkodlar (Carpanlari ";" ile barkod sonuna ekleyiniz)', type:'textarea' , rows:5}
+            }
+        },
+        {
             caption:'Resimler',
             formControls:{
                 image0  :{name:'images.0', caption:'Resim 1',     type:'fileBase64Image'   },
@@ -32,14 +40,8 @@
                 file1  :{name:'files.1', caption:'Dosya/dokuman 2',     type:'fileBase64'   },
                 file2  :{name:'files.2', caption:'Dosya/dokuman 3',     type:'fileBase64'   }
             }
-        },
-        {
-            caption:'Diger',
-            formControls:{
-                barkodlar:{ name:'barkodlar', caption:'Barkodlar (Carpanlari ";" ile barkod sonuna ekleyiniz)', type:'textarea' , rows:5},
-                paketAgirliklari:{ name:'paketAgirliklari', caption:'Paket ağırlıkları/adetleri', type:'textarea' , rows:5}
-            }
         }
+        
     ],
     action:'',
     mode:'view',
