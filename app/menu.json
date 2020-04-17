@@ -36,7 +36,10 @@
 		{"text":"Stok Kartlari",		"path":"/inventory/items?itemType=item",		"icon":"fas fa-dolly-flatbed", "visible":true, "nodes":[]},
 		{"text":"Envanter durumu",		"path":"/inventory/inventory", 		"icon":"fas fa-boxes", "visible":true, "nodes":[]},
 		{"text":"Sayım",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]},
-		{"text":"Stok işlemleri",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]}
+		{"text":"Stok işlemleri",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]},
+		{"text":"Tanimlamalar",			"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
+			{"text":"Paletler",	 			"path":"/inventory/pallets", "icon":"fas fa-pallet", "visible":true, "nodes":[]}
+		]}
 	]},
 	{"text":"Finans",	"module":"finance",	 "path":"",	"icon":"fas fa-money-bill-wave", "visible":true, "nodes":[
 		{"text":"Müşteriler",		"path":"/finance/customers",		"icon":"fas fa-users", "visible":true, "nodes":[]},
@@ -79,6 +82,7 @@
 	{"text":"Ayarlar",		"path":"",					"icon":"fas fa-wrench", "visible":true,
 		"nodes":[
 			{"text":"Lokasyonlar",			"path":"/settings/locations",			"icon":"fas fa-map-marker", "visible":true, "nodes":[]},
+			{"text":"Alt Lokasyonlar",			"path":"/settings/sub-locations",			"icon":"fas fa-th-large", "visible":true, "nodes":[]},
 			{"text":"Vardiya Tanımları",	"path":"/settings/shifts",				"icon":"far fa-clock", "visible":true, "nodes":[]},
 			{"text":"Personel",				"path":"/settings/persons", 			"icon":"fas fa-users", "visible":true, "nodes":[]},
 			{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"fas fa-plug", "visible":true, "nodes":[]},

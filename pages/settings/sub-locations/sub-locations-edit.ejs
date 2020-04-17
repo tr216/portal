@@ -1,0 +1,14 @@
+<%layout('../../_common/layout')%>
+
+<%- partial('../../_common/form', {
+   
+    formControls:{
+        location:{caption:'Lokasyon', type:'lookup' , lookup:locationList, valueField:'_id', textField:'locationName'   ,required:true},
+        name:{caption:'Alt Lokasyon ismi', type:'textbox'    ,required:true},
+        passive:{caption:'Pasif?', type:'checkbox'    }
+    },
+    action:'',
+    mode:'edit'
+    }) 
+%>
+

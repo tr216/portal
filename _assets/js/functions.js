@@ -363,3 +363,34 @@ function getUnitCodeText(unitCode){
 	}
 	return unitCode;
 }
+
+function incString(text){
+    if(!text) return '1';
+    var sbuf='';
+    for(var i=text.length-1;i>=0;i--){
+        if(!isNaN(text[i])){
+            sbuf =text[i] + sbuf;
+        }else{
+            break;
+        }
+    }
+    if(sbuf=='') return text +'1';
+
+    //A04950;  sbuf='04950';
+    var numara=Number(sbuf);
+    var numaraString='';
+    numara++;
+    if(numara.toString().length<sbuf.length){
+        numaraString=numara.toString();
+        for(var i=0;i<(sbuf.length-numara.toString().length);i++){
+            numaraString = '0' + numaraString;
+        }
+    }else{
+        numaraString=numara.toString();
+    }
+    if(numaraString.length>=text.length){
+        return numaraString;
+    }else{
+        return text.substr(0,(text.length-numaraString.length)) + numaraString;
+    }
+}

@@ -1,0 +1,69 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'name',text:'Palet',type:'label' , filter:true, orderable:true},
+        {name:'palletType',text:'Palet Tip',type:'label' , filter:true, orderable:true},
+        {name:'width',text:'En',type:'label' , filter:true, orderable:true},
+        {name:'length',text:'Boy',type:'label' , filter:true, orderable:true},
+        {name:'height',text:'Yukseklik',type:'label' , filter:true, orderable:true},
+        {name:'maxWeight',text:'Max Kg',type:'label' , filter:true, orderable:true},
+        {name:'passive',text:'Pasif',type:'checkbox', filter:true, width:'120px', orderable:true}
+    ],
+    caption:'Palet Listesi',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    deleteUrl:'/dbapi/pallets/{_id}?db=' + db + '&sid=' + sid,
+    customButtons:[
+        {href:'javascript:itemCopyConfirm("{_id}","{name}")', text:'Kopyala',icon:'far fa-copy'}
+    ]
+    }) 
+%>
+
+<%- partial('../../_common/modal',{
+    modalId:'itemCopyModal',
+    caption:'Kopya',
+    formControls:{
+        newName:{caption:'Yeni Palet isim/kod/numara', type:'textbox', default:''}
+    },
+    mode:'addnew',
+    buttons:[
+        {isCancelButton:true},
+        {href:'javascript:itemCopySave()', text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+    ]
+}) %>
+
+<script type="text/javascript">
+    var temp_id, temp_name;
+    function itemCopyConfirm(id, name){
+        temp_id=id;
+        temp_name=name;
+        $('#newName').val(incString(name));
+        $('#itemCopyModal').modal('show');
+    }
+
+    function itemCopySave(){
+        if($('#newName').val().trim()==''){
+            alert('Isim bos olamaz');
+            return;
+        }
+        $('#itemCopyModal').modal('hide');
+
+        var data={id:temp_id, newName:$('#newName').val()}
+        $.ajax({
+            url:'/dbapi/pallets/copy?db=<%=db%>&sid=<%=sid%>',
+            data:data,
+            type:'POST',
+            success:function(result){
+                if(result.success){
+                    window.location.reload();
+                }else{
+                    $('#itemCopyModal').modal('show');
+                    alert(result.error.code + ' - ' + result.error.message);
+                }
+            }
+        });
+       
+    }
+</script>

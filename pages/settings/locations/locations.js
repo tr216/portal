@@ -1,9 +1,10 @@
 module.exports = function(req,res,callback){
 	var data={
-		locationTypeList:staticValues.locationTypes,
+		locationTypeList:clone(staticValues.locationTypes),
 		form:{
 			locationName:'',
 			locationType:0,
+			hasSubLocations:false,
 			passive:false
 		},
 		list:[],
@@ -21,6 +22,9 @@ module.exports = function(req,res,callback){
 		case 'edit':
 			edit(req,res,data,callback);
 		break;
+		case 'view':
+			edit(req,res,data,callback);
+		break;
 		case 'delete':
 		
 		deleteItem(req,res,data,callback);
@@ -34,6 +38,7 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
+	data.locationTypeList.unshift({text:'-- Tümü --', value:-1});
 	api.get('/' + req.query.db + '/locations',req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp);
@@ -45,19 +50,14 @@ function getList(req,res,data,callback){
 function addnew(req,res,data,callback){
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body);
-		if(data.form.locationName.trim()==''){
-			data['message']='Lokasyon ismi bos olamaz!';
-			callback(null,data);
-		}else{
-			api.post('/' + req.query.db + '/locations',req,data.form,(err,resp)=>{
-				if(!err){
-					res.redirect('/settings/locations?db=' + req.query.db +'&sid=' + req.query.sid);
- 				}else{
- 					data['message']=err.message;
- 					callback(null,data);
- 				}
- 			});
-		}
+		api.post('/' + req.query.db + '/locations',req,data.form,(err,resp)=>{
+			if(!err){
+				res.redirect('/settings/locations?db=' + req.query.db +'&sid=' + req.query.sid);
+			}else{
+				data['message']=err.message;
+				callback(null,data);
+			}
+		});
 	}else{
 		callback(null,data);
 	}
@@ -66,18 +66,13 @@ function addnew(req,res,data,callback){
 function edit(req,res,data,callback){
 	//data['title']='Lokasyon Duzelt';
 	var _id=req.params.id || '';
+	if(_id.trim()==''){
+		data['message']='ID bos olamaz';
+		callback(null,data);
+		return;
+	}
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body);
-		if(data.form.locationName.trim()==''){
-			data['message']='Lokasyon ismi bos olamaz!';
-			callback(null,data);
-			return;
-		}
-		if(_id.trim()==''){
-			data['message']='ID bos olamaz';
-			callback(null,data);
-			return;
-		}
 
 		api.put('/' + req.query.db + '/locations/' + _id, req,data.form,(err,resp)=>{
 			if(!err){
