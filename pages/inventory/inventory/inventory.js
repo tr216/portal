@@ -7,7 +7,7 @@ module.exports = function(req,res,callback){
 			quantity:0,
 			quantity2:0,
 			quantity3:0,
-			locations:[]
+			details:[]
 		},
 		filter:{},
 		list:[]
@@ -47,7 +47,6 @@ function view(req,res,data,callback){
 
 	api.get('/' + req.query.db + '/inventory/' + _id,req,null,(err,resp)=>{
 		if(!err){
-			console.log('resp.data.locations:',resp.data.locations);
 			data.form=Object.assign({},data.form,resp.data);
 			callback(null,data);
 		}else{

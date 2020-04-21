@@ -155,6 +155,17 @@
 		{"text":"Hata","value": "Error"}
 		
 	],
+	"inventoryFicheTypeCodeList":[
+		{"text":"Transfer","value": "TRANSFER"},
+		{"text":"Giriş","value": "GIRIS"},
+		{"text":"Çıkış","value": "CIKIS"},
+		{"text":"Sayım Fazlası(-)","value": "SAYIMFAZLASI"},
+		{"text":"Sayım Eksiği(+)","value": "SAYIMEKSIGI"},
+		{"text":"Sarf","value": "SARF"},
+		{"text":"Üretime Çıkış","value": "URETIMECIKIS"},
+		{"text":"Üretimden Giriş","value": "URETIMDENGIRIS"},
+		{"text":"Sayım","value": "SAYIM"}
+	],
 	"xsltFileTypes":[
 		{"text":".xslt","value": "xslt","icon":"file"},
 		{"text":".txt","value": "txt","icon":"file-alt"},

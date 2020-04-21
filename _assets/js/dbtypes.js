@@ -185,6 +185,11 @@ const itemType={
     sellersItemIdentification:{ID:idType},
     originCountry:countryType,
     itemInstance:[itemInstanceType],
+    images:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
+    files:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
+    localDocumentId:'',
+    passive:false
+    
 }
 
 const paymentTermsType={

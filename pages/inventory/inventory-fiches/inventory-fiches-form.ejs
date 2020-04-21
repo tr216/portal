@@ -1,0 +1,477 @@
+<%
+    var headerButtons='';
+    headerButtons +='<button type="button" class="btn btn-primary" title="Kaydet" onclick="formKaydet()"><i class="fas fa-save"></i></button>';
+    
+    headerButtons +='<a href="javascript:goBack();" class="btn btn-dark ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
+%>
+
+
+<form action="" method="POST" role="form" name="form1" id="form1">
+    <% if(typeof message!='undefined'){ if(message!=''){ %>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <%=message %>
+            </div>
+        </div>
+    </div>
+    <% } } %>
+
+    <div class="card">
+        <div class="card-header p-1">
+            <div class="float-left bold text-primary">Fiş Bilgileri</div>
+        </div>
+        <div class="card-body p-1">
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label for="" class="m-0">Fiş No</label>
+                    <input type="text" class="form-control" name="docId" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.docId%>">
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="" class="m-0">Tarih</label>
+                    <div class="input-group date">
+                        <input type="text" name="issueDate" id="issueDate" class="form-control" value="<% if(typeof form.issueDate=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate%><%}%>">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="" class="m-0">Saat</label>
+                    <div class="input-group" id="issueTime1">
+                        <input type="text" name="issueTime" id="issueTime" class="form-control" value="<% if(typeof form.issueTime=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.substr(0,8)%><%}%>">
+                        <div class="input-group-addon">
+                            <i class="fa fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="" class="m-0">Fiş Tipi</label>
+                    <select name="docTypeCode" class="form-control" <% if(mode!='addnew'){%>disabled<%}%> onchange="docTypeCodeChange()">
+                        <% staticValues.inventoryFicheTypeCodeList.forEach(function(e){ %>
+                            <option value="<%=e.value%>" <% if(e.value==form.docTypeCode){%>selected<%} %> ><%=e.text%></option>
+                        <% }); %>
+                    </select>
+                </div>
+                
+                <div class="w-100"></div>
+                <div class="form-group col-md-5">
+                    <label for="" class="m-0">Fiş açıklaması</label>
+                    <input type="text" class="form-control" name="description" placeholder="Fiş açıklaması" autocomplete="off" value="<%=form.description%>">
+                </div>
+                <div class="col-md-3">
+                    <%- partial('../../_common/location-selection',{name:'location',subLocationName:'subLocation',inputTitle:'Lokasyon',form:form}) %>
+                </div>
+                <div id="divLocation2" class="col-md-3" style="display: none;">
+                    <%- partial('../../_common/location-selection',{name:'location2',subLocationName:'subLocation2',inputTitle:'Hedef Lokasyon',form:form}) %>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card mt-2">
+        <div class="card-header p-1">
+            <div class="float-left bold text-primary">Satırlar</div>
+        </div>
+        <div class="card-body p-1">
+            <table id="grid1" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+                <thead>
+                    <tr class="text-nowrap">
+                        <th width="40" class="">No</th>
+                        <th width="200" class="">Stok Karti</th>
+                        <th class="text-right" style="min-width:120px;">Miktar</th>
+                        <th>Brm</th>
+                        <th>Palet</th>
+                        <th>Lot No</th>
+                        <th>Seri No</th>
+                        <th>Renk</th>
+                        <th>Desen</th>
+                        <th>Beden</th>
+                        <th width="80" class="text-center">#</th>
+                    </tr>
+                </thead>
+                <tbody id="lineGrid">
+
+                    <% if(mode!='view'){ %>
+                    <tr>
+                        <td>#</td>
+                        <td>
+                            <input type="text" class="form-control" id="docLine-item-name" autocomplete="off" placeholder="" value="" title="Stok karti sec">
+                            <input type="hidden" class="form-control" id="docLine-item-id" autocomplete="off" value=""></td>
+                        <td>
+                            <input type="number" class="form-control" id="docLine-quantity" placeholder="" autocomplete="off" value="0" title="Miktar">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="docLine-unitCodeText" autocomplete="off" placeholder="" value="" title="Birim" readonly="true">
+                            <input type="hidden" class="form-control" id="docLine-unitCode" autocomplete="off" value="">
+                        </td>
+
+                        <td>
+                            <select name="docLine-pallet" class="form-control" title="Palet"></select>
+                        </td>
+                        <td><input type="text" class="form-control" id="docLine-lotNo" autocomplete="off" placeholder="" value="" title="lot numarasi"></td>
+                        <td><input type="text" class="form-control" id="docLine-serialNo" autocomplete="off" placeholder="" value="" title="seri numarasi"></td>
+                        <td>
+                            <select name="docLine-color" id="docLine-color" class="form-control" title="Renk"></select>
+                        </td>
+                        <td><select name="docLine-pattern"  id="docLine-pattern" class="form-control" title="Desen"></select></td>
+                        <td><select name="docLine-size"  id="docLine-size" class="form-control" title="Beden/Size"></select></td>
+                        <td class="text-center">
+                            <a href="javascript:addNewLine();" class="btn btn-primary far fa-plus-square"  title="Ekle"></a>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="divSayimKesinlestir" class="card mt-2" style="display: none;">
+        <div class="card-header p-1">
+            <div class="float-left bold text-primary">Sayım Kesinleştirme</div>
+        </div>
+        <div class="card-body p-1">
+            <h3>sayim kesinlestirme islemleri eklenecek qwerty</h3>
+        </div>
+    </div>
+</form>
+
+
+<script type="text/javascript">
+    var headerButtons=document.getElementById('headerButtons');
+    if(headerButtons){
+      headerButtons.innerHTML='<%- headerButtons %>';
+    }
+    var db='<%=db%>';
+    var sid='<%=sid%>';
+    var _id='<%=(form._id || '')%>';
+    var doc={
+        docTypeCode:'',
+        docId:'',
+        issueDate: '',
+        issueTime: '',
+        location: '',
+        subLocation: '',
+        palletId: '',
+        location2: '',
+        subLocation2: '',
+        palletId2:'',
+        description:'',
+        docLine:[]
+    }
+
+
+    doc.issueDate.value=(new Date()).yyyymmdd();
+    doc.issueTime.value=(new Date()).hhmm();
+
+    var unitCodeList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(staticValues.unitCodeList)) %>'));
+
+    <% 
+        if(typeof form._id!='undefined'){
+        if((form._id || '')!=''){ 
+    %>
+    doc=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form))%>'));
+    
+    <%  }
+    } %>
+
+    function docTypeCodeChange(){
+        if($('select[name="docTypeCode"]').val()=='TRANSFER'){
+            $('#divLocation2').show();
+        }else{
+            $('#divLocation2').hide();
+        }
+        if($('select[name="docTypeCode"]').val()=='SAYIM'){
+            $('#divSayimKesinlestir').show();
+        }else{
+            $('#divSayimKesinlestir').hide();
+        }
+        
+    }
+
+   
+
+    $('select[name="pallet"]').change(function(){
+        console.log('qwrerty palet stogunu detaylara ekleyelim.');
+    });
+
+    function addNewLine(obj){
+        var lineGrid=document.getElementById('lineGrid');
+        var index=lineGrid.rows.length-1;
+        var newRow=lineGrid.insertRow(lineGrid.rows.length-1);
+        doc.docLine.forEach(function(e,sira){
+            e.sequence=sira+1;
+        })
+        if(obj==undefined){
+            if($('#docLine-item-id').val()=='') return;
+            if(($('#docLine-lotNo').prop('readonly') || false)==false){
+                if(($('#docLine-lotNo').val() || '').trim()==''){
+                    alert('Lutfen lot numarasi giriniz.');
+                    $('#docLine-lotNo').focus();
+                    return;
+                }
+            }
+            if(($('#docLine-serialNo').prop('readonly') || false)==false){
+                if(($('#docLine-serialNo').val() || '').trim()==''){
+                    alert('Lutfen seri numarasi giriniz.');
+                    $('#docLine-serialNo').focus();
+                    return;
+                }
+            }
+            if(($('#docLine-color').prop('disabled') || false)==false){
+                if(!$('#docLine-color').val()){
+                    alert('Lutfen renk seciniz.');
+                    $('#docLine-color').focus();
+                    return;
+                }
+            }
+
+            if(($('#docLine-pattern').prop('disabled') || false)==false){
+                if(!$('#docLine-pattern').val()){
+                    alert('Lutfen desen seciniz.');
+                    $('#docLine-pattern').focus();
+                    return;
+                }
+            }
+
+            if(($('#docLine-size').prop('disabled') || false)==false){
+                if(!$('#docLine-size').val()){
+                    alert('Lutfen beden/size seciniz.');
+                    $('#docLine-size').focus();
+                    return;
+                }
+            }
+
+
+            obj={
+                sequence:doc.docLine.length+1,
+                item:{_id: $('#docLine-item-id').val() , name:{value:$('#docLine-item-name').val()}} ,
+                quantity:Number($('#docLine-quantity').val()),
+                quantity2:Number($('#docLine-quantity').val()),  //qwerty
+                quantity3:Number($('#docLine-quantity').val()),  //qwerty
+                unitCode:$('#docLine-unitCode').val(),
+                pallet:{_id: $('#docLine-pallet').val() , name:$('#docLine-pallet option:selected').text()} ,
+                lotNo:$('#docLine-lotNo').val(),
+                serialNo:$('#docLine-serialNo').val(),
+                color:{_id: $('#docLine-color').val() , name:$('#docLine-color option:selected').text()} ,
+                pattern:{_id: $('#docLine-pattern').val() , name:$('#docLine-pattern option:selected').text()} ,
+                size:{_id: $('#docLine-size').val() , name:$('#docLine-size option:selected').text()}
+            }
+            
+            doc.docLine.push(obj);
+            
+            $('#docLine-item-id').val('');
+            $('#docLine-item-name').val('');
+            $('#docLine-quantity').val(0);
+            $('#docLine-pallet').val('');
+            $('#docLine-lotNo').val('');
+            $('#docLine-serialNo').val('');
+            $('#docLine-color').val('');
+            $('#docLine-pattern').val('');
+            $('#docLine-size').val('');
+        }
+
+        var cell0=newRow.insertCell(0);
+        cell0.classList.add('text-right');
+        cell0.innerHTML=obj.sequence;
+
+        var cell1=newRow.insertCell(1);
+        cell1.innerHTML=obj.item==undefined?'':obj.item.name.value;
+
+        var cell2=newRow.insertCell(2);
+        cell2.classList.add('text-right');
+        cell2.innerHTML=Number(obj.quantity).formatQuantity();
+
+        var cell3=newRow.insertCell(3);
+        cell3.innerHTML=getUnitCodeText(obj.unitCode);
+
+        var cell4=newRow.insertCell(4);
+        cell4.innerHTML=obj.pallet?obj.pallet.name:'';
+
+        var cell5=newRow.insertCell(5);
+        cell5.innerHTML=obj.lotNo;
+
+        var cell6=newRow.insertCell(6);
+        cell6.innerHTML=obj.serialNo;
+
+        var cell7=newRow.insertCell(7);
+        cell7.innerHTML=obj.color?obj.color.name:'';
+
+        var cell8=newRow.insertCell(8);
+        cell8.innerHTML=obj.pattern?obj.pattern.name:'';
+
+        var cell9=newRow.insertCell(9);
+        cell9.innerHTML=obj.size?obj.size.name:'';
+
+        var cell10=newRow.insertCell(10);
+        <% if(mode=='view'){%>
+        cell10.innerHTML='';
+        <%}else{%>
+        cell10.innerHTML='<a href="javascript:removeLine(' + index + ');" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>';
+        <% } %>
+        cell10.classList.add('text-center');
+    }
+
+    function removeLine(index){
+        if(confirm('Satiri silmek istedinizden emin misiniz?')==false) return;
+        doc.docLine.splice(index,1);
+        refreshLines();
+    }
+
+    function refreshLines(){
+        var lineGrid=document.getElementById('lineGrid');
+        while(lineGrid.rows.length>1){
+            lineGrid.deleteRow(0);
+        }
+        doc.docLine.forEach(function(e){
+            addNewLine(e);
+        })
+    }
+    function docLineItemNameAutoComplete(){
+        var q=getAllUrlParams();
+
+        $('#docLine-item-name').autocomplete({
+            source:function(request,response){
+                $("#docLine-item-id").val(''); 
+                $("#docLine-item-unitCode").val(''); 
+                
+                $.ajax({
+                    url:'/dbapi/items?itemType=all&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                    type:'GET',
+                    dataType: 'json',
+                    success: function(result) {
+                            if(result.success){
+                                var dizi=[];
+                                for(var i=0;i<result.data.docs.length;i++){
+                                    var item=result.data.docs[i];
+                                    dizi.push({
+                                        name:item.name.value, 
+                                        label:(getItemTypeName(item.itemType) + ' - ' + item.name.value),
+                                        value:item._id,
+                                        itemType:item.itemType,
+                                        unitPacks:item.unitPacks,
+                                        tracking:(item.tracking!=undefined?item.tracking:{lotNo:false,serialNo:false,color:false,pattern:false,size:false})
+                                    });
+                                }
+                                
+                                response(dizi);
+                            }
+                        },
+                    error:function(err){
+                        console.error('err:',err);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                    $("#docLine-item-name").val(ui.item.name); 
+                    $("#docLine-item-id").val(ui.item.value);
+                    $("#docLine-unitCode").val('');
+                    if(ui.item.unitPacks){
+                        if(ui.item.unitPacks.length){
+                            $("#docLine-unitCode").val(ui.item.unitPacks[0].unitCode);
+                            $("#docLine-unitCodeText").val(getUnitCodeText(ui.item.unitPacks[0].unitCode));
+                        }
+                    }
+
+                    $('#docLine-lotNo').val('');
+                    if(!ui.item.tracking.lotNo){
+                        $('#docLine-lotNo').prop('readonly',true);
+                    }else{
+                        $('#docLine-lotNo').prop('readonly',false);
+                    }
+
+                    $('#docLine-serialNo').val('');
+                    if(!ui.item.tracking.serialNo){
+                        $('#docLine-serialNo').prop('readonly',true);
+                    }else{
+                        $('#docLine-serialNo').prop('readonly',false);
+                    }
+
+                    $('#docLine-color').val('');
+                    if(!ui.item.tracking.color){
+                        $('#docLine-color').prop('disabled',true);
+                    }else{
+                        $('#docLine-color').prop('disabled',false);
+                    }
+
+                    $('#docLine-pattern').val('');
+                    if(!ui.item.tracking.pattern){
+                        $('#docLine-pattern').prop('disabled',true);
+                    }else{
+                        $('#docLine-pattern').prop('disabled',false);
+                    }
+
+                    $('#docLine-size').val('');
+                    if(!ui.item.tracking.size){
+                        $('#docLine-size').prop('disabled',true);
+                    }else{
+                        $('#docLine-size').prop('disabled',false);
+                    }
+                    return false;
+                }
+        });
+
+
+    }
+
+    docLineItemNameAutoComplete();
+
+    docTypeCodeChange();
+    refreshLines();
+
+
+    function formKaydet(){
+        var q=getAllUrlParams();
+        doc.docId=$('input[name="docId"]').val();
+        doc.docTypeCode=$('select[name="docTypeCode"]').val();
+        doc.issueDate=$('input[name="issueDate"]').val();
+        doc.issueTime=$('input[name="issueTime"]').val();
+        doc.location=$('select[name="location"]').val().split(';')[0];
+        doc.subLocation=$('select[name="subLocation"]').val();
+        doc.location2=$('select[name="location2"]').val().split(';')[0];
+        doc.subLocation2=$('select[name="subLocation2"]').val();
+        doc.description=$('input[name="description"]').val();
+
+        var url='';
+        var type='PUT';
+        if((doc._id || '')=='') type='POST';
+        if((doc._id || '')=='')
+            url='/dbapi/inventory-fiches?db=' + db + '&sid=' + sid;
+        else
+            url='/dbapi/inventory-fiches/' + doc._id + '?db=' + db + '&sid=' + sid;
+        $.ajax({
+            url:url,
+            data:doc,
+            type:type,
+            success:function(result){
+                if(result.success){
+                    goBack();
+                }else{
+                    alert(result.error.message)
+                }
+            }
+        });
+    }
+
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.input-group.date').datepicker({
+            format: 'yyyy-mm-dd',
+            language: "tr",
+            orientation: "bottom auto",
+            // todayBtn: "linked",
+            autoclose: true,
+            todayHighlight: true,
+            clearBtn: true
+
+            // startDate: -4,
+            // endDate: +8,
+        });
+
+
+
+    });
+</script>

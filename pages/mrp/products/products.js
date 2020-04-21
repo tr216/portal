@@ -40,7 +40,14 @@ module.exports = function(req,res,callback){
 	        localDocumentId:'',
 	        passive:false,
 	        barkodlar:'',
-	        paketAgirliklari:''
+	        tracking:{
+		        pallet:false,
+		        lotNo:false,
+		        serialNo:false,
+		        color:false,
+		        pattern:false,
+		        size:false
+		    }
 	        
 		},
 		filter:{},

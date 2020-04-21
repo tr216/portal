@@ -167,7 +167,7 @@
                                         <% }); %>
                                     </select>
                                 <% } else { %>
-                                    <input type="text" class="form-control p-0 m-0" name="filter_<%=index%>" id="filter_<%=index%>" value="<%=field.filterValue%>">
+                                    <input type="text" class="form-control p-0 m-0" name="filter_<%=index%>" id="filter_<%=index%>" <% if(typeof field.placeholder!='undefined'){%>placeholder="<%=field.placeholder%>"<%}%> value="<%=field.filterValue%>">
                                 <% } %>
                             <% } %>
                         </th>

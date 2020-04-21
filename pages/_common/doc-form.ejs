@@ -210,14 +210,10 @@
                             <label for="" class="m-0">Yerel <%=title%> No</label>
                             <input type="text" class="form-control" name="localDocumentId" placeholder="localDocumentId" autocomplete="off"  value="<%=form.localDocumentId%>">
                         </div>
+                       
                         <% if(docFormType=='despatch' || docFormType=='invoice'){ %>
-                        <div class="form-group col-md-3">
-                            <label for="" class="m-0">Lokasyon:</label>
-                            <select name="location" class="form-control">
-                                <% locationList.forEach((e)=>{ %>
-                                <option value="<%=e._id%>" <% if(form.location==e._id){%> selected <%}%>><%=e.locationName%></option>
-                                <%  }); %>
-                            </select>
+                        <div class="col-md-4">
+                            <%- partial('./location-selection.ejs',{name:'location',subLocationName:'subLocation'}) %>
                         </div>
                         <% } %>
                     </div>

@@ -36,7 +36,7 @@
 		{"text":"Stok Kartlari",		"path":"/inventory/items?itemType=item",		"icon":"fas fa-dolly-flatbed", "visible":true, "nodes":[]},
 		{"text":"Envanter durumu",		"path":"/inventory/inventory", 		"icon":"fas fa-boxes", "visible":true, "nodes":[]},
 		{"text":"Sayım",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]},
-		{"text":"Stok işlemleri",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]},
+		{"text":"Stok fişleri",		"path":"/inventory/inventory-fiches",		"icon":"fas fa-truck-loading", "visible":true, "nodes":[]},
 		{"text":"Tanimlamalar",			"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
 			{"text":"Paletler",	 			"path":"/inventory/pallets", "icon":"fas fa-pallet", "visible":true, "nodes":[]}
 		]}

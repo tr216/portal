@@ -3,8 +3,8 @@ module.exports = function(req,res,callback){
 	var data={
 		accountGroupList:[],
 		form:{
+			_id:'',
 			itemType:(req.query.itemType || 'item'),
-	        code:{ value:''},
 	        name:{ value:''},
 	        additionalItemIdentification:[{ID:{ value:''}}],
 	        brandName:{ value:''},
@@ -21,7 +21,7 @@ module.exports = function(req,res,callback){
 	        sellersItemIdentification:{ID:{ value:''}},
 	        originCountry:{},
 	        itemInstance:[],
-	        accountGroup: null,
+	        accountGroup: '',
 	        similar:[],
 	        unitPacks:[],
 	        vendors:[{
@@ -35,17 +35,21 @@ module.exports = function(req,res,callback){
 	        files:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
 	        localDocumentId:'',
 	        passive:false,
-	        exceptInventory:false,
-	        exceptRecipeCalculation:false,
 	        barkodlar:'',
-	        paketAgirliklari:''
+	        tracking:{
+		        pallet:false,
+		        lotNo:false,
+		        serialNo:false,
+		        color:false,
+		        pattern:false,
+		        size:false
+		    }
 	        
 		},
-
 		filter:{},
 		list:[]
 	}
-	
+
 	if(!req.query.db){
 		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
 	}

@@ -498,12 +498,15 @@ function saveDocument(callback){
     	case 'invoice':
     		doc.invoiceTypeCode={ value:$("select[name='invoiceTypeCode[value]']").val()}
     		doc.location=$("select[name='location']").val();
+    		doc.subLocation=$("select[name='subLocation']").val();
     	break;
 
     	case 'despatch':
     		doc.despatchAdviceTypeCode={ value:$("select[name='despatchAdviceTypeCode[value]']").val()}
     		doc.location=$("select[name='location']").val();
-			doc.location2=$("select[name='location']").val();
+    		doc.subLocation=$("select[name='subLocation']").val();
+			doc.location2=$("select[name='location2']").val();
+			doc.subLocation2=$("select[name='subLocation']").val();
     	break;
     }
     
@@ -627,7 +630,6 @@ function saveDocument(callback){
 }
 
 
-
 function addIskontoRow(obj={oran:'',tutar:'',aciklama:''}){
 	
 	var iskontoRow0=document.getElementById('iskontoRow0');
@@ -652,12 +654,11 @@ function addIskontoRow(obj={oran:'',tutar:'',aciklama:''}){
 
 function removeIskontoRow(rowId){
 	document.getElementById(rowId).remove();
-	
 }
+
 function addArtirimRow(obj={oran:'',tutar:'',aciklama:''}){
 	
 	var artirimRow0=document.getElementById('artirimRow0');
-  
    
 	var clone = artirimRow0.cloneNode(true);
 	
@@ -674,10 +675,8 @@ function addArtirimRow(obj={oran:'',tutar:'',aciklama:''}){
 	artirimCount++;
 }
 
-
 function removeArtirimRow(rowId){
 	document.getElementById(rowId).remove();
-	
 }
 
 function docLinePackageGrid_clear(){

@@ -31,7 +31,12 @@
         {name:'name.value',text:'Adı',type:'label' , filter:true, filterField:'name', orderable:true, width:'60%'},
         {name:'description.value',text:'Açıklama',type:'label' , filter:true, filterField:'description', orderable:true},
         {name:'accountGroup',text:'Muh.Grup',type:'lookup' ,lookupList:accountGroupList, filter:true, textField:'name',valueField:'_id', orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1, filter:true, orderable:true}
+        {name:'tracking.lotNo',text:'Lot No?',type:'checkbox',width:'100px', filter:true, orderable:true},
+        {name:'tracking.serialNo',text:'Seri No?',type:'checkbox',width:'100px', filter:true, orderable:true},
+        {name:'tracking.color',text:'Renk?',type:'checkbox',width:'100px', filter:true, orderable:true},
+        {name:'tracking.pattern',text:'Desen?',type:'checkbox',width:'100px', filter:true, orderable:true},
+        {name:'tracking.size',text:'Beden?',type:'checkbox',width:'100px', filter:true, orderable:true},
+        {name:'passive',text:'Pasif',type:'checkbox',width:'100px', filter:true, orderable:true}
     ],
     caption:'',
     addNewButton:true,

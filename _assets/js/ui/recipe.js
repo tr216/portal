@@ -576,13 +576,13 @@ function autoCompleteItemName(adimIndex){
             }
     });
 
-    $('#adim' + adimIndex + ' #itemName' ).keypress(function( event ) {
-      if ( event.which == 13 ) {
-        event.preventDefault();
-        $( '#adim' + adimIndex + ' #percent').focus();
-        $( '#adim' + adimIndex + ' #percent').select();
-      }
-    });
+    // $('#adim' + adimIndex + ' #itemName' ).keypress(function( event ) {
+    //   if ( event.which == 13 ) {
+    //     event.preventDefault();
+    //     $( '#adim' + adimIndex + ' #percent').focus();
+    //     $( '#adim' + adimIndex + ' #percent').select();
+    //   }
+    // });
     $('#adim' + adimIndex + ' #percent').change(function() {
         var oran=Number($('#adim' + adimIndex + ' #percent').val());
         var receteMiktari=doc.totalQuantity * defaultUnit.netWeight.value;
@@ -590,19 +590,19 @@ function autoCompleteItemName(adimIndex){
         $('#adim' + adimIndex + ' #quantity').val(miktar);
 
     });
-    $('#adim' + adimIndex + ' #percent').keypress(function( event ) {
-      if ( event.which == 13 ) {
-        event.preventDefault();
-        $( '#adim' + adimIndex + ' #quantity').focus();
-        $( '#adim' + adimIndex + ' #quantity').select();
-      }
-    });
-    $('#adim' + adimIndex + ' #quantity').keypress(function( event ) {
-      if ( event.which == 13 ) {
-        event.preventDefault();
-        addProcessInputMaterial(adimIndex);
-      }
-    });
+    // $('#adim' + adimIndex + ' #percent').keypress(function( event ) {
+    //   if ( event.which == 13 ) {
+    //     event.preventDefault();
+    //     $( '#adim' + adimIndex + ' #quantity').focus();
+    //     $( '#adim' + adimIndex + ' #quantity').select();
+    //   }
+    // });
+    // $('#adim' + adimIndex + ' #quantity').keypress(function( event ) {
+    //   if ( event.which == 13 ) {
+    //     event.preventDefault();
+    //     addProcessInputMaterial(adimIndex);
+    //   }
+    // });
 
     $('#adim' + adimIndex + ' #itemNameOutput').autocomplete({
         source:function(request,response){

@@ -21,6 +21,15 @@ recipeFormType='products';
                 keyword:{ name:'keyword.value', caption:'Anahtar kelime', type:'textbox'},
                 accountGroup:{ name:'accountGroup', caption:'Muhasebe Grubu', type:'lookup', lookup:accountGroupList, textField:'name',valueField:'_id'},
                 tags:{ name:'tags', caption:'Etiketler (virgulle ayrılmış)', type:'textbox'},
+                tracking1 :{caption:'Stok/Envanter Takibi',  type:'label',   
+                    formControls:{
+                        lotNo:{name:'tracking.lotNo', caption:'Lot No?', type:'checkbox'    },
+                        serialNo:{name:'tracking.serialNo', caption:'Seri No?', type:'checkbox'    },
+                        color:{name:'tracking.color', caption:'Renk?', type:'checkbox'    },
+                        pattern:{name:'tracking.pattern', caption:'Desen?', type:'checkbox'    },
+                        size:{name:'tracking.size', caption:'Beden?', type:'checkbox'    }
+                    }
+                },
                 passive:{caption:'Pasif?', type:'checkbox'    }
             }
         },
