@@ -139,6 +139,35 @@
     </div>
             
     <%- partial('../../_common/recipe.ejs',{recipeFormType:'production-orders'}) %>
+
+     <div class="card mt-2">
+        <div class="card-header p-1">Palet/Ambalaj/Kutu/Koli</div>
+        <div class="card-body p-1">
+            <div class="row m-0 p-0">
+                <div class="col-md-3 p-0 m-0 form-group">
+                    <label class="">Palet</label>
+                    <select class="form-control" id="palletType" name="palletType" onchange="paketPaletHesapla()"></select>
+                </div>
+                <div class="col-md-3 p-0 m-0 form-group">
+                    <label class="">Ambalaj</label>
+                    <select class="form-control" id="packingType" name="packingType" onchange="paketPaletHesapla()"></select>
+                </div>
+                <div class="col-md-2 offset-md-2 p-0 m-0 form-group">
+                    <label class="">Palet Sayisi</label>
+                    <input type="number" class="form-control" name="totalPallet" id="totalPallet" value="0" />
+                </div>
+                <div class="col-md-2 p-0 m-0 form-group">
+                    <label class="">Kutu Sayisi</label>
+                    <input type="number" class="form-control" name="totalPacking" id="totalPacking" value="0" />
+                </div>
+            </div>
+            <div class="row m-0 p-0">
+                <div class="col-md-12">
+                    <div id="aciklama1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 <div class="modal" id="salesOrdersModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="salesOrdersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-scrollable modal-dialog-centered" role="document">
@@ -177,9 +206,8 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-	
 
+<script type="text/javascript">
 
 	function modalSalesOrders(){
 		$("#gridSalesOrdersLineGrid tr").remove();
@@ -338,6 +366,7 @@
 	}
 
     var sourceRecipeDoc;
+    var itemDoc;
 
 	function loadMainItemAndRecipe(callback){
 		$('#production-item-name').val('');
@@ -350,6 +379,9 @@
 	        dataType: 'json',
 	        success: function(result) {
 	                if(result.success){
+                        itemDoc=result.data;
+                        load_palletTypes();
+                        load_packingTypes();
 	                    $('#production-item-name').val(result.data.name.value);
 	                    $.ajax({
 					        url:'/dbapi/recipes?item=' + doc.item + '&db=' + q.db + '&sid=' + q.sid,
@@ -392,6 +424,114 @@
 	    });
 	}
 
+    function load_palletTypes(){
+        if(itemDoc==undefined) return;
+        console.log('itemDoc:',itemDoc);
+
+        $('#palletType option').remove();
+        var palletTypes = document.getElementById("palletType");
+        if(!itemDoc.palletRequired){
+            var c = document.createElement("option");
+            c.text = '-- Palet yok --';
+            c.value='';
+            palletTypes.options.add(c,palletTypes.options.length);
+        }
+        itemDoc.palletTypes.forEach(function(e){
+            var c = document.createElement("option");
+            c.text = e.palletType.name;
+            c.value= e.palletType._id;
+            // c.value=encodeURIComponent(JSON.stringify(e.palletType)); // e.palletType._id;
+            if(e.palletType._id.toString()==(doc.palletType || '').toString()){
+                c.selected=true;
+            }
+            palletTypes.options.add(c, palletTypes.options.length);
+        });
+    }
+
+    function load_packingTypes(){
+        if(itemDoc==undefined) return;
+
+        $('#packingType option').remove();
+        var packingTypes = document.getElementById("packingType");
+        if(!itemDoc.packingRequired){
+            var c = document.createElement("option");
+            c.text = '-- Ambalaj yok --';
+            c.value='';
+            packingTypes.options.add(c,packingTypes.options.length);
+        }
+        itemDoc.packingTypes.forEach(function(e){
+            var c = document.createElement("option");
+            c.text = e.packingType.name + ' - ' + e.quantity;
+            c.value=e.packingType._id;
+            // c.value=encodeURIComponent(JSON.stringify(e)); 
+            if(e.packingType._id.toString()==(doc.packingType || '').toString()){
+                c.selected=true;
+            }
+            packingTypes.options.add(c, packingTypes.options.length);
+        });
+    }
+
+    function paketPaletHesapla(){
+        var palletType;
+        var packingType;
+
+        if($('#palletType').val()!=''){
+            itemDoc.palletTypes.forEach(function(e){
+                if(e.palletType._id==$('#palletType').val()){
+                    palletType=e.palletType;
+                    return;
+                }
+            })
+            // palletType=JSON.parse(decodeURIComponent($('#palletType').val()));
+        }
+        if($('#packingType').val()!=''){
+            itemDoc.packingTypes.forEach(function(e){
+                if(e.packingType._id==$('#packingType').val()){
+                    packingType=e;
+                    return;
+                }
+            })
+            // packingType=JSON.parse(decodeURIComponent($('#packingType').val()));
+        }
+        if(palletType && packingType){
+            var birSiradakiKutu=0;
+            var paletAlani=palletType.width * palletType.length;
+            var kutuAlani=packingType.packingType.width * packingType.packingType.length;
+            var kacSira=0;
+            var s='';
+            if(kutuAlani>0){
+                birSiradakiKutu=Math.floor(paletAlani/kutuAlani);
+            }
+            if(packingType.packingType.height>0){
+                kacSira=Math.floor(palletType.height/packingType.packingType.height);
+            }
+            if(packingType.quantity<=0) packingType.quantity=1;
+
+            var palettekiKutu=birSiradakiKutu*kacSira;
+            if(palettekiKutu<=0) palettekiKutu=1;
+
+            var palettekiMiktar=palettekiKutu*packingType.quantity;
+            var toplamKutu=Math.ceil(doc.plannedQuantity/packingType.quantity);
+            var toplamPalet=Math.ceil(toplamKutu/palettekiKutu);
+
+            s+='palette 1 siradaki kutu: ' + birSiradakiKutu + '<br>';
+            s+='paletteki toplam sira: ' + kacSira + '<br>';
+            s+='1 Kutuda: ' + packingType.quantity + ' adet<br>';
+            s+='1 palette: ' + palettekiKutu + ' kutu<br>';
+            s+='1 palette toplam: ' + palettekiMiktar + ' adet<br>';
+            s+='----------------<br>';
+            s+='<b>Toplam Kutu:' + toplamKutu + '</b><br>';
+            s+='<b>Toplam Palet:' + toplamPalet + '</b><br>';
+            
+            $('#aciklama1').html(s);
+
+            $('#totalPallet').val(toplamPalet);
+            $('#totalPacking').val(toplamKutu);
+        }
+    }
+
+   
+
 
 	var calculating=false;
 
@@ -422,6 +562,7 @@
 
 		if(doc.productionTypeCode!='') $('#productionTypeCode').val(doc.productionTypeCode);
 		$('#plannedQuantity-quantity').val(doc.plannedQuantity);
+        
 
         switch(doc.productionTypeCode){
             case 'DEPO':
@@ -442,6 +583,12 @@
                 if(doc.productionTypeCode=='MUSTERI') loadOrderLineReference();
 
 				reloadRecipe();
+
+                // $('#palletType').val((doc.palletType || ''));
+                // $('#packingType').val((doc.packingType || ''));
+                $('#totalPallet').val((doc.totalPallet || 0));
+                $('#totalPacking').val((doc.totalPacking || 0));
+                paketPaletHesapla();
 			}
 		});
 		
@@ -505,6 +652,7 @@
                         
                         sourceRecipeDoc=clone(recete);
         				reloadRecipe();
+                        paketPaletHesapla();
 	                }
 	            },
 	        error:function(err){
@@ -526,6 +674,12 @@
         if(doc.productionTypeCode=='DEPO'){
             doc.orderLineReference.splice(0);
         }
+
+        doc.palletType=$('#palletType').val();
+        doc.packingType=$('#packingType').val();
+        doc.totalPallet=Number($('#totalPallet').val());
+        doc.totalPacking=Number($('#totalPacking').val());
+
 
 		saveRecipe((err)=>{
 	        if(!err){

@@ -9,7 +9,7 @@ module.exports = function(req,res,callback){
 			docTypeCode:'',
 	        docId:'',
 	        issueDate: moment().format('YYYY-MM-DD'),
-	        issueTime: moment().format('mm:hh:ss'),
+	        issueTime: moment().format('hh:mm:ss'),
 	        location: '',
 	        subLocation: '',
 	        palletId: '',

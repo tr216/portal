@@ -343,3 +343,9 @@ hr {
     -webkit-box-shadow: 0 0.15rem 0.45rem 0 rgba(58, 59, 69, 0.30) !important;
     box-shadow: 0 0.15rem 0.45rem 0 rgba(58, 59, 69, 0.30) !important;
 }
+
+.card-header-primary {
+  background-color: #0E6DEF;
+  border-bottom: 1px solid #0E6DEF;
+  color: #fff!important;
+}

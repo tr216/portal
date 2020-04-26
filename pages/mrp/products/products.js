@@ -5,6 +5,8 @@ module.exports = function(req,res,callback){
 		stationList:[],
 		stepList:[],
 		recipeList:[],
+		palletTypeList:[],
+		packingTypeList:[],
 		productTypeList:[{text:'Mamul',value:'product'},{text:'Yarı Mamul',value:'semi-product'}],
 		form:{
 			_id:'',
@@ -47,8 +49,11 @@ module.exports = function(req,res,callback){
 		        color:false,
 		        pattern:false,
 		        size:false
-		    }
-	        
+		    },
+		    palletRequired:false,
+		    packingRequired:false,
+		    palletTypes:[],
+		    packingTypes:[]
 		},
 		filter:{},
 		list:[]
@@ -97,7 +102,8 @@ function initLookUpLists(req,res,data,cb){
 	data.stationList=[];
 	data.stepList=[];
 	data.accountGroupList=[];
-	
+	data.palletTypeList=[];
+	data.packingTypeList=[];
 	
 	api.get('/' + req.query.db + '/mrp-stations',req,{passive:false},(err,resp)=>{
 		if(!err){
@@ -113,7 +119,17 @@ function initLookUpLists(req,res,data,cb){
 				if(!err){
 					data.accountGroupList=resp.data.docs;
 				}
-				cb(null,data);
+				api.get('/' + req.query.db + '/pallet-types',req,{},(err,resp)=>{
+					if(!err){
+						data.palletTypeList=resp.data.docs;
+					}
+					api.get('/' + req.query.db + '/packing-types',req,{},(err,resp)=>{
+						if(!err){
+							data.packingTypeList=resp.data.docs;
+						}
+						cb(null,data);
+					});
+				});
 			});
 		});
 	});

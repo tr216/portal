@@ -1,0 +1,209 @@
+
+<div class="row m-0 p-0">
+    <div class="col-md-4 m-0 p-1">
+        <div class="card">
+            <div class="card-header p-1">
+                <div class="float-left bold text-primary">Kullanılabilir Palet Türleri</div>
+            </div>
+            <div class="card-body p-1">
+                <%
+                    var palletTypeIndex=0;
+
+                %>
+                <% palletTypeList.forEach((e)=>{ %>
+                    <% 
+                        var bFound=false;
+                        form.palletTypes.forEach((e2)=>{ 
+                            if(e._id.toString()==e2.palletType._id.toString()){
+                                bFound=true;
+                                return;
+                            }
+                        });
+                        if(bFound==true){
+                    %>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" class=""  name="palletTypes[<%=palletTypeIndex%>][palletType]) %>" value="<%=e._id%>" checked <%- mode=='view'?'disabled':'' %> />
+                        <b><%=(e.name + ' ' + e.description + ' - ' + e.width + 'x' + e.length + 'x' + e.height + ' cm MaxKg:' + e.maxWeight) %></b>
+                    </label>
+                </div>
+                    <% 
+                        palletTypeIndex++;
+                    } %>
+                <% }) %>
+                <% 
+                if(mode!='view'){
+                    palletTypeList.forEach((e)=>{ %>
+                    <% 
+                        var bFound=false;
+                        form.palletTypes.forEach((e2)=>{ 
+                            if(e._id.toString()==e2.palletType._id.toString()){
+                                bFound=true;
+                                return;
+                            }
+                        });
+                        if(bFound==false){
+                    %>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" class=""  name="palletTypes[<%=palletTypeIndex%>][palletType]" value="<%=e._id%>" <%- mode=='view'?'disabled':'' %> />
+                        <%=(e.name + ' ' + e.description + ' - ' + e.width + 'x' + e.length + 'x' + e.height + ' cm MaxKg:' + e.maxWeight) %>
+                    </label>
+                </div>
+                    <% 
+                        palletTypeIndex++;
+                    } %>
+                <% }) 
+                } %>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 m-0 p-1">
+        <div class="card">
+            <div class="card-header p-1">
+                <div class="float-left bold text-primary">Kullanılabilir Ambalaj/Kutu/Koliler</div>
+            </div>
+            <div class="card-body p-1">
+                <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
+                    <thead>
+                        <tr class="text-nowrap">
+                            <th width="55%" class="">Paket Tipi</th>
+                            <th width="35%" class="text-right">Koli ici miktar</th>
+                            <th style="min-width: 60px;" class="text-center">#</th>
+                        </tr>
+                    </thead>
+                    <tbody id="packingTypeGrid">
+                        <tr id="addPackingTypeGridRow" class="text-nowrap" >
+                            <td class="">
+                                <input type="text" form="form-general" name="packingTypeName" id="packingTypeName" placeholder="ara"  class="form-control" autocomplete="off" value="">
+                                <input type="hidden" form="form-general" name="packingTypeId" id="packingTypeId"  class="itemId" hidden="true" value="">
+                            </td>
+                            <td class="text-right">
+                                <input type="number" class="form-control" name="packingType-quantity" id="packingType-quantity" placeholder="" value="0" >
+                            </td>
+                            <td class="text-center"><a href="javascript:addPackingType();" id="addPackingTypeButton" class="btn btn-primary far fa-plus-square"  title="Paket turu ekle"></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var packingTypes=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.packingTypes)) %>'));
+
+    if((packingTypes || '')=='') packingTypes=[];
+
+    function load_packingTypes(){
+        var packingTypeGrid=document.getElementById('packingTypeGrid');
+        while(packingTypeGrid.rows.length>1){
+            packingTypeGrid.deleteRow(0);
+        }
+        packingTypes.forEach(function(e,index){
+            addPackingType(e);
+        });
+    }
+
+    function addPackingType(obj){
+        var packingTypeGrid=document.getElementById('packingTypeGrid');
+        var index=packingTypeGrid.rows.length-1;
+        var newRow=packingTypeGrid.insertRow(packingTypeGrid.rows.length-1);
+        if(obj==undefined){
+            if($('#packingTypeId').val()=='') return;
+            if(Number($('#packingType-quantity').val())<=0) return;
+            obj={
+                packingType:{_id:$('#packingTypeId').val(), name:$('#packingTypeName').val()},
+                quantity:Number($('#packingType-quantity').val())
+            }
+            var bFound=false;
+            packingTypes.forEach(function(e){
+                if((e.packingType._id || '')!=''){
+                    if(e.packingType._id.toString()==obj.packingType._id.toString()){
+                        bFound=true;
+                        return;
+                    }
+                }
+            })
+            if(bFound) return alert( obj.packingType.name + '  daha once eklenmis');
+            packingTypes.push(obj);
+            $('#packingTypeName').val('');
+            $('#packingTypeId').val('');
+            $('#packingType-quantity').val(0);
+           
+        }
+        
+       
+
+        var cell0=newRow.insertCell(0);
+        cell0.innerHTML=obj.packingType.name + '<input type="hidden" name="packingTypes[' + index + '][packingType]" value="' + obj.packingType._id + '">';
+       
+
+        var cell1=newRow.insertCell(1);
+        cell1.innerHTML=obj.quantity +  '<input type="hidden"  name="packingTypes[' + index + '][quantity]" value="' + obj.quantity + '">';
+        cell1.classList.add('text-right');
+
+
+
+        var cell2=newRow.insertCell(2);
+        <% if(mode=='view'){%>
+        cell2.innerHTML='';
+        <%}else{%>
+        cell2.innerHTML='<a href="javascript:packingTypeGrid_RemoveRow(' + index + ');" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>';
+        <% } %>
+        cell2.classList.add('text-center');
+    }
+
+    function packingTypeGrid_RemoveRow(index){
+        if(confirm('Satiri silmek istiyor musunuz?')==false) return;
+        packingTypes.splice(index,1);
+        load_packingTypes();
+        // var table1=document.getElementById('packingTypeGrid');
+        // if(index<0 || index>=table1.rows.length-1) return;
+        // table1.deleteRow(index);
+        // for(var i=0;i<table1.rows.length-1;i++){
+        //     table1.rows[i].cells[0].innerHTML=(i+1).toString();
+        // }
+        //document.getElementById('docLinePackageGrid-ID').value=table1.rows.length;
+    }
+
+    load_packingTypes();
+
+
+    function packingTypeAutoComplete(){
+        $('#packingTypeName').autocomplete({
+            source:function(request,response){
+                    $.ajax({
+                    url:'/dbapi/packing-types?&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                    type:'GET',
+                    dataType: 'json',
+                    success: function(result) {
+                            if(result.success){
+                                var dizi=[];
+                                for(var i=0;i<result.data.docs.length;i++){
+                                    var item=result.data.docs[i];
+                                    
+                                    dizi.push({label:(item.name),value:item._id});
+                                }
+                                response(dizi);
+                            }
+                        },
+                    error:function(err){
+                        console.error('err:',err);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                    $('#packingTypeName').val(ui.item.label); 
+                    $('#packingTypeId').val(ui.item.value); 
+                    return false;
+                }
+        });
+    }
+
+
+    packingTypeAutoComplete();
+
+
+    
+</script>

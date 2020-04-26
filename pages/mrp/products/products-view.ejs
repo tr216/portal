@@ -49,6 +49,14 @@
                 file1  :{name:'files.1', caption:'Dosya/dokuman 2',     type:'fileBase64'   },
                 file2  :{name:'files.2', caption:'Dosya/dokuman 3',     type:'fileBase64'   }
             }
+        },
+        {
+            caption:'Palet/Paketleme Tanımları',
+            formControls:{
+                palletRequired:{caption:'Palet mecburi mi?', type:'checkbox'    },
+                packingRequired:{caption:'Ambalaj/Kutu/Koli mecburi mi?', type:'checkbox'    },
+                ambalajTanimlari:{ name:'ambalajTanimlari', caption:'Paketleme', type:'partial' ,partial:'../mrp/products/packingform.ejs'}
+            }
         }
         
     ],

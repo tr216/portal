@@ -1,0 +1,18 @@
+<%layout('../../_common/layout')%>
+
+<%- partial('../../_common/form', {
+   
+    formControls:{
+        name:{caption:'Palet ismi/kodu/numarasi', type:'textbox'    ,required:true},
+        description:{caption:'Açıklama', type:'textbox' },
+        width:{caption:'En(cm)', type:'number' },
+        length:{caption:'Boy(cm)', type:'number' },
+        height:{caption:'Yukseklik(cm)', type:'number' },
+        maxWeight:{caption:'Max ağırlık(Kg)', type:'number' },
+        passive:{caption:'Pasif?', type:'checkbox'    }
+    },
+    action:'',
+    mode:'edit'
+    }) 
+%>
+

@@ -187,6 +187,10 @@ const itemType={
     itemInstance:[itemInstanceType],
     images:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
     files:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
+    palletRequired:false,
+    palletTypes:[],
+    packingRequired:false,
+    packingTypes:[],
     localDocumentId:'',
     passive:false
     
@@ -762,6 +766,10 @@ const productionOrderType={
     outputSummary:[], //materialType
     qualityControl:[], //qualityControlType
     finishNotes:'',
+    palletType:'',
+    packingType:'',
+    totalPallet:0,
+    totalPacking:0,
     status:'Draft',
     cancelled: false
 }

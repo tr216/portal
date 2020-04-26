@@ -25,12 +25,12 @@
             <div class="row">
                 <div class="form-group col-md-3">
                     <label for="" class="m-0">Fiş No</label>
-                    <input type="text" class="form-control" name="docId" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.docId%>">
+                    <input type="text" class="form-control" name="docId" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.docId%>" <% if(mode=='view'){%>readonly="true"<%}%> >
                 </div>
                 <div class="form-group col-md-2">
                     <label for="" class="m-0">Tarih</label>
                     <div class="input-group date">
-                        <input type="text" name="issueDate" id="issueDate" class="form-control" value="<% if(typeof form.issueDate=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate%><%}%>">
+                        <input type="text" name="issueDate" id="issueDate" class="form-control" value="<% if(typeof form.issueDate=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
                         <div class="input-group-addon">
                             <i class="fa fa-calendar fa-2x"></i>
                         </div>
@@ -39,7 +39,7 @@
                 <div class="form-group col-md-2">
                     <label for="" class="m-0">Saat</label>
                     <div class="input-group" id="issueTime1">
-                        <input type="text" name="issueTime" id="issueTime" class="form-control" value="<% if(typeof form.issueTime=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.substr(0,8)%><%}%>">
+                        <input type="text" name="issueTime" id="issueTime" class="form-control" value="<% if(typeof form.issueTime=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.substr(0,8)%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
                         <div class="input-group-addon">
                             <i class="fa fa-clock fa-2x"></i>
                         </div>
@@ -57,7 +57,7 @@
                 <div class="w-100"></div>
                 <div class="form-group col-md-5">
                     <label for="" class="m-0">Fiş açıklaması</label>
-                    <input type="text" class="form-control" name="description" placeholder="Fiş açıklaması" autocomplete="off" value="<%=form.description%>">
+                    <input type="text" class="form-control" name="description" placeholder="Fiş açıklaması" autocomplete="off" value="<%=form.description%>" <% if(mode=='view'){%>readonly="true"<%}%> >
                 </div>
                 <div class="col-md-3">
                     <%- partial('../../_common/location-selection',{name:'location',subLocationName:'subLocation',inputTitle:'Lokasyon',form:form}) %>

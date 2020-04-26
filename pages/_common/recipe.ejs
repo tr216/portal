@@ -38,7 +38,7 @@
             </div>
             <div class="form-group col-md-3">
                 <label for="" class="m-0">Birim Ağırlık</label>
-                <input type="text" class="form-control" name="birimAgirlik" id="birimAgirlik"  value="1 <% if(form.unitPacks.length>0){%><%- getUnitCodeText(form.unitPacks[0].unitCode)%> <%=form.unitPacks[0].netWeight.value%><%- getUnitCodeText(form.unitPacks[0].netWeight.attr.unitCode)%><%}%>" readonly="true">
+                <input type="text" class="form-control" name="birimAgirlik" id="birimAgirlik"  value="<% if(form.unitPacks.length>0){ if(form.unitPacks[0]!=null){%><%- getUnitCodeText(form.unitPacks[0].unitCode)%> <%=form.unitPacks[0].netWeight.value%><%- getUnitCodeText(form.unitPacks[0].netWeight.attr.unitCode)%><%}}%>" readonly="true">
             </div>
             <div class="form-group col-md-6">
                 <label for="" class="m-0">Açıklama</label>
@@ -67,13 +67,13 @@
 
 <div id="sablonAdim" class="card mt-2" style="display: none;">
     <div class="card-header p-1 text-primary">
+    <!-- <div class="card-header p-1 card-header-primary"> -->
         <div class="row m-0 p-0">
             <div class="col-6 m-0 p-0 mt-1">
                 <div id="baslik"></div>
             </div>
             <div class="col-6 m-0 p-0 text-right">
-                <!-- <a href="javascript:yeniProcess();" id="yeniProcessButton" class="btn btn-primary"><i class="fas fa-plus-square"></i> Yeni Adim Ekle</a> -->
-                <a href="javascript:silProcess();" id="silProcessButton" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Adım Sil</a>
+                <a href="javascript:silProcess();" id="silProcessButton" class="btn btn-danger" style="height: 24px;font-size: 14px;"><i class="fas fa-trash-alt"></i> Adım Sil</a>
             </div>
         </div>
     </div>
@@ -242,6 +242,7 @@
 
 <div id="processGrid"></div>
 
+
 <script type="text/javascript">
     var q=getAllUrlParams();
     var recipeFormType='<%=recipeFormType%>';
@@ -256,7 +257,10 @@
     var lineMachines=[];
     var recipeList=[];
     var defaultUnit={unitCode:'NIU',netWeight:{value:1,attr:{unitCode:'NIU'}}};
-    var birimler=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.unitPacks)) %>'));
+    var birimler=[];
+    <% if(recipeFormType=='products'){ %>
+        birimler=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.unitPacks)) %>'));
+    <% } %>
     var stepList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(stepList)) %>'));
     
     if(stepList.length>0) stepList[0].name='---';

@@ -35,10 +35,11 @@
 	{"text":"Stok",	"module":"inventory",			"path":"",					"icon":"fas fa-box-open", "visible":true, "nodes":[
 		{"text":"Stok Kartlari",		"path":"/inventory/items?itemType=item",		"icon":"fas fa-dolly-flatbed", "visible":true, "nodes":[]},
 		{"text":"Envanter durumu",		"path":"/inventory/inventory", 		"icon":"fas fa-boxes", "visible":true, "nodes":[]},
-		{"text":"Sayım",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]},
 		{"text":"Stok fişleri",		"path":"/inventory/inventory-fiches",		"icon":"fas fa-truck-loading", "visible":true, "nodes":[]},
 		{"text":"Tanimlamalar",			"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
-			{"text":"Paletler",	 			"path":"/inventory/pallets", "icon":"fas fa-pallet", "visible":true, "nodes":[]}
+			{"text":"Palet Tipleri",	 			"path":"/inventory/pallet-types", "icon":"fas fa-cogs", "visible":true, "nodes":[]},
+			{"text":"Paletler",	 			"path":"/inventory/pallets", "icon":"fas fa-pallet", "visible":true, "nodes":[]},
+			{"text":"Ambalaj Tipleri",	 			"path":"/inventory/packing-types", "icon":"fas fa-boxes", "visible":true, "nodes":[]}
 		]}
 	]},
 	{"text":"Finans",	"module":"finance",	 "path":"",	"icon":"fas fa-money-bill-wave", "visible":true, "nodes":[

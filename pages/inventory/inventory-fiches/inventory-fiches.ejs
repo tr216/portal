@@ -3,7 +3,6 @@
     <div class="row m-0 mt-2">
         <div class="col-12 p-0">
 <%- partial('../../_common/date-filter',{includeForm:false,includeFilterButton:false}) %>
-    
             <div class="float-left form-inline ml-md-4">
                 <label class="text-primary">Fiş Türü:</label>
                 <select class="form-control input-inline input-sm" name="docTypeCode" id="docTypeCode" onchange="docTypeCodeChange()">
@@ -41,7 +40,7 @@
 <%- partial('../../_common/grid2',{
     fields:[
         {name:'docId',text:'Fiş No',type:'label' , filter:true, orderable:true, align:'left'},
-        {name:'issueDate',text:'Tarih',type:'label' , filter:true, orderable:true },
+        {name:'issueDate',text:'Tarih',type:'label' ,  orderable:true },
         {name:'description',text:'Açıklama',type:'label' , filter:true, filterField:'description', orderable:true},
         {name:'subLocation',text:'Lokasyon',type:'label', filter:true, placeholder:'alt lokasyon', orderable:true},
         {name:'subLocation2',text:'Lokasyon2',type:'label', filter:true, placeholder:'alt lokasyon2', orderable:true}

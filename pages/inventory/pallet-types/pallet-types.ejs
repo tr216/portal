@@ -1,0 +1,20 @@
+<%layout('../../_common/layout')%>
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'name',text:'Isim/kod',type:'label' , filter:true, orderable:true},
+        {name:'description',text:'Açıklama',type:'label' , filter:true, orderable:true},
+        {name:'width',text:'En',type:'label' , filter:true, orderable:true},
+        {name:'length',text:'Boy',type:'label' , filter:true, orderable:true},
+        {name:'height',text:'Yukseklik',type:'label' , filter:true, orderable:true},
+        {name:'maxWeight',text:'Max Kg',type:'label' , filter:true, orderable:true},
+        {name:'passive',text:'Pasif',type:'checkbox', filter:true, width:'120px', orderable:true}
+    ],
+    caption:'Palet Listesi',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    deleteUrl:'/dbapi/pallet-types/{_id}?db=' + db + '&sid=' + sid
+    
+    }) 
+%>

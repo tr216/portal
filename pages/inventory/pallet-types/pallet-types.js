@@ -1,9 +1,8 @@
 module.exports = function(req,res,callback){
 	var data={
-		palletTypeList:[],
 		form:{
 			name:'',
-			palletType:'',
+			description:'',
 			width:0,
 			length:0,
 			height:0,
@@ -32,8 +31,7 @@ module.exports = function(req,res,callback){
 
 function getList(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.palletTypeList.unshift({_id:'',name:'-- Tümü --'})
-		api.get('/' + req.query.db + '/pallets',req,data.filter,(err,resp)=>{
+		api.get('/' + req.query.db + '/pallet-types',req,data.filter,(err,resp)=>{
 			if(!err){
 				data=mrutil.setGridData(data,resp);
 			}
@@ -44,26 +42,16 @@ function getList(req,res,data,callback){
 
 
 function initLookUpLists(req,res,data,cb){
-	data.palletTypeList=[];
-	api.get('/' + req.query.db + '/pallet-types',req,{},(err,resp)=>{
-		if(!err){
-			resp.data.docs.forEach((e)=>{
-				data.palletTypeList.push({_id:e._id,name:(e.name + (e.description?' - ' + e.description:''))});
-			})
-			
-		}
-		cb(null,data);
-	});
+	cb(null,data);
 }
 
 function addnew(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.palletTypeList.unshift({_id:'',name:'-- Seç --'})
 		if(req.method=='POST'){
 			data.form=Object.assign(data.form,req.body);
-			api.post('/' + req.query.db + '/pallets',req,data.form,(err,resp)=>{
+			api.post('/' + req.query.db + '/pallet-types',req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/inventory/pallets?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/inventory/pallet-types?db=' + req.query.db +'&sid=' + req.query.sid);
  				}else{
  					data['message']=err.message;
  					callback(null,data);
@@ -83,13 +71,13 @@ function edit(req,res,data,callback){
 		return;
 	}
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.palletTypeList.unshift({_id:'',name:'-- Seç --'})
+		
 		if(req.method=='POST' || req.method=='PUT'){
 			data.form=Object.assign(data.form,req.body);
 			
-			api.put('/' + req.query.db + '/pallets/' + _id, req,data.form,(err,resp)=>{
+			api.put('/' + req.query.db + '/pallet-types/' + _id, req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/inventory/pallets?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/inventory/pallet-types?db=' + req.query.db +'&sid=' + req.query.sid);
 
 				}else{
 					data['message']=err.message;
@@ -97,7 +85,7 @@ function edit(req,res,data,callback){
 				}
 			});
 		}else{
-			api.get('/' + req.query.db + '/pallets/' + _id,req,null,(err,resp)=>{
+			api.get('/' + req.query.db + '/pallet-types/' + _id,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					callback(null,data);
@@ -112,9 +100,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/pallets/' + _id,req,(err,resp)=>{
+	api.delete('/' + req.query.db + '/pallet-types/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/inventory/pallets?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/inventory/pallet-types?db=' + req.query.db +'&sid=' + req.query.sid);
 			
 		}else{
 			

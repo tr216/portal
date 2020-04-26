@@ -54,6 +54,14 @@ recipeFormType='products';
         {
             caption:'Recete/Process',
             partial:'./recipe.ejs'
+        },
+        {
+            caption:'Palet/Paketleme Tanımları',
+            formControls:{
+                palletRequired:{caption:'Palet mecburi mi?', type:'checkbox'    },
+                packingRequired:{caption:'Ambalaj/Kutu/Koli mecburi mi?', type:'checkbox'    },
+                ambalajTanimlari:{ name:'ambalajTanimlari', caption:'Paketleme', type:'partial' ,partial:'../mrp/products/packingform.ejs'}
+            }
         }
     ],
     action:'',

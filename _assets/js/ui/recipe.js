@@ -159,6 +159,8 @@ function reloadRecipe(onlyProcess=false){
         $('#recipeDescription').val((doc.description || ''));
     }
 
+    
+
     if(doc.process!=undefined){
         if(doc.process.length==0){
             yeniProcess();
@@ -189,7 +191,10 @@ function yeniProcess(process=undefined){
     document.getElementById('processGrid').appendChild(adim);
 
     $('#' + adim.id + ' #baslik').html('Adım #' + (index+1).toString());
-    
+    if(index==0){
+        
+        $('#' + adim.id + ' #silProcessButton').hide();
+    }
     adim.querySelector('#addProcessMachineButton').href='javascript:addProcessMachine(' + index + ');';
     if(recipeFormType=='products'){
         adim.querySelector('#addProcessInputMaterialButton').href='javascript:addProcessInputMaterial(' + index + ');';
@@ -205,7 +210,7 @@ function yeniProcess(process=undefined){
         adim.querySelector('#addProcessOutputMaterialRow').style.display='none';
         // adim.querySelector('#addProcessMachineRow').style.display='none';
         adim.querySelector('#silProcessButton').style.display='none';
-        adim.querySelector('#yeniProcessButton').style.display='none';
+        //adim.querySelector('#yeniProcessButton').style.display='none';
         
     }
 

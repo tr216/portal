@@ -1,8 +1,12 @@
 <%layout('../../_common/layout')%>
 <%- partial('../../_common/grid2',{
     fields:[
-        {name:'name',text:'Palet',type:'label' , filter:true, orderable:true},
-        {name:'palletType',text:'Palet Tip',type:'lookup' , lookupList:palletTypeList,valueField:'_id',textField:'name', filter:true, orderable:true},
+        {name:'name',text:'Adı/Kodu',type:'label' , filter:true, orderable:true},
+        {name:'description',text:'Açıklama',type:'label' , filter:true, orderable:true},
+        {name:'width',text:'En',type:'label' , filter:true, orderable:true},
+        {name:'length',text:'Boy',type:'label' , filter:true, orderable:true},
+        {name:'height',text:'Yukseklik',type:'label' , filter:true, orderable:true},
+        {name:'maxWeight',text:'Max Kg',type:'label' , filter:true, orderable:true},
         {name:'passive',text:'Pasif',type:'checkbox', filter:true, width:'120px', orderable:true}
     ],
     caption:'Palet Listesi',
@@ -10,7 +14,7 @@
     editButton:true,
     deleteButton:true,
     viewButton:true,
-    deleteUrl:'/dbapi/pallets/{_id}?db=' + db + '&sid=' + sid,
+    deleteUrl:'/dbapi/packing-types/{_id}?db=' + db + '&sid=' + sid,
     customButtons:[
         {href:'javascript:itemCopyConfirm("{_id}","{name}")', text:'Kopyala',icon:'far fa-copy'}
     ]
@@ -48,7 +52,7 @@
 
         var data={id:temp_id, newName:$('#newName').val()}
         $.ajax({
-            url:'/dbapi/pallets/copy?db=<%=db%>&sid=<%=sid%>',
+            url:'/dbapi/packing-types/copy?db=<%=db%>&sid=<%=sid%>',
             data:data,
             type:'POST',
             success:function(result){

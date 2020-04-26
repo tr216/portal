@@ -165,9 +165,13 @@
     }
 
     function unitPackGrid_RemoveRow(index){
-        var table1=document.getElementById('unitPackGrid');
-        if(index<0 || index>=table1.rows.length-1) return;
-        table1.deleteRow(index);
+        if(confirm('Satiri silmek istiyor musunuz?')==false) return;
+        unitPacks.splice(index,1);
+        load_unitPacks();
+        
+        // var table1=document.getElementById('unitPackGrid');
+        // if(index<0 || index>=table1.rows.length-1) return;
+        // table1.deleteRow(index);
         // for(var i=0;i<table1.rows.length-1;i++){
         //     table1.rows[i].cells[0].innerHTML=(i+1).toString();
         // }
