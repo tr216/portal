@@ -62,22 +62,17 @@ function getList(req,res,data,callback){
 		
 		api.get('/' + req.query.db + '/production-orders',req,data.filter,(err,resp)=>{
 			if(!err){
+				
+				var docs=[];
 				resp.data.docs.forEach((e)=>{
-					e['musteri']='';
-					if(e.productionTypeCode=='DEPO'){
-						e['musteri']='DEPO';
-					}else{
-						if(e.orderLineReference){
-							e.orderLineReference.forEach((e2,index)=>{
-								e['musteri']+=e2.orderReference.buyerCustomerParty.party.partyName.name.value;
-								if(index<e.orderLineReference.length-1){
-									e['musteri']+='<br>';
-								}
-							});
-						}
-					}
+					
+					docs.push(docFormHelper.makeSimpleProductionOrderList(e));
+					
 				});
+				resp.data.docs=docs;
+				
 				data=mrutil.setGridData(data,resp);
+				
 			}
 			callback(null,data);
 		});

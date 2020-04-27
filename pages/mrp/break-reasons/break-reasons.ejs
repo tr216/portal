@@ -1,0 +1,17 @@
+<%layout('../../_common/layout')%>
+
+<%- partial('../../_common/grid2',{
+    fields:[
+        {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
+        {name:'description',text:'Açıklama',type:'label', filter:true, orderable:true},
+        {name:'level',text:'Level',type:'label', filter:true, orderable:true},
+        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+    ],
+    caption:'Istasyon Listesi',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    deleteUrl:'/dbapi/production-break-reasons/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>

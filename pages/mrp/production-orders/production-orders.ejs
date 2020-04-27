@@ -35,12 +35,13 @@
 <%- partial('../../_common/grid2',{
     fields:[
         {name:'productionId',text:'Üretim No',type:'label', filter:true,orderable:true, width:'80px'},
-        {name:'item.name.value',text:'Mamül',type:'label', filter:true,orderable:true},
+        {name:'issueDate',text:'E.Tarih',type:'label', orderable:true, width:'80px'},
+        {name:'itemName',text:'Mamül',type:'label', filter:true,orderable:true},
+        {name:'plannedPeriod',text:'Planlama',type:'label', orderable:true},
+        {name:'quantity',text:'Miktar',type:'label', filter:true, orderable:true},
         {name:'musteri',text:'Müşteri',type:'label', filter:true,orderable:true},
-        {name:'issueDate',text:'Tarih',type:'label', orderable:true, width:'80px'},
-        {name:'plannedQuantity',text:'Planlanan',type:'label', filter:true, orderable:true},
-        {name:'producedQuantity',text:'Üretilen',type:'label', filter:true, orderable:true},
-        {name:'status',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:productionStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
+        {name:'ambalaj',text:'Paketleme',type:'label', filter:true, orderable:true},
+        {name:'status',text:'Durumu', width:'100px',type:'label',filter:true, orderable:false}
     ],
     caption:'Uretim Emirleri',
     addNewButton:true,
