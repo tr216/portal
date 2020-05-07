@@ -232,6 +232,7 @@
                             <div class="dropdown">
 
                                 <button class="btn btn-secondary btn-sm fas fa-caret-square-down" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Diğer işlemler"></button>
+                                <!-- <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Diğer işlemler"><i class="fas fa-caret-square-down"></i> </button> -->
                                 <div class="dropdown-menu">
                                 <% 
                                     for(var i=0;i<customButtons.length;i++){ 
@@ -271,36 +272,10 @@
                                 <% } %>
                             <% } %>
                             <% 
-                            if(typeof printButton!='undefined'){ 
-                               if(typeof printButton.path!='undefined'){ 
-                                if(typeof printButton.printDesignList=='undefined') printButton.printDesignList=[];
-                                var printAPIPath='/general/print?path=' + printButton.path + '&db=' + db + '&sid=' + sid;
-                                
-                                printAPIPath=replaceUrlCurlyBracket(printAPIPath,item,fields);
-                                
-                            %>
-                            <% if(printButton.printDesignList.length<=1){ %>
-                            <a href="javascript:popupCenter('<%=printAPIPath%>','Yazdır','900','600');" class="btn btn-secondary btn-sm ml-1" title="Yazdır"><i class="fas fa-print"></i></a>
-                            <% } else { %>
-                            <div class="dropdown">
-                                <!-- <button class="btn btn-secondary btn-sm fas fa-caret-square-down" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Yazdır"></button> -->
-                                <button class="btn btn-secondary btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Yazdır"><i class="fas fa-print"></i></button>
-                                <div class="dropdown-menu">
-                                    <% 
-                                        console.log(printButton.printDesignList);
-                                        printButton.printDesignList.forEach((e)=>{ 
-                                        var printAPIPathWithId=printAPIPath + '&designId=' + e._id;
-                                    %>
-                                    <a class="dropdown-item" href="javascript:popupCenter('<%=printAPIPathWithId%>','Yazdır','900','600');" title="Yazdır" ><%=e.name%></a>
-                                    <% }) %>
-                                </div>
-                            </div>                                    
-                            <% } %>
-                            <% }} %>
-                            <% 
                                if(viewButton){ 
                                 var viewUrlRow=urlPath + '/view/{_id}?db=' + db + '&sid=' + sid;
                                 if(typeof viewUrl!='undefined') viewUrlRow=viewUrl;
+                                //viewUrlRow=viewUrlRow.replaceAll('{_id}',item._id);
                                 viewUrlRow=replaceUrlCurlyBracket(viewUrlRow,item,fields);
                                 
 

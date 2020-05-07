@@ -57,6 +57,12 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
+                        <label for="" class="">Gramajı/ağırlığı gr</label>
+                        <input type="number" class="form-control" name="weight" autocomplete="off" value="<%=form.weight%>" <% if(mode=='view'){%>readonly="true"<%}%> >
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
                         <label for="" class="">Max. Ağırlık(kg) Kapasite</label>
                         <input type="number" class="form-control" name="maxWeight" autocomplete="off" value="<%=form.maxWeight%>" <% if(mode=='view'){%>readonly="true"<%}%> >
                     </div>
@@ -346,6 +352,7 @@
         doc.width=Number($('input[name="width"]').val());
         doc.length=Number($('input[name="length"]').val());
         doc.height=Number($('input[name="height"]').val());
+        doc.weight=Number($('input[name="weight"]').val());
         doc.maxWeight=Number($('input[name="maxWeight"]').val());
         doc.passive=$('checkbox[name="passive"]').prop('checked')?true:false;
         var url='';

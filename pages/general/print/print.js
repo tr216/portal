@@ -5,13 +5,13 @@ module.exports = function(req,res,callback){
         filter:{}
     }
     
-    
     if(!req.query.db){
         return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
     }
 
     var apiPath=req.query.path || '';
 
+    var designId=req.query.designId || '';
     switch(req.params.func || ''){
         case 'preview':
             data.html = 'preview - ' + data.html
@@ -20,9 +20,9 @@ module.exports = function(req,res,callback){
         default:
         break;
     }
-    console.log('apiPath:',apiPath);
+    
 
-    api.getFile('/' + req.query.db + apiPath,req,{print:true},(err,resp)=>{
+    api.getFile('/' + req.query.db + apiPath,req,{designId:designId, print:true},(err,resp)=>{
        
         if(!err){
             

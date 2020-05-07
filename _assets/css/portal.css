@@ -349,3 +349,8 @@ hr {
   border-bottom: 1px solid #0E6DEF;
   color: #fff!important;
 }
+
+.text-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}

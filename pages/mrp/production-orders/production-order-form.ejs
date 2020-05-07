@@ -93,18 +93,36 @@
                     <input type="text" class="form-control" id="production-item-name" autocomplete="off" placeholder="" value="" readonly="true">
                     <input type="hidden" class="form-control" id="production-item-id" autocomplete="off" value="">
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     <label for="" class="m-0">Reçete</label>
                     <select id="main-recipe" class="form-control">
                     	
                     </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <label for="" class="m-0">Planlanan Miktar</label>
+                    <label for="" class="m-0">Üretilecek Miktar</label>
                     <input type="number" class="form-control" id="plannedQuantity-quantity" autocomplete="off" value="0" readonly="true" onchange="calculatePlannedQuantity()">
                 </div>
                 <div class="form-group col-md-2">
-                    <a href="javascript:receteUygula()" class="btn btn-primary mt-3"><i class="fas fa-fill-drip" title="Reçeteyi uygula"></i> Uygula</a>
+                    <label for="" class="m-0"><i class="fas fa-user-friends"></i> Gerekli İnsan</label>
+                    <select class="form-control" name="staffCount" id="staffCount">
+                        <option value="0">-- Sıfır --</option>
+                        <option value="0.20">%20</option>
+                        <option value="0.25">%25</option>
+                        <option value="0.50">%50</option>
+                        <option value="1">%100</option>
+                        <option value="1.5">%150</option>
+                        <option value="2">%200</option>
+                        <option disabled="disabled">---</option>
+                        <option value="3">3 Kişi</option>
+                        <option value="4">4 Kişi</option>
+                        <option value="5">5 Kişi</option>
+                        <option value="10">10 Kişi</option>
+                        <option value="20">20 Kişi</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2 text-right">
+                    <a href="javascript:receteUygula()" class="btn btn-primary mt-md-4"><i class="fas fa-fill-drip" title="Reçeteyi uygula"></i> Uygula</a>
                 </div>
             </div>
             <div class="row">
@@ -193,20 +211,44 @@
         <div class="card-body p-1">
             <div class="row m-0 p-0">
                 <div class="col-md-3 p-0 m-0 form-group">
-                    <label class="">Palet</label>
-                    <select class="form-control" id="palletType" name="palletType" onchange="paketPaletHesapla()"></select>
+                    <select class="form-control" id="choosePackingOption" name="choosePackingOption" onchange="choosePackingOptionChanged()"></select>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-3 p-0 m-0 form-group">
+                    <label class="m-0">Palet</label>
+                    <input type="text" class="form-control" name="palletType" id="palletType" value="" readonly="true" />
                 </div>
                 <div class="col-md-3 p-0 m-0 form-group">
-                    <label class="">Ambalaj</label>
-                    <select class="form-control" id="packingType" name="packingType" onchange="paketPaletHesapla()"></select>
-                </div>
-                <div class="col-md-2 offset-md-2 p-0 m-0 form-group">
-                    <label class="">Palet Sayisi</label>
-                    <input type="number" class="form-control" name="totalPallet" id="totalPallet" value="0" />
+                    <label class="m-0">Ambalaj</label>
+                    <input type="text" class="form-control" name="packingType" id="packingType" value="" readonly="true" />
                 </div>
                 <div class="col-md-2 p-0 m-0 form-group">
-                    <label class="">Kutu Sayisi</label>
-                    <input type="number" class="form-control" name="totalPacking" id="totalPacking" value="0" />
+                    <label class="m-0">Koli içi miktar</label>
+                    <input type="number" class="form-control" name="quantityInPacking" id="quantityInPacking" value="0"  onchange="paketPaletHesapla()" />
+                </div>
+                <div class="col-md-2 p-0 m-0 form-group">
+                    <label class="m-0">Palet İstif Sıra</label>
+                    <input type="number" class="form-control" name="palletRowCount" id="palletRowCount" value="0" onchange="paketPaletHesapla()" />
+                </div>
+                <div class="col-md-2 p-0 m-0 form-group">
+                    <label class="m-0">Sıradaki Koli sayısı</label>
+                    <input type="number" class="form-control" name="packingCountInRow" id="packingCountInRow" value="0" onchange="paketPaletHesapla()" />
+                </div>
+                <div class="col-md-3 p-0 m-0 form-group">
+                    <label class="m-0">Ambalaj 2</label>
+                    <input type="text" class="form-control" name="packingType2" id="packingType2" value="" readonly="true" />
+                </div>
+                <div class="col-md-3 p-0 m-0 form-group">
+                    <label class="m-0">Ambalaj 3</label>
+                    <input type="text" class="form-control" name="packingType3" id="packingType3" value="" readonly="true" />
+                </div>
+                <div class="col-md-2 p-0 m-0 form-group">
+                    <label class="m-0 bold">Toplam Palet</label>
+                    <input type="number" class="form-control bold" name="totalPallet" id="totalPallet" value="0" readonly="true" />
+                </div>
+                <div class="col-md-2 p-0 m-0 form-group">
+                    <label class="m-0 bold">Toplam Koli/kutu</label>
+                    <input type="number" class="form-control bold" name="totalPacking" id="totalPacking" value="0" readonly="true" />
                 </div>
             </div>
             <div class="row m-0 p-0">
@@ -428,7 +470,6 @@
 	        success: function(result) {
 	                if(result.success){
                         itemDoc=result.data;
-                        load_palletTypes();
                         load_packingTypes();
 	                    $('#production-item-name').val(result.data.name.value);
 	                    $.ajax({
@@ -472,110 +513,101 @@
 	    });
 	}
 
-    function load_palletTypes(){
-        if(itemDoc==undefined) return;
-        console.log('itemDoc:',itemDoc);
-
-        $('#palletType option').remove();
-        var palletTypes = document.getElementById("palletType");
-        if(!itemDoc.palletRequired){
-            var c = document.createElement("option");
-            c.text = '-- Palet yok --';
-            c.value='';
-            palletTypes.options.add(c,palletTypes.options.length);
-        }
-        itemDoc.palletTypes.forEach(function(e){
-            var c = document.createElement("option");
-            c.text = e.palletType.name;
-            c.value= e.palletType._id;
-            // c.value=encodeURIComponent(JSON.stringify(e.palletType)); // e.palletType._id;
-            if(e.palletType._id.toString()==(doc.palletType || '').toString()){
-                c.selected=true;
-            }
-            palletTypes.options.add(c, palletTypes.options.length);
-        });
-    }
-
+  
     function load_packingTypes(){
         if(itemDoc==undefined) return;
 
-        $('#packingType option').remove();
-        var packingTypes = document.getElementById("packingType");
-        if(!itemDoc.packingRequired){
-            var c = document.createElement("option");
-            c.text = '-- Ambalaj yok --';
-            c.value='';
-            packingTypes.options.add(c,packingTypes.options.length);
+        $('#choosePackingOption option').remove();
+
+        var packingOptions = document.getElementById("choosePackingOption");
+        if(itemDoc.packingOptions){
+            itemDoc.packingOptions.forEach(function(e){
+                var c = document.createElement("option");
+                c.text='';
+                if(e.palletType){
+                    c.text += e.palletType.name + ' - ';
+                }
+                if(e.packingType){
+                    c.text += e.packingType.name + ' - ';
+                }
+                if(e.packingType2){
+                    c.text += e.packingType2.name + ' - ';
+                }
+                if(e.packingType3){
+                    c.text += e.packingType3.name;
+                }
+
+                c.value=encodeURIComponent(JSON.stringify(e)); 
+                if(doc.packingOption){
+                    var palletType=e.palletType?e.palletType._id.toString():'';
+                    var packingType=e.packingType?e.packingType._id.toString():'';
+                    var packingType2=e.packingType2?e.packingType2._id.toString():'';
+                    var packingType3=e.packingType3?e.packingType3._id.toString():'';
+
+                    var doc_palletType=doc.packingOption.palletType?doc.packingOption.palletType._id.toString():'';
+                    var doc_packingType=doc.packingOption.packingType?doc.packingOption.packingType._id.toString():'';
+                    var doc_packingType2=doc.packingOption.packingType2?doc.packingOption.packingType2._id.toString():'';
+                    var doc_packingType3=doc.packingOption.packingType3?doc.packingOption.packingType3._id.toString():'';
+
+                    if(palletType==doc_palletType && packingType==doc_packingType && packingType2==doc_packingType2 && packingType3==doc_packingType3){
+                        c.selected=true;
+                    }
+                }
+                
+                packingOptions.options.add(c, packingOptions.options.length);
+            });
         }
-        itemDoc.packingTypes.forEach(function(e){
-            var c = document.createElement("option");
-            c.text = e.packingType.name + ' - ' + e.quantity;
-            c.value=e.packingType._id;
-            // c.value=encodeURIComponent(JSON.stringify(e)); 
-            if(e.packingType._id.toString()==(doc.packingType || '').toString()){
-                c.selected=true;
-            }
-            packingTypes.options.add(c, packingTypes.options.length);
-        });
+        choosePackingOptionChanged();
+        
+    }
+
+    function choosePackingOptionChanged(){
+        if($('#choosePackingOption').val()=='') return;
+        var obj=JSON.parse(decodeURIComponent($('#choosePackingOption').val()));
+
+        
+        if(obj.palletType) 
+            $('#palletType').val(obj.palletType.name);
+        else
+            $('#palletType').val('');
+
+        if(obj.packingType) 
+            $('#packingType').val(obj.packingType.name);
+        else
+            $('#packingType').val('');
+
+        if(obj.packingType2) 
+            $('#packingType2').val(obj.packingType2.name);
+        else
+            $('#packingType2').val('');
+
+        if(obj.packingType3) 
+            $('#packingType3').val(obj.packingType3.name);
+        else
+            $('#packingType3').val('');
+
+
+        $('#quantityInPacking').val((obj.quantityInPacking || 0));
+        $('#palletRowCount').val((obj.palletRowCount || 0));
+        $('#packingCountInRow').val((obj.packingCountInRow || 0));
+
     }
 
     function paketPaletHesapla(){
-        var palletType;
-        var packingType;
+        var quantityInPacking=Number($('#quantityInPacking').val());
+        var palletRowCount=Number($('#palletRowCount').val());
+        var packingCountInRow=Number($('#packingCountInRow').val());
+        var plannedQuantity=Number($('#plannedQuantity-quantity').val());
 
-        if($('#palletType').val()!=''){
-            itemDoc.palletTypes.forEach(function(e){
-                if(e.palletType._id==$('#palletType').val()){
-                    palletType=e.palletType;
-                    return;
-                }
-            })
-            // palletType=JSON.parse(decodeURIComponent($('#palletType').val()));
-        }
-        if($('#packingType').val()!=''){
-            itemDoc.packingTypes.forEach(function(e){
-                if(e.packingType._id==$('#packingType').val()){
-                    packingType=e;
-                    return;
-                }
-            })
-            // packingType=JSON.parse(decodeURIComponent($('#packingType').val()));
-        }
-        if(palletType && packingType){
-            var birSiradakiKutu=0;
-            var paletAlani=palletType.width * palletType.length;
-            var kutuAlani=packingType.packingType.width * packingType.packingType.length;
-            var kacSira=0;
-            var s='';
-            if(kutuAlani>0){
-                birSiradakiKutu=Math.floor(paletAlani/kutuAlani);
-            }
-            if(packingType.packingType.height>0){
-                kacSira=Math.floor(palletType.height/packingType.packingType.height);
-            }
-            if(packingType.quantity<=0) packingType.quantity=1;
+        var totalPacking=0;
+        var totalPallet=0;
 
-            var palettekiKutu=birSiradakiKutu*kacSira;
-            if(palettekiKutu<=0) palettekiKutu=1;
+        if(quantityInPacking>0) totalPacking=Math.ceil(plannedQuantity/quantityInPacking);
 
-            var palettekiMiktar=palettekiKutu*packingType.quantity;
-            var toplamKutu=Math.ceil(doc.plannedQuantity/packingType.quantity);
-            var toplamPalet=Math.ceil(toplamKutu/palettekiKutu);
+        if(packingCountInRow*palletRowCount>0) totalPallet=Math.ceil(totalPacking/(packingCountInRow*palletRowCount));
 
-            s+='palette 1 siradaki kutu: ' + birSiradakiKutu + '<br>';
-            s+='paletteki toplam sira: ' + kacSira + '<br>';
-            s+='1 Kutuda: ' + packingType.quantity + ' adet<br>';
-            s+='1 palette: ' + palettekiKutu + ' kutu<br>';
-            s+='1 palette toplam: ' + palettekiMiktar + ' adet<br>';
-            s+='----------------<br>';
-            s+='<b>Toplam Kutu:' + toplamKutu + '</b><br>';
-            s+='<b>Toplam Palet:' + toplamPalet + '</b><br>';
-            
-            $('#aciklama1').html(s);
-
-            $('#totalPallet').val(toplamPalet);
-            $('#totalPacking').val(toplamKutu);
-        }
+        $('#totalPacking').val(totalPacking);
+        $('#totalPallet').val(totalPallet);
     }
 
    
@@ -644,7 +676,12 @@
                 // $('#packingType').val((doc.packingType || ''));
                 $('#totalPallet').val((doc.totalPallet || 0));
                 $('#totalPacking').val((doc.totalPacking || 0));
-                paketPaletHesapla();
+                if(doc.packingOption){
+                    $('#quantityInPacking').val(doc.packingOption.quantityInPacking);
+                    $('#palletRowCount').val(doc.packingOption.palletRowCount);
+                    $('#packingCountInRow').val(doc.packingOption.packingCountInRow);
+                }
+                //paketPaletHesapla();
 			}
 		});
 		
@@ -670,12 +707,14 @@
 	        success: function(result) {
 	                if(result.success){
 	                    var recete=result.data;
+
 	                    var oran=0;
 	                    if(recete.totalQuantity>0) oran=doc.plannedQuantity/recete.totalQuantity;
 	                    if(oran==0) return alert('Recete orani "0" olamaz. Recete miktarlarini kontrol ediniz.');
 	                    doc.recipeName=recete.name;
 	                    doc.recipeRevision=recete.revision;
 	                    doc.description=recete.description;
+                        doc.staffCount=recete.staffCount || 0;
 	                    doc.process=[];
 	                    doc.materialSummary=[];
 	                    doc.outputSummary=[];
@@ -701,11 +740,12 @@
         				recete.outputSummary.forEach(function(e){
 	                    	var obj=JSON.parse(JSON.stringify(e));
 	                    	obj.quantity=obj.quantity * oran;
+                            
 	                    	doc.outputSummary.push(obj);
 	                    })
         				
         				doc.qualityControl=JSON.parse(JSON.stringify(recete.qualityControl));
-                        
+                        doc.totalWeight=(recete.totalWeight || 0) * oran;
                         sourceRecipeDoc=clone(recete);
         				reloadRecipe();
                         paketPaletHesapla();
@@ -745,8 +785,15 @@
             doc.orderLineReference.splice(0);
         }
 
-        doc.palletType=$('#palletType').val();
-        doc.packingType=$('#packingType').val();
+        if($('#choosePackingOption').val()!=''){
+            doc.packingOption=JSON.parse(decodeURIComponent($('#choosePackingOption').val()));
+            doc.packingOption.quantityInPacking=Number($('#quantityInPacking').val());
+            doc.packingOption.palletRowCount=Number($('#palletRowCount').val());
+            doc.packingOption.packingCountInRow=Number($('#packingCountInRow').val());
+        }
+        
+        
+
         doc.totalPallet=Number($('#totalPallet').val());
         doc.totalPacking=Number($('#totalPacking').val());
 

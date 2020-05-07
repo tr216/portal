@@ -962,11 +962,40 @@
 		{"text":"zreport","value":"zreport"}
 	],
 	"printDesignModuleList":[
+		{"text":"Sipariş","value":"order-outbox"},
+		{"text":"Reçete","value":"recipe"},
+		{"text":"Stok Kartı","value":"item"},
+		{"text":"Ürün Kartı","value":"item-product"},
+		{"text":"Üretim Emri","value":"mrp-production-order"},
+		{"text":"Üretim Emri Palet Etiketi","value":"mrp-production-order-pallet"},
+		{"text":"Üretim Emri Ambalaj/Kutu Etiketi","value":"mrp-production-order-packing"},
+		{"text":"Gelen İrsaliye","value":"despatch-inbox"},
+		{"text":"Giden İrsaliye","value":"despatch-outbox"},
+		{"text":"Alım Sipariş","value":"order-inbox"},
+		{"text":"Envanter/Stok Durumu","value":"inventory-list"},
+		{"text":"Stok Fişi","value":"inventory-fiche"}
+	],
+	"printDesignModuleList_listeler":[
 		{"text":"Reçete","value":"recipe"},
 		{"text":"Reçete Listesi","value":"recipe-list"},
 		{"text":"Stok Kartı","value":"item"},
 		{"text":"Stok Kart Listesi","value":"item-list"},
-		{"text":"Ürün Kartı","value":"item-product"}
+		{"text":"Ürün Kartı","value":"item-product"},
+		{"text":"Üretim Emir Listesi","value":"mrp-production-order-list"},
+		{"text":"Üretim Emir Formu","value":"mrp-production-order"},
+		{"text":"Üretim Emri Palet Etiketi","value":"mrp-production-order-pallet"},
+		{"text":"Üretim Emri Ambalaj/Kutu Etiketi","value":"mrp-production-order-packing"},
+		{"text":"Gelen İrsaliye Listesi","value":"despatch-inbox-list"},
+		{"text":"Gelen İrsaliye Formu","value":"despatch-inbox"},
+		{"text":"Giden İrsaliye Listesi","value":"despatch-outbox-list"},
+		{"text":"Giden İrsaliye Formu","value":"despatch-outbox"},
+		{"text":"Alım Sipariş Listesi","value":"order-inbox-list"},
+		{"text":"Alım Sipariş Formu","value":"order-inbox"},
+		{"text":"Sipariş Listesi","value":"order-outbox-list"},
+		{"text":"Sipariş Formu","value":"order-outbox"},
+		{"text":"Envanter/Stok Durumu","value":"inventory-list"},
+		{"text":"Stok Fiş Listesi","value":"inventory-fiche-list"},
+		{"text":"Stok Fiş Formu","value":"inventory-fiche"}
 	],
 	"itemTypeList":[
 		{"text":"Stok/Envanter","value":"item"},

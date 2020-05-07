@@ -12,6 +12,57 @@
     editButton:true,
     deleteButton:true,
     viewButton:true,
-    deleteUrl:'/dbapi/print-designs/{_id}?db=' + db + '&sid=' + sid
+    deleteUrl:'/dbapi/print-designs/{_id}?db=' + db + '&sid=' + sid,
+    customButtons:[
+        {href:'javascript:itemCopyConfirm("{_id}","{name}")', text:'Kopyala',icon:'far fa-copy'}
+    ]
     }) 
 %>
+
+
+<%- partial('../../_common/modal',{
+    modalId:'itemCopyModal',
+    caption:'Kopya',
+    formControls:{
+        newName:{caption:'Yeni Palet isim/kod/numara', type:'textbox', default:''}
+    },
+    mode:'addnew',
+    buttons:[
+        {isCancelButton:true},
+        {href:'javascript:itemCopySave()', text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+    ]
+}) %>
+
+<script type="text/javascript">
+    var temp_id, temp_name;
+    function itemCopyConfirm(id, name){
+        temp_id=id;
+        temp_name=name;
+        $('#newName').val(incString(name));
+        $('#itemCopyModal').modal('show');
+    }
+
+    function itemCopySave(){
+        if($('#newName').val().trim()==''){
+            alert('Isim bos olamaz');
+            return;
+        }
+        $('#itemCopyModal').modal('hide');
+
+        var data={id:temp_id, newName:$('#newName').val()}
+        $.ajax({
+            url:'/dbapi/print-designs/copy?db=<%=db%>&sid=<%=sid%>',
+            data:data,
+            type:'POST',
+            success:function(result){
+                if(result.success){
+                    window.location.reload();
+                }else{
+                    $('#itemCopyModal').modal('show');
+                    alert(result.error.code + ' - ' + result.error.message);
+                }
+            }
+        });
+       
+    }
+</script>

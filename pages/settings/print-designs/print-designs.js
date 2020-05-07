@@ -1,6 +1,6 @@
 module.exports = function(req,res,callback){
 	var data={
-		printDesignModuleList:JSON.parse(JSON.stringify(staticValues.printDesignModuleList)),
+		printDesignModuleList:clone(staticValues.printDesignModuleList),
 		form:{
 			module:'',
 			name:'',
@@ -41,6 +41,7 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
+	data.printDesignModuleList.unshift({text:'-- Tümü --',value:''});
 	api.get('/' + req.query.db + '/print-designs',req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp);

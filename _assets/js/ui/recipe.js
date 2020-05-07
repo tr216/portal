@@ -71,8 +71,14 @@ function saveRecipe(callback){
         
         doc['revision']=Number($('#recipeRevision').val());
         doc['isDefault']=$('#recipeIsDefault').prop('checked');
+        var receteGramaj=doc.totalQuantity * defaultUnit.netWeight.value;
+        doc.totalWeight=receteGramaj;
+    }else if(recipeFormType=='production-orders'){
+        
     }
+
     doc['description']=$('#recipeDescription').val();
+    doc['staffCount']=$('#staffCount').val();
     
     if(doc.process.length>0){
         doc.process.forEach(function(p){
@@ -87,6 +93,8 @@ function saveRecipe(callback){
             })
         });
     }
+
+    
     var type='POST';
     var url='';
     if(recipeFormType=='products'){
@@ -159,7 +167,7 @@ function reloadRecipe(onlyProcess=false){
         $('#recipeDescription').val((doc.description || ''));
     }
 
-    
+    $('#staffCount').val((doc.staffCount || 0));
 
     if(doc.process!=undefined){
         if(doc.process.length==0){
@@ -261,16 +269,18 @@ function refreshProcessInputMaterialGrid(adimIndex){
         cell1.classList.add('text-right');
 
         var oran=0;
-        if(defaultUnit.netWeight.attr.unitCode==e.unitCode){
-            if(receteMiktari*defaultUnit.netWeight.value>0){
-                oran=Math.round(100*100*e.quantity/(receteMiktari*defaultUnit.netWeight.value))/100;
-            }
+        cell1.innerHTML='%' + e.percent;
+        toplamOran +=e.percent;
+        // if(defaultUnit.netWeight.attr.unitCode==e.unitCode){
+        //     if(receteMiktari*defaultUnit.netWeight.value>0){
+        //         oran=Math.round(100*100*e.quantity/(receteMiktari*defaultUnit.netWeight.value))/100;
+        //     }
             
-            cell1.innerHTML='%' + oran;
-            toplamOran +=Math.round(100*oran)/100;
-        }else{
-            cell1.innerHTML='';
-        }
+        //     cell1.innerHTML='%' + oran;
+        //     toplamOran +=Math.round(100*oran)/100;
+        // }else{
+        //     cell1.innerHTML='';
+        // }
         
 
         var cell2=newRow.insertCell(2);
@@ -287,10 +297,10 @@ function refreshProcessInputMaterialGrid(adimIndex){
        
     });
 
-    if(recipeFormType=='products'){
+    //if(recipeFormType=='products'){
         adimDiv.querySelector('#totalPercentInput').innerHTML='%' + toplamOran.formatMoney();
         
-    }
+    //}
    
 }
 
@@ -308,13 +318,15 @@ function addProcessInputMaterial(adimIndex){
     var itemName=$('#adim'+ adimIndex + ' #itemName').val();
     var unitCode=$('#adim'+ adimIndex + ' #quantity-unitCode').val();
     var quantity=Number($('#adim'+ adimIndex + ' #quantity').val());
+    var percent=Number($('#adim'+ adimIndex + ' #percent').val());
     
     if(!(itemId && quantity>0)) return;
     if(!doc.process[adimIndex].input) doc.process[adimIndex].input=[];
-    doc.process[adimIndex].input.push({item:{_id:itemId,name:{value:itemName}},quantity:quantity,unitCode:unitCode});
+    doc.process[adimIndex].input.push({item:{_id:itemId,name:{value:itemName}},quantity:quantity,unitCode:unitCode,percent:percent});
     $('#adim'+ adimIndex + ' #itemId').val('');
     $('#adim'+ adimIndex + ' #itemName').val('');
     $('#adim'+ adimIndex + ' #quantity').val(0);
+    $('#adim'+ adimIndex + ' #percent').val(0);
     refreshProcessInputMaterialGrid(adimIndex);
     $('#adim'+ adimIndex + ' #itemName').focus();
 }
@@ -340,7 +352,7 @@ function refreshProcessOutputMaterialGrid(adimIndex){
         var cell1=newRow.insertCell(1);
         cell1.classList.add('text-right');
         cell1.innerHTML=e.quantity + ' ' + e.unitCode;
-
+        //qwerty   output refresh yapilacak. burada oran felan yok.
         var cell2=newRow.insertCell(2);
         cell2.classList.add('text-center');
         if(recipeFormType=='products'){
@@ -366,13 +378,15 @@ function addProcessOutputMaterial(adimIndex){
     var itemName=$('#adim'+ adimIndex + ' #itemNameOutput').val();
     var unitCode=$('#adim'+ adimIndex + ' #quantity-unitCodeOutput').val();
     var quantity=Number($('#adim'+ adimIndex + ' #quantityOutput').val());
+    var percent=Number($('#adim'+ adimIndex + ' #percentOutput').val());
     
     if(!(itemId && quantity>0)) return;
     if(!doc.process[adimIndex].output) doc.process[adimIndex].output=[];
-    doc.process[adimIndex].output.push({item:{_id:itemId,name:{value:itemName}},quantity:quantity,unitCode:unitCode});
+    doc.process[adimIndex].output.push({item:{_id:itemId,name:{value:itemName}},quantity:quantity,unitCode:unitCode, percent:percent});
     $('#adim'+ adimIndex + ' #itemIdOutput').val('');
     $('#adim'+ adimIndex + ' #itemNameOutput').val('');
     $('#adim'+ adimIndex + ' #quantityOutput').val(0);
+    $('#adim'+ adimIndex + ' #percentOutput').val(0);
     refreshProcessOutputMaterialGrid(adimIndex);
     $('#adim'+ adimIndex + ' #itemNameOutput').focus();
 }
@@ -595,6 +609,13 @@ function autoCompleteItemName(adimIndex){
         $('#adim' + adimIndex + ' #quantity').val(miktar);
 
     });
+    $('#adim' + adimIndex + ' #percentOutput').change(function() {
+        var oran=Number($('#adim' + adimIndex + ' #percentOutput').val());
+        var receteMiktari=doc.totalQuantity * defaultUnit.netWeight.value;
+        var miktar=Math.round(100*receteMiktari*oran/100)/100;
+        $('#adim' + adimIndex + ' #quantity').val(miktar);
+
+    });
     // $('#adim' + adimIndex + ' #percent').keypress(function( event ) {
     //   if ( event.which == 13 ) {
     //     event.preventDefault();
@@ -717,14 +738,9 @@ function autoCompleteItemName(adimIndex){
 }
 
 function selectMachineChange(adimIndex,deger){
-    console.log('selectMachineChange => adimIndex:',adimIndex,' deger:',deger);
     var adimDiv=document.getElementById('adim' + adimIndex);
     $('#adim' + adimIndex + ' #select-mold option').remove();
-
-    
     if(deger=='') return;
-
-
 
     var url='';
     if(recipeFormType=='products'){

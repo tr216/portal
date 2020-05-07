@@ -187,9 +187,6 @@ const itemType={
     itemInstance:[itemInstanceType],
     images:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
     files:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
-    palletRequired:false,
-    palletTypes:[],
-    packingRequired:false,
     packingTypes:[],
     localDocumentId:'',
     passive:false
@@ -770,6 +767,7 @@ const productionOrderType={
     packingType:'',
     totalPallet:0,
     totalPacking:0,
+    totalWeight:0,
     status:'Draft',
     cancelled: false
 }
@@ -785,6 +783,7 @@ const recipeType={
     qualityControl:[], //qualityControlType
     isDefault: true,
     totalQuantity:100,
+    totalWeight:100,
     passive: false
     
 }

@@ -92,7 +92,6 @@ module.exports = function(app){
 			pages[req.params.module][req.params.page].code(req, res, (err,data)=>{
 				if(!data) data={};
 				data=setGeneralParams(req,data);
-				
 
 				if(req.params.isSysUser){
 					data['leftMenu']=sysmenu;

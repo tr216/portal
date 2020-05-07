@@ -3,6 +3,7 @@ module.exports = function(req,res,callback){
 	var data={
 		stationList:[],
 		stepList:[],
+		printDesignList:[],
 		productionTypeCodeList:Array.from(staticValues.productionTypeCodeList),
 		productionStatusTypes:Array.from(staticValues.productionStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
@@ -83,7 +84,7 @@ function getList(req,res,data,callback){
 function initLookUpLists(req,res,data,cb){
 	data.stationList=[];
 	data.stepList=[];
-	
+	data.printDesignList=[];
 	api.get('/' + req.query.db + '/mrp-stations',req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.stationList=resp.data.docs;
@@ -94,9 +95,16 @@ function initLookUpLists(req,res,data,cb){
 				data.stepList=resp.data.docs;
 				data.stepList.unshift({_id:'',name:'-Tümü-'})
 			}
-			cb(null,data);
+			api.get('/' + req.query.db + '/print-designs',req,{passive:false,module:'mrp-production-order'},(err,resp)=>{
+				if(!err){
+					data.printDesignList=resp.data.docs;
+				}
+				cb(null,data);
+			});
 		});
 	});
+
+	//
 }
 
 function addnew(req,res,data,callback){

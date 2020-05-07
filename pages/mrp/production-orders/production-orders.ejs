@@ -49,14 +49,19 @@
     editButton:true,
     deleteButton:true,
     selection:true,
+    printButton:{
+        path:'/production-orders/{_id}',
+        printDesignList:printDesignList,
+    },
     //customButtons:[
-    //    {href:'javascript:popupCenter("/e-invoice/inbox/view/{_id}?db=' + db + '&sid=' + sid + '","Ön izleme","900","600");', text:'Goruntule',icon:'fas fa-search-plus'}
+    //    {href:'javascript:yazdir("{_id}");', text:'Goruntule',icon:'fas fa-print'}
     //],
     deleteUrl:'/dbapi/production-orders/{_id}?db='+db+'&sid=' + sid
     }) 
 %>
 
 <script type="text/javascript">
+    var q=getAllUrlParams();
 
     $(document).ready(function(){
 
@@ -122,5 +127,9 @@
     function showErrors(_id){
         var url='<%=urlPath%>/errors/'+ _id + '?db=<%=db%>&sid=<%=sid%>';
         popupCenter(url,'Goster','900','600');
+    }
+
+    function yazdir(id){
+        popupCenter('/general/print?path=/production-orders/' + id + '&db='+ q.db + '&sid='+ q.sid,'Üretim Emri', '1000','700');
     }
 </script>

@@ -43,8 +43,8 @@ module.exports = function(req,res,callback){
 		        color:false,
 		        pattern:false,
 		        size:false
-		    }
-	        
+		    },
+	        packingOptions:[]
 		},
 		filter:{},
 		list:[]

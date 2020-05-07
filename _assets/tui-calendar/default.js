@@ -143,7 +143,6 @@ function setRenderRangeText() {
 function setSchedules() {
   cal.clear();
   
-  hazirla();
   cal.createSchedules(ScheduleList);
   refreshScheduleVisibility();
 }
