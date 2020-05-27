@@ -354,3 +354,14 @@ hr {
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
+
+.page-link-disabled {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #0E6DEF;
+    background-color: #f0f0f0;
+    border: 1px solid #d0d0e0;
+}

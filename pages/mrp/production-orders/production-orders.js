@@ -19,13 +19,17 @@ module.exports = function(req,res,callback){
 	}
 	switch(req.params.func || ''){
 		case 'addnew':
-		
 			addnew(req,res,data,callback);
 		break;
 		case 'edit':
 			edit(req,res,data,callback);
 		break;
 		case 'view':
+			edit(req,res,data,callback);
+		break;
+		case 'approvement':
+		case 'start':
+		case 'complete':
 			edit(req,res,data,callback);
 		break;
 		
@@ -43,22 +47,7 @@ function getList(req,res,data,callback){
 	data.productionTypeCodeList.unshift({text:'-Tümü-',value:''});
 	data.productionStatusTypes.unshift({text:'-Tümü-',value:''});
 	
-	// if(req.method=='POST'){
-	// 	var filter={};
-	// 	filter=Object.assign(filter,req.query);
-	// 	filter=Object.assign(filter,req.body);
-	// 	filter['btnFilter']=undefined;
-	// 	delete filter['btnFilter'];
-	// 	filter['page']=1;
-	// 	data.filter=filter;
-	// }else{
-	// 	data.filter=Object.assign(data.filter,req.query);
-	// 	data.filter.db=undefined;
-	// 	delete data.filter.db;
-	// 	data.filter.sid=undefined;
-	// 	delete data.filter.sid;
-	// }
-
+	
 	initLookUpLists(req,res,data,(err,data)=>{
 		
 		api.get('/' + req.query.db + '/production-orders',req,data.filter,(err,resp)=>{
@@ -67,7 +56,7 @@ function getList(req,res,data,callback){
 				var docs=[];
 				resp.data.docs.forEach((e)=>{
 					
-					docs.push(docFormHelper.makeSimpleProductionOrderList(e));
+					docs.push(docFormHelper.makeSimpleProductionOrderList(req, e));
 					
 				});
 				resp.data.docs=docs;
@@ -122,12 +111,72 @@ function addnew(req,res,data,callback){
 				}
 			});
 		}else{
-			
-			callback(null,data);
-			
+			eventLog('addnew calisti');
+			if((req.query.itemId || '')!=''){
+				data.form.item=req.query.itemId;
+			}
+
+			if((req.query.orderLineId || '')!=''){
+				formaSiparisEkle(req,data,(err,data)=>{
+					return callback(null,data);
+				})
+			}else{
+				callback(null,data);
+			}
 		}
 	});
 }
+
+function formaSiparisEkle(req,data,callback){
+
+	var orderLineId=req.query.orderLineId;
+	if(orderLineId.substr(-1,1)==',') orderLineId=orderLineId.substr(0,orderLineId.length-1);
+	var orderLineList=orderLineId.split(',');
+	var index=0;
+	console.log('orderLineList:',orderLineList);
+
+	function siparisiBul(cb){
+		if(index>=orderLineList.length) return cb(null);
+		api.get('/' + req.query.db + '/production-orders/salesOrders',req,{orderLineId:orderLineList[index]},(err,resp)=>{
+			if(!err){
+				
+				resp.data.docs.forEach((e)=>{
+					var obj={
+		                lineId:e.orderLine.ID,
+		                item:e.orderLine.item,
+		                orderedQuantity:e.orderLine.orderedQuantity,
+
+		                producedQuantity:{value:e.producedRemaining, attr:{unitCode:e.orderLine.orderedQuantity.attr.unitCode}},
+		                deliveredQuantity:e.orderLine.deliveredQuantity,
+
+		                orderReference:{
+		                    order:e.sip_id,
+		                    ID:e.ID,
+		                    issueDate:e.issueDate,
+		                    orderTypeCode:e.orderTypeCode,
+		                    salesOrderId:e.salesOrderId,
+		                    buyerCustomerParty:{
+		                        party:e.buyerCustomerParty.party,
+		                        deliveryContact:e.buyerCustomerParty.deliveryContact,
+		                        accountingContact:e.buyerCustomerParty.accountingContact,
+		                        buyerContact:e.buyerCustomerParty.buyerContact
+		                    }
+		                }
+		            }
+		            data.form.orderLineReference.push(obj);
+				});
+			}
+			index++;
+			setTimeout(siparisiBul,0,cb);
+		});
+	}
+
+	siparisiBul((err)=>{
+		callback(null,data);
+	});
+}
+
+
 
 function edit(req,res,data,callback){
 	var _id=req.params.id || '';

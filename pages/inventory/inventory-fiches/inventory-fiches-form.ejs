@@ -23,109 +23,149 @@
         </div>
         <div class="card-body p-1">
             <div class="row">
-                <div class="form-group col-md-3">
-                    <label for="" class="m-0">Fiş No</label>
-                    <input type="text" class="form-control" name="docId" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.docId%>" <% if(mode=='view'){%>readonly="true"<%}%> >
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="" class="m-0">Tarih</label>
-                    <div class="input-group date">
-                        <input type="text" name="issueDate" id="issueDate" class="form-control" value="<% if(typeof form.issueDate=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
-                        <div class="input-group-addon">
-                            <i class="fa fa-calendar fa-2x"></i>
+                <div class="col-12">
+                    <div class="form-group float-left">
+                        <label for="" class="m-0">Fiş No</label>
+                        <input type="text" class="form-control" name="docId" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.docId%>" <% if(mode=='view'){%>readonly="true"<%}%> >
+                    </div>
+                    <div class="form-group float-left ml-md-2">
+                        <label for="" class="m-0">Tarih</label>
+                        <div class="input-group date">
+                            <input type="text" name="issueDate" id="issueDate" class="form-control" value="<% if(typeof form.issueDate=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar fa-2x"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group col-md-2">
-                    <label for="" class="m-0">Saat</label>
-                    <div class="input-group" id="issueTime1">
-                        <input type="text" name="issueTime" id="issueTime" class="form-control" value="<% if(typeof form.issueTime=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.substr(0,8)%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
-                        <div class="input-group-addon">
-                            <i class="fa fa-clock fa-2x"></i>
+                    <div class="form-group float-left ml-md-2">
+                        <label for="" class="m-0">Saat</label>
+                        <div class="input-group" id="issueTime1">
+                            <input type="text" name="issueTime" id="issueTime" class="form-control" value="<% if(typeof form.issueTime=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.substr(0,8)%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
+                            <div class="input-group-addon">
+                                <i class="fa fa-clock fa-2x"></i>
+                            </div>
                         </div>
                     </div>
+                    <div class="form-group float-left ml-md-2">
+                        <label for="" class="m-0">Fiş Tipi</label>
+                        <div class="form-inline">
+                            <select name="docTypeCode" class="form-control float-left" <% if(mode!='addnew'){%>disabled<%}%> onchange="docTypeCodeChange()">
+                                <% staticValues.inventoryFicheTypeCodeList.forEach(function(e){ %>
+                                    <option value="<%=e.value%>" <% if(e.value==form.docTypeCode){%>selected<%} %> ><%=e.text%></option>
+                                <% }); %>
+                            </select>
+                            <div id="btnUretimSec" class="float-left ml-2" style="display: none;">
+                                <a class="btn btn-primary" href="javascript:modalProductionOrders()"><i class="fas fa-industry"></i> Üretim Seç</a>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
-                <div class="form-group col-md-2">
-                    <label for="" class="m-0">Fiş Tipi</label>
-                    <select name="docTypeCode" class="form-control" <% if(mode!='addnew'){%>disabled<%}%> onchange="docTypeCodeChange()">
-                        <% staticValues.inventoryFicheTypeCodeList.forEach(function(e){ %>
-                            <option value="<%=e.value%>" <% if(e.value==form.docTypeCode){%>selected<%} %> ><%=e.text%></option>
-                        <% }); %>
-                    </select>
-                </div>
-                
-                <div class="w-100"></div>
-                <div class="form-group col-md-5">
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
                     <label for="" class="m-0">Fiş açıklaması</label>
                     <input type="text" class="form-control" name="description" placeholder="Fiş açıklaması" autocomplete="off" value="<%=form.description%>" <% if(mode=='view'){%>readonly="true"<%}%> >
                 </div>
-                <div class="col-md-3">
-                    <%- partial('../../_common/location-selection',{name:'location',subLocationName:'subLocation',inputTitle:'Lokasyon',form:form}) %>
-                </div>
-                <div id="divLocation2" class="col-md-3" style="display: none;">
-                    <%- partial('../../_common/location-selection',{name:'location2',subLocationName:'subLocation2',inputTitle:'Hedef Lokasyon',form:form}) %>
+                <div class="col-md-8">
+                    
+                    <div class="float-left">
+                        <%- partial('../../_common/location-selection',{name:'location',subLocationName:'subLocation',inputTitle:'Lokasyon',form:form}) %>
+                    </div>
+                    <div id="divLocation2" class="float-left ml-2" style="display: none;">
+                        <%- partial('../../_common/location-selection',{name:'location2',subLocationName:'subLocation2',inputTitle:'Hedef Lokasyon',form:form}) %>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <div class="card mt-2">
-        <div class="card-header p-1">
-            <div class="float-left bold text-primary">Satırlar</div>
+    <div class="row m-0 p-0 mt-2">
+        <div id="divUretimDetay" class="col-md-4 m-0 p-0 pr-md-2" style="display: none;">
+            <div class="card">
+                <div class="card-header p-1">
+                    <div class="float-left bold text-primary">Üretim emri detayları</div>
+                </div>
+                <div class="card-body p-1">
+                    <div id="productionOrderInfo"></div>
+
+                    <label class="text-primary bold m-0 mt-2" title="Üretime çıkacak hammadde ve yardımcı malzemeler">Gerekli malzemeler</label>
+                    <table id="gridProOrderMaterials" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+                        <thead>
+                            <tr class="text-nowrap">
+                                <th width="40" class="">No</th>
+                                <th class="">Stok Karti</th>
+                                <th class="text-right">Miktar</th>
+                                <th class="text-right">Kalan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lineGridProOrder">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="card-body p-1">
-            <table id="grid1" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-                <thead>
-                    <tr class="text-nowrap">
-                        <th width="40" class="">No</th>
-                        <th width="200" class="">Stok Karti</th>
-                        <th class="text-right" style="min-width:120px;">Miktar</th>
-                        <th>Brm</th>
-                        <th>Palet</th>
-                        <th>Lot No</th>
-                        <th>Seri No</th>
-                        <th>Renk</th>
-                        <th>Desen</th>
-                        <th>Beden</th>
-                        <th width="80" class="text-center">#</th>
-                    </tr>
-                </thead>
-                <tbody id="lineGrid">
+        <div class="col m-0 p-0">
+            <div class="card">
+                <div class="card-header p-1">
+                    <div class="float-left bold text-primary">Satırlar</div>
+                </div>
+                <div class="card-body p-1">
+                    <table id="grid1" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+                        <thead>
+                            <tr class="text-nowrap">
+                                <th width="40" class="">No</th>
+                                <th width="200" class="">Stok Karti</th>
+                                <th class="text-right" style="min-width:120px;">Miktar</th>
+                                <th>Brm</th>
+                                <th>Palet</th>
+                                <th>Lot No</th>
+                                <th>Seri No</th>
+                                <th>Renk</th>
+                                <th>Desen</th>
+                                <th>Beden</th>
+                                <th width="80" class="text-center">#</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lineGrid">
 
-                    <% if(mode!='view'){ %>
-                    <tr>
-                        <td>#</td>
-                        <td>
-                            <input type="text" class="form-control" id="docLine-item-name" autocomplete="off" placeholder="" value="" title="Stok karti sec">
-                            <input type="hidden" class="form-control" id="docLine-item-id" autocomplete="off" value=""></td>
-                        <td>
-                            <input type="number" class="form-control" id="docLine-quantity" placeholder="" autocomplete="off" value="0" title="Miktar">
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" id="docLine-unitCodeText" autocomplete="off" placeholder="" value="" title="Birim" readonly="true">
-                            <input type="hidden" class="form-control" id="docLine-unitCode" autocomplete="off" value="">
-                        </td>
+                            <% if(mode!='view'){ %>
+                            <tr>
+                                <td>#</td>
+                                <td>
+                                    <input type="text" class="form-control" id="docLine-item-name" autocomplete="off" placeholder="" value="" title="Stok karti sec">
+                                    <input type="hidden" class="form-control" id="docLine-item-id" autocomplete="off" value=""></td>
+                                <td>
+                                    <input type="number" class="form-control" id="docLine-quantity" placeholder="" autocomplete="off" value="0" title="Miktar">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" id="docLine-unitCodeText" autocomplete="off" placeholder="" value="" title="Birim" readonly="true">
+                                    <input type="hidden" class="form-control" id="docLine-unitCode" autocomplete="off" value="">
+                                </td>
 
-                        <td>
-                            <select name="docLine-pallet" class="form-control" title="Palet"></select>
-                        </td>
-                        <td><input type="text" class="form-control" id="docLine-lotNo" autocomplete="off" placeholder="" value="" title="lot numarasi"></td>
-                        <td><input type="text" class="form-control" id="docLine-serialNo" autocomplete="off" placeholder="" value="" title="seri numarasi"></td>
-                        <td>
-                            <select name="docLine-color" id="docLine-color" class="form-control" title="Renk"></select>
-                        </td>
-                        <td><select name="docLine-pattern"  id="docLine-pattern" class="form-control" title="Desen"></select></td>
-                        <td><select name="docLine-size"  id="docLine-size" class="form-control" title="Beden/Size"></select></td>
-                        <td class="text-center">
-                            <a href="javascript:addNewLine();" class="btn btn-primary far fa-plus-square"  title="Ekle"></a>
-                        </td>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
+                                <td>
+                                    <select name="docLine-pallet" class="form-control" title="Palet"></select>
+                                </td>
+                                <td><input type="text" class="form-control" id="docLine-lotNo" autocomplete="off" placeholder="" value="" title="lot numarasi"></td>
+                                <td><input type="text" class="form-control" id="docLine-serialNo" autocomplete="off" placeholder="" value="" title="seri numarasi"></td>
+                                <td>
+                                    <select name="docLine-color" id="docLine-color" class="form-control" title="Renk"></select>
+                                </td>
+                                <td><select name="docLine-pattern"  id="docLine-pattern" class="form-control" title="Desen"></select></td>
+                                <td><select name="docLine-size"  id="docLine-size" class="form-control" title="Beden/Size"></select></td>
+                                <td class="text-center">
+                                    <a href="javascript:addNewLine();" class="btn btn-primary far fa-plus-square"  title="Ekle"></a>
+                                </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+    
     <div id="divSayimKesinlestir" class="card mt-2" style="display: none;">
         <div class="card-header p-1">
             <div class="float-left bold text-primary">Sayım Kesinleştirme</div>
@@ -136,6 +176,61 @@
     </div>
 </form>
 
+<div class="modal" id="productionOrdersModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="productionOrdersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-2 ">
+                <label class="modal-title" id="productionOrdersModalLabel">Üretim emri seç</label>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-2" style="overflow: auto;">
+                <div class="row m-0 mb-2">
+                    <div class="col-12 p-0">
+                        <%- partial('../../_common/date-filter',{isModal:true}) %>
+                        <div class="float-md-right">
+                            <a href="javascript:loadProductionOrders();" class="btn btn-primary"><i class="fa fa-filter"></i> Filtrele</a>
+                        </div>
+                    </div>
+                </div>
+                <table id="gridProductionOrders" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+                    <thead>
+                        <tr class="text-nowrap">
+                            <th class="">Uretim No</th>
+                            <th class="">Tarih</th>
+                            <th class="">Müşteri</th>
+                            <th class="">Mamül</th>
+                            <th width="100" class="text-right">Miktar</th>
+                            <th width="100" class="text-center">#</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="gridProductionOrdersLineGrid">
+                        
+                    </tbody>
+                </table>
+                <div id="gridProductionOrdersPages">
+                    <nav aria-label="">
+                      <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">|&lt;</a></li>
+                        <li class="page-item"><a class="page-link" href="#">&lt;</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
+                        <li class="page-item"><a class="page-link" href="#">&gt;|</a></li>
+                      </ul>
+                    </nav>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     var headerButtons=document.getElementById('headerButtons');
@@ -175,6 +270,137 @@
     <%  }
     } %>
 
+    function modalProductionOrders(){
+        loadProductionOrders(1,function(err){
+            if(!err){
+                $('#productionOrdersModal').modal('show');
+            }else{
+                alert((err.message || 'HATA'));
+            }
+        })
+    }
+
+    
+
+    function loadProductionOrders(page=1,cb=undefined){
+        $("#gridProductionOrdersLineGrid tr").remove();
+        var gridProductionOrdersPages=document.getElementById('gridProductionOrdersPages');
+        var date1=$('#date1Modal').val();
+        var date2=$('#date2Modal').val();
+        var q=getAllUrlParams();
+        $.ajax({
+            url:'/dbapi/production-orders?date1=' + date1 + '&date2=' + date2 + '&page=' + page + '&pageSize=10&db=' + q.db + '&sid=' + q.sid,
+            type:'GET',
+            dataType: 'json',
+            success: function(result) {
+                if(result.success){
+                    
+                    var lineGrid=document.getElementById('gridProductionOrdersLineGrid');
+                    result.data.docs.forEach(function(proOrder,index){
+                        var newRow=lineGrid.insertRow(lineGrid.rows.length);
+                        newRow.insertCell(0).innerHTML=proOrder.productionId;
+                        newRow.insertCell(1).innerHTML=proOrder.issueDate;
+                        var musteri='';
+                        if(proOrder.productionTypeCode=='DEPO'){
+                            musteri='DEPO';
+                        }else{
+                            proOrder.orderLineReference.forEach(function(e,index2){
+                                musteri +=e.orderReference.ID.value + ' - ' + e.orderReference.buyerCustomerParty.party.partyName.name.value;
+                                if(index2<proOrder.orderLineReference.length-1) musteri +='<br>';
+                            });
+                        }
+                        
+                        newRow.insertCell(2).innerHTML=musteri;
+                        newRow.insertCell(3).innerHTML=proOrder.item.name.value + ' - ' + proOrder.item.description.value;
+                        var cell4=newRow.insertCell(4);
+                        cell4.classList.add('text-right');
+                        cell4.innerHTML=Number(proOrder.plannedQuantity).formatDecimal();
+                        var cell5=newRow.insertCell(5);
+                        cell5.classList.add('text-center');
+                        cell5.innerHTML='<a href="javascript:uretimEmriSec(\'' + proOrder._id + '\');" class="btn btn-sm btn-primary"><i class="fas fa-check"></i> Seç</a>';
+                        
+                    });
+                    gridProductionOrdersPages.innerHTML = '';
+                    gridProductionOrdersPages.appendChild(generatePagination(page,result.data.pageCount,'javascript:loadProductionOrders({page});'));
+                    if(cb){
+                        return cb(null);
+                    }
+                    
+
+                }
+            },
+            error:function(err){
+                gridProductionOrdersPages.innerHTML = '';
+                console.log('err:',err);
+                if(cb){
+                    return cb(err);
+                }
+                
+            }
+        });
+    }
+
+    // var proOrderDoc;
+    function uretimEmriSec(_id){
+        var q=getAllUrlParams();
+        $.ajax({
+            url:'/dbapi/production-orders/' + _id + '?db=' + q.db + '&sid=' + q.sid,
+            type:'GET',
+            dataType: 'json',
+            success: function(result) {
+                if(result.success){
+                    showUretimEmriDetaylar(result.data);
+                }
+            },
+            error:function(err){
+                gridProductionOrdersPages.innerHTML = '';
+                console.log('err:',err);
+                
+            }
+        });
+        $('#productionOrdersModal').modal('hide');
+    }
+
+    function showUretimEmriDetaylar(proOrder){
+        var productionOrderInfo=document.getElementById('productionOrderInfo');
+        var musteri='';
+        if(proOrder.productionTypeCode=='DEPO'){
+            musteri='DEPO';
+        }else{
+            proOrder.orderLineReference.forEach(function(e,index2){
+                musteri +=e.orderReference.ID.value + ' - ' + e.orderReference.buyerCustomerParty.party.partyName.name.value;
+                if(index2<proOrder.orderLineReference.length-1) musteri +='<br>';
+            });
+        }
+        productionOrderInfo.innerHTML='';
+        productionOrderInfo.innerHTML+='Uretim No: <b>' + proOrder.productionId + '</b><br>';
+        productionOrderInfo.innerHTML+='Musteri: <b>' + musteri + '</b><br>';
+        productionOrderInfo.innerHTML+='Evrak Tar.: <b>' + proOrder.issueDate + '</b><br>';
+        productionOrderInfo.innerHTML+='Planlama Tar.: <b>[' + proOrder.plannedPeriod.startDate + '] - [' + proOrder.plannedPeriod.endDate + ']</b>';
+
+
+        $("#lineGridProOrder tr").remove();
+        var lineGridProOrder=document.getElementById('lineGridProOrder');
+
+        proOrder.materialSummary.forEach(function(e,index){
+            var newRow=lineGridProOrder.insertRow(lineGridProOrder.rows.length);
+            newRow.insertCell(0).innerHTML=(index+1).n2();
+            newRow.insertCell(1).innerHTML=e.item.name.value + ' - ' + e.item.description.value;
+            var cell2=newRow.insertCell(2);
+            cell2.classList.add('text-right');
+            cell2.innerHTML=Number(e.quantity).formatDecimal();
+            var cell3=newRow.insertCell(3);
+            cell3.classList.add('text-right');
+            cell3.innerHTML=Number(e.quantity).formatDecimal();
+        });
+        
+        
+        
+        console.log('proOrder:',proOrder);
+
+    }
+    
+
     function docTypeCodeChange(){
         if($('select[name="docTypeCode"]').val()=='TRANSFER'){
             $('#divLocation2').show();
@@ -185,6 +411,19 @@
             $('#divSayimKesinlestir').show();
         }else{
             $('#divSayimKesinlestir').hide();
+        }
+        if($('select[name="docTypeCode"]').val()=='URETIMECIKIS' || $('select[name="docTypeCode"]').val()=='URETIMDENGIRIS'){
+            $('#btnUretimSec').show();
+            $('#divUretimDetay').show();
+        }else{
+            $('#btnUretimSec').hide();
+            $('#divUretimDetay').hide();
+        }
+
+        if($('select[name="docTypeCode"]').val()=='URETIMECIKIS'){
+            
+        }else{
+            
         }
         
     }

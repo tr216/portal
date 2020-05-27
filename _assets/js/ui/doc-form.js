@@ -497,16 +497,16 @@ function saveDocument(callback){
 
     	case 'invoice':
     		doc.invoiceTypeCode={ value:$("select[name='invoiceTypeCode[value]']").val()}
-    		doc.location=$("select[name='location']").val();
+    		doc.location=$("select[name='location']").val().split(';')[0];
     		doc.subLocation=$("select[name='subLocation']").val();
     	break;
 
     	case 'despatch':
     		doc.despatchAdviceTypeCode={ value:$("select[name='despatchAdviceTypeCode[value]']").val()}
-    		doc.location=$("select[name='location']").val();
+    		if($("select[name='location']").val()!='')	doc.location=$("select[name='location']").val().split(';')[0];
     		doc.subLocation=$("select[name='subLocation']").val();
-			doc.location2=$("select[name='location2']").val();
-			doc.subLocation2=$("select[name='subLocation']").val();
+   //  		if($("select[name='location2']").val()!='')	doc.location2=$("select[name='location2']").val().split(';')[0];
+			// doc.subLocation2=$("select[name='subLocation']").val();
     	break;
     }
     
@@ -1244,11 +1244,66 @@ function docLineItemNameAutoComplete(){
     });
 }
 
+var q=getAllUrlParams();
+
+function docFormAutoComplete(){
+	$('#partyName').autocomplete({
+        source:function(request,response){
+        		var url='';
+        		if(doc.ioType==0){
+        			url='/dbapi/customers?partyName=';
+        		}else{
+        			url='/dbapi/vendors?partyName=';
+        		}
+                $.ajax({
+                url:url +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                type:'GET',
+                dataType: 'json',
+                success: function(result) {
+                        if(result.success){
+                            var dizi=[];
+                            for(var i=0;i<result.data.docs.length;i++){
+                                var item=result.data.docs[i];
+                                
+                                dizi.push({label:(item.partyName.name.value),value:(item.partyName.name.value), obj:item});
+                            }
+                            response(dizi);
+                        }
+                    },
+                error:function(err){
+                    console.error('err:',err);
+                }
+            });
+        },
+        select: function (event, ui) {
+                $("#partyName").val(ui.item.label); 
+                $("#partyId").val(ui.item.obj._id);
+                $('input[name="party[person][firstName][value]"]').val(ui.item.obj.person.firstName.value);
+                $('input[name="party[person][familyName][value]"]').val(ui.item.obj.person.familyName.value);
+                $('input[name="vknTckn"]').val(ui.item.obj.vknTckn);
+                $('input[name="party[partyTaxScheme][taxScheme][name][value]"]').val(ui.item.obj.partyTaxScheme.taxScheme.name.value);
+                $('input[name="party[postalAddress][country][name][value]"]').val(ui.item.obj.postalAddress.country.name.value);
+                $('input[name="party[postalAddress][cityName][value]"]').val(ui.item.obj.postalAddress.cityName.value);
+                $('input[name="party[postalAddress][district][value]"]').val(ui.item.obj.postalAddress.district.value);
+                $('input[name="party[postalAddress][streetName][value]"]').val(ui.item.obj.postalAddress.streetName.value);
+                $('input[name="party[postalAddress][buildingName][value]"]').val(ui.item.obj.postalAddress.buildingName.value);
+                $('input[name="party[postalAddress][blockName][value]"]').val(ui.item.obj.postalAddress.blockName.value);
+                $('input[name="party[postalAddress][buildingNumber][value]"]').val(ui.item.obj.postalAddress.buildingNumber.value);
+                $('input[name="party[postalAddress][room][value]"]').val(ui.item.obj.postalAddress.room.value);
+                $('input[name="party[postalAddress][postbox][value]"]').val(ui.item.obj.postalAddress.postbox.value);
+                $('input[name="party[contact][telephone][value]"]').val(ui.item.obj.contact.telephone.value);
+                $('input[name="party[contact][telefax][value]"]').val(ui.item.obj.contact.telefax.value);
+                $('input[name="party[contact][electronicMail][value]"]').val(ui.item.obj.contact.electronicMail.value);
+                $('input[name="party[websiteURI][value]"]').val(ui.item.obj.websiteURI.value);
+                return false;
+            }
+    });
+}
 
 
 $(document).ready(function(){
 	
 	formOrjinal=document.getElementById('docLineModal').cloneNode(true);
 	
-	
+	docFormAutoComplete();
 });

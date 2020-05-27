@@ -2,6 +2,7 @@
 	{"text":"Ana Sayfa",				"path":"/general/dashboard",		"icon":"fas fa-tachometer-alt", "visible":true, "nodes":[]},
 	{"text":"Satış",	"module":"sales",			"path":"",					"icon":"fas fa-shopping-cart", "visible":true, "nodes":[
 		{"text":"Siparişler",			"path":"/order/outbox", "icon":"fas fa-file-alt", "visible":true, "nodes":[]},
+		{"text":"Bekleyen Siparişler",			"path":"/order/outbox-waiting-orders", "icon":"fas fa-business-time", "visible":true, "nodes":[]},
 		{"text":"Giden İrsaliyeler",	"path":"/despatch/outbox", 	"icon":"fas fa-table", "visible":true, "nodes":[]},
 		{"text":"Giden Faturalar",		"path":"/invoice/outbox",		"icon":"fas fa-table", "visible":true, "nodes":[]},
 		{"text":"Müşteriler",			"path":"/finance/customers",		"icon":"fas fa-users", "visible":true, "nodes":[]}

@@ -362,6 +362,23 @@ function savePageFilter(path,key,value){
 	localStorage.setItem(path + '_filter',JSON.stringify(filter));
 }
 
+function getPageFilter(path,key,defaultValue=''){
+	var filter={}
+	if(localStorage.getItem(path+ '_filter')){
+		try{
+			filter=JSON.parse(localStorage.getItem(path+ '_filter'));
+		}catch(tryErr){
+			localStorage.removeItem(path+ '_filter');
+		}
+		
+	}
+	if(filter[key]){
+		return filter[key];
+	}else{
+		return defaultValue;
+	}
+}
+
 const dbType=typeof types!='undefined'?types.types:'';
 
 function clone(obj){
@@ -442,3 +459,153 @@ function dateTimeFromText(dateStr) {
 
     return d;
 };
+
+
+function pagination(c, m) {
+    var current =Number(c),
+        last = Number(m),
+        delta = 2,
+        left = current - delta,
+        right = current + delta + 1,
+        range = [],
+        rangeWithDots = [],
+        l;
+    
+    for (let i = 1; i <= last; i++) {
+        if (i == 1 || i == last || i >= left && i < right) {
+            range.push(i);
+        }
+    }
+
+
+    for (let i of range) {
+        if (l) {
+            if (i - l == 2) {
+                rangeWithDots.push(l + 1);
+            } else if (i - l != 1) {
+                rangeWithDots.push('...');
+            }
+        }
+        rangeWithDots.push(i);
+        
+        
+        l = i;
+    }
+
+    return rangeWithDots;
+}
+
+function generatePagination(page,pageCount,url){
+    var nav=document.createElement('NAV');
+    nav.setAttribute('aria-label','tr216 pagination');
+    var ul=document.createElement('UL');
+    ul.classList.add('pagination');
+    nav.appendChild(ul);
+
+    // ilk ve onceki
+    var li_first=document.createElement('LI');
+    li_first.classList.add('page-item');
+    if(page>1){
+        var a_first=document.createElement('A');
+        a_first.classList.add('page-link');
+        a_first.setAttribute('href',url.replaceAll('{page}',1));
+        a_first.innerHTML='|<';
+        li_first.appendChild(a_first);
+    }else{
+        var span_first=document.createElement('SPAN');
+        span_first.classList.add('page-link-disabled');
+        span_first.innerHTML='|<';
+        li_first.appendChild(span_first);
+    }
+    
+    ul.appendChild(li_first);
+
+    var li_previous=document.createElement('LI');
+    li_previous.classList.add('page-item');
+
+    if(page>1){
+        var a_previous=document.createElement('A');
+        a_previous.classList.add('page-link');
+        a_previous.setAttribute('href',url.replaceAll('{page}',(page-1)));
+        a_previous.innerHTML='<';
+        li_previous.appendChild(a_previous);
+    }else{
+        var span_previous=document.createElement('SPAN');
+        span_previous.classList.add('page-link-disabled');
+        span_previous.innerHTML='<';
+        li_previous.appendChild(span_previous);
+    }
+
+    ul.appendChild(li_previous);
+    
+    // ---------------
+
+    var sayfalar=pagination(page,pageCount);
+
+    for(var i=0;i<sayfalar.length;i++){
+        var li=document.createElement('LI');
+        
+        li.classList.add('page-item');
+        if(sayfalar[i]==page){
+            li.classList.add('active');
+            var span=document.createElement('SPAN');
+            span.classList.add('page-link');
+            span.innerHTML=sayfalar[i];
+            li.appendChild(span);
+        }else if(sayfalar[i]=='...'){
+            var span=document.createElement('SPAN');
+            span.classList.add('page-link');
+            span.innerHTML='...';
+            li.appendChild(span);
+        }else{
+            var a=document.createElement('A');
+            a.classList.add('page-link');
+            a.innerHTML=sayfalar[i];
+            a.setAttribute('href',url.replaceAll('{page}',sayfalar[i]));
+            li.appendChild(a);
+        }
+       
+        ul.appendChild(li);
+    }
+    
+    
+    // son ve sonraki sayfa
+    var li_next=document.createElement('LI');
+    li_next.classList.add('page-item');
+    if(page<pageCount){
+        var a_next=document.createElement('A');
+        a_next.classList.add('page-link');
+        a_next.setAttribute('href',url.replaceAll('{page}',(page+1)));
+        a_next.innerHTML='>';
+        li_next.appendChild(a_next);
+    }else{
+        var span_next=document.createElement('SPAN');
+        span_next.classList.add('page-link-disabled');
+        span_next.innerHTML='>';
+        li_next.appendChild(span_next);
+    }
+    
+    ul.appendChild(li_next);
+
+    var li_last=document.createElement('LI');
+    li_last.classList.add('page-item');
+    if(page<pageCount){
+        var a_last=document.createElement('A');
+        a_last.classList.add('page-link');
+        a_last.setAttribute('href',url.replaceAll('{page}',pageCount));
+        a_last.innerHTML='>|';
+        li_last.appendChild(a_last);
+    }else{
+        var span_last=document.createElement('SPAN');
+        span_last.classList.add('page-link-disabled');
+        span_last.innerHTML='>|';
+        li_last.appendChild(span_last);
+    }
+    
+    ul.appendChild(li_last);
+
+    // ---------------
+
+    return nav;         
+   
+}

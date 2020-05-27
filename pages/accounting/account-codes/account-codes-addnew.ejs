@@ -32,7 +32,7 @@
                                 for(var i=0;i<result.data.docs.length;i++){
                                     var item=result.data.docs[i];
                                     
-                                    dizi.push({label:(item.accountCode + ' - ' + item.name),value:item._id});
+                                    dizi.push({label:(item.accountCode + ' - ' + item.name),value:(item.accountCode + ' - ' + item.name), obj:item});
                                 }
                                 response(dizi);
                             }
@@ -44,7 +44,7 @@
             },
             select: function (event, ui) {
                     $("#parentAccountCode").val(ui.item.label); 
-                    $("#parentAccount").val(ui.item.value); 
+                    $("#parentAccount").val(ui.item.obj._id); 
                     return false;
                 }
         });

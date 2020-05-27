@@ -147,7 +147,7 @@
 	],
 	"productionStatusTypes":[
 		{"text":"Taslak","value": "Draft"},
-		{"text":"İşleniyor","value": "Processing"},
+		{"text":"Üretiliyor","value": "Processing"},
 		{"text":"Onaylandı","value": "Approved"},
 		{"text":"Reddedildi","value": "Declined"},
 		{"text":"İptal Edildi","value": "Cancelled"},

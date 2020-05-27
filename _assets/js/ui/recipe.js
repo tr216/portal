@@ -435,7 +435,12 @@ function refreshProcessMachines(adimIndex){
 
         var cell5=newRow.insertCell(5);
         cell5.classList.add('text-center');
-        cell5.innerHTML='<a href="javascript:removeProcessMachine(' + adimIndex + ',' + index2 + ');" class="btn btn-danger fas fa-trash-alt" title="sil"></a>';
+        if(mode!='view'){
+            cell5.innerHTML='<a href="javascript:removeProcessMachine(' + adimIndex + ',' + index2 + ');" class="btn btn-danger fas fa-trash-alt" title="sil"></a>';    
+        }else{
+            cell5.innerHTML='';
+        }
+        
 
     });
     
@@ -578,7 +583,7 @@ function autoCompleteItemName(adimIndex){
                             for(var i=0;i<result.data.docs.length;i++){
                                 var item=result.data.docs[i];
                                 
-                                dizi.push({label:(item.name.value),value:item._id});
+                                dizi.push({label:(item.name.value + ' - ' + item.description.value),value:(item.name.value + ' - ' + item.description.value), obj:item});
                             }
                             response(dizi);
                         }
@@ -590,7 +595,7 @@ function autoCompleteItemName(adimIndex){
         },
         select: function (event, ui) {
                 $('#adim' + adimIndex + ' #itemName').val(ui.item.label); 
-                $('#adim' + adimIndex + ' #itemId').val(ui.item.value); 
+                $('#adim' + adimIndex + ' #itemId').val(ui.item.obj._id); 
                 return false;
             }
     });
@@ -643,7 +648,7 @@ function autoCompleteItemName(adimIndex){
                             for(var i=0;i<result.data.docs.length;i++){
                                 var item=result.data.docs[i];
                                 
-                                dizi.push({label:(item.name.value),value:item._id});
+                                dizi.push({label:(item.name.value + ' - ' + item.description.value),value:(item.name.value + ' - ' + item.description.value), obj:item});
                             }
                             response(dizi);
                         }
@@ -655,7 +660,7 @@ function autoCompleteItemName(adimIndex){
         },
         select: function (event, ui) {
                 $('#adim' + adimIndex + ' #itemNameOutput').val(ui.item.label); 
-                $('#adim' + adimIndex + ' #itemIdOutput').val(ui.item.value); 
+                $('#adim' + adimIndex + ' #itemIdOutput').val(ui.item.obj._id); 
                 return false;
             }
     });

@@ -221,12 +221,16 @@
                 </div>
             </div>
             <div class="card mt-2">
-                <div class="card-header p-1 text-primary"><b>Cari Bilgiler</b></div>
+                <div class="card-header p-1">
+                    <div class="text-primary bold float-left">Cari Bilgiler</div>
+                    <div class="float-right"><a href="/finance/<% if(form.ioType==0){%>customers<%}else{%>vendors<%}%>?db=<%=db%>&sid=<%=sid%>" target="_blank" class="btn btn-primary" title="<% if(form.ioType==0){%>Müşteri listesini aç<%}else{%>Tedarikçi listesini aç<%}%>"><i class="fas fa-users"></i></a></div>
+                </div>
                 <div class="card-body p-1">
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label for="" class="m-0">Cari Ünvan</label>
-                            <input type="text" class="form-control" name="party[partyName][name][value]" placeholder="" autocomplete="off"  value="<%=form.party.partyName.name.value%>">
+                            <input type="text" class="form-control" name="party[partyName][name][value]" id="partyName" placeholder="" autocomplete="off"  value="<%=form.party.partyName.name.value%>">
+                            <input type="hidden" class="form-control" name="partyId" id="partyId" value="<% if(typeof form.party._id!='undefined'){%><%=form.party._id%><%}%>">
                         </div>
                         <div class="form-group col-md-2">
                             <label for="" class="m-0">Adı(Şahıs)</label>

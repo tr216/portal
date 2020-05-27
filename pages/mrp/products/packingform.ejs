@@ -23,10 +23,12 @@
                             <td class="">
                                 <input type="text" form="form-general" name="palletTypeName" id="palletTypeName" placeholder="palet tipi"  class="form-control" autocomplete="off" value="">
                                 <input type="hidden" form="form-general" name="palletTypeId" id="palletTypeId"  class="itemId" hidden="true" value="">
+                                <input type="hidden" form="form-general" name="palletTypeObject" id="palletTypeObject"  class="itemId" hidden="true" value="">
                             </td>
                             <td class="">
                                 <input type="text" form="form-general" name="packingTypeName" id="packingTypeName" placeholder="ambalaj tipi"  class="form-control" autocomplete="off" value="">
                                 <input type="hidden" form="form-general" name="packingTypeId" id="packingTypeId"  class="itemId" hidden="true" value="">
+                                <input type="hidden" form="form-general" name="packingTypeObject" id="packingTypeObject"  class="itemId" hidden="true" value="">
                             </td>
                             <td class="text-right">
                                 <input type="number" class="form-control" name="quantityInPacking" id="quantityInPacking" placeholder="" value="0" >
@@ -40,10 +42,12 @@
                             <td class="">
                                 <input type="text" form="form-general" name="packingTypeName2" id="packingTypeName2" placeholder="ara"  class="form-control" autocomplete="off" value="">
                                 <input type="hidden" form="form-general" name="packingTypeId2" id="packingTypeId2"  class="itemId" hidden="true" value="">
+                                <input type="hidden" form="form-general" name="packingTypeObject2" id="packingTypeObject2"  class="itemId" hidden="true" value="">
                             </td>
                             <td class="">
                                 <input type="text" form="form-general" name="packingTypeName3" id="packingTypeName3" placeholder="ara"  class="form-control" autocomplete="off" value="">
                                 <input type="hidden" form="form-general" name="packingTypeId3" id="packingTypeId3"  class="itemId" hidden="true" value="">
+                                <input type="hidden" form="form-general" name="packingTypeObject3" id="packingTypeObject3"  class="itemId" hidden="true" value="">
                             </td>
                             <td class="text-center"><a href="javascript:addPackingType();" id="addPackingTypeButton" class="btn btn-primary far fa-plus-square"  title="Paket turu ekle"></a></td>
                         </tr>
@@ -76,15 +80,23 @@
         if(obj==undefined){
             if($('#packingTypeId').val()=='') return;
             if(Number($('#packingType-quantity').val())<=0) return;
-            obj={
-                packingType:{_id:$('#packingTypeId').val(), name:$('#packingTypeName').val()},
-                packingType2:{_id:$('#packingTypeId2').val(), name:$('#packingTypeName2').val()},
-                packingType3:{_id:$('#packingTypeId3').val(), name:$('#packingTypeName3').val()},
-                palletType:{_id:$('#palletTypeId').val(), name:$('#palletTypeName').val()},
-                quantityInPacking:Number($('#quantityInPacking').val()),
-                palletRowCount:Number($('#palletRowCount').val()),
-                packingCountInRow:Number($('#packingCountInRow').val())
+            obj={}
+            if($('#palletTypeObject').val()!=''){
+                obj.palletType=JSON.parse(decodeURIComponent($('#palletTypeObject').val()));
             }
+            if($('#packingTypeObject').val()!=''){
+                obj.packingType=JSON.parse(decodeURIComponent($('#packingTypeObject').val()));
+            }
+            if($('#packingTypeObject2').val()!=''){
+                obj.packingType2=JSON.parse(decodeURIComponent($('#packingTypeObject2').val()));
+            }
+            if($('#packingTypeObject3').val()!=''){
+                obj.packingType3=JSON.parse(decodeURIComponent($('#packingTypeObject3').val()));
+            }
+            obj.quantityInPacking=Number($('#quantityInPacking').val());
+            obj.palletRowCount=Number($('#palletRowCount').val());
+            obj.packingCountInRow=Number($('#packingCountInRow').val());
+            
             // var bFound=false;
             // packingOptions.forEach(function(e){
             //     if((e.packingType._id || '')!=''){
@@ -115,14 +127,14 @@
        
 
         var cell0=newRow.insertCell(0);
-        if(obj.palletType)
-            cell0.innerHTML=obj.palletType.name + '<input type="hidden" name="packingOptions[' + index + '][palletType]" value="' + obj.palletType._id + '">';
+        if(obj.palletType!=undefined)
+            cell0.innerHTML=obj.palletType.name + ' - ' + obj.palletType.description + ' [' + obj.palletType.width + 'x' + obj.palletType.length + ']<input type="hidden" name="packingOptions[' + index + '][palletType]" value="' + obj.palletType._id + '">';
         else
             cell0.innerHTML='';
        
         var cell1=newRow.insertCell(1);
-        if(obj.packingType)
-            cell1.innerHTML=obj.packingType.name + '<input type="hidden" name="packingOptions[' + index + '][packingType]" value="' + obj.packingType._id + '">';
+        if(obj.packingType!=undefined)
+            cell1.innerHTML=obj.packingType.name + ' - ' + obj.packingType.description + ' [' + obj.packingType.width + 'x' + obj.packingType.length + 'x' + obj.packingType.height  + ']<input type="hidden" name="packingOptions[' + index + '][packingType]" value="' + obj.packingType._id + '">';
         else
             cell1.innerHTML='';
 
@@ -139,14 +151,14 @@
         cell4.classList.add('text-right');
 
         var cell5=newRow.insertCell(5);
-        if(obj.packingType2)
-            cell5.innerHTML=obj.packingType2.name + '<input type="hidden" name="packingOptions[' + index + '][packingType2]" value="' + obj.packingType2._id + '">';
+        if(obj.packingType2!=undefined)
+            cell5.innerHTML=obj.packingType2.name + ' - ' + obj.packingType2.description + '<input type="hidden" name="packingOptions[' + index + '][packingType2]" value="' + obj.packingType2._id + '">';
         else
             cell5.innerHTML='';
        
         var cell6=newRow.insertCell(6);
-        if(obj.packingType3)
-            cell6.innerHTML=obj.packingType3.name + '<input type="hidden" name="packingOptions[' + index + '][packingType3]" value="' + obj.packingType3._id + '">';
+        if(obj.packingType3!=undefined)
+            cell6.innerHTML=obj.packingType3.name + ' - ' + obj.packingType3.description + '<input type="hidden" name="packingOptions[' + index + '][packingType3]" value="' + obj.packingType3._id + '">';
         else
             cell6.innerHTML='';
        
@@ -188,7 +200,7 @@
                                 for(var i=0;i<result.data.docs.length;i++){
                                     var item=result.data.docs[i];
                                     
-                                    dizi.push({label:(item.name),value:item._id});
+                                    dizi.push({label:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + 'x' + item.height + ']'),value:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + 'x' + item.height + ']'),obj:item});
                                 }
                                 response(dizi);
                             }
@@ -200,7 +212,9 @@
             },
             select: function (event, ui) {
                     $('#packingTypeName').val(ui.item.label); 
-                    $('#packingTypeId').val(ui.item.value); 
+                    $('#packingTypeId').val(ui.item.obj._id); 
+                    $('#packingTypeObject').val(encodeURIComponent(JSON.stringify(ui.item.obj))); 
+                    calcPackingCountInRow();
                     return false;
                 }
         });
@@ -216,7 +230,7 @@
                                 for(var i=0;i<result.data.docs.length;i++){
                                     var item=result.data.docs[i];
                                     
-                                    dizi.push({label:(item.name),value:item._id});
+                                    dizi.push({label:(item.name + ' - ' + item.description),value:(item.name + ' - ' + item.description), obj:item});
                                 }
                                 response(dizi);
                             }
@@ -228,7 +242,8 @@
             },
             select: function (event, ui) {
                     $('#packingTypeName2').val(ui.item.label); 
-                    $('#packingTypeId2').val(ui.item.value); 
+                    $('#packingTypeId2').val(ui.item.obj._id); 
+                    $('#packingTypeObject2').val(encodeURIComponent(JSON.stringify(ui.item.obj))); 
                     return false;
                 }
         });
@@ -244,7 +259,7 @@
                                 for(var i=0;i<result.data.docs.length;i++){
                                     var item=result.data.docs[i];
                                     
-                                    dizi.push({label:(item.name),value:item._id});
+                                    dizi.push({label:(item.name + ' - ' + item.description),value:(item.name + ' - ' + item.description), obj:item});
                                 }
                                 response(dizi);
                             }
@@ -256,7 +271,8 @@
             },
             select: function (event, ui) {
                     $('#packingTypeName3').val(ui.item.label); 
-                    $('#packingTypeId3').val(ui.item.value); 
+                    $('#packingTypeId3').val(ui.item.obj._id); 
+                    $('#packingTypeObject3').val(encodeURIComponent(JSON.stringify(ui.item.obj))); 
                     return false;
                 }
         });
@@ -272,7 +288,7 @@
                                 for(var i=0;i<result.data.docs.length;i++){
                                     var item=result.data.docs[i];
                                     
-                                    dizi.push({label:(item.name),value:item._id});
+                                    dizi.push({label:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + ']'),value:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + ']'),obj:item});
                                 }
                                 response(dizi);
                             }
@@ -284,7 +300,9 @@
             },
             select: function (event, ui) {
                     $('#palletTypeName').val(ui.item.label); 
-                    $('#palletTypeId').val(ui.item.value); 
+                    $('#palletTypeId').val(ui.item.obj._id); 
+                    $('#palletTypeObject').val(encodeURIComponent(JSON.stringify(ui.item.obj)));
+                    calcPackingCountInRow(); 
                     return false;
                 }
         });
@@ -293,4 +311,29 @@
 
     packingTypeAutoComplete();
     
+
+    function calcPackingCountInRow(){
+        if($('#palletTypeObject').val()=='') return;
+        if($('#packingTypeObject').val()=='') return;
+        var palletType=JSON.parse(decodeURIComponent($('#palletTypeObject').val()));
+        var packingType=JSON.parse(decodeURIComponent($('#packingTypeObject').val()));
+        var enAdet1 =0;
+        var boyAdet1 =0;
+        var enAdet2 =0;
+        var boyAdet2 =0;
+        if(packingType.width>0){
+            enAdet1=Math.floor(palletType.width/packingType.width);
+            enAdet2=Math.floor(palletType.length/packingType.width);
+        }
+        if(packingType.length>0){
+            boyAdet1=Math.floor(palletType.length/packingType.length);
+            boyAdet2=Math.floor(palletType.width/packingType.length);
+        } 
+        if(enAdet1*boyAdet1>enAdet2*boyAdet2){
+            $('#packingCountInRow').val(enAdet1*boyAdet1);
+        }else{
+            $('#packingCountInRow').val(enAdet2*boyAdet2);
+        }
+        
+    }
 </script>

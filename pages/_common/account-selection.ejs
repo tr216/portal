@@ -37,7 +37,7 @@
                                 for(var i=0;i<result.data.docs.length;i++){
                                     var item=result.data.docs[i];
                                     
-                                    dizi.push({label:(item.accountCode + ' - ' + item.name),value:item._id});
+                                    dizi.push({label:(item.accountCode + ' - ' + item.name),value:(item.accountCode + ' - ' + item.name), obj:item});
                                 }
                                 response(dizi);
                             }
@@ -49,11 +49,9 @@
             },
             select: function (event, ui) {
                     $("#<%=name%>Code").val(ui.item.label); 
-                    $("#<%=name%>").val(ui.item.value); 
+                    $("#<%=name%>").val(ui.item.obj._id); 
                     return false;
                 }
         });
-
-        
     });
 </script>

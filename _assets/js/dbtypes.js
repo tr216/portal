@@ -763,8 +763,16 @@ const productionOrderType={
     outputSummary:[], //materialType
     qualityControl:[], //qualityControlType
     finishNotes:'',
-    palletType:'',
-    packingType:'',
+    packingOption:{
+        palletType:'',
+        packingType:'',
+        quantityInPacking:0,
+        palletRowCount:0,
+        packingCountInRow:0,
+        unitCode:'',
+        packingType2:'',
+        packingType3:''
+    },
     totalPallet:0,
     totalPacking:0,
     totalWeight:0,

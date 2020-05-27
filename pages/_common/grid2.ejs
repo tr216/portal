@@ -203,23 +203,23 @@
                                     
                                     field.lookupList.forEach(function(e){
                                         if(e[field.valueField]==itemValue){
-                                            %><td><%=e[field.textField]%></td><%
+                                            %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%=e[field.textField]%></td><%
                                             bFound=true;
                                             return;
                                         }
                                     });
                                     if(bFound==false){
-                                        %><td><%=itemValue%></td><%
+                                        %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%=itemValue%></td><%
                                     }
                                 }else if(field.type=='checkbox'){
-                                    %><td class="text-center"><% if(itemValue){%>evet<%}else{%>hayır<%}%></td><%
+                                    %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}else{%>text-center"<%}%>><% if(itemValue){%>evet<%}else{%>hayır<%}%></td><%
                                 }else if(field.type=='button'){
-                                    %><td class="text-center"><a href="<%=field.path%>/<%=item._id%>?db=<%=db%>&sid=<%=sid%>" class="btn btn-info" title="<%=field.text%>" <% if(typeof field.buttonTarget!='undefined'){%>target="<%=field.buttonTarget%>"<%}%>><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %></a></td><%
+                                    %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}else{%>text-center"<%}%>><a href="<%=field.path%>/<%=item._id%>?db=<%=db%>&sid=<%=sid%>" class="btn btn-info" title="<%=field.text%>" <% if(typeof field.buttonTarget!='undefined'){%>target="<%=field.buttonTarget%>"<%}%>><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %></a></td><%
                                 }else{
-                                    %><td class="<% if(typeof field.nowrap!='undefined') if(field.nowrap){%>text-nowrap <%}%><% if(typeof field.align=='undefined' && !isNaN(itemValue)){%>text-nowrap text-right<%}%>"><%- mrutil.formatCol(itemValue,field) %></td><%
+                                    %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%- mrutil.formatCol(itemValue,field) %></td><%
                                 }
                             }else{
-                            %><td><%- mrutil.formatCol(itemValue,field)%></td>
+                            %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%- mrutil.formatCol(itemValue,field)%></td>
                             <%} %>
                         
                         <%}); %>
@@ -229,7 +229,7 @@
                             if(typeof customButtons!='undefined') { 
                                 if(customButtons.length>1){
                             %>
-                            <div class="dropdown">
+                            <div class="dropdown ml-1">
 
                                 <button class="btn btn-secondary btn-sm fas fa-caret-square-down" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Diğer işlemler"></button>
                                 <div class="dropdown-menu">
@@ -239,8 +239,7 @@
                                     var href='';
 
                                     if(typeof customButtons[i].href!='undefined'){
-                                        //href=customButtons[i].href;
-                                        //href=customButtons[i].href.replaceAll('{_id}',item._id);
+                                        
                                         href=replaceUrlCurlyBracket(customButtons[i].href, item, fields);
                                     }
                                     if(typeof customButtons[i].target!='undefined') target=customButtons[i].target;
@@ -261,13 +260,12 @@
                                     var target='_self';
                                     var href='';
                                     if(typeof customButtons[0].href!='undefined'){
-                                        //href=customButtons[0].href.replaceAll('{_id}',item._id);
                                         href=replaceUrlCurlyBracket(customButtons[0].href, item, fields);
                                     } 
                                     if(typeof customButtons[0].target!='undefined') target=customButtons[0].target;
                                     if(customButtons[0].title=='') customButtons[0].title=customButtons[0].text;
                                     %> 
-                                    <a class="btn btn-secondary btn-sm" href="<%=href%>" title="<%=customButtons[0].title%>" target="<%=target%>"><% if(customButtons[0].icon!=''){%><i class="<%=customButtons[0].icon%>"></i><% }else{ %><i class="fas fa-chess-board"></i><% } %></a>
+                                    <a class="btn btn-secondary btn-sm ml-1" href="<%=href%>" title="<%=customButtons[0].title%>" target="<%=target%>"><% if(customButtons[0].icon!=''){%><i class="<%=customButtons[0].icon%>"></i><% }else{ %><i class="fas fa-chess-board"></i><% } %><% if(customButtons[0].text!=''){%> <%=customButtons[0].text%><%}%></a>
                                 <% } %>
                             <% } %>
                             <% 
@@ -280,11 +278,11 @@
                                 
                             %>
                             <% if(printButton.printDesignList.length<=1){ %>
-                            <a href="javascript:popupCenter('<%=printAPIPath%>','Yazdır','900','600');" class="btn btn-secondary btn-sm ml-1" title="Yazdır"><i class="fas fa-print"></i></a>
+                            <a href="javascript:popupCenter('<%=printAPIPath%>','Yazdır','900','600');" class="btn invoice-satis btn-sm ml-1" title="Yazdır"><i class="fas fa-print"></i></a>
                             <% } else { %>
-                            <div class="dropdown">
+                            <div class="dropdown ml-1">
                                 <!-- <button class="btn btn-secondary btn-sm fas fa-caret-square-down" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Yazdır"></button> -->
-                                <button class="btn btn-secondary btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Yazdır"><i class="fas fa-print"></i></button>
+                                <button class="btn invoice-satis" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Yazdır"><i class="fas fa-print"></i></button>
                                 <div class="dropdown-menu">
                                     <% 
                                         console.log(printButton.printDesignList);
@@ -305,13 +303,13 @@
                                 
 
                             %>
-                            <a href="javascript:popupCenter('<%=viewUrlRow%>','İncele','900','600');" class="btn btn-info btn-sm fa fa-eye ml-1" title="İncele"></a>
+                            <a href="javascript:popupCenter('<%=viewUrlRow%>','İncele','900','600');" class="btn btn-info fa fa-eye ml-1" title="İncele"></a>
                             <% } %>
                             <% if(editButton){ %>
-                            <a href="javascript:openUrl('<% if(typeof editUrl!='undefined'){%><%=editUrl%><%}else{%><%=urlPath%>/edit/{_id}?db=<%=db%>&sid=<%=sid%><%}%>','<%=item._id%>');" class="btn btn-primary btn-sm fas fa-edit ml-1"  title="Düzenle"></a>
+                            <a href="javascript:openUrl('<% if(typeof editUrl!='undefined'){%><%=editUrl%><%}else{%><%=urlPath%>/edit/{_id}?db=<%=db%>&sid=<%=sid%><%}%>','<%=item._id%>');" class="btn btn-primary fas fa-edit ml-1"  title="Düzenle"></a>
                             <% } %>
                             <% if(deleteButton && typeof deleteUrl!='undefined'){ %>
-                            <a href="javascript:deleteItem('<%=deleteUrl%>','<%=item._id%>');"  class="btn btn-danger btn-sm fas fa-trash-alt ml-1" title="Sil"></a>
+                            <a href="javascript:deleteItem('<%=deleteUrl%>','<%=item._id%>');"  class="btn btn-danger fas fa-trash-alt ml-1" title="Sil"></a>
                             <% } %>
                             </div>
                         </td>
@@ -524,7 +522,7 @@ function getPropertyByKeyPath(targetObj, field) {
 
     function replaceUrlCurlyBracket(url,item,fields){
         
-        if(!(url.indexOf('{')>-1 && url.indexOf('}')>-1))  return;
+        if(!(url.indexOf('{')>-1 && url.indexOf('}')>-1))  return url;
         if(typeof item!='undefined')
             if(typeof item._id!='undefined'){
                 url=url.replaceAll('{_id}',item._id);

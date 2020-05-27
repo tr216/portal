@@ -171,7 +171,7 @@
                         </tr>
                     </thead>
                     <tbody id="machineGrid">
-                        <tr id="addProcessMachineRow" class="text-nowrap">
+                        <tr id="addProcessMachineRow" class="text-nowrap" <% if(mode=='view'){%>style="display:none;"<%}%>>
                             <td class="">
                                 <select class="form-control" id="select-machine">
                                 </select>
@@ -260,6 +260,7 @@
 <script type="text/javascript">
     var q=getAllUrlParams();
     var recipeFormType='<%=recipeFormType%>';
+    var mode='<%=mode%>';
     <% if(recipeFormType=='products'){ %>
     var form_item_id='<%=form._id%>';
     var doc=clone(dbType.recipeType);

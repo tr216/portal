@@ -10,11 +10,18 @@ exports.get=(endpoint,req, params, callback)=>{
 			    // 'Content-Type':'application/json; charset=utf-8',
 			    'token':token
 			}
-
-			if(req.params.sid){
-				req.params.sid=undefined;
-				delete req.params.sid;
+			
+			if(params){
+				if(params.sid!=undefined){
+					params.sid=undefined;
+					delete params.sid;
+				}
+				if(params.db!=undefined){
+					params.db=undefined;
+					delete params.db;
+				}
 			}
+			
 			
 			var options = {
 			    url: url,
@@ -62,9 +69,15 @@ exports.getFile=(endpoint,req, params, callback)=>{
 			    'token':token
 			}
 
-			if(req.params.sid){
-				req.params.sid=undefined;
-				delete req.params.sid;
+			if(params){
+				if(params.sid!=undefined){
+					params.sid=undefined;
+					delete params.sid;
+				}
+				if(params.db!=undefined){
+					params.db=undefined;
+					delete params.db;
+				}
 			}
 			
 			var options = {
@@ -114,7 +127,7 @@ exports.post=(endpoint,req, jsonData, callback)=>{
 			    'Content-Type':'application/json; charset=utf-8',
 			    'token':token
 			}
-
+			
 			var options = {
 			    url: url,
 			    method: 'POST',
@@ -197,7 +210,7 @@ exports.delete=(endpoint,req, callback)=>{
 			    'Content-Type':'application/json; charset=utf-8',
 			    'token':token
 			}
-
+			
 			var options = {
 			    url: url,
 			    method: 'DELETE',

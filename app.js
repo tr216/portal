@@ -16,11 +16,19 @@ global.moment = require('moment');
 global.uuid = require('node-uuid');
 
 global.config = require('./config.json');
-if(process.argv.length>=3){
+var controlMessage='Config original';
+
+if(fs.existsSync('./config-test.json')){
+  controlMessage='Config test running';
+  global.config = require('./config-test.json');
+  
+}else if(process.argv.length>=3){
     if(process.argv[2]=='localhost' || process.argv[2]=='-l'){
-        global.config = require('./config_local.json');
+        controlMessage='Config local running';
+        global.config = require('./config-local.json');
     }
 }
+
 global.rootDir=__dirname;
 
 global.mrutil = require('./lib/mrutil.js');
@@ -54,8 +62,8 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '_vendors'), { maxAge: (60 * 1000 * 60 * 24 * 365) }));
-// app.use(express.static(path.join(__dirname, '_assets'), { maxAge: (60 * 1000 * 60 * 24 * 30) })); //1 ay cache  assetFile fonksiyonunu kullanin;
-app.use(express.static(path.join(__dirname, '_assets'))); //qwerty cache siz
+app.use(express.static(path.join(__dirname, '_assets'), { maxAge: (60 * 1000 * 60 * 24 * 30) })); //1 ay cache  assetFile fonksiyonunu kullanin;
+// app.use(express.static(path.join(__dirname, '_assets'))); //qwerty cache siz
 
 app.use(flash());
 
@@ -63,6 +71,7 @@ require('./lib/loader_db.js')((err)=>{
   if(!err){
     require('./app/route.js')(app);
     require('./providers/index');
+    console.log(controlMessage.blue);
   }else{
     console.log('loader_db.js ERROR:',err);
   }
