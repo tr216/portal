@@ -90,7 +90,8 @@
                 <div class="card-body p-1">
                     <div id="productionOrderInfo"></div>
 
-                    <label class="text-primary bold m-0 mt-2" title="Üretime çıkacak hammadde ve yardımcı malzemeler">Gerekli malzemeler</label>
+                    <label id="divUretimDetay-UretimeCikis" class="text-primary bold m-0 mt-2" title="Üretime çıkacak hammadde ve yardımcı malzemeler">Gerekli malzemeler</label>
+                    <label id="divUretimDetay-UretimdenGiris" class="text-primary bold m-0 mt-2" title="Ürün ve Yan ürünler">Ürün ve Yan ürünler</label>
                     <table id="gridProOrderMaterials" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
                         <thead>
                             <tr class="text-nowrap">
@@ -188,7 +189,7 @@
             <div class="modal-body p-2" style="overflow: auto;">
                 <div class="row m-0 mb-2">
                     <div class="col-12 p-0">
-                        <%- partial('../../_common/date-filter',{isModal:true}) %>
+                        <%- partial('../../_common/date-filter',{isModal:true, date1Name:'date1Modal', date2Name:'date2Modal', cboEasyDateName:'cboEasyDateModal'}) %>
                         <div class="float-md-right">
                             <a href="javascript:loadProductionOrders();" class="btn btn-primary"><i class="fa fa-filter"></i> Filtrele</a>
                         </div>
@@ -288,17 +289,20 @@
         var date1=$('#date1Modal').val();
         var date2=$('#date2Modal').val();
         var q=getAllUrlParams();
+        var url='/dbapi/production-orders?status=Approved&date1=' + date1 + '&date2=' + date2 + '&page=' + page + '&pageSize=10&db=' + q.db + '&sid=' + q.sid;
+        console.log('url:',url);
         $.ajax({
-            url:'/dbapi/production-orders?date1=' + date1 + '&date2=' + date2 + '&page=' + page + '&pageSize=10&db=' + q.db + '&sid=' + q.sid,
+            url:url,
             type:'GET',
             dataType: 'json',
             success: function(result) {
+                console.log('result:',result);
                 if(result.success){
                     
                     var lineGrid=document.getElementById('gridProductionOrdersLineGrid');
                     result.data.docs.forEach(function(proOrder,index){
                         var newRow=lineGrid.insertRow(lineGrid.rows.length);
-                        newRow.insertCell(0).innerHTML=proOrder.productionId;
+                        newRow.insertCell(0).innerHTML=proOrder.productionId + '<br>' + proOrder.status;
                         newRow.insertCell(1).innerHTML=proOrder.issueDate;
                         var musteri='';
                         if(proOrder.productionTypeCode=='DEPO'){
@@ -340,24 +344,11 @@
         });
     }
 
-    // var proOrderDoc;
+    var proOrderDoc;
+
+
     function uretimEmriSec(_id){
-        var q=getAllUrlParams();
-        $.ajax({
-            url:'/dbapi/production-orders/' + _id + '?db=' + q.db + '&sid=' + q.sid,
-            type:'GET',
-            dataType: 'json',
-            success: function(result) {
-                if(result.success){
-                    showUretimEmriDetaylar(result.data);
-                }
-            },
-            error:function(err){
-                gridProductionOrdersPages.innerHTML = '';
-                console.log('err:',err);
-                
-            }
-        });
+        loadUretimEmri(_id);
         $('#productionOrdersModal').modal('hide');
     }
 
@@ -373,6 +364,7 @@
             });
         }
         productionOrderInfo.innerHTML='';
+        productionOrderInfo.innerHTML+='<span class="text-primary">Mamul: <b>' + proOrder.item.name.value + ' - ' + proOrder.item.description.value + '</b></span><br>';
         productionOrderInfo.innerHTML+='Uretim No: <b>' + proOrder.productionId + '</b><br>';
         productionOrderInfo.innerHTML+='Musteri: <b>' + musteri + '</b><br>';
         productionOrderInfo.innerHTML+='Evrak Tar.: <b>' + proOrder.issueDate + '</b><br>';
@@ -383,7 +375,21 @@
         var lineGridProOrder=document.getElementById('lineGridProOrder');
 
         proOrder.materialSummary.forEach(function(e,index){
+            var kalan=0;
+            var toplam=0;
+            doc.docLine.forEach(function(e2){
+                if(e.item._id.toString()==e2.item._id.toString()){
+                    toplam +=e2.quantity;
+                }
+            })
+            kalan=e.quantity-toplam;
+            
             var newRow=lineGridProOrder.insertRow(lineGridProOrder.rows.length);
+            if(kalan<0){
+                newRow.classList.add('text-danger');
+                newRow.classList.add('bold');
+                 
+            }
             newRow.insertCell(0).innerHTML=(index+1).n2();
             newRow.insertCell(1).innerHTML=e.item.name.value + ' - ' + e.item.description.value;
             var cell2=newRow.insertCell(2);
@@ -391,12 +397,13 @@
             cell2.innerHTML=Number(e.quantity).formatDecimal();
             var cell3=newRow.insertCell(3);
             cell3.classList.add('text-right');
-            cell3.innerHTML=Number(e.quantity).formatDecimal();
+            if(kalan>=0){
+                cell3.innerHTML=Number(kalan).formatDecimal();
+            }else{
+                cell3.innerHTML='(' + Number(kalan).formatDecimal() + ')';
+            }
+            
         });
-        
-        
-        
-        console.log('proOrder:',proOrder);
 
     }
     
@@ -415,6 +422,14 @@
         if($('select[name="docTypeCode"]').val()=='URETIMECIKIS' || $('select[name="docTypeCode"]').val()=='URETIMDENGIRIS'){
             $('#btnUretimSec').show();
             $('#divUretimDetay').show();
+            if($('select[name="docTypeCode"]').val()=='URETIMECIKIS'){
+                $('#divUretimDetay-UretimeCikis').show();
+                $('#divUretimDetay-UretimdenGiris').hide();
+            }
+            if($('select[name="docTypeCode"]').val()=='URETIMDENGIRIS'){
+                $('#divUretimDetay-UretimeCikis').hide();
+                $('#divUretimDetay-UretimdenGiris').show();
+            }
         }else{
             $('#btnUretimSec').hide();
             $('#divUretimDetay').hide();
@@ -508,6 +523,12 @@
             $('#docLine-color').val('');
             $('#docLine-pattern').val('');
             $('#docLine-size').val('');
+
+            if($('select[name="docTypeCode"]').val()=='URETIMECIKIS' || $('select[name="docTypeCode"]').val()=='URETIMDENGIRIS'){
+                if(proOrderDoc){
+                    showUretimEmriDetaylar(proOrderDoc);
+                }
+            }
         }
 
         var cell0=newRow.insertCell(0);
@@ -564,7 +585,12 @@
         }
         doc.docLine.forEach(function(e){
             addNewLine(e);
-        })
+        });
+        if((doc.docTypeCode=='URETIMECIKIS' || doc.docTypeCode=='URETIMDENGIRIS') && (doc.productionOrderId || '')!=''){
+            if(proOrderDoc){
+                showUretimEmriDetaylar(proOrderDoc);
+            }
+        }
     }
     function docLineItemNameAutoComplete(){
         var q=getAllUrlParams();
@@ -653,11 +679,56 @@
 
     }
 
-    docLineItemNameAutoComplete();
+    function loadUretimEmri(_id){
+        var q=getAllUrlParams();
+        doc.productionOrderId=_id;
+        $.ajax({
+            url:'/dbapi/production-orders/' + _id + '?db=' + q.db + '&sid=' + q.sid,
+            type:'GET',
+            dataType: 'json',
+            success: function(result) {
+                if(result.success){
+                    var obj=result.data;
 
-    docTypeCodeChange();
-    refreshLines();
+                    $.ajax({
+                        url:'/dbapi/items/' + result.data.item + '?&db=' + q.db + '&sid=' + q.sid,
+                        type:'GET',
+                        dataType: 'json',
+                        success: function(itemResult) {
+                            obj['item']=itemResult.data;
+                            proOrderDoc=obj;
+                            showUretimEmriDetaylar(proOrderDoc);
+                        },
+                        error:function(err){
+                            gridProductionOrdersPages.innerHTML = '';
+                            console.log('err:',err);
+                            
+                        }
+                    });
+                    
+                }
+            },
+            error:function(err){
+                gridProductionOrdersPages.innerHTML = '';
+                console.log('err:',err);
+                
+            }
+        });
+    }
+    
 
+    function loadForm(){
+        docLineItemNameAutoComplete();
+
+        docTypeCodeChange();
+        refreshLines();
+        if((doc.docTypeCode=='URETIMECIKIS' || doc.docTypeCode=='URETIMDENGIRIS') && (doc.productionOrderId || '')!=''){
+            loadUretimEmri(doc.productionOrderId);
+        }
+        
+    }
+
+    loadForm();
 
     function formKaydet(){
         var q=getAllUrlParams();
@@ -671,13 +742,20 @@
         doc.subLocation2=$('select[name="subLocation2"]').val();
         doc.description=$('input[name="description"]').val();
 
+        if((doc.docTypeCode=='URETIMECIKIS' || doc.docTypeCode=='URETIMDENGIRIS') && (doc.productionOrderId || '')==''){
+            alert('uretim emri secilmemis.');
+            return;
+        }
+
         var url='';
         var type='PUT';
-        if((doc._id || '')=='') type='POST';
-        if((doc._id || '')=='')
+        if((doc._id || '')==''){
+            type='POST';
             url='/dbapi/inventory-fiches?db=' + db + '&sid=' + sid;
-        else
+        }else{
             url='/dbapi/inventory-fiches/' + doc._id + '?db=' + db + '&sid=' + sid;
+        }
+
         $.ajax({
             url:url,
             data:doc,
@@ -686,7 +764,7 @@
                 if(result.success){
                     goBack();
                 }else{
-                    alert(result.error.message)
+                    alert('HATA from Server:' + result.error.message)
                 }
             }
         });
