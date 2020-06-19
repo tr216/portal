@@ -101,7 +101,7 @@ function openUrl(url,_id,target,popup){
 		}
 		
 	}
-function popupCenter(url, title, w, h) {
+function popupCenter(url, title, w, h,isDialog=false) {
 	// Fixes dual-screen position                         Most browsers      Firefox
 	var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX;
 	var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
@@ -112,8 +112,12 @@ function popupCenter(url, title, w, h) {
 	var systemZoom = width / window.screen.availWidth;
 var left = (width - w) / 2 / systemZoom + dualScreenLeft
 var top = (height - h) / 2 / systemZoom + dualScreenTop
-	var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left);
-
-	// Puts focus on the newWindow
-	if (window.focus) newWindow.focus();
+	if(!isDialog){
+		var newWindow=window.open(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left);
+		if (window.focus) newWindow.focus();
+	}else{
+		var newWindow=openDialog(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left);
+		if (window.focus) newWindow.focus();
+	}
+	
 }

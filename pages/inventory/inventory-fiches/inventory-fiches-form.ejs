@@ -241,7 +241,8 @@
     var db='<%=db%>';
     var sid='<%=sid%>';
     var _id='<%=(form._id || '')%>';
-    var doc={
+    var q=getAllUrlParams();
+    var docInventoryFiche={
         docTypeCode:'',
         docId:'',
         issueDate: '',
@@ -257,8 +258,8 @@
     }
 
 
-    doc.issueDate.value=(new Date()).yyyymmdd();
-    doc.issueTime.value=(new Date()).hhmm();
+    docInventoryFiche.issueDate.value=(new Date()).yyyymmdd();
+    docInventoryFiche.issueTime.value=(new Date()).hhmm();
 
     var unitCodeList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(staticValues.unitCodeList)) %>'));
 
@@ -266,7 +267,7 @@
         if(typeof form._id!='undefined'){
         if((form._id || '')!=''){ 
     %>
-    doc=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form))%>'));
+    docInventoryFiche=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form))%>'));
     
     <%  }
     } %>
@@ -288,7 +289,7 @@
         var gridProductionOrdersPages=document.getElementById('gridProductionOrdersPages');
         var date1=$('#date1Modal').val();
         var date2=$('#date2Modal').val();
-        var q=getAllUrlParams();
+        
         var url='/dbapi/production-orders?status=Approved&date1=' + date1 + '&date2=' + date2 + '&page=' + page + '&pageSize=10&db=' + q.db + '&sid=' + q.sid;
         console.log('url:',url);
         $.ajax({
@@ -349,6 +350,7 @@
 
     function uretimEmriSec(_id){
         loadUretimEmri(_id);
+        $('select[name="docTypeCode"]').attr('disabled','true');
         $('#productionOrdersModal').modal('hide');
     }
 
@@ -370,31 +372,63 @@
         productionOrderInfo.innerHTML+='Evrak Tar.: <b>' + proOrder.issueDate + '</b><br>';
         productionOrderInfo.innerHTML+='Planlama Tar.: <b>[' + proOrder.plannedPeriod.startDate + '] - [' + proOrder.plannedPeriod.endDate + ']</b>';
 
+        if($('select[name="docTypeCode"]').val()=='URETIMECIKIS'){
+            $("#lineGridProOrder tr").remove();
+            var lineGridProOrder=document.getElementById('lineGridProOrder');
 
-        $("#lineGridProOrder tr").remove();
-        var lineGridProOrder=document.getElementById('lineGridProOrder');
+            proOrder.materialSummary.forEach(function(e,index){
+                var kalan=0;
+                var toplam=0;
+                docInventoryFiche.docLine.forEach(function(e2){
+                    if(e.item._id.toString()==e2.item._id.toString()){
+                        toplam +=e2.quantity;
+                    }
+                })
+                kalan=e.quantity-toplam;
+                
+                var newRow=lineGridProOrder.insertRow(lineGridProOrder.rows.length);
+                if(kalan<0){
+                    newRow.classList.add('text-danger');
+                    newRow.classList.add('bold');
+                     
+                }
+                newRow.insertCell(0).innerHTML=(index+1).n2();
+                newRow.insertCell(1).innerHTML=e.item.name.value + ' - ' + e.item.description.value;
+                var cell2=newRow.insertCell(2);
+                cell2.classList.add('text-right');
+                cell2.innerHTML=Number(e.quantity).formatDecimal();
+                var cell3=newRow.insertCell(3);
+                cell3.classList.add('text-right');
+                if(kalan>=0){
+                    cell3.innerHTML=Number(kalan).formatDecimal();
+                }else{
+                    cell3.innerHTML='(' + Number(kalan).formatDecimal() + ')';
+                }
+                
+            });
+        }else if($('select[name="docTypeCode"]').val()=='URETIMDENGIRIS'){
+            $("#lineGridProOrder tr").remove();
 
-        proOrder.materialSummary.forEach(function(e,index){
+            var lineGridProOrder=document.getElementById('lineGridProOrder');
             var kalan=0;
             var toplam=0;
-            doc.docLine.forEach(function(e2){
-                if(e.item._id.toString()==e2.item._id.toString()){
+            docInventoryFiche.docLine.forEach(function(e2){
+                if(proOrder.item._id.toString()==e2.item._id.toString()){
                     toplam +=e2.quantity;
                 }
             })
-            kalan=e.quantity-toplam;
+            kalan=proOrder.plannedQuantity-toplam;
             
             var newRow=lineGridProOrder.insertRow(lineGridProOrder.rows.length);
             if(kalan<0){
                 newRow.classList.add('text-danger');
                 newRow.classList.add('bold');
-                 
             }
-            newRow.insertCell(0).innerHTML=(index+1).n2();
-            newRow.insertCell(1).innerHTML=e.item.name.value + ' - ' + e.item.description.value;
+            newRow.insertCell(0).innerHTML='01';
+            newRow.insertCell(1).innerHTML=proOrder.item.name.value + ' - ' + proOrder.item.description.value;
             var cell2=newRow.insertCell(2);
             cell2.classList.add('text-right');
-            cell2.innerHTML=Number(e.quantity).formatDecimal();
+            cell2.innerHTML=Number(proOrder.plannedQuantity).formatDecimal();
             var cell3=newRow.insertCell(3);
             cell3.classList.add('text-right');
             if(kalan>=0){
@@ -402,13 +436,44 @@
             }else{
                 cell3.innerHTML='(' + Number(kalan).formatDecimal() + ')';
             }
-            
-        });
 
+            proOrder.outputSummary.forEach(function(e,index){
+                var kalan=0;
+                var toplam=0;
+                docInventoryFiche.docLine.forEach(function(e2){
+                    if(e.item._id.toString()==e2.item._id.toString()){
+                        toplam +=e2.quantity;
+                    }
+                })
+                kalan=e.quantity-toplam;
+                
+                var newRow=lineGridProOrder.insertRow(lineGridProOrder.rows.length);
+                if(kalan<0){
+                    newRow.classList.add('text-danger');
+                    newRow.classList.add('bold');
+                }
+                newRow.insertCell(0).innerHTML=(index+1+1).n2();
+                newRow.insertCell(1).innerHTML=e.item.name.value + ' - ' + e.item.description.value;
+                var cell2=newRow.insertCell(2);
+                cell2.classList.add('text-right');
+                cell2.innerHTML=Number(e.quantity).formatDecimal();
+                var cell3=newRow.insertCell(3);
+                cell3.classList.add('text-right');
+                if(kalan>=0){
+                    cell3.innerHTML=Number(kalan).formatDecimal();
+                }else{
+                    cell3.innerHTML='(' + Number(kalan).formatDecimal() + ')';
+                }
+                
+            });
+
+        }
     }
     
 
     function docTypeCodeChange(){
+        //docInventoryFiche.docTypeCode=$('select[name="docTypeCode"]').val();
+
         if($('select[name="docTypeCode"]').val()=='TRANSFER'){
             $('#divLocation2').show();
         }else{
@@ -453,7 +518,7 @@
         var lineGrid=document.getElementById('lineGrid');
         var index=lineGrid.rows.length-1;
         var newRow=lineGrid.insertRow(lineGrid.rows.length-1);
-        doc.docLine.forEach(function(e,sira){
+        docInventoryFiche.docLine.forEach(function(e,sira){
             e.sequence=sira+1;
         })
         if(obj==undefined){
@@ -498,8 +563,8 @@
 
 
             obj={
-                sequence:doc.docLine.length+1,
-                item:{_id: $('#docLine-item-id').val() , name:{value:$('#docLine-item-name').val()}} ,
+                sequence:docInventoryFiche.docLine.length+1,
+                item:{_id: $('#docLine-item-id').val() , name:{value:$('#docLine-item-name').val()} , description:{value:''}},
                 quantity:Number($('#docLine-quantity').val()),
                 quantity2:Number($('#docLine-quantity').val()),  //qwerty
                 quantity3:Number($('#docLine-quantity').val()),  //qwerty
@@ -512,7 +577,7 @@
                 size:{_id: $('#docLine-size').val() , name:$('#docLine-size option:selected').text()}
             }
             
-            doc.docLine.push(obj);
+            docInventoryFiche.docLine.push(obj);
             
             $('#docLine-item-id').val('');
             $('#docLine-item-name').val('');
@@ -529,6 +594,10 @@
                     showUretimEmriDetaylar(proOrderDoc);
                 }
             }
+        }else{
+            if(obj.item!=undefined){
+                obj.item.name.value ='[' + getItemTypeShortName(obj.item.itemType) + '] ' + obj.item.name.value;
+            }
         }
 
         var cell0=newRow.insertCell(0);
@@ -536,7 +605,7 @@
         cell0.innerHTML=obj.sequence;
 
         var cell1=newRow.insertCell(1);
-        cell1.innerHTML=obj.item==undefined?'':obj.item.name.value;
+        cell1.innerHTML=obj.item==undefined?'':obj.item.name.value + (obj.item.description.value!=''?' - ' + obj.item.description.value:'');
 
         var cell2=newRow.insertCell(2);
         cell2.classList.add('text-right');
@@ -574,7 +643,7 @@
 
     function removeLine(index){
         if(confirm('Satiri silmek istedinizden emin misiniz?')==false) return;
-        doc.docLine.splice(index,1);
+        docInventoryFiche.docLine.splice(index,1);
         refreshLines();
     }
 
@@ -583,17 +652,16 @@
         while(lineGrid.rows.length>1){
             lineGrid.deleteRow(0);
         }
-        doc.docLine.forEach(function(e){
+        docInventoryFiche.docLine.forEach(function(e){
             addNewLine(e);
         });
-        if((doc.docTypeCode=='URETIMECIKIS' || doc.docTypeCode=='URETIMDENGIRIS') && (doc.productionOrderId || '')!=''){
+        if((docInventoryFiche.docTypeCode=='URETIMECIKIS' || docInventoryFiche.docTypeCode=='URETIMDENGIRIS') && (docInventoryFiche.productionOrderId || '')!=''){
             if(proOrderDoc){
                 showUretimEmriDetaylar(proOrderDoc);
             }
         }
     }
     function docLineItemNameAutoComplete(){
-        var q=getAllUrlParams();
 
         $('#docLine-item-name').autocomplete({
             source:function(request,response){
@@ -610,12 +678,14 @@
                                 for(var i=0;i<result.data.docs.length;i++){
                                     var item=result.data.docs[i];
                                     dizi.push({
-                                        name:item.name.value, 
-                                        label:(getItemTypeName(item.itemType) + ' - ' + item.name.value),
-                                        value:item._id,
-                                        itemType:item.itemType,
-                                        unitPacks:item.unitPacks,
-                                        tracking:(item.tracking!=undefined?item.tracking:{lotNo:false,serialNo:false,color:false,pattern:false,size:false})
+                                        // name:item.name.value, 
+                                        //name:('[' + getItemTypeShortName(item.itemType) + '] ' + item.name.value + (item.description.value!=''? ' - ' + item.description.value:'')), 
+                                        label:('[' + getItemTypeShortName(item.itemType) + '] ' + item.name.value + (item.description.value!=''? ' - ' + item.description.value:'')),
+                                        obj:item
+                                        // value:item._id,
+                                        // itemType:item.itemType,
+                                        // unitPacks:item.unitPacks,
+                                        // tracking:(item.tracking!=undefined?item.tracking:{lotNo:false,serialNo:false,color:false,pattern:false,size:false})
                                     });
                                 }
                                 
@@ -628,46 +698,46 @@
                 });
             },
             select: function (event, ui) {
-                    $("#docLine-item-name").val(ui.item.name); 
-                    $("#docLine-item-id").val(ui.item.value);
+                    $("#docLine-item-name").val(ui.item.label); 
+                    $("#docLine-item-id").val(ui.item.obj._id);
                     $("#docLine-unitCode").val('');
-                    if(ui.item.unitPacks){
-                        if(ui.item.unitPacks.length){
-                            $("#docLine-unitCode").val(ui.item.unitPacks[0].unitCode);
-                            $("#docLine-unitCodeText").val(getUnitCodeText(ui.item.unitPacks[0].unitCode));
+                    if(ui.item.obj.unitPacks){
+                        if(ui.item.obj.unitPacks.length){
+                            $("#docLine-unitCode").val(ui.item.obj.unitPacks[0].unitCode);
+                            $("#docLine-unitCodeText").val(getUnitCodeText(ui.item.obj.unitPacks[0].unitCode));
                         }
                     }
 
                     $('#docLine-lotNo').val('');
-                    if(!ui.item.tracking.lotNo){
+                    if(!ui.item.obj.tracking.lotNo){
                         $('#docLine-lotNo').prop('readonly',true);
                     }else{
                         $('#docLine-lotNo').prop('readonly',false);
                     }
 
                     $('#docLine-serialNo').val('');
-                    if(!ui.item.tracking.serialNo){
+                    if(!ui.item.obj.tracking.serialNo){
                         $('#docLine-serialNo').prop('readonly',true);
                     }else{
                         $('#docLine-serialNo').prop('readonly',false);
                     }
 
                     $('#docLine-color').val('');
-                    if(!ui.item.tracking.color){
+                    if(!ui.item.obj.tracking.color){
                         $('#docLine-color').prop('disabled',true);
                     }else{
                         $('#docLine-color').prop('disabled',false);
                     }
 
                     $('#docLine-pattern').val('');
-                    if(!ui.item.tracking.pattern){
+                    if(!ui.item.obj.tracking.pattern){
                         $('#docLine-pattern').prop('disabled',true);
                     }else{
                         $('#docLine-pattern').prop('disabled',false);
                     }
 
                     $('#docLine-size').val('');
-                    if(!ui.item.tracking.size){
+                    if(!ui.item.obj.tracking.size){
                         $('#docLine-size').prop('disabled',true);
                     }else{
                         $('#docLine-size').prop('disabled',false);
@@ -680,8 +750,8 @@
     }
 
     function loadUretimEmri(_id){
-        var q=getAllUrlParams();
-        doc.productionOrderId=_id;
+        
+        docInventoryFiche.productionOrderId=_id;
         $.ajax({
             url:'/dbapi/production-orders/' + _id + '?db=' + q.db + '&sid=' + q.sid,
             type:'GET',
@@ -719,46 +789,55 @@
 
     function loadForm(){
         docLineItemNameAutoComplete();
-
+        if((q.docTypeCode || '')!=''){
+            $('select[name="docTypeCode"]').val(q.docTypeCode);
+        }
         docTypeCodeChange();
         refreshLines();
-        if((doc.docTypeCode=='URETIMECIKIS' || doc.docTypeCode=='URETIMDENGIRIS') && (doc.productionOrderId || '')!=''){
-            loadUretimEmri(doc.productionOrderId);
+        if((q.productionOrderId || '')!=''){
+            $('#btnUretimSec').hide();
+            uretimEmriSec(q.productionOrderId);
+        }else{
+            
+            if((docInventoryFiche.docTypeCode=='URETIMECIKIS' || docInventoryFiche.docTypeCode=='URETIMDENGIRIS') && (docInventoryFiche.productionOrderId || '')!=''){
+                loadUretimEmri(docInventoryFiche.productionOrderId);
+            }
         }
+        
         
     }
 
     loadForm();
 
     function formKaydet(){
-        var q=getAllUrlParams();
-        doc.docId=$('input[name="docId"]').val();
-        doc.docTypeCode=$('select[name="docTypeCode"]').val();
-        doc.issueDate=$('input[name="issueDate"]').val();
-        doc.issueTime=$('input[name="issueTime"]').val();
-        doc.location=$('select[name="location"]').val().split(';')[0];
-        doc.subLocation=$('select[name="subLocation"]').val();
-        doc.location2=$('select[name="location2"]').val().split(';')[0];
-        doc.subLocation2=$('select[name="subLocation2"]').val();
-        doc.description=$('input[name="description"]').val();
+        
+        docInventoryFiche.docId=$('input[name="docId"]').val();
+        docInventoryFiche.docTypeCode=$('select[name="docTypeCode"]').val();
+        docInventoryFiche.issueDate=$('input[name="issueDate"]').val();
+        docInventoryFiche.issueTime=$('input[name="issueTime"]').val();
+        docInventoryFiche.location=$('select[name="location"]').val().split(';')[0];
+        docInventoryFiche.subLocation=$('select[name="subLocation"]').val();
+        docInventoryFiche.location2=$('select[name="location2"]').val().split(';')[0];
+        docInventoryFiche.subLocation2=$('select[name="subLocation2"]').val();
+        docInventoryFiche.description=$('input[name="description"]').val();
 
-        if((doc.docTypeCode=='URETIMECIKIS' || doc.docTypeCode=='URETIMDENGIRIS') && (doc.productionOrderId || '')==''){
+        if((docInventoryFiche.docTypeCode=='URETIMECIKIS' || docInventoryFiche.docTypeCode=='URETIMDENGIRIS') && (docInventoryFiche.productionOrderId || '')==''){
             alert('uretim emri secilmemis.');
             return;
         }
 
         var url='';
         var type='PUT';
-        if((doc._id || '')==''){
+        if((docInventoryFiche._id || '')==''){
             type='POST';
             url='/dbapi/inventory-fiches?db=' + db + '&sid=' + sid;
         }else{
-            url='/dbapi/inventory-fiches/' + doc._id + '?db=' + db + '&sid=' + sid;
+            url='/dbapi/inventory-fiches/' + docInventoryFiche._id + '?db=' + db + '&sid=' + sid;
         }
 
         $.ajax({
             url:url,
-            data:doc,
+            data:docInventoryFiche,
             type:type,
             success:function(result){
                 if(result.success){

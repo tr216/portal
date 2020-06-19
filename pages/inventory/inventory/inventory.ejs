@@ -1,7 +1,8 @@
 <%layout('../../_common/layout')%>
 <%- partial('../../_common/grid2',{
     fields:[
-        {name:'item.name.value',text:'Adı',type:'label' , filter:true, orderable:true, width:'60%'},
+        {name:'item.name.value',text:'Adı',type:'label' , filter:true, orderable:true, width:'30%'},
+        {name:'item.description.value',text:'Açıklama',type:'label' , filter:true, orderable:true, width:'40%'},
         {name:'quantity',text:'Miktar',type:'label' , filter:true, orderable:true}
     ],
     caption:'',

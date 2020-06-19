@@ -264,6 +264,7 @@ function refreshProcessInputMaterialGrid(adimIndex){
         var newRow=malzemeGrid.insertRow(malzemeGrid.rows.length-1);
         var cell0=newRow.insertCell(0);
         cell0.innerHTML=e.item.name.value;
+        cell0.innerHTML+=e.item.description.value!=''?' - ' + e.item.description.value:'';
 
         var cell1=newRow.insertCell(1);
         cell1.classList.add('text-right');

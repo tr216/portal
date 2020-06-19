@@ -1,4 +1,12 @@
+<% 
+	var isPopup=false;
+	if(typeof filterObjects.popup!='undefined') isPopup=filterObjects.popup=='true';
+%>
+<% if(!isPopup){ %>
 <%layout('../../_common/layout')%>
+<% }else{%>
+<%layout('../../_common/plain-layout')%>
+<% } %>
 <% 
 	mode='addnew';
 %>

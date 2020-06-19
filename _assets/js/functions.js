@@ -398,10 +398,24 @@ function getItemTypeName(itemType){
         case 'product': return 'Mamul';
         case 'semi-product': return 'Yarı Mamul';
         case 'sales-service': return 'Hizmet Satış';
-        case 'purchasing-service': return 'Hizmet Satış';
+        case 'purchasing-service': return 'Hizmet alım';
         case 'asset': return 'Demirbaş';
         case 'expense': return 'Masraf/Gider';
         default: return 'Envanter';
+    }
+}
+function getItemTypeShortName(itemType){
+    switch(itemType){
+        case 'item': return 'ENV';
+        case 'raw-material': return 'HMM';
+        case 'helper-material': return 'YML';
+        case 'product': return 'MAM';
+        case 'semi-product': return 'YMAM';
+        case 'sales-service': return 'HiS';
+        case 'purchasing-service': return 'HiA';
+        case 'asset': return 'DEM';
+        case 'expense': return 'GDR';
+        default: return 'ENV';
     }
 }
 
