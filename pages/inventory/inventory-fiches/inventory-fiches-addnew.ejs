@@ -3,9 +3,9 @@
 	if(typeof filterObjects.popup!='undefined') isPopup=filterObjects.popup=='true';
 %>
 <% if(!isPopup){ %>
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 <% }else{%>
-<%layout('../../_common/plain-layout')%>
+<%layout('../../_common/layouts/plain')%>
 <% } %>
 <% 
 	mode='addnew';

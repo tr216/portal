@@ -16,21 +16,17 @@ global.moment = require('moment');
 global.uuid = require('node-uuid');
 
 global.config = require('./config.json');
-var controlMessage='Config original';
 
 global.config['status']='dist';
 
-if(fs.existsSync('./config-test.json')){
-  controlMessage='Config test running';
-  global.config = require('./config-test.json');
-  global.config['status']='test';
-  
-}else if(process.argv.length>=3){
-    if(process.argv[2]=='localhost' || process.argv[2]=='-l'){
-        controlMessage='Config local running';
-        global.config = require('./config-local.json');
-        global.config['status']='src';
-    }
+if(process.argv.length>=3){
+	if(process.argv[2]=='localhost' || process.argv[2]=='-l'){
+		global.config = require('./config-local.json');
+		global.config['status']='dev';
+	}
+}else if(fs.existsSync('./config-test.json')){
+	global.config = require('./config-test.json');
+	global.config['status']='test';
 }
 
 global.rootDir=__dirname;
@@ -43,8 +39,7 @@ global.api = require('./providers/api/api.js');
 global.docFormHelper=require('./lib/doc_form_helper.js');
 
 
-// global.dbType=require(path_module.join(rootDir,'_assets','js','dbtypes.js'));
-global.dbType=require('./_assets/js/dbtypes.js').types;
+global.dbType=require('./assets/js/dbtypes.js').types;
 
 
 var app = express();
@@ -56,7 +51,7 @@ app.set('view engine', 'ejs');
 
 app.set('port', config.httpserver.port);
 
-app.use(favicon(__dirname + '/_assets/images/tr216webicon.png'));
+app.use(favicon(__dirname + '/assets/img/webicon.png'));
 
 app.use(logger('dev'));
 
@@ -65,40 +60,47 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 
 
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '_vendors'), { maxAge: (60 * 1000 * 60 * 24 * 365) }));
-app.use(express.static(path.join(__dirname, '_assets'), { maxAge: (60 * 1000 * 60 * 24 * 30) })); //1 ay cache  assetFile fonksiyonunu kullanin;
-// app.use(express.static(path.join(__dirname, '_assets'))); //qwerty cache siz
-
+app.use(express.static(path.join(__dirname, 'assets'), { maxAge: (60 * 1000 * 60 * 24 * 30) })); 
 app.use(flash());
 
 require('./lib/loader_db.js')((err)=>{
-  if(!err){
-    require('./app/route.js')(app);
-    require('./providers/index');
-    console.log(controlMessage.blue);
-  }else{
-    console.log('loader_db.js ERROR:',err);
-  }
+	if(!err){
+		require('./routes/routes.js')(app);
+		require('./providers/index');
+		switch(config.status){
+			case 'test':
+			eventLog('portal is running on '.yellow + 'test'.cyan + ' platform.'.yellow);
+			break;
+			case 'dev':
+			eventLog('portal is running on '.yellow + 'development'.cyan + ' platform.'.yellow);
+			break;
+			case 'dist':
+			eventLog('portal is running '.yellow + 'release'.red + ' mode.'.yellow);
+			break;
+		}
+	}else{
+		console.log('loader_db.js ERROR:',err);
+	}
 });
 
 
 if( app.get('env') == 'development')
 {
-    errorHandler.title = "Ups...";
-    app.use(errorHandler());
-   
+	errorHandler.title = "Ups...";
+	app.use(errorHandler());
+
 }
 
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error/error',{title:'Sistem hatasi',code:err.status || 500,message:err.message});
-  
+	res.status(err.status || 500);
+	res.render('error/error',{title:'Sistem hatasi',code:err.status || 500,message:err.message});
+
 });
 
 
-global.menu=require('./app/menu.json');
-global.sysmenu=require('./app/sysmenu.json');
-global.staticValues=require('./app/staticvalues.json');
+global.menu=require('./resources/menu.json');
+// global.sysmenu=require('./app/sysmenu.json');
+global.staticValues=require('./resources/staticvalues.json');
 
 
 //=========== RESONANCE SERVICE ==================
@@ -121,52 +123,52 @@ server.on('listening', onListening);
 
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+	var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
+	if (isNaN(port)) {
     // named pipe
     return val;
-  }
+}
 
-  if (port >= 0) {
+if (port >= 0) {
     // port number
     return port;
-  }
+}
 
-  return false;
+return false;
 }
 
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+	var bind = typeof port === 'string'
+	? 'Pipe ' + port
+	: 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
+  	case 'EACCES':
+  	console.error(bind + ' requires elevated privileges');
+  	process.exit(1);
+  	break;
+  	case 'EADDRINUSE':
+  	console.error(bind + ' is already in use');
+  	process.exit(1);
+  	break;
+  	default:
+  	throw error;
   }
 }
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+	var addr = server.address();
+	var bind = typeof addr === 'string'
+	? 'pipe ' + addr
+	: 'port ' + addr.port;
+	debug('Listening on ' + bind);
 }
 
 // ==========HTTP SERVER /===========
@@ -174,7 +176,7 @@ function onListening() {
 
 
 process.on('uncaughtException', function (err) {
-    errorLog('Caught exception: ', err);
+	errorLog('Caught exception: ', err);
 });
 
 

@@ -1,8 +1,8 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 <form action="" method="POST" role="form" name="form1">
     <div class="row m-0 mt-2">
         <div class="col-12 p-0">
-<%- partial('../../_common/date-filter',{includeForm:false,includeFilterButton:false}) %>
+<%- partial('../../_common/components/date-filter',{includeForm:false,includeFilterButton:false}) %>
     
             <div class="float-left form-inline ml-md-4">
                 <label class="text-primary">Senaryo:</label>
@@ -51,7 +51,7 @@
     <% } %>
 <% } %>
 
-<%- partial('../../_common/grid2',{
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'invoiceNo',text:'Fat.No',type:'label', filterField:'invoiceNo', filter:true,orderable:true},
         {name:'issueDate',text:'Fat. Tarihi',type:'label', orderable:true},

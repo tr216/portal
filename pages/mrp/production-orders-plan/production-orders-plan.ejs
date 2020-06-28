@@ -1,9 +1,9 @@
-<%layout('../../_common/layout')%>
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css">
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
-<link rel="stylesheet" type="text/css" href="/tui-calendar/dist/tui-calendar.css">
-<link rel="stylesheet" type="text/css" href="/tui-calendar/css/default.css">
-<link rel="stylesheet" type="text/css" href="/tui-calendar/css/icons.css">
+<%layout('../../_common/layouts/general')%>
+<link rel="stylesheet" type="text/css" href="<%- assetVersion('/vendor/tui-calendar/tui-time-picker.min.css') %>">
+<link rel="stylesheet" type="text/css" href="<%- assetVersion('/vendor/tui-calendar/tui-date-picker.min.css') %>">
+<link rel="stylesheet" type="text/css" href="<%- assetVersion('/vendor/tui-calendar/tui-calendar.min.css') %>">
+<link rel="stylesheet" type="text/css" href="<%- assetVersion('/vendor/tui-calendar/css/default.css') %>">
+<link rel="stylesheet" type="text/css" href="<%- assetVersion('/vendor/tui-calendar/css/icons.css') %>">
 
 <div class="code-html" style="min-height: 50rem;">
     <div id="menu" class="form-inline">
@@ -24,15 +24,15 @@
     <div id="calendar" class="mt-2"></div>
 </div>
 
-<script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
-<script src="https://uicdn.toast.com/tui.time-picker/v2.0.3/tui-time-picker.min.js"></script>
-<script src="https://uicdn.toast.com/tui.date-picker/v4.0.3/tui-date-picker.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.0.13/chance.min.js"></script>
-<script src="/tui-calendar/dist/tui-calendar.js"></script>
-<script src="/tui-calendar/data/calendars.js"></script>
-<script src="/tui-calendar/data/schedules.js"></script>
-<script src="/tui-calendar/default.js"></script>
+<script src="<%- assetVersion('/vendor/tui-calendar/tui-code-snippet.min.js') %>"></script>
+<script src="<%- assetVersion('/vendor/tui-calendar/tui-time-picker.min.js') %>"></script>
+<script src="<%- assetVersion('/vendor/tui-calendar/tui-date-picker.min.js') %>"></script>
+<script src="<%- assetVersion('/vendor/tui-calendar/moment.min.js') %>"></script>
+<script src="<%- assetVersion('/vendor/tui-calendar/chance.min.js') %>"></script>
+<script src="<%- assetVersion('/vendor/tui-calendar/tui-calendar.min.js') %>"></script>
+<script src="<%- assetVersion('/vendor/tui-calendar/data/calendars.js') %>"></script>
+<script src="<%- assetVersion('/vendor/tui-calendar/data/schedules.js') %>"></script>
+<script src="<%- assetVersion('/vendor/tui-calendar/default.js') %>"></script>
 <script type="text/javascript" class="code-js">
     var list=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(list)) %>'));
     console.log('list:',list);

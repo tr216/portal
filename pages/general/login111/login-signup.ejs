@@ -1,0 +1,35 @@
+<%layout('../../_common/layouts/generals/login-layout')%>
+<% 
+    title='Kayıt ol';
+%>
+<form action="" id="aform" role="form"  method="post">
+    <fieldset>
+        <% if ( message!='' ) { %>
+            <div class="flash"><%= message %></div>
+        <% } %>
+        <div class="form-group">
+            <label for="">Kullanici adi:</label>
+            <input class="form-control" placeholder="E-mail veya telefon" name="username" type="text" autofocus value="<%=form['username']%>" required="required">
+        </div>
+        <div class="form-group">
+            <label for="">Parola:</label>
+            <input class="form-control" placeholder="Password" name="password" type="password" value="<%=form['password']%>" required="required">
+        </div>
+        <div class="form-group">
+            <label for="">Tekrar Parola:</label>
+            <input class="form-control" placeholder="Re-enter Password" name="repassword" type="password" value="<%=form['repassword']%>" required="required">
+        </div>
+
+         <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary btn-block">Üye ol</button>
+            </div>
+            <div class="col-md-4 offset-md-2">
+                <a href="/general/login" class="btn btn-dark btn-block"><i class="fa fa-reply"></i> Vazgec</a>
+            </div>
+            
+            
+        </div>
+
+    </fieldset>
+</form>

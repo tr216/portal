@@ -1,4 +1,4 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 
 <% if(typeof message!='undefined') { %>
     <% if(message!='') { %>
@@ -12,7 +12,7 @@
     <% } %>
 <% } %>
 
-<%- partial('../../_common/grid2',{
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'identifier',text:'VknTckn',type:'label', filter:true,orderable:true,align:'left'},
         {name:'title',text:'Ünvan',type:'label',filter:true, orderable:true},

@@ -1,5 +1,5 @@
-<%layout('../../_common/layout')%>
-<%- partial('../../_common/grid2',{
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'itemType',text:'Turu',type:'lookup', lookupList:productTypeList , filter:true, filterField:'itemType', orderable:true},
         {name:'name.value',text:'Adı',type:'label' , filter:true, filterField:'name', orderable:true},
@@ -18,14 +18,14 @@
     deleteButton:true,
     viewButton:true,
     customButtons:[
-        {href:'javascript:itemCopyConfirm("{_id}","{name.value}")', text:'Kopyala',icon:'far fa-copy'}
+        {href:'javascript:itemCopyConfirm("{_id}","{name.value}")', title:'Kopyala',icon:'far fa-copy'}
     ],
     deleteUrl:'/dbapi/items/{_id}?db=' + db + '&sid=' + sid
     }) 
 %>
 
 
-<%- partial('../../_common/modal',{
+<%- partial('../../_common/forms/modal',{
     modalId:'itemCopyModal',
     caption:'Kopya',
     formControls:{
@@ -34,7 +34,7 @@
     mode:'addnew',
     buttons:[
         {isCancelButton:true},
-        {href:'javascript:itemCopySave()', text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+        {href:'javascript:itemCopySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
     ]
 }) %>
 <script type="text/javascript">

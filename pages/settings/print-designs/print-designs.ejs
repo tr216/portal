@@ -1,6 +1,6 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 
-<%- partial('../../_common/grid2',{
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'module',    text:'Modul',    type:'lookup' , filter:true, lookupList:printDesignModuleList}, 
         {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
@@ -14,13 +14,13 @@
     viewButton:true,
     deleteUrl:'/dbapi/print-designs/{_id}?db=' + db + '&sid=' + sid,
     customButtons:[
-        {href:'javascript:itemCopyConfirm("{_id}","{name}")', text:'Kopyala',icon:'far fa-copy'}
+        {href:'javascript:itemCopyConfirm("{_id}","{name}")', title:'Kopyala',icon:'far fa-copy'}
     ]
     }) 
 %>
 
 
-<%- partial('../../_common/modal',{
+<%- partial('../../_common/forms/modal',{
     modalId:'itemCopyModal',
     caption:'Kopya',
     formControls:{
@@ -29,7 +29,7 @@
     mode:'addnew',
     buttons:[
         {isCancelButton:true},
-        {href:'javascript:itemCopySave()', text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+        {href:'javascript:itemCopySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
     ]
 }) %>
 

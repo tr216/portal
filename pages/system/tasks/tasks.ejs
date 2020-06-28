@@ -1,7 +1,7 @@
-<% layout('../../_common/layout')%>
-<%- partial('../../_common/date-filter',{includeForm:true,includeFilterButton:true}) %>
+<% layout('../../_common/layouts/general')%>
+<%- partial('../../_common/components/date-filter',{includeForm:true,includeFilterButton:true}) %>
 
-<%- partial('../../_common/grid2',{
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'taskType',text:'Görev Türü',type:'lookup',filter:true, lookupList:[
             {text:'-Tümü-', value:''},

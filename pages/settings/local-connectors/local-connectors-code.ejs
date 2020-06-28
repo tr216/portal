@@ -1,5 +1,5 @@
-<%layout('../../_common/layout')%>
-<%- partial('../../_common/form',{
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/forms/form',{
     tabs:[
         {
             active:(activeTab==0),
@@ -19,7 +19,7 @@
                     }
                 },
                 passive         :{caption:'Pasif',                 type:'label'},
-                connectorTest :{caption:'Connector Test', type:'partial', partial:'../settings/local-connectors/connector-test.ejs'}
+                connectorTest :{caption:'Connector Test', type:'partial', partial:'../../settings/local-connectors/connector-test.ejs'}
             }
         },
         {

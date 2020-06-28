@@ -1,5 +1,5 @@
-<%layout('../../_common/layout')%>
-<%- partial('../../_common/date-filter',{includeForm:true,includeFilterButton:true}) %>
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/components/date-filter',{includeForm:true,includeFilterButton:true}) %>
 
 <div class="btn-toolbar mt-2 border p-1 rounded" role="toolbar" aria-label="Toolbar with button groups">
   <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -21,7 +21,7 @@
 <% } %>
 
 
-<%- partial('../../_common/grid2',{
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'status', text:'Durum',     type:'lookup', 
             lookupList:[

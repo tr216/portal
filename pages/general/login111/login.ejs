@@ -1,0 +1,33 @@
+<%layout('../../_common/layouts/generals/login-layout')%>
+<% 
+    title='Giris';
+%>
+<form id="aform" role="form" action="" method="POST">
+    <fieldset>
+        <% if ( typeof message!='undefined' ) { %>
+            <div class="flash"><%= message %></div>
+        <% } %>
+        <div class="form-group">
+            <input class="form-control" placeholder="Kullanıcı adı" name="username" type="" value="<%=form.username%>">
+        </div>
+        <div class="form-group">
+            <input class="form-control" placeholder="Parola" name="password" type="password" value="<%=form.password%>">
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="checkbox col-md-6" style="margin-top:0px;">
+                    <label>
+                        <input name="remember" type="checkbox" value="Remember Me">Beni hatırla
+                    </label>
+                </div>
+                <div class="col-md-6 text-right">
+                    <a href="/general/login/forgot-password"  class="">Parolami unuttum</a>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-lg btn-primary btn-block">Giriş</button>
+        <a href="/general/login/signup"  class="btn btn-lg btn-secondary btn-block">Üye ol</a>
+        
+    </fieldset>
+</form>
+                  

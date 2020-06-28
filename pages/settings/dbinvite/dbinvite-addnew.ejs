@@ -1,4 +1,4 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 <div class="form-group">
     <label class="control-label" for="">Veri Ambari</label>
     <input type="text" form="" name="dbName" class="form-control" autocomplete="off" value="<%=dbName%>" readonly="true">
@@ -9,7 +9,7 @@
     <input type="text" form="form-general" name="memberId"  id="memberId" hidden="true" value="<% if(typeof form.memberId!='undefined'){%><%=form.memberId%><%}%>">
 </div>
 
-<%- partial('../../_common/form',{
+<%- partial('../../_common/forms/form',{
     formControls:{
         canRead         :{caption:'Okuyabilir?',                 type:'checkbox'},
         canWrite         :{caption:'Yazabilir?',                 type:'checkbox'},

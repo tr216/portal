@@ -1,4 +1,4 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
@@ -8,7 +8,7 @@
         </div>
     </div>
 </div>
-<%- partial('../../_common/form', {
+<%- partial('../../_common/forms/form', {
     formControls:{
         code:{caption:'Hesap Kodu', type:'textbox'    ,required:true},
         name:{caption:'Hesap Ismi', type:'textbox'    ,required:true}

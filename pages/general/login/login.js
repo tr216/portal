@@ -6,8 +6,7 @@ module.exports = function(req,res,callback){
 			repassword:'',
 			authCode:''
 		},
-		title:'Uyelik',
-		message:''
+		title:'Giriş'
 	}
 	switch(req.params.func){
 		case 'signup':

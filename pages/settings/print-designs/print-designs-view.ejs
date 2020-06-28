@@ -1,5 +1,5 @@
-<%layout('../../_common/plain-layout')%>
-<%- partial('../../_common/form',{
+<%layout('../../_common/layouts/plain')%>
+<%- partial('../../_common/forms/form',{
     formControls:{
         module        :{caption:'Modül',             type:'lookup', lookup:printDesignModuleList, required:true},
         name        :{caption:'Adı',                type:'textbox' ,required:true},

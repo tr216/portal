@@ -24,7 +24,7 @@
     }
 
 %>
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 
 <% 
     var frmControl1={
@@ -57,7 +57,7 @@
         frmControl1['exceptRecipeCalculation']={name:'exceptRecipeCalculation', caption:'Recete hesaplarina dahil edilmesin', type:'checkbox'    };
     }
 %>
-<%- partial('../../_common/form', {
+<%- partial('../../_common/forms/form', {
     tabs:[
        {
             caption:'Bilgiler',
@@ -66,7 +66,7 @@
         {
             caption:'Birimler/Barkodlar',
             formControls:{
-                unitPacks:{ name:'unitPacks', caption:'Birimler', type:'partial' ,partial:'./unitpacks.ejs'},
+                unitPacks:{ name:'unitPacks', caption:'Birimler', type:'partial' ,partial:'../components/unitpacks.ejs'},
                 barkodlar:{ name:'barkodlar', caption:'Barkodlar (Carpanlari ";" ile barkod sonuna ekleyiniz)', type:'textarea' , rows:5}
             }
         },
@@ -83,7 +83,7 @@
         },
         {
             caption:'Makina Tanımları',
-            partial:'../inventory/items/product-machines.ejs'
+            partial:'../../inventory/items/product-machines.ejs'
         }
     ],
     action:'',

@@ -1,5 +1,5 @@
-<%layout('../../_common/layout')%>
-<%- partial('../../_common/grid2',{
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'name',text:'Adı',type:'label'},
         {name:'importerType',text:'Türü',type:'lookup' , lookupList:staticValues.fileImporterTypes},

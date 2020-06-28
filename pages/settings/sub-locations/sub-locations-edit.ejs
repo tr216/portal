@@ -1,6 +1,6 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 
-<%- partial('../../_common/form', {
+<%- partial('../../_common/forms/form', {
    
     formControls:{
         location:{caption:'Lokasyon', type:'lookup' , lookup:locationList, valueField:'_id', textField:'locationName'   ,required:true},

@@ -1,5 +1,5 @@
-<%layout('../../_common/layout')%>
-<%- partial('../../_common/grid2',{
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'locationName',text:'Lokasyon Ismi',type:'label' ,filter:true, orderable:true},
         {name:'locationType',text:'Turu',type:'lookup', lookupList:locationTypeList, filter:true, orderable:true},

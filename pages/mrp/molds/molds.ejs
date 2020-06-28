@@ -1,6 +1,6 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 
-<%- partial('../../_common/grid2',{
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'moldGroup',    text:'Kalıp Grubu',    type:'lookup' , filter:true, lookupList:moldGroupList, textField:'name', valueField:'_id'}, 
         {name:'machineGroup',    text:'Makine Grubu',    type:'lookup' , filter:true, lookupList:machineGroupList, textField:'name', valueField:'_id'}, 

@@ -1,5 +1,5 @@
-<%layout('../../_common/layout')%>
-<%- partial('../../_common/form',{
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/forms/form',{
     tabs:[
        {
             caption:'Bilgiler',
@@ -11,13 +11,13 @@
                 minCapacity  :{caption:'Min. Kapasite',        type:'textbox'    },
                 maxCapacity  :{caption:'Max. Kapasite',        type:'textbox'    },
                 power  :{caption:'Güç(watt)',        type:'textbox'    },
-                account:{caption:'Muhasebe Hesap Kodu', type:'partial', partial:'account-selection.ejs' },
+                account:{caption:'Muhasebe Hesap Kodu', type:'partial', partial:'../components/account-selection.ejs' },
                 passive         :{caption:'Pasif',                 type:'checkbox'}
             }
         },
         {
             caption:'Makinanın üretim parametreleri',
-            partial:'../mrp/machines/parameters.ejs'
+            partial:'../../mrp/machines/parameters.ejs'
         }
     ],
     action:'',

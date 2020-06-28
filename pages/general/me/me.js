@@ -10,7 +10,8 @@ module.exports = function(req,res,callback){
 			oldPassword:'',
 			newPassword:'',
 			rePassword:''
-		}
+		},
+		message:''
 	}
 
 	
@@ -20,22 +21,44 @@ module.exports = function(req,res,callback){
 
 function myprofile(req,res,data,callback){
 	if(req.method=='POST'){
+		data.form=Object.assign(data.form,req.body);
 		if(req.body.oldPassword || req.body.newPassword || req.body.rePassword){
 			if(req.body.newPassword!=req.body.rePassword){
 				data['message']='Tekrar girilen parola hatali!'
+				data.form['oldPassword']='';
+				data.form['newPassword']='';
+				data.form['rePassword']='';
 				return callback(null,data);
+			}else{
+				api.put('/me/change-password',req,req.body,(err,resp)=>{
+					if(!err){
+						data.form=Object.assign(data.form,resp.data);
+					}else{
+						
+						data['message']=err.message;
+					}
+					data.form['oldPassword']='';
+					data.form['newPassword']='';
+					data.form['rePassword']='';
+					callback(null,data);
+				});
 			}
+		}else{
+			api.put('/me',req,req.body,(err,resp)=>{
+				if(!err){
+					data.form=Object.assign(data.form,resp.data);
+				}else{
+					
+					data['message']=err.message;
+				}
+				data.form['oldPassword']='';
+				data.form['newPassword']='';
+				data.form['rePassword']='';
+				callback(null,data);
+			});
 		}
 
-		api.put('/me',req,req.body,(err,resp)=>{
-			if(!err){
-				data.form=Object.assign(data.form,resp.data);
-			}else{
-				data.form=Object.assign(data.form,req.body);
-				data['message']=err.message;
-			}
-			callback(null,data);
-		});
+		
 	}else{
 		api.get('/me',req,{},(err,resp)=>{
 			if(!err){

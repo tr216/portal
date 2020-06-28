@@ -1,4 +1,4 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 <form action="" method="POST" role="form" name="form1">
         <div class="row align-items-end shadow-sm">
             <div class="col-sm-3">
@@ -47,7 +47,7 @@
 <% } %>
 
 
-<%- partial('../../_common/grid2',{
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'posDevice.location.locationName',    text:'Lokasyon',    type:'lookup' ,orderable:false, filter:true, filterField:'location', lookupList:locationList, textField:'locationName', valueField:'_id'}, 
         {name:'posDevice.deviceSerialNo',           text:'Seri No',     type:'label',orderable:false, filter:true,filterField:'deviceSerialNo'}, 

@@ -1,8 +1,8 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 <form action="" method="POST" role="form" name="form1">
     <div class="row m-0 mt-2">
         <div class="col-12 p-0">
-<%- partial('../../_common/date-filter',{includeForm:false,includeFilterButton:false}) %>
+<%- partial('../../_common/components/date-filter',{includeForm:false,includeFilterButton:false}) %>
             <div class="float-left form-inline ml-md-4">
                 <label class="text-primary">Fiş Türü:</label>
                 <select class="form-control input-inline input-sm" name="docTypeCode" id="docTypeCode" onchange="docTypeCodeChange()">
@@ -37,7 +37,7 @@
         </div>
     </div>
 </form>
-<%- partial('../../_common/grid2',{
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'docId',text:'Fiş No',type:'label' , filter:true, orderable:true, align:'left'},
         {name:'issueDate',text:'Tarih',type:'label' ,  orderable:true },

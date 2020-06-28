@@ -1,6 +1,6 @@
-<%layout('../../_common/layout')%>
+<%layout('../../_common/layouts/general')%>
 
-<%- partial('../../_common/grid2',{
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'station',    text:'Istasyon',    type:'lookup' , filter:true, lookupList:stationList, textField:'name', valueField:'_id'}, 
         {name:'firstName.value',text:'Adı',type:'label', filterField:'firstName', filter:true, orderable:true},

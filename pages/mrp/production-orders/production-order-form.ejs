@@ -3,18 +3,18 @@
     formName='form1';
 
     if(func=='approvement'){
-        headerButtons +='<button type="button" class="btn btn-primary m-1" title="Onayla" onclick="approve()"><i class="fas fa-check-square"></i> Onayla</button>';
-        headerButtons +='<button type="button" class="btn btn-danger m-1" title="Reddet" onclick="decline()"><i class="fas fa-window-close"></i> Reddet</button>';
+        headerButtons +='<button type="button" class="btn btn-primary btn-form-header m-1" title="Onayla" onclick="approve()"><i class="fas fa-check-square"></i> Onayla</button>';
+        headerButtons +='<button type="button" class="btn btn-danger btn-form-header m-1" title="Reddet" onclick="decline()"><i class="fas fa-window-close"></i> Reddet</button>';
     }else if(func=='start'){
-        headerButtons +='<button type="button" class="btn btn-primary m-1" title="Üretim başlasın" onclick="start()"><i class="fas fa-play-circle"></i> Üretim başlasın</button>';
-        headerButtons +='<button type="button" class="btn btn-danger m-1" title="Taslak hale geri çevir" onclick="makeDraftBack()"><i class="fas fa-window-close"></i> Taslak hale geri çevir</button>';
+        headerButtons +='<button type="button" class="btn btn-primary btn-form-header m-1" title="Üretim başlasın" onclick="start()"><i class="fas fa-play-circle"></i> Üretim başlasın</button>';
+        headerButtons +='<button type="button" class="btn btn-danger btn-form-header m-1" title="Taslak hale geri çevir" onclick="makeDraftBack()"><i class="fas fa-window-close"></i> Taslak hale geri çevir</button>';
     }else if(func=='complete'){
-        headerButtons +='<button type="button" class="btn btn-primary m-1" title="Üretimi tamamla" onclick="complete()"><i class="fas fa-check-square"></i> Üretimi tamamla</button>';
-        headerButtons +='<button type="button" class="btn btn-danger m-1" title="Taslak hale geri çevir" onclick="makeDraftBack()"><i class="fas fa-window-close"></i> Taslak hale geri çevir</button>';
+        headerButtons +='<button type="button" class="btn btn-primary btn-form-header m-1" title="Üretimi tamamla" onclick="complete()"><i class="fas fa-check-square"></i> Üretimi tamamla</button>';
+        headerButtons +='<button type="button" class="btn btn-danger btn-form-header m-1" title="Taslak hale geri çevir" onclick="makeDraftBack()"><i class="fas fa-window-close"></i> Taslak hale geri çevir</button>';
     }else{
-        headerButtons +='<button type="button" class="btn btn-primary" title="Kaydet" onclick="formKaydet()"><i class="fas fa-save"></i></button>';
+        headerButtons +='<button type="button" class="btn btn-primary btn-form-header" title="Kaydet" onclick="formKaydet()"><i class="fas fa-save"></i></button>';
     }
-    headerButtons +='<a href="javascript:goBack();" class="btn btn-dark m-1" title="Vazgeç"><i class="fas fa-reply"></i></a>';
+    headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-header m-1" title="Vazgeç"><i class="fas fa-reply"></i></a>';
 %>
 
 <script type="text/javascript">
@@ -249,7 +249,7 @@
             </div>
         </div>
                 
-        <%- partial('../../_common/recipe.ejs',{recipeFormType:'production-orders'}) %>
+        <%- partial('../../_common/forms/recipe.ejs',{recipeFormType:'production-orders'}) %>
 
          <div class="card mt-2">
             <div class="card-header p-1">Palet/Ambalaj/Kutu/Koli</div>
@@ -511,18 +511,20 @@
 		});
 		if(bFarkliUrunVar) return alert('Uretim emrine ayni urunden olan siparisleri ekleyebilirsiniz.');
 		if(list.length==0)  return alert('Kayit secilmemis!');
-		// if(!confirm(list.length + ' adet siparis icin uretim emri verilecektir. Onayliyor musunuz?')) return;
 
 		list.forEach(function(e){
+			
 			var obj={
                 lineId:e.orderLine.ID,
                 item:e.orderLine.item,
                 orderedQuantity:e.orderLine.orderedQuantity,
-
-                // producedQuantity:e.orderLine.producedQuantity,
-                producedQuantity:{value:e.producedRemaining, attr:{unitCode:e.orderLine.orderedQuantity.attr.unitCode}},
+                producedQuantity:{
+                	value:e.producedRemaining, 
+                	attr:{
+                		unitCode:e.orderLine.orderedQuantity.attr.unitCode
+                	}
+                },
                 deliveredQuantity:e.orderLine.deliveredQuantity,
-
                 orderReference:{
                     order:e.sip_id,
                     ID:e.ID,
@@ -537,21 +539,23 @@
                     }
                 }
             }
+
             var bFound=false;
             doc.orderLineReference.forEach(function(e2){
             	if(e.ID.value==e2.orderReference.ID.value && e.orderLine.ID.value==e2.lineId.value){
             		bFound=true;
             		return;
             	}
-            })
+            });
+
             var bAyniUrun=true;
             doc.orderLineReference.forEach(function(e2){
-            	// urun karsilastirimlasi item._id alanindan yapilacak qwerty
             	if(e.orderLine.item._id!=e2.item._id){
             		bAyniUrun=false;
             		return;
             	}
-            })
+            });
+
             if(bFound==false && bAyniUrun==true) {
             	doc.orderLineReference.push(obj);
             	if(doc.orderLineReference.length==1){

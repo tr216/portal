@@ -1,5 +1,5 @@
-<%layout('../../_common/layout')%>
-<%- partial('../../_common/grid2',{
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/components/grid2',{
     fields:[
         {name:'name',text:'Grup adı',type:'label' , filter:true, orderable:true},
         {name:'account.accountCode', text:'Muh. Kodu', type:'label' , filter:false },
@@ -16,14 +16,14 @@
     deleteButton:true,
     viewButton:true,
     customButtons:[
-        {href:'javascript:copyConfirm("{_id}","{name}")', text:'Kopyala',icon:'far fa-copy'}
+        {href:'javascript:copyConfirm("{_id}","{name}")', title:'Kopyala',icon:'far fa-copy'}
     ],
     deleteUrl:'/dbapi/account-groups/{_id}?db=' + db + '&sid=' + sid
     }) 
 %>
 
 
-<%- partial('../../_common/modal',{
+<%- partial('../../_common/forms/modal',{
     modalId:'copyModal',
     caption:'Kopya',
     formControls:{
@@ -32,7 +32,7 @@
     mode:'addnew',
     buttons:[
         {isCancelButton:true},
-        {href:'javascript:copySave()', text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+        {href:'javascript:copySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
     ]
 }) %>
 

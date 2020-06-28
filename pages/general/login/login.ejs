@@ -1,33 +1,36 @@
-<%layout('login-layout')%>
-<% 
-    title='Giris';
-%>
-<form id="aform" role="form" action="" method="POST">
-    <fieldset>
-        <% if ( typeof message!='undefined' ) { %>
-            <div class="flash"><%= message %></div>
-        <% } %>
-        <div class="form-group">
-            <input class="form-control" placeholder="Kullanıcı adı" name="username" type="" value="<%=form.username%>">
-        </div>
-        <div class="form-group">
-            <input class="form-control" placeholder="Parola" name="password" type="password" value="<%=form.password%>">
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="checkbox col-md-6" style="margin-top:0px;">
-                    <label>
-                        <input name="remember" type="checkbox" value="Remember Me">Beni hatırla
-                    </label>
-                </div>
-                <div class="col-md-6 text-right">
-                    <a href="/general/login/forgot-password"  class="">Parolami unuttum</a>
+<% layout('../../_common/layouts/login-layout') %>
+    <div class="container mb-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-header"><div class="text-center login-title text-primary"><i class="fas fa-sign-in-alt mr-1"></i> {{Sign In}}</div></div>
+                    <div class="card-body">
+                        <%- formError(message) %>
+                        <form action="" method="POST" role="form" name="form1" id="form1" autocomplete="off">
+                            <div class="form-group">
+                                <label class="mb-1" for="username">{{Kullanıcı adı}}</label>
+                                <input class="form-control" id="username"  name="username" type="text" placeholder="{{Kullanıcı adınızı giriniz}}" value="<%=form.username%>" />
+                            </div>
+                            <div class="form-group">
+                                <label class="mb-1" for="password">{{Password}}</label>
+                                <input class="form-control" id="password"  name="password"  type="password" placeholder="{{Parolanızı giriniz}}" value="<%=form.password%>" />
+                            </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="remember" name="remember" type="checkbox" />
+                                    <label class="custom-control-label" for="remember">{{Beni hatırla}}</label>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
+                                <a class="" href="#/general/login/forgot-password">{{Parolami unuttum?}}</a>
+                                <input class="btn btn-primary" type="submit" value="{{Giriş}}">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center">
+                        <div class=""><a href="#/general/login/signup">{{Üye ol!}}</a></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-lg btn-primary btn-block">Giriş</button>
-        <a href="/general/login/signup"  class="btn btn-lg btn-secondary btn-block">Üye ol</a>
-        
-    </fieldset>
-</form>
-                  
+    </div>

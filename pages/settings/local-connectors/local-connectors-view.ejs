@@ -1,5 +1,5 @@
-<%layout('../../_common/plain-layout')%>
-<%- partial('../../_common/form',{
+<%layout('../../_common/layouts/plain')%>
+<%- partial('../../_common/forms/form',{
     formControls:{
         name            :{caption:'Adı',                   type:'textbox'    ,required:true},
         connectorId     :{caption:'Connector ID',          type:'textbox'    ,required:true},
@@ -15,7 +15,7 @@
             }
         },
         passive         :{caption:'Pasif',                 type:'checkbox'},
-        connectorTest :{caption:'Connector Test', type:'partial', partial:'../settings/local-connectors/connector-test.ejs'}
+        connectorTest :{caption:'Connector Test', type:'partial', partial:'../../settings/local-connectors/connector-test.ejs'}
     },
     action:'',
     mode:'view'

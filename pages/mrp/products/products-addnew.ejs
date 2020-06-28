@@ -1,6 +1,6 @@
 
-<%layout('../../_common/layout')%>
-<%- partial('../../_common/form', {
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/forms/form', {
     tabs:[
         {
             caption:'Bilgiler',
@@ -51,7 +51,7 @@
         {
             caption:'Palet/Paketleme Tanımları',
             formControls:{
-                ambalajTanimlari:{ name:'ambalajTanimlari', caption:'Paketleme', type:'partial' ,partial:'../mrp/products/packingform.ejs'}
+                ambalajTanimlari:{ name:'ambalajTanimlari', caption:'Paketleme', type:'partial' ,partial:'../../mrp/products/packingform.ejs'}
             }
         }
     ],

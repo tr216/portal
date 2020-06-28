@@ -1,5 +1,5 @@
-<%layout('../../_common/layout')%>
-<%- partial('../../_common/form',{
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/forms/form',{
     tabs:[
     {
         caption:'Bilgiler',
@@ -9,7 +9,7 @@
             familyName     :{ name:'familyName.value', caption:'Soyadı',  type:'textbox' ,required:true},
             shift        :{caption:'Vardiya', type:'lookup', lookup:shiftList, textField:'name', valueField:'_id' },
             bloodGroup   :{caption:'Kan Grubu', type:'lookup', lookup:bloodGroups },
-            account:{ name:'account', caption:'Muhasebe Hesabı', type:'partial' , partial:'account-selection.ejs'},
+            account:{ name:'account', caption:'Muhasebe Hesabı', type:'partial' , partial:'../components/account-selection.ejs'},
             monthlyCost      :{caption:'Aylık Maliyeti',                 type:'number'},
             passive      :{caption:'Pasif',                 type:'checkbox'}
         }

@@ -1,5 +1,5 @@
-<%layout('../../_common/plain-layout')%>
-<%- partial('../../_common/form',{
+<%layout('../../_common/layouts/plain')%>
+<%- partial('../../_common/forms/form',{
     formControls:{
         name            :{caption:'Adı',                   type:'textbox'    ,required:true},
         importerType :{caption:'Türü', type:'lookup', lookup:staticValues.fileImporterTypes },
