@@ -212,7 +212,11 @@ footer.footer {
     color:#fff;
     background-color: #468847;
 }
-.invoice-waitingforaprovement {
+.invoice-partial-approved {
+    color:#fff;
+    background-color: #66A867;
+}
+.invoice-waitingforapprovement {
     color:#fff;
     background-color: #00CC66;
 }

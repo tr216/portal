@@ -1,16 +1,16 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'eIntegrator',text:'GIB Entegrator',type:'lookup',lookup:eIntegrators, orderable:true},
+        {name:'eIntegrator',text:'Entegrator',type:'lookup',lookup:eIntegrators, orderable:true},
         {name:'name',text:'Adı',type:'label', orderable:true},
         {name:'isDefault',text:'Varsayılan',type:'checkbox',width:1, orderable:false},
         {name:'passive',text:'Pasif',type:'checkbox',width:1, orderable:false}
     ],
-    caption:'GIB Entegrator Tanimlari',
+    caption:'Entegrator Tanimlari',
     addNewButton:true,
     editButton:true,
     deleteButton:true,
-    deleteUrl:'/dbapi/e-integrators/{_id}?db='+db+'&sid=' + sid
+    deleteUrl:'/dbapi/integrators/{_id}?db='+db+'&sid=' + sid
     }) 
 %>
 

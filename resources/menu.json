@@ -91,7 +91,7 @@
 			{"text":"Personel",				"path":"/settings/persons", 			"icon":"fas fa-users", "visible":true, "nodes":[]},
 			{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"fas fa-plug", "visible":true, "nodes":[]},
 			{"text":"Yazdırma Tasarımları",	"path":"/settings/print-designs",		"icon":"fas fa-print", "visible":true, "nodes":[]},
-			{"text":"Evrak Seri ve GIB Entegrator",		"path":"/settings/e-integrators",	"icon":"fas fa-cogs", "visible":true, "nodes":[]},
+			{"text":"Evrak Seri ve Entegrator",		"path":"/settings/integrators",	"icon":"fas fa-cogs", "visible":true, "nodes":[]},
 			{"text":"File Importer",	"path":"/settings/file-importers",	"icon":"fas fa-file-import", "visible":true, "nodes":[]}
 		]
 	},

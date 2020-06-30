@@ -56,7 +56,7 @@ function getList(req,res,data,callback){
 function initLookUpLists(req,res,data,cb){
 	data.eIntegratorList=[];
 	
-	api.get('/' + req.query.db + '/e-integrators',req,{passive:false},(err,resp)=>{
+	api.get('/' + req.query.db + '/integrators',req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
 			

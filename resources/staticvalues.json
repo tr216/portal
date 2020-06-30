@@ -76,7 +76,7 @@
 		{"text":"GİB e iltildi","value": "SentToGib"},
 		{"text":"Onaylandı","value": "Approved"},
 		{"text":"Reddedildi","value": "Declined"},
-		{"text":"Onay bekliyor","value": "WaitingForAprovement"},
+		{"text":"Onay bekliyor","value": "WaitingForApprovement"},
 		{"text":"Hata","value": "Error"}
 		
 	],
@@ -109,7 +109,7 @@
 		{"text":"Gönderildi","value": "SentToGib"},
 		{"text":"Onaylandı","value": "Approved"},
 		{"text":"Reddedildi","value": "Declined"},
-		{"text":"Onay bekliyor","value": "WaitingForAprovement"},
+		{"text":"Onay bekliyor","value": "WaitingForApprovement"},
 		{"text":"Hata","value": "Error"}
 		
 	],
@@ -125,13 +125,16 @@
 	],
 	"despatchStatusTypes":[
 		{"text":"Taslak","value": "Draft"},
+		{"text":"İptal Edildi","value": "Cancelled"},
+		{"text":"Silindi","value": "Deleted"},
 		{"text":"Bekliyor","value": "Pending"},
 		{"text":"Kuyrukta","value": "Queued"},
 		{"text":"İşleniyor","value": "Processing"},
 		{"text":"Gönderildi","value": "SentToGib"},
 		{"text":"Onaylandı","value": "Approved"},
+		{"text":"Kısmi Onaylandı","value": "PartialApproved"},
 		{"text":"Reddedildi","value": "Declined"},
-		{"text":"Onay bekliyor","value": "WaitingForAprovement"},
+		{"text":"Onay bekliyor","value": "WaitingForApprovement"},
 		{"text":"Hata","value": "Error"}
 		
 	],

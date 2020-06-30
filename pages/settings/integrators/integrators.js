@@ -130,7 +130,7 @@ module.exports = function(req,res,callback){
 var editorFileTypes=['text/plain', 'application/json','text/javascript','text/html','application/xml'];
 
 function getList(req,res,data,callback){
-	api.get('/' + req.query.db + '/e-integrators',req,data.filter,(err,resp)=>{
+	api.get('/' + req.query.db + '/integrators',req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp);
 		}
@@ -157,9 +157,9 @@ function addnew(req,res,data,callback){
 		if(req.method=='POST'){
 			data.form=Object.assign(data.form,req.body);
 			
-			api.post('/' + req.query.db + '/e-integrators',req,data.form,(err,resp)=>{
+			api.post('/' + req.query.db + '/integrators',req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/settings/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/settings/integrators?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
 				}else{
 					data['message']=err.message;
@@ -184,9 +184,9 @@ function edit(req,res,data,callback){
 				return;
 			}
 
-			api.put('/' + req.query.db + '/e-integrators/' + _id,req,data.form,(err,resp)=>{
+			api.put('/' + req.query.db + '/integrators/' + _id,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/settings/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect('/settings/integrators?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
 				}else{
 					data['message']=err.message;
@@ -194,7 +194,7 @@ function edit(req,res,data,callback){
 				}
 			});
 		}else{
-			api.get('/' + req.query.db + '/e-integrators/' + _id,req,null,(err,resp)=>{
+			api.get('/' + req.query.db + '/integrators/' + _id,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					callback(null,data);
@@ -209,9 +209,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/e-integrators/' + _id,req,(err,resp)=>{
+	api.delete('/' + req.query.db + '/integrators/' + _id,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/settings/e-integrators?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect('/settings/integrators?db=' + req.query.db +'&sid=' + req.query.sid);
 		}else{
 			data['message']=err.message;
 			callback(null,data);
