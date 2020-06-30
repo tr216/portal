@@ -4,7 +4,7 @@
     <% leftMenu.forEach((mainItem,menuIndex)=>{ %>
         <% if(mainItem.visible){ %>
             <% if(mainItem.nodes.length>0){ %>
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapse<%- menuIndex %>" aria-expanded="false" aria-controls="pagesCollapse<%- menuIndex %>">
+            <a class="nav-link collapsed <% if(typeof mainItem.module!='undefined'){%> module-<%=mainItem.module%><%}%>" href="#" data-toggle="collapse" data-target="#pagesCollapse<%- menuIndex %>" aria-expanded="false" aria-controls="pagesCollapse<%- menuIndex %>">
                 <div class="sb-nav-link-icon"><i class="<%- mainItem.icon %>"></i></div>
                 <%- mainItem.text %>
                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -14,7 +14,7 @@
             <% mainItem.nodes.forEach((subItem,submenuIndex)=>{ %>
                 <% if(subItem.visible){ %>
                     <% if(subItem.nodes.length>0){ %>
-                    <a class="nav-link collapsed" href="#"  data-toggle="collapse" data-target="#ikinciMenu<%- menuIndex %>-<%- submenuIndex%>" aria-expanded="false" aria-controls="ikinciMenu<%- menuIndex %>-<%- submenuIndex%>">
+                    <a class="nav-link collapsed <% if(typeof subItem.module!='undefined'){%> module-<%=subItem.module%><%}%>" href="#"  data-toggle="collapse" data-target="#ikinciMenu<%- menuIndex %>-<%- submenuIndex%>" aria-expanded="false" aria-controls="ikinciMenu<%- menuIndex %>-<%- submenuIndex%>">
                         <div class="sb-nav-link-icon"><i class="<%- subItem.icon %>"></i></div>
                         <%- subItem.text %>
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -23,7 +23,7 @@
                         <nav class="sb-sidenav-menu-nested nav">
                             <% subItem.nodes.forEach((sub2Item,submenu2Index)=>{ %>
                             <% if(sub2Item.visible){ %>
-                            <a class="nav-link" href="<%- sub2Item.path %>">
+                            <a class="nav-link <% if(typeof sub2Item.module!='undefined'){%> module-<%=sub2Item.module%><%}%>" href="<%- sub2Item.path %>">
                                 <div class="sb-nav-link-icon"><i class="<%- sub2Item.icon %>"></i></div>
                                 <%- sub2Item.text %>
                             </a>
@@ -32,7 +32,7 @@
                         </nav>
                     </div>
                     <% } else { %>
-                    <a class="nav-link" href="<%- subItem.path %>">
+                    <a class="nav-link " href="<%- subItem.path %>">
                         <div class="sb-nav-link-icon"><i class="<%- subItem.icon %>"></i></div>
                         <%- subItem.text %>
                     </a>
@@ -42,7 +42,7 @@
                 </nav>
             </div>
             <% } else { %>
-            <a class="nav-link" href="<%- mainItem.path %>">
+            <a class="nav-link <% if(typeof mainItem.module!='undefined'){%> module-<%=mainItem.module%><%}%>" href="<%- mainItem.path %>">
                 <div class="sb-nav-link-icon"><i class="<%- mainItem.icon %>"></i></div>
                 <%- mainItem.text %>
             </a>
@@ -92,6 +92,32 @@
         }
         return url;
     }
+
+    var modules={}
+	if(localStorage.getItem('activeDbModules')!=null){
+		modules=JSON.parse(localStorage.getItem('activeDbModules'));
+	}
+
+
+	for(let key in modules){
+		var elements=document.getElementsByClassName('module-' + key);
+		if(typeof modules[key]== 'boolean'){
+			if(modules[key]==false){
+				for(var i=0;i<elements.length;i++){
+					if(elements[i])
+					if(elements[i].style!=undefined) elements[i].style.display='none';
+				}
+			}else{
+				if(elements[i])
+				if(elements[i].style!=undefined) elements[i].style.display='flex';
+			}
+		}else{
+			for(var i=0;i<elements.length;i++){
+				if(elements[i])
+				if(elements[i].style!=undefined) elements[i].style.display='none';
+			}
+		}
+	}
 
     function cboEasyDateUrlParams(value){
         var date1=new Date();

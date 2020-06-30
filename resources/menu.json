@@ -58,12 +58,19 @@
 		{"text":"Muhasebe fişleri",		"path":"/general/closed-module",		"icon":"fas fa-parachute-box", "visible":true, "nodes":[]},
 		{"text":"Hesap hareketleri",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]}
 	]},
-	{"text":"Fatura",	"module":"eInvoice",				"path":"",		"icon":"fas fa-file-invoice", "visible":true, 
+	{"text":"E-Fatura",	"module":"eInvoice",				"path":"",		"icon":"fas fa-file-invoice", "visible":true, 
 		"nodes":[
 			{"text":"Yeni Fatura Oluştur",			"path":"/invoice/outbox/addnew",		"icon":"fas fa-file-alt", "visible":true, "nodes":[]},
 			{"text":"Gelen Kutusu",					"path":"/invoice/inbox",		"icon":"fas fa-table", "visible":true , "nodes":[]},
 			{"text":"Giden Kutusu",					"path":"/invoice/outbox",		"icon":"fas fa-table", "visible":true, "nodes":[]},
 			{"text":"E-Fatura Mükellefleri",		"path":"/invoice/gib-users",	"icon":"fas fa-users", "visible":true, "nodes":[]}
+		]
+	},
+	{"text":"E-Irsaliye",	"module":"eDespatch",				"path":"",		"icon":"fas fa-file-invoice", "visible":true, 
+		"nodes":[
+			{"text":"Gelen Kutusu",					"path":"/despatch/inbox",		"icon":"fas fa-envelope-open-text", "visible":true , "nodes":[]},
+			{"text":"Giden Kutusu",					"path":"/despatch/outbox",		"icon":"fas fa-paper-plane", "visible":true, "nodes":[]},
+			{"text":"E-Irsaliye Mükellefleri",		"path":"/invoice/gib-users",	"icon":"fas fa-users", "visible":true, "nodes":[]}
 		]
 	},
 	{"text":"E-Defter",	"module":"eLedger",				"path":"/general/closed-module", "icon":"fas fa-table", 	"visible":true, "nodes":[]},

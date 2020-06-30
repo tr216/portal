@@ -30,17 +30,23 @@
     </div>
 </form>
 
-<% if(typeof message!='undefined') { %>
-    <% if(message!='') { %>
-<div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-danger" role="alert">
-            <%=message %>
-        </div>
-    </div>
+
+<div class="btn-toolbar mt-2 border p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
+	<div class="btn-group mr-2" role="group" aria-label="">
+		<button type="button" class="btn btn-primary" id="btnSendToGib">Gönder</button>
+	</div>
+	<div class="btn-group mr-2" role="group" aria-label="">
+		<button type="button" class="btn btn-info" id="btnSendToArchive">Arşive Kaldır</button>
+	</div>
+	
+	<div class="btn-group mr-2" role="group" aria-label="">
+		<button type="button" class="btn btn-info" id="btnImportFromFile" title="File Importar kullanarak iceri al"><i class="fas fa-file-import"></i> Dosyadan İçeri Al</button>
+		<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.csv,*.txt" multiple>
+	</div>
+	
 </div>
-    <% } %>
-<% } %>
+
+<%- formError(message) %>
 
 <%- partial('../../_common/components/grid2',{
     fields:[

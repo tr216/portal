@@ -42,13 +42,13 @@ module.exports = function(req,res,callback){
 		deleteItem(req,res,data,callback);
 		break;
 		default:
-			data.filter=getFilter(data.filter,req);
-			getList(req,res,data,callback);
+			data.filter=getFilter(data.filter,req,res)
+			if(data.filter)
+				getList(req,res,data,callback);
 		break;
 	}
 	
 }
-
 function getList(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
 		api.get('/' + req.query.db + '/pos-device-zreports',req,data.filter,(err,resp)=>{

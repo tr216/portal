@@ -22,8 +22,9 @@ module.exports = function(req,res,callback){
 		case 'view': return edit(req,res,data,callback);
 		case 'delete': return deleteItem(req,res,data,callback);
 		default:
-			data.filter=getFilter(data.filter,req);
-			getList(req,res,data,callback);
+			data.filter=getFilter(data.filter,req,res)
+			if(req.method!='POST') 
+				getList(req,res,data,callback)
 		break;
 	}
 	

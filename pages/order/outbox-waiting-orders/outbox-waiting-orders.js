@@ -19,8 +19,9 @@ module.exports = function(req,res,callback){
 	switch((req.params.func || '')){
 		
 		default:
-			data.filter=getFilter(data.filter,req);
-			getList(req,res,data,callback);
+			data.filter=getFilter(data.filter,req,res)
+			if(req.method!='POST') 
+				getList(req,res,data,callback)
 		break;
 	}
 

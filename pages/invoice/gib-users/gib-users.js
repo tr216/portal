@@ -16,7 +16,7 @@ module.exports = function(req,res,callback){
 		return callback({code:'PAGE ERROR',message:'Sayfa yok.'});
 	}
 	
-	data.filter=getFilter(data.filter,req);
+	data.filter=getFilter(data.filter,req,res)
 	getList(req,res,data,callback);
 		
 }

@@ -17,7 +17,7 @@
   <script type="text/javascript">
     $(document).ready(function(){
       <% if(typeof databases!='undefined') { %>
-          var databases=<%- JSON.stringify(databases) %>;
+          var databases=JSON.parse(decodeURIComponent("<%-  encodeURIComponent(JSON.stringify(databases)) %>"));
       <% }else{ %>
           var databases=[];
       <% } %>
@@ -38,6 +38,17 @@
           localStorage.removeItem('activeDbName');
           localStorage.removeItem('activeDbModules');
         }
+      }else{
+      	console.log('buraya geldi')
+      	var dd=databases.some(value=>{return value._id==localStorage.getItem('activeDb')?value:false})
+      	if(dd){
+      		if(dd.owner!=undefined){
+	            if(dd.owner.modules!=undefined){
+	              localStorage.setItem('activeDbModules',JSON.stringify(dd.owner.modules));
+	            }
+	        }
+      	}
+
       }
       window.location.href=window.location.origin + '/general/dashboard?db=' + (localStorage.getItem('activeDb') || '') + '&sid=<%=sid%>';
 

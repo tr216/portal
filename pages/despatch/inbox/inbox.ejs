@@ -30,17 +30,16 @@
     </div>
 </form>
 
-<% if(typeof message!='undefined') { %>
-    <% if(message!='') { %>
-<div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-danger" role="alert">
-            <%=message %>
-        </div>
-    </div>
+<div class="btn-toolbar mt-2 border p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-primary" id="btnApprove">Onayla</button>
+  </div>
+  <div class="btn-group mr-2" role="group" aria-label="">
+    <button type="button" class="btn btn-danger" id="btnDecline">Kısmi Onay/Ret</button>
+  </div>
 </div>
-    <% } %>
-<% } %>
+
+<%- formError(message) %>
 
 <%- partial('../../_common/components/grid2',{
     fields:[
