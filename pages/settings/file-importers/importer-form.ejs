@@ -71,7 +71,7 @@
 			</div>
 			<div class="card-body">
 				<div class="form-group">
-					<textarea name="fileData" id="fileData" class="form-control code-area" rows="10"><%=form.fileData%></textarea>
+					<textarea name="fileData" id="fileData" class="form-control code-area" rows="15" style="height: 70vh;"><%=form.fileData%></textarea>
 					<img id="fileImage" src="">
 					<a id="fileOther" href="" download="<%- (typeof form['fileFullName']!='undefined')?form['fileFullName']:''%>"><i class="fa fa-<%- (typeof fileIcon!='undefined')?fileIcon:'file'%>"></i> <%- (typeof form['fileFullName']!='undefined')?form['fileFullName']:''%></a>
 				</div>

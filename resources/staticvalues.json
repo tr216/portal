@@ -960,8 +960,10 @@
 	],
 	"deliveryTerms":["","FOB","CIF","DAF","EXW","FCA","FAS","CFR","CPT","CIP","DES","DEQ","DDU","DDP"],
 	"fileImporterTypes":[
-		{"text":"e-invoice","value":"e-invoice"},
-		{"text":"e-ledger","value":"e-ledger"},
+		{"text":"Fatura","value":"invoice"},
+		{"text":"e-Fatura","value":"e-invoice"},
+		{"text":"Irsaliye","value":"despatch"},
+		{"text":"e-defter","value":"e-ledger"},
 		{"text":"zreport","value":"zreport"}
 	],
 	"printDesignModuleList":[

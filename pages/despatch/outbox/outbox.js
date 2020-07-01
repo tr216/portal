@@ -2,6 +2,7 @@ module.exports = function(req,res,callback){
 	var data={
 		eIntegratorList:[],
 		locationList:[],
+		printDesignList:[],
 		docStatusTypes:Array.from(staticValues.despatchStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
 		docProfileIdList:Array.from(staticValues.despatchProfileIdList),
@@ -30,8 +31,8 @@ module.exports = function(req,res,callback){
 		case 'pdf':
 			pdf(req,res,data,callback);
 		break;
-		case 'errors':
-			showErrors(req,res,data,callback);
+		case 'logs':
+			logs(req,res,data,callback);
 		break;
 		default:
 			data.filter=getFilter(data.filter,req,res)
@@ -42,14 +43,14 @@ module.exports = function(req,res,callback){
 
 }
 
-function showErrors(req,res,data,callback){
+function logs(req,res,data,callback){
 	var _id=req.params.id || '';
 	if(_id.trim()==''){
 		data['message']='id bos olamaz';
 		callback(null,data);
 		return;
 	}
-	api.get('/' + req.query.db + '/despatch/errors/' + _id,req,null,(err,resp)=>{
+	api.get('/' + req.query.db + '/despatch/despatch-logs/' + _id,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);

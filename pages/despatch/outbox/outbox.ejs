@@ -61,14 +61,103 @@
     editButton:true,
     deleteButton:true,
     selection:true,
+    printButton:{
+        path:'/despatch/despatch/{_id}',
+        printDesignList:printDesignList
+    },
     customButtons:[
-        {href:'javascript:popupCenter("/despatch/outbox/view/{_id}?db=' + db + '&sid=' + sid + '","Ön izleme","900","600");', text:'Goruntule',icon:'fas fa-search-plus'},
-        {href:'/despatch/outbox/pdf/{_id}?db=' + db + '&sid=' + sid, text:'Pdf',icon:'fas fa-file-pdf'}
+        {href:`javascript:popupCenter("/despatch/outbox/logs/{_id}?db=${db}&sid=${sid}","Loglar","900","600");`, text:'Log kayıtları',icon:'fas fa-clipboard-list'},
+        {href:`javascript:popupCenter("/despatch/outbox/view/{_id}?db=${db}&sid=${sid}","Loglar","900","600");`, text:'Pdf',icon:'fas fa-file-pdf'}
     ],
     deleteUrl:'/dbapi/despatch/despatch/{_id}?db='+db+'&sid=' + sid
 }) 
 %>
 
+
 <script type="text/javascript">
+	$(document).ready(function(){
+		
+		$("#btnImportFromFile").click(function() {
+			$("#fileUpload").trigger('click'); 
+	    });
+
+		$("#fileUpload").change(function() {
+			
+			var reader  = new FileReader();
+			var fileIndex=0;
+			var files=this.files;
+			var willBeSentFiles=[];
+			reader.addEventListener("load", function(){
+				
+				if(reader.result){
+					willBeSentFiles[willBeSentFiles.length-1].base64Data=reader.result.split('base64,')[1];
+				}
+				fileIndex++;
+				runReader();
+			});
+
+			function runReader(){
+				if(fileIndex>=files.length){
+					sendFileImport(willBeSentFiles);
+					return;
+				}
+				var file=files[fileIndex];
+				willBeSentFiles.push({name:file.name,modifiedDate:file.lastModifiedDate,size:file.size,base64Data:''});
+				reader.readAsDataURL(file);
+			}
+			
+			runReader();
+	    });
+
+		function sendFileImport(files){
+			if(files.length==0) 
+				return
+
+			if(!confirm(files.length + ' adet dosya iceri alinacaktir. Onayliyor musunuz?')) return;
+			$.ajax({
+				url:'/dbapi/despatch/importOutbox?db=<%=db%>&sid=<%=sid%>',
+				data:{fileImporter:'', files:files},
+				type:'POST',
+				success:function(result){
+					if(result.success){
+						//alert('Aktarim basladi.');
+						window.location.reload();
+					}else{
+						alert(result.error.message);
+					}
+				}
+			});
+		}
+
+		
+		$('#btnSendToGib').click(function(){
+			var data={list:[]};
+			$(".checkSingle").each(function() {
+				if(this.checked){
+					var satir=JSON.parse(decodeURIComponent(this.value));
+					if(satir.doc.despatchStatus=='Draft' || satir.doc.despatchStatus=='Error'){
+						data.list.push({_id:satir._id, ID:satir.doc.ID});
+					}
+					
+				}
+			});
+			if(data.list.length==0)  return alert('Kayit secilmemis!\nDurum: Taslak + Hata');
+			if(!confirm(data.list.length + ' adet irsaliye GIB e gonderilecektir. Onayliyor musunuz?')) return;
+			$.ajax({
+				url:'/dbapi/despatch/sendToGib?db=<%=db%>&sid=<%=sid%>',
+				data:data,
+				type:'POST',
+				success:function(result){
+					if(result.success){
+						//alert('Aktarim basladi.');
+						window.location.reload();
+					}else{
+						alert(result.error.code + '\n' + result.error.message);
+					}
+				}
+			});
+			
+		});
+	});
 
 </script>
