@@ -1,4 +1,3 @@
-
 var request=require('request');
 
 exports.get=(endpoint,req, params, callback)=>{
@@ -270,4 +269,3 @@ function sessionId2Token(req,cb){
 		}
 	});
 }
-

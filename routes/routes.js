@@ -531,6 +531,7 @@ function localApi(req,res,dbApi){
 			}
 		}
 	}
+	
 	switch(req.method){
 		
 		case 'POST':

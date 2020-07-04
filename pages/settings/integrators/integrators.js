@@ -97,7 +97,8 @@ module.exports = function(req,res,callback){
 				}
 			},
 			isDefault:false,
-			passive:false
+			passive:false,
+			party:clone(dbType.partyType)
 		},
 		list:[],
 		filter:{}

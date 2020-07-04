@@ -1,2 +1,2 @@
- global.api = require('./api/api');
+global.api = require('./api/api');
  

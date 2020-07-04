@@ -7,7 +7,45 @@
                 eIntegrator:{caption:'GIB Entegrator', type:'lookup' , lookup:eIntegrators   ,required:true},
                 name:{caption:'Adı(nick name)', type:'textbox'    ,required:true},
                 isDefault:{caption:'Varsayilan?', type:'checkbox'    },
-                passive:{caption:'Pasif?', type:'checkbox'    }
+                passive:{caption:'Pasif?', type:'checkbox'    },
+                partyType  :{caption:'Şirket/Firma Bilgileriniz',         type:'label',
+		            formControls:{
+			            name:{ name:'party.partyName.name.value', caption:'Şirket adınız', type:'textbox'    ,required:true},
+			            firstName:{ name:'party.person.firstName.value', caption:'Kişi Adı', type:'textbox'},
+			            familyName:{ name:'party.person.familyName.value', caption:'Kişi Soyadı', type:'textbox'},
+			            vknTckn:{ name:'party.partyIdentification.0.ID.value', caption:'Vergi No/Tckn', type:'textbox'},
+			            vknTcknSchemaID:{ name:'party.partyIdentification.0.ID.attr.schemeID', caption:'Tür', type:'lookup', lookup:[{text:'VKN',value:'VKN'},{text:'TCKN',value:'TCKN'}]},
+			            vergiDairesi:{ name:'party.partyTaxScheme.taxScheme.name.value', caption:'Vergi Dairesi', type:'textbox'},
+			            websiteURI:{ name:'party.websiteURI.value', caption:'Web sitesi', type:'textbox'},
+			            iletisim:{
+			                caption:'İletişim',
+			                type:'label',
+			                formControls:{
+			                    telephone:{ name:'party.contact.telephone.value', caption:'Telefon', type:'textbox'},
+			                    telefax:{ name:'party.contact.telefax.value', caption:'Fax', type:'textbox'},
+			                    electronicMail:{ name:'party.contact.electronicMail.value', caption:'E-Mail', type:'textbox'}
+			                }
+			            },
+			            adresBilgileri:{
+			                caption:'Adres bilgisi',
+			                type:'label',
+			                formControls:{
+			                    streetName:{ name:'party.postalAddress.streetName.value', caption:'Cadde/Sokak', type:'textbox'},
+			                    buildingNumber:{ name:'party.postalAddress.buildingNumber.value', caption:'Cadde Sokak Kapı No', type:'textbox'},
+			                    buildingName:{ name:'party.postalAddress.buildingName.value', caption:'Bina/Site adı', type:'textbox'},
+			                    blockName:{ name:'party.postalAddress.blockName.value', caption:'Blok adı', type:'textbox'},
+			                    room:{ name:'party.postalAddress.room.value', caption:'Daire', type:'textbox'},
+			                    citySubdivisionName:{ name:'party.postalAddress.citySubdivisionName.value', caption:'Mahalle/Semt', type:'textbox'},
+			                    district:{ name:'party.postalAddress.district.value', caption:'İlçe', type:'textbox'},
+			                    cityName:{ name:'party.postalAddress.cityName.value', caption:'Şehir', type:'textbox'},
+			                    region:{ name:'party.postalAddress.region.value', caption:'Bölge', type:'textbox'},
+			                    identificationCode:{ name:'party.postalAddress.country.identificationCode.value', caption:'Ülke Kodu', type:'lookup', lookup:staticValues.countryList},
+			                    country:{ name:'party.postalAddress.country.name.value', caption:'Ülke', type:'textbox'},
+			                    postbox:{ name:'party.postalAddress.postbox.value', caption:'Posta Kutusu', type:'textbox'}
+			                }
+			            }
+			        }
+		        }
             }
         },
         {

@@ -941,16 +941,7 @@ function reloadLineGrid(){
 
         var cell12=newRow.insertCell(12);
         cell12.classList.add('text-center');
-        cell12.innerHTML='<div class="form-inline"><div class="dropdown">' + 
-                '<button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Satır işlemleri"><i class="fas fa-table"></i> </button>' +
-                '<div class="dropdown-menu">' +
-                    '<a class="dropdown-item" href="javascript:alert(' + index + ');">GTIP NO Boş olanları geçmişe bakarak doldur</a>'+
-                    '<a class="dropdown-item" href="javascript:alert(' + index + ');">Ihracat bilgilerini alt satirlara kopyala</a>'+
-                    '<div class="dropdown-divider"></div>' +
-                    '<a class="dropdown-item" href="javascript:alert(' + index + ');">qwerty yeni satir islemi eklenecek</a>'+
-                '</div>' + 
-            '</div>'+
-            '<a href="javascript:editLine(' + index + ');"  class="btn btn-primary btn-sm fas fa-edit ml-2" title="Düzenle"></a>' +
+        cell12.innerHTML='<a href="javascript:editLine(' + index + ');"  class="btn btn-primary btn-sm fas fa-edit ml-2" title="Düzenle"></a>' +
             '<a href="javascript:removeLine(' + index + ');"  class="btn btn-danger btn-sm fas fa-trash-alt ml-2" title="Sil"></a></div>';
     });
     
