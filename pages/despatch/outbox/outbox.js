@@ -135,9 +135,9 @@ function addnew(req,res,data,callback){
 
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.getFile('/' + req.query.db + '/despatch/despatchView/' + _id,req,null,(err,resp)=>{
+	api.get('/' + req.query.db + '/despatch/view/' + _id,req,null,(err,resp)=>{
 		if(!err){
-			data['html']=resp;
+			data['html']=resp.data;
 			callback(null,data);
 		}else{
 			data['html']=err.message;

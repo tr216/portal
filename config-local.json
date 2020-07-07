@@ -1,6 +1,6 @@
 {
   "httpserver":{
-  	"port" : 4000
+  	"port" : 5100
   },
   "api": {
   	"url":"http://localhost:3500/api/v1"

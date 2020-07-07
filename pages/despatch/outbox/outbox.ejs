@@ -61,13 +61,12 @@
     editButton:true,
     deleteButton:true,
     selection:true,
-    printButton:{
-        path:'/despatch/despatch/{_id}',
-        printDesignList:printDesignList
-    },
+    //printButton:{
+    //    path:'/despatch/despatch/{_id}',
+    //    printDesignList:printDesignList
+    //},
     customButtons:[
-        {href:`javascript:popupCenter("/despatch/outbox/logs/{_id}?db=${db}&sid=${sid}","Loglar","900","600");`, text:'Log kayıtları',icon:'fas fa-clipboard-list'},
-        {href:`javascript:popupCenter("/despatch/outbox/view/{_id}?db=${db}&sid=${sid}","Loglar","900","600");`, text:'Pdf',icon:'fas fa-file-pdf'}
+        {href:`javascript:popupCenter("/despatch/outbox/view/{_id}?db=${db}&sid=${sid}","Yazdir","900","600");`, title:'Yazdir',icon:'fas fa-print'}
     ],
     deleteUrl:'/dbapi/despatch/despatch/{_id}?db='+db+'&sid=' + sid
 }) 
@@ -140,20 +139,27 @@
 					}
 					
 				}
-			});
-			if(data.list.length==0)  return alert('Kayit secilmemis!\nDurum: Taslak + Hata');
-			if(!confirm(data.list.length + ' adet irsaliye GIB e gonderilecektir. Onayliyor musunuz?')) return;
+			})
+			if(data.list.length==0)
+				return alert('Kayit secilmemis!\nDurum: Taslak + Hata')
+			if(!confirm(data.list.length + ' adet irsaliye GIB e gonderilecektir. Onayliyor musunuz?'))
+				return
 			$.ajax({
-				url:'/dbapi/despatch/sendToGib?db=<%=db%>&sid=<%=sid%>',
+				url:'/dbapi/despatch/send?db=<%=db%>&sid=<%=sid%>',
 				data:data,
 				type:'POST',
 				success:function(result){
+					console.log('result:',result)
 					if(result.success){
-						//alert('Aktarim basladi.');
+						alert(result.data)
 						window.location.reload();
 					}else{
 						alert(result.error.code + '\n' + result.error.message);
 					}
+				},
+				error:function(err){
+					console.log(err)
+					alert(err)
 				}
 			});
 			

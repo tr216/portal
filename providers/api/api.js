@@ -6,7 +6,6 @@ exports.get=(endpoint,req, params, callback)=>{
 			var url=config.api.url + endpoint;
 			
 			var headers = {
-			    // 'Content-Type':'application/json; charset=utf-8',
 			    'token':token
 			}
 			
@@ -64,7 +63,6 @@ exports.getFile=(endpoint,req, params, callback)=>{
 			var url=config.api.url + endpoint;
 			
 			var headers = {
-			    // 'Content-Type':'application/json; charset=utf-8',
 			    'token':token
 			}
 

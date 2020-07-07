@@ -1,6 +1,6 @@
 {
   "httpserver":{
-  	"port" : 4000
+  	"port" : 5100
   },
   "mongodb": {
     "address":"mongodb://localhost:27017/portalweb"

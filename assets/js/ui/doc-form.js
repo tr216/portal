@@ -817,9 +817,12 @@ function reloadLineGrid(){
         
         var itemName=line.item.name.value + '<br>';
         itemName +='<span class="text-primary">';
-        if(line.item.buyersItemIdentification.ID.value!='') itemName +=line.item.buyersItemIdentification.ID.value + ' ';
-        if(line.item.sellersItemIdentification.ID.value!='') itemName +=line.item.sellersItemIdentification.ID.value + ' ';
+        line.item=Object.assign({},dbType.itemType,line.item)
+
+		if(line.item.buyersItemIdentification.ID.value!='') itemName +=line.item.buyersItemIdentification.ID.value + ' ';
+    	if(line.item.sellersItemIdentification.ID.value!='') itemName +=line.item.sellersItemIdentification.ID.value + ' ';
         if(line.item.manufacturersItemIdentification.ID.value!='') itemName +=line.item.manufacturersItemIdentification.ID.value + ' ';
+        
         itemName +='</span>';
         newRow.insertCell(2).innerHTML = itemName;
 
