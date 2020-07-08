@@ -1,33 +1,33 @@
-var fs = require('fs');
+var fs = require('fs')
 
 global.pages = {};
 
 
 module.exports = function(app){
 	
-	var DIR = path_module.join(__dirname, '../pages');
+	var DIR = path_module.join(__dirname, '../pages')
 
 
-	loadPages(DIR);
+	loadPages(DIR)
 
 	app.all("/*", function(req, res, next) {
 
-		res.header("Access-Control-Allow-Origin", "*");
-		res.header('Access-Control-Allow-Credentials', 'true');
-		res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization,   Content-Type, Content-Length, X-Requested-With , x-access-token, token");
-		res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-		return next();
-	});
+		res.header("Access-Control-Allow-Origin", "*")
+		res.header('Access-Control-Allow-Credentials', 'true')
+		res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization,   Content-Type, Content-Length, X-Requested-With , x-access-token, token")
+		res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS")
+		return next()
+	})
 
 
 	app.all('/', function(req, res) {
 		if(req.query.sid){
-			res.redirect('/general/dashboard?db=' + req.query.db + '&sid=' + req.query.sid);
+			res.redirect('/general/dashboard?db=' + req.query.db + '&sid=' + req.query.sid)
 		}else{
-			res.redirect('/general/login');
+			res.redirect('/general/login')
 		}
 		
-	});
+	})
 	
  	app.all('/passport', function(req, res) {
  		var data={
@@ -38,58 +38,58 @@ module.exports = function(app){
 	 		if(!err){
 	 			data['databases']=resp.data;
 	 		}
-	 		res.render('_common/activedb', data);
-	 	});
+	 		res.render('_common/activedb', data)
+	 	})
 		
-	});
+	})
 
 
 
 	app.all('/logout', function(req, res) {
-	   res.redirect('/general/login');
-	});
+	   res.redirect('/general/login')
+	})
 
 	app.all('/api/:func', function(req, res) {
-		localApi(req,res,false);
-	});
+		localApi(req,res,false)
+	})
 	app.all('/api/:func/:param1', function(req, res) {
-		localApi(req,res,false);
-	});
+		localApi(req,res,false)
+	})
 
 	app.all('/api/:func/:param1/:param2', function(req, res) {
-		localApi(req,res,false);
-	});
+		localApi(req,res,false)
+	})
 
 	app.all('/api/:func/:param1/:param2/:param3', function(req, res) {
-		localApi(req,res,false);
-	});
+		localApi(req,res,false)
+	})
 
 	app.all('/dbapi/:func', function(req, res) {
 
-		localApi(req,res,true);
-	});
+		localApi(req,res,true)
+	})
 	app.all('/dbapi/:func/:param1', function(req, res) {
-		localApi(req,res,true);
-	});
+		localApi(req,res,true)
+	})
 
 	app.all('/dbapi/:func/:param1/:param2', function(req, res) {
-		localApi(req,res,true);
-	});
+		localApi(req,res,true)
+	})
 
 	app.all('/dbapi/:func/:param1/:param2/:param3', function(req, res) {
-		localApi(req,res,true);
-	});
+		localApi(req,res,true)
+	})
 
 	
 	app.all('/:module/:page', userInfo, function(req, res) {
 		if(pages[req.params.module]==undefined){
-			errorPage(req,res,null);
+			errorPage(req,res,null)
 		}else if (pages[req.params.module][req.params.page] == undefined) {
-			errorPage(req,res,null);
+			errorPage(req,res,null)
 		} else {
 			pages[req.params.module][req.params.page].code(req, res, (err,data)=>{
 				if(!data) data={};
-				data=setGeneralParams(req,data);
+				data=setGeneralParams(req,data)
 
 				if(req.params.isSysUser){
 					data['leftMenu']=sysmenu;
@@ -101,27 +101,27 @@ module.exports = function(app){
 				if(!err){
 					res.render(pages[req.params.module][req.params.page].view['index'], data,(err,html)=>{
 						if(!err){
-							res.status(200).send(applyLanguage(req,html));
+							res.status(200).send(applyLanguage(req,html))
 						}else{
-							errorPage(req,res,err);
+							errorPage(req,res,err)
 						}
-					});
+					})
 				}else{
-					errorPage(req,res,err);
+					errorPage(req,res,err)
 				}
-			});
+			})
 		}
-	});
+	})
 
 	app.all('/:module/:page/:func', userInfo,  function(req, res) {
 		if(pages[req.params.module]==undefined){
-			errorPage(req,res,null);
+			errorPage(req,res,null)
 		}else if (pages[req.params.module][req.params.page] == undefined) {
-			errorPage(req,res,null);
+			errorPage(req,res,null)
 		} else {
 			pages[req.params.module][req.params.page].code(req, res, (err,data,view)=>{
 				if(!data) data={};
-				data=setGeneralParams(req,data);
+				data=setGeneralParams(req,data)
 				
 				switch(req.params.func){
 					case 'addnew':
@@ -148,44 +148,44 @@ module.exports = function(app){
 				if(!err){
 					
 					if(view){
-						res.render(view, data);
+						res.render(view, data)
 					}else{
 						if(pages[req.params.module][req.params.page].view[req.params.func]){
 							res.render(pages[req.params.module][req.params.page].view[req.params.func], data,(err,html)=>{
 								if(!err){
-									res.status(200).send(applyLanguage(req,html));
+									res.status(200).send(applyLanguage(req,html))
 								}else{
-									errorPage(req,res,err);
+									errorPage(req,res,err)
 								}
-							});
+							})
 						}else{
 							res.render(pages[req.params.module][req.params.page].view['index'], data,(err,html)=>{
 								if(!err){
-									res.status(200).send(applyLanguage(req,html));
+									res.status(200).send(applyLanguage(req,html))
 								}else{
-									errorPage(req,res,err);
+									errorPage(req,res,err)
 								}
-							});
+							})
 						}
 						
 					}
 					
 				}else{
-					errorPage(req,res,err);
+					errorPage(req,res,err)
 				}
-			});
+			})
 		}
-	});
+	})
 	
 	app.all('/:module/:page/:func/:id', userInfo, function(req, res) {
 		if(pages[req.params.module]==undefined){
-			errorPage(req,res,null);
+			errorPage(req,res,null)
 		}else if (pages[req.params.module][req.params.page] == undefined) {
-			errorPage(req,res,null);
+			errorPage(req,res,null)
 		} else {
 			pages[req.params.module][req.params.page].code(req, res, (err,data,view)=>{
 				if(!data) data={};
-				data=setGeneralParams(req,data);
+				data=setGeneralParams(req,data)
 				
 				switch(req.params.func){
 					case 'addnew':
@@ -211,37 +211,37 @@ module.exports = function(app){
 
 				if(!err){
 					if(view){
-						res.render(view, data);
+						res.render(view, data)
 					}else{
 						if(pages[req.params.module][req.params.page].view[req.params.func]){
 							res.render(pages[req.params.module][req.params.page].view[req.params.func], data,(err,html)=>{
 								if(!err){
-									res.status(200).send(applyLanguage(req,html));
+									res.status(200).send(applyLanguage(req,html))
 								}else{
-									errorPage(req,res,err);
+									errorPage(req,res,err)
 								}
-							});
+							})
 						}else{
 							res.render(pages[req.params.module][req.params.page].view['index'], data,(err,html)=>{
 								if(!err){
-									res.status(200).send(applyLanguage(req,html));
+									res.status(200).send(applyLanguage(req,html))
 								}else{
-									errorPage(req,res,err);
+									errorPage(req,res,err)
 								}
-							});
+							})
 						}
 					}
 				}else{
-					errorPage(req,res,err);
+					errorPage(req,res,err)
 				}
-			});
+			})
 		}
-	});
+	})
 }
 
 
 function applyLanguage(req,html){
-	return html.replaceAll('{{','').replaceAll('}}','');
+	return html.replaceAll('{{','').replaceAll('}}','')
 }
 
 function setGeneralParams(req,data){
@@ -264,10 +264,10 @@ function setGeneralParams(req,data){
 		}
 	}
 	if(current.substr(-1)=='&'){
-		current=current.substr(0,current.length-1);
+		current=current.substr(0,current.length-1)
 	}
 	if(filter.substr(-1)=='&'){
-		filter=filter.substr(0,filter.length-1);
+		filter=filter.substr(0,filter.length-1)
 	}
 	
 	data['currentUrl']=current;
@@ -312,7 +312,7 @@ function setGeneralParams(req,data){
 	if(data.recordCount==undefined) data['recordCount']=0;
 
 	data['icon']=getMenuIcon(req,current2)
-	data['pageTitle']=getMenuText(req,current2);
+	data['pageTitle']=getMenuText(req,current2)
 	data['pagePath']='/' + req.params.module + '/' + req.params.page;
 				
 	data['title']=data['pageTitle'];
@@ -335,18 +335,18 @@ var userInfo = function (req, res, next) {
 					req.params.role=doc.role;
 					req.params.isSysUser=doc.isSysUser;
 					req.params.isMember=doc.isMember;
-					return next();
+					return next()
 				}else{
-					errorPage(req,res,{code:'503',message:'Yetkisiz giris'});
-					//res.redirect('/error?code=403&message=Authentication Failed&sid=' + req.query.sid);
+					errorPage(req,res,{code:'503',message:'Yetkisiz giris'})
+					//res.redirect('/error?code=403&message=Authentication Failed&sid=' + req.query.sid)
 				}
 			}else{
-				//res.redirect('/error?code=403&message=Authentication Failed&sid=' + req.query.sid);
-				errorPage(req,res,{code:err.name,message:err.message});
+				//res.redirect('/error?code=403&message=Authentication Failed&sid=' + req.query.sid)
+				errorPage(req,res,{code:err.name,message:err.message})
 			}
-		});
+		})
 	}else{
-		return next();
+		return next()
 	}
 }
 
@@ -354,34 +354,34 @@ function errorPage(req,res,err){
 	var data={};
 	data['title']='Hata';
 	data['err']=err || {code:404,message:'Sayfa bulunamadi'};
-	data=setGeneralParams(req,data);
+	data=setGeneralParams(req,data)
 	data['leftMenu']=[];
-	res.render('general/error/error', data);
+	res.render('general/error/error', data)
 }
 
 function loadPages(folder) {
-	var modules=fs.readdirSync(folder);
+	var modules=fs.readdirSync(folder)
 	
 	for(var m=0;m<modules.length;m++){
 		if(fs.statSync(path_module.join(folder,modules[m])).isDirectory() && modules[m][0]!='_'){
-			var pageFolders=fs.readdirSync(path_module.join(folder,modules[m]));
+			var pageFolders=fs.readdirSync(path_module.join(folder,modules[m]))
 			
 			pages[modules[m]]={}
 			for (var i = 0; i < pageFolders.length; i++) {
-				var pageDir = path_module.join(folder,modules[m], pageFolders[i]);
+				var pageDir = path_module.join(folder,modules[m], pageFolders[i])
 				if(fs.statSync(pageDir).isDirectory() && pageFolders[i][0]!='_'){
 					
-					var pageFiles=fs.readdirSync(pageDir);
+					var pageFiles=fs.readdirSync(pageDir)
 
 					if(pageFiles.findIndex((x)=>{return x==pageFolders[i]+'.js'})>-1){
-						var requireFileName=path_module.join(pageDir, pageFolders[i] + '.js');
+						var requireFileName=path_module.join(pageDir, pageFolders[i] + '.js')
 						pages[modules[m]][pageFolders[i]]={};
 
-						pages[modules[m]][pageFolders[i]]['code']=require(requireFileName);
+						pages[modules[m]][pageFolders[i]]['code']=require(requireFileName)
 						if(pageFiles.findIndex((x)=>{return x==pageFolders[i]+'.ejs'})>-1){
 							pages[modules[m]][pageFolders[i]]['view']=[];
-							pages[modules[m]][pageFolders[i]]['view']['index']=path_module.join(modules[m], pageFolders[i], pageFolders[i]);
-							var funcP= loadFunctionPages(pageDir,modules[m],pageFolders[i]);
+							pages[modules[m]][pageFolders[i]]['view']['index']=path_module.join(modules[m], pageFolders[i], pageFolders[i])
+							var funcP= loadFunctionPages(pageDir,modules[m],pageFolders[i])
 							for(var k in funcP){
 								pages[modules[m]][pageFolders[i]]['view'][k]=funcP[k];
 								
@@ -396,16 +396,16 @@ function loadPages(folder) {
 }
 
 function loadFunctionPages(path,module,pageName){
-	var funcPageFiles=fs.readdirSync(path);
+	var funcPageFiles=fs.readdirSync(path)
 	var funcPages={};
 	for(var i=0;i<funcPageFiles.length;i++){
 		var s='';
 		if(funcPageFiles[i].substr(0,pageName.length)==pageName && funcPageFiles[i].length>(pageName+'.ejs').length){
-			s=funcPageFiles[i].substr(pageName.length,funcPageFiles[i].length-(pageName+'').length);
+			s=funcPageFiles[i].substr(pageName.length,funcPageFiles[i].length-(pageName+'').length)
 			if(s.substr(s.length-4)=='.ejs'){
 				if(s[0]=='-' && s.length>1){
-					s=s.substr(1,s.length-5);
-					funcPages[s]=path_module.join(module,pageName,funcPageFiles[i]);
+					s=s.substr(1,s.length-5)
+					funcPages[s]=path_module.join(module,pageName,funcPageFiles[i])
 				}
 			}
 		}
@@ -417,16 +417,16 @@ function loadFunctionPages(path,module,pageName){
 }
 
 function loadFunctionSystemPages(path,pageName){
-	var funcPageFiles=fs.readdirSync(path);
+	var funcPageFiles=fs.readdirSync(path)
 	var funcPages={};
 	for(var i=0;i<funcPageFiles.length;i++){
 		var s='';
 		if(funcPageFiles[i].substr(0,pageName.length)==pageName && funcPageFiles[i].length>(pageName+'.ejs').length){
-			s=funcPageFiles[i].substr(pageName.length,funcPageFiles[i].length-(pageName+'').length);
+			s=funcPageFiles[i].substr(pageName.length,funcPageFiles[i].length-(pageName+'').length)
 			if(s.substr(s.length-4)=='.ejs'){
 				if(s[0]=='-' && s.length>1){
-					s=s.substr(1,s.length-5);
-					funcPages[s]=path_module.join('system',pageName,funcPageFiles[i]);
+					s=s.substr(1,s.length-5)
+					funcPages[s]=path_module.join('system',pageName,funcPageFiles[i])
 				}
 			}
 		}
@@ -461,7 +461,7 @@ function getMenuItem(req, urlPath){
 	}else{
 		m0=menu;
 	}
-	console.log('urlPath:',urlPath);
+	console.log('urlPath:',urlPath)
 	m0.forEach((m1)=>{
 		
 		if(m1.path){
@@ -497,16 +497,16 @@ function getMenuItem(req, urlPath){
 												menuItem.icon=m4.icon;
 												return;
 											}
-										});
+										})
 									}
 								}
-							});
+							})
 						}
 					}
-				});
+				})
 			}
 		}
-	});
+	})
 	return menuItem;
 
 }
@@ -517,45 +517,66 @@ function localApi(req,res,dbApi){
 		if(req.query.db) dburl='/' + req.query.db + '';
 	}
 
-	var enpoint='';
+	var endpoint='';
 	if(req.params.func){
-		enpoint = '/' + req.params.func;
+		endpoint = '/' + req.params.func;
 		if(req.params.param1){
-			enpoint =enpoint + '/' + req.params.param1;
+			endpoint =endpoint + '/' + req.params.param1;
 			if(req.params.param2){
-				enpoint =enpoint + '/' + req.params.param2;
+				endpoint =endpoint + '/' + req.params.param2;
 				if(req.params.param3){
-					enpoint =enpoint + '/' + req.params.param3;
+					endpoint =endpoint + '/' + req.params.param3;
 					
 				}
 			}
 		}
 	}
-	
+	console.log(`localApi.endpoint:`,dburl+endpoint)
+	console.log('req.method',req.method)
+
 	switch(req.method){
 		
 		case 'POST':
-			api.post(dburl + enpoint,req,req.body,(err,resp)=>{
-				res.status(200).json(resp);
-			});
+			api.post(dburl + endpoint,req,req.body,(err,resp)=>{
+				if(err){
+					res.status(200).json({success:false,error:err})
+				}else{
+					res.status(200).json(resp)
+				}
+				
+			})
 		break;
 
 		case 'PUT':
-			api.put(dburl + enpoint,req,req.body,(err,resp)=>{
-				res.status(200).json(resp);
-			});
+			api.put(dburl + endpoint,req,req.body,(err,resp)=>{
+				if(err){
+					res.status(200).json({success:false,error:err})
+				}else{
+					res.status(200).json(resp)
+				}
+			})
 		break;
 
 		case 'DELETE':
-			api.delete(dburl + enpoint,req,(err,resp)=>{
-				res.status(200).json(resp);
-			});
+			api.delete(dburl + endpoint,req,(err,resp)=>{
+				console.log(`typeof resp routes.js:`,typeof resp)
+				console.log(`typeof err routes.js:`,typeof err)
+				if(err){
+					res.status(200).json({success:false,error:err})
+				}else{
+					res.status(200).json(resp)
+				}
+			})
 		break;
 
 		default: //default GET
-			api.get(dburl + enpoint,req,req.query,(err,resp)=>{
-				res.status(200).json(resp);
-			});
+			api.get(dburl + endpoint,req,req.query,(err,resp)=>{
+				if(err){
+					res.status(200).json({success:false,error:err})
+				}else{
+					res.status(200).json(resp)
+				}
+			})
 			
 			
 		break;

@@ -1,4 +1,4 @@
-var request=require('request');
+var request=require('request')
 
 exports.get=(endpoint,req, params, callback)=>{
 	sessionId2Token(req,(err,token)=>{
@@ -31,30 +31,30 @@ exports.get=(endpoint,req, params, callback)=>{
 
 			request(options, function (error, response, body) {
 					if(error){
-						return callback({code: 'API_ERROR_GET', message: error.message});
+						return callback({code: 'API_ERROR_GET', message: error.message})
 					}
 			    	try{
-		    			var resp=JSON.parse(body);
+		    			var resp=JSON.parse(body)
 		    			if(resp.success){
-		    				callback(null,resp);
+		    				callback(null,resp)
 		    			}else{
-		    				callback((resp.error || body));
+		    				callback((resp.error || body))
 		    			}
 			    		
 			    	}catch(e){
 			    		if(!e.hasOwnProperty('message')){
-			    			callback({code: 'API_ERROR_GET', message: e.message});
+			    			callback({code: 'API_ERROR_GET', message: e.message})
 			    		}else{
-			    			callback({code: 'API_ERROR_GET', message: e});
+			    			callback({code: 'API_ERROR_GET', message: e})
 			    		}
 			    		
 			    	}
 			    
-			});
+			})
 		}else{
-			callback(err);
+			callback(err)
 		}
-	});
+	})
 }
 
 exports.getFile=(endpoint,req, params, callback)=>{
@@ -87,15 +87,15 @@ exports.getFile=(endpoint,req, params, callback)=>{
 
 			request(options, function (error, response, body) {
 					if(error){
-						return callback({code: 'API_ERROR_GET', message: error.message});
+						return callback({code: 'API_ERROR_GET', message: error.message})
 					}
-			    	return callback(null,body);
+			    	return callback(null,body)
 			    
-			});
+			})
 		}else{
-			callback(err);
+			callback(err)
 		}
-	});
+	})
 }
 
 exports.downloadFile=(endpoint,req, res, params, callback)=>{
@@ -104,15 +104,15 @@ exports.downloadFile=(endpoint,req, res, params, callback)=>{
 			var url=config.api.url + endpoint + '?token=' + token;
 			if(params){
 				for(var key in params){
-					url = url + '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+					url = url + '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
 				}
 			}
-			res.redirect(url);
-			callback(null);
+			res.redirect(url)
+			callback(null)
 		}else{
-			callback(err);
+			callback(err)
 		}
-	});
+	})
 }
 
 exports.post=(endpoint,req, jsonData, callback)=>{
@@ -137,33 +137,33 @@ exports.post=(endpoint,req, jsonData, callback)=>{
 			    if (!error && response.statusCode==200) {
 			    	if(typeof body=='string'){
 			    		try{
-							var resp=JSON.parse(body);
+							var resp=JSON.parse(body)
 							if(resp.success){
-								callback(null,resp);
+								callback(null,resp)
 							}else{
-								callback(resp.error);
+								callback(resp.error)
 							}
 				    		
 				    	}catch(e){
 				    		if(!e.hasOwnProperty('message')){
-				    			callback({code: 'API_ERROR_DELETE', message: e.message});
+				    			callback({code: 'API_ERROR_DELETE', message: e.message})
 				    		}else{
-				    			callback({code: 'API_ERROR_DELETE', message: e});
+				    			callback({code: 'API_ERROR_DELETE', message: e})
 				    		}
 				    		
 				    	}
 			    	}else{
-			    		callback(null,body);
+			    		callback(null,body)
 			    	}
 			        
 			    }else{
-			    	callback(error?error:body.error,body);
+			    	callback(error?error:body.error,body)
 			    }
-			});
+			})
 		}else{
-			callback(err);
+			callback(err)
 		}
-	});
+	})
 
 }
 
@@ -186,16 +186,16 @@ exports.put=(endpoint,req, jsonData, callback)=>{
 			}
 			request(options, function (error, response, body) {
 			    if (!error && response.statusCode==200) {
-			        callback(null,body);
+			        callback(null,body)
 			    }else{
-			    	callback(error?error:body.error,body);
+			    	callback(error?error:body.error,body)
 			    }
-			});
+			})
 		}else{
-			console.log('err:',err);
-			callback(err);
+			console.log('err:',err)
+			callback(err)
 		}
-	});
+	})
 }
 
 exports.delete=(endpoint,req, callback)=>{
@@ -216,54 +216,70 @@ exports.delete=(endpoint,req, callback)=>{
 			}
 
 			request(options, function (error, response, body) {
-			    if(error){
-					return callback({code: 'API_ERROR_DELETE', message: error.message});
-				}
-		    	try{
 
-					var resp=JSON.parse(body);
-					if(resp.success){
-						callback(null,resp);
-					}else{
-						callback(resp.error);
-					}
-		    		
-		    	}catch(e){
-		    		if(!e.hasOwnProperty('message')){
-		    			callback({code: 'API_ERROR_DELETE', message: e.message});
-		    		}else{
-		    			callback({code: 'API_ERROR_DELETE', message: e});
-		    		}
-		    		
-		    	}
-			});
+				if (!error && response.statusCode==200) {
+			        try{
+			        	var resp={}
+			        	if(typeof body=='string'){
+			        		resp=JSON.parse(body)
+			        	}else{
+			        		resp=body
+			        	}
+						console.log(`api.js delete typeof resp:`,typeof resp)
+						if(resp.success){
+							callback(null,resp)
+						}else{
+							callback(resp.error)
+						}
+			    		
+			    	}catch(e){
+			    		if(!e.hasOwnProperty('message')){
+			    			callback({code: 'API_ERROR_DELETE', message: e.message})
+			    		}else{
+			    			callback({code: 'API_ERROR_DELETE', message: e})
+			    		}
+			    	}
+			    }else{
+			    	if(error!=undefined){
+			    		if(typeof error=='string')
+			    			error=JSON.parse(error)
+			    		callback(error)
+			    	}else{
+			    		if(typeof body=='string')
+			    			body=JSON.parse(body)
+			    		callback(body.error)
+			    	}
+			    	
+			    }
+		    	
+			})
 		}else{
-			callback(err);
+			callback(err)
 		}
-	});
+	})
 }
 
 function sessionId2Token(req,cb){
-	if(req.query.sid==undefined) return cb(null,'');
+	if(req.query.sid==undefined) return cb(null,'')
 	db.sessions.findOne({_id:req.query.sid},(err,doc)=>{
 		if(!err){
 			if(doc!=null){
-				var userAgent=req.headers['user-agent'] || '';
-				var IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
+				var userAgent=req.headers['user-agent'] || ''
+				var IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || ''
 
-				// if(userAgent!=doc.userAgent) return cb({code:'WRONT_AGENT',message:'Yanlis userAgent'});
+				// if(userAgent!=doc.userAgent) return cb({code:'WRONT_AGENT',message:'Yanlis userAgent'})
 				
-				if(IP!=doc.ip) return cb({code:'WRONT_IP',message:'Yanlis IP'});
-				doc.lastOnline=new Date();
+				if(IP!=doc.ip) return cb({code:'WRONT_IP',message:'Yanlis IP'})
+				doc.lastOnline=new Date()
 				doc.save((err,doc2)=>{
-					cb(null,doc.token);
-				});
+					cb(null,doc.token)
+				})
 				
 			}else{
-				cb({code:'RECORD_NOT_FOUND',message:'sessionId bulunamadi!'});
+				cb({code:'RECORD_NOT_FOUND',message:'sessionId bulunamadi!'})
 			}
 		}else{
-			cb({code:err.name,message:err.message});
+			cb({code:err.name,message:err.message})
 		}
-	});
+	})
 }

@@ -504,11 +504,18 @@
             url:url,
             type:'DELETE',
             success:function(result){
+            	console.log(`result:`,result)
+            	console.log(`type of result:`,typeof result)
                 if(result.success){
                     window.location.reload();
                 }else{
+
                     alert('Hata:' + result.error.message);
                 }
+            },
+            error:function(err){
+            	console.log(`error:`,err)
+            	alert(err)
             }
         });
         // localStorage.setItem('returnUrl',window.location.href);

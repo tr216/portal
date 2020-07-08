@@ -1,16 +1,14 @@
 {
-  "name": "node-sbadmin",
+  "name": "portal.tr216",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "bower install",
-    "test": "nodemon ./bin/www",
-    "start": "node ./bin/www"
+    "test": "nodemon ./app.js",
+    "start": "node ./app.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "*",
     "body-parser": "~1.12.0",
-    "bower": "^1.7.7",
     "cluster": "^0.7.7",
     "colors": "^1.2.1",
     "connect-flash": "*",
