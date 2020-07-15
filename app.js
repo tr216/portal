@@ -1,7 +1,6 @@
 require('./eventlog.js');
 
 var express = require('express');
-var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -9,7 +8,7 @@ var bodyParser = require('body-parser');
 var engine = require('ejs-locals')
 var errorHandler = require('errorhandler');
 
-global.path_module = require('path');
+global.path = require('path');
 global.fs = require('fs');
 global.moment = require('moment');
 

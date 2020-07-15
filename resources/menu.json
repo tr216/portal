@@ -60,9 +60,8 @@
 	]},
 	{"text":"E-Fatura",	"module":"eInvoice",				"path":"",		"icon":"fas fa-file-invoice", "visible":true, 
 		"nodes":[
-			{"text":"Yeni Fatura Oluştur",			"path":"/invoice/outbox/addnew",		"icon":"fas fa-file-alt", "visible":true, "nodes":[]},
-			{"text":"Gelen Kutusu",					"path":"/invoice/inbox",		"icon":"fas fa-table", "visible":true , "nodes":[]},
-			{"text":"Giden Kutusu",					"path":"/invoice/outbox",		"icon":"fas fa-table", "visible":true, "nodes":[]},
+			{"text":"Gelen Kutusu",					"path":"/invoice/inbox",		"icon":"fas fa-envelope-open-text", "visible":true , "nodes":[]},
+			{"text":"Giden Kutusu",					"path":"/invoice/outbox",		"icon":"fas fa-paper-plane", "visible":true, "nodes":[]},
 			{"text":"E-Fatura Mükellefleri",		"path":"/invoice/gib-users",	"icon":"fas fa-users", "visible":true, "nodes":[]}
 		]
 	},
@@ -105,7 +104,12 @@
 	{"text":"System",		"path":"",					"icon":"fas fa-shield-alt", "visible":true,
 		"nodes":[
 			{"text":"Veri Ambarları",					"path":"/settings/dbdefine",		"icon":"fas fa-database", "visible":true, "nodes":[]},
-			{"text":"Görev Yöneticisi",					"path":"/system/tasks",		"icon":"fas fa-tasks", "visible":true, "nodes":[]}
+			{"text":"Görev Yöneticisi",					"path":"/system/tasks",		"icon":"fas fa-tasks", "visible":true, "nodes":[]},
+			{"text":"Developer console",	"module":"",				"path":"",		"icon":"fas fa-code", "visible":true, 
+				"nodes":[
+					{"text":"irsaliye xslt test",					"path":"/zzdeveloper/outbox",		"icon":"fas fa-paper-plane", "visible":true , "nodes":[]}
+				]
+			}
 		]
 	},
 	{"text":"",		"path":"",					"icon":"fas fa-", "visible":false,

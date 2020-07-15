@@ -69,7 +69,7 @@ function getList(req,res,data,callback){
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
-		api.get('/' + req.query.db + '/despatch/inboxDespatchList',req,data.filter,(err,resp)=>{
+		api.get('/' + req.query.db + '/despatch/inbox',req,data.filter,(err,resp)=>{
 			if(!err){
 				var docs=[];
 				resp.data.docs.forEach((e)=>{
@@ -136,9 +136,9 @@ function addnew(req,res,data,callback){
 
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.getFile('/' + req.query.db + '/despatch/despatchView/' + _id,req,null,(err,resp)=>{
+	api.get('/' + req.query.db + '/despatch/view/' + _id,req,null,(err,resp)=>{
 		if(!err){
-			data['html']=resp;
+			data['html']=resp.data;
 			callback(null,data);
 		}else{
 			data['html']=err.message;
@@ -168,7 +168,7 @@ function edit(req,res,data,callback){
 			
 			data.form['buyerCustomerParty']={party:(data.form.party || {})}
 			data.form.ioType=1;
-			api.put('/' + req.query.db + '/despatch/despatch/' + _id,req,data.form,(err,resp)=>{
+			api.put('/' + req.query.db + '/despatch/' + _id,req,data.form,(err,resp)=>{
 				if(!err){
 					res.redirect('/despatch/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
@@ -179,7 +179,7 @@ function edit(req,res,data,callback){
 			});
 		}else{
 			
-			api.get('/' + req.query.db + '/despatch/despatch/' + _id,req,null,(err,resp)=>{
+			api.get('/' + req.query.db + '/despatch/' + _id,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					callback(null,data);

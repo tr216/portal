@@ -28,6 +28,9 @@ module.exports = function(req,res,callback){
 		case 'view':
 			view(req,res,data,callback);
 		break;
+		case 'xslt':
+			xslt(req,res,data,callback);
+		break;
 		case 'pdf':
 			pdf(req,res,data,callback);
 		break;
@@ -43,6 +46,28 @@ module.exports = function(req,res,callback){
 
 }
 
+function xslt(req,res,data,callback){
+	var _id=req.params.id || ''
+	data.form._id=_id
+	callback(null,data)
+}
+
+
+function view(req,res,data,callback){
+	var _id=req.params.id || ''
+	data.form._id=_id
+	api.get('/' + req.query.db + '/despatch/view/' + _id,req,null,(err,resp)=>{
+		if(!err){
+			data['html']=resp.data;
+			callback(null,data);
+		}else{
+			data['html']=err.message;
+			callback(null,data);
+		}
+	});
+}
+
+
 function logs(req,res,data,callback){
 	var _id=req.params.id || '';
 	if(_id.trim()==''){
@@ -50,7 +75,7 @@ function logs(req,res,data,callback){
 		callback(null,data);
 		return;
 	}
-	api.get('/' + req.query.db + '/despatch/despatch-logs/' + _id,req,null,(err,resp)=>{
+	api.get('/' + req.query.db + '/despatch/logs/' + _id,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);
@@ -70,7 +95,7 @@ function getList(req,res,data,callback){
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
-		api.get('/' + req.query.db + '/despatch/outboxDespatchList',req,data.filter,(err,resp)=>{
+		api.get('/' + req.query.db + '/despatch/outbox',req,data.filter,(err,resp)=>{
 			if(!err){
 				var docs=[];
 				resp.data.docs.forEach((e)=>{
@@ -115,7 +140,7 @@ function addnew(req,res,data,callback){
 			data.form=Object.assign(data.form,req.body);
 			data.form['buyerCustomerParty']={party:(data.form.party || {})}
 			data.form.ioType=0;
-			api.post('/' + req.query.db + '/despatch/despatch',req,data.form,(err,resp)=>{
+			api.post('/' + req.query.db + '/despatch',req,data.form,(err,resp)=>{
 				if(!err){
 					res.redirect('/despatch/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
@@ -133,24 +158,6 @@ function addnew(req,res,data,callback){
 	});
 }
 
-function view(req,res,data,callback){
-	var _id=req.params.id || '';
-	api.get('/' + req.query.db + '/despatch/view/' + _id,req,null,(err,resp)=>{
-		if(!err){
-			data['html']=resp.data;
-			callback(null,data);
-		}else{
-			data['html']=err.message;
-			callback(null,data);
-		}
-	});
-}
-function pdf(req,res,data,callback){
-	var _id=req.params.id || '';
-	api.downloadFile('/' + req.query.db + '/despatch/despatchPdf/' + _id,req,res,null,(err,resp)=>{
-		return;
-	});
-}
 
 function edit(req,res,data,callback){
 	var _id=req.params.id || '';
@@ -166,7 +173,7 @@ function edit(req,res,data,callback){
 			console.log('data.form.location:',data.form.location);
 			data.form['buyerCustomerParty']={party:(data.form.party || {})}
 			data.form.ioType=0;
-			api.put('/' + req.query.db + '/despatch/despatch/' + _id,req,data.form,(err,resp)=>{
+			api.put('/' + req.query.db + '/despatch/' + _id,req,data.form,(err,resp)=>{
 				if(!err){
 					res.redirect('/despatch/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
 					return;
@@ -176,7 +183,7 @@ function edit(req,res,data,callback){
 				}
 			});
 		}else{
-			api.get('/' + req.query.db + '/despatch/despatch/' + _id,req,null,(err,resp)=>{
+			api.get('/' + req.query.db + '/despatch/' + _id,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					callback(null,data);
@@ -191,7 +198,7 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/despatch/despatch/' + _id,req,(err,resp)=>{
+	api.delete('/' + req.query.db + '/despatch/' + _id,req,(err,resp)=>{
 		if(!err){
 			res.redirect('/despatch/outbox?db=' + req.query.db +'&sid=' + req.query.sid);
 		}else{

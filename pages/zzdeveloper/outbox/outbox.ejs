@@ -53,7 +53,7 @@
         {name:'despatchNo',text:'İrs.No',type:'label', filterField:'despatchNo', filter:true,orderable:true},
         {name:'issueDate',text:'İrs. Tarihi',type:'label', orderable:true},
         {name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
-        {name:'despatchStatusHtml',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
+        {name:'despatchStatus',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
     ],
     caption:'İrsaliyeler',
     addNewButton:true,
@@ -66,24 +66,14 @@
     //    printDesignList:printDesignList
     //},
     customButtons:[
-        {href:`javascript:yazdir('{despatchStatus}','{_id}?db=${db}&sid=${sid}')`, title:'Yazdir',icon:'fas fa-print'}
+        {href:`javascript:popupCenter("/zzdeveloper/outbox/xslt/{_id}?db=${db}&sid=${sid}","Yazdir","900","600");`, title:'xslt',icon:'fas fa-print'}
     ],
     deleteUrl:'/dbapi/despatch/{_id}?db='+db+'&sid=' + sid
 }) 
 %>
 
+
 <script type="text/javascript">
-
-	function yazdir(despatchStatus,partialUrl){
-		var url=''
-		if(despatchStatus=='SentToGib' || despatchStatus=='Approved' || despatchStatus=='PartialApproved' || despatchStatus=='Declined' || despatchStatus=='WaitingForApprovement' ){
-			url=window.location.origin + '/despatch/outbox/view/' + partialUrl
-		}else{
-			url=window.location.origin + '/despatch/outbox/xslt/' + partialUrl
-		}
-		popupCenter(url,"Yazdir","900","600")
-	}
-
 	$(document).ready(function(){
 		
 		$("#btnImportFromFile").click(function() {

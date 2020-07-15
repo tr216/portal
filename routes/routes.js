@@ -1,11 +1,10 @@
-var fs = require('fs')
 
 global.pages = {};
 
 
 module.exports = function(app){
 	
-	var DIR = path_module.join(__dirname, '../pages')
+	var DIR = path.join(__dirname, '../pages')
 
 
 	loadPages(DIR)
@@ -64,6 +63,7 @@ module.exports = function(app){
 		localApi(req,res,false)
 	})
 
+
 	app.all('/dbapi/:func', function(req, res) {
 
 		localApi(req,res,true)
@@ -78,6 +78,19 @@ module.exports = function(app){
 
 	app.all('/dbapi/:func/:param1/:param2/:param3', function(req, res) {
 		localApi(req,res,true)
+	})
+
+	app.all('/downloadFile/:func', function(req, res) {
+		apiDownload(req,res)
+	})
+	app.all('/downloadFile/:func/:param1', function(req, res) {
+		apiDownload(req,res)
+	})
+	app.all('/downloadFile/:func/:param1/:param2', function(req, res) {
+		apiDownload(req,res)
+	})
+	app.all('/downloadFile/:func/:param1/:param2/:param3', function(req, res) {
+		apiDownload(req,res)
 	})
 
 	
@@ -313,6 +326,8 @@ function setGeneralParams(req,data){
 
 	data['icon']=getMenuIcon(req,current2)
 	data['pageTitle']=getMenuText(req,current2)
+	data['breadCrumbsTitle']=getBreadCrumbs(req,current2)
+
 	data['pagePath']='/' + req.params.module + '/' + req.params.page;
 				
 	data['title']=data['pageTitle'];
@@ -363,24 +378,24 @@ function loadPages(folder) {
 	var modules=fs.readdirSync(folder)
 	
 	for(var m=0;m<modules.length;m++){
-		if(fs.statSync(path_module.join(folder,modules[m])).isDirectory() && modules[m][0]!='_'){
-			var pageFolders=fs.readdirSync(path_module.join(folder,modules[m]))
+		if(fs.statSync(path.join(folder,modules[m])).isDirectory() && modules[m][0]!='_'){
+			var pageFolders=fs.readdirSync(path.join(folder,modules[m]))
 			
 			pages[modules[m]]={}
 			for (var i = 0; i < pageFolders.length; i++) {
-				var pageDir = path_module.join(folder,modules[m], pageFolders[i])
+				var pageDir = path.join(folder,modules[m], pageFolders[i])
 				if(fs.statSync(pageDir).isDirectory() && pageFolders[i][0]!='_'){
 					
 					var pageFiles=fs.readdirSync(pageDir)
 
 					if(pageFiles.findIndex((x)=>{return x==pageFolders[i]+'.js'})>-1){
-						var requireFileName=path_module.join(pageDir, pageFolders[i] + '.js')
+						var requireFileName=path.join(pageDir, pageFolders[i] + '.js')
 						pages[modules[m]][pageFolders[i]]={};
 
 						pages[modules[m]][pageFolders[i]]['code']=require(requireFileName)
 						if(pageFiles.findIndex((x)=>{return x==pageFolders[i]+'.ejs'})>-1){
 							pages[modules[m]][pageFolders[i]]['view']=[];
-							pages[modules[m]][pageFolders[i]]['view']['index']=path_module.join(modules[m], pageFolders[i], pageFolders[i])
+							pages[modules[m]][pageFolders[i]]['view']['index']=path.join(modules[m], pageFolders[i], pageFolders[i])
 							var funcP= loadFunctionPages(pageDir,modules[m],pageFolders[i])
 							for(var k in funcP){
 								pages[modules[m]][pageFolders[i]]['view'][k]=funcP[k];
@@ -395,8 +410,8 @@ function loadPages(folder) {
 	}
 }
 
-function loadFunctionPages(path,module,pageName){
-	var funcPageFiles=fs.readdirSync(path)
+function loadFunctionPages(folder,module,pageName){
+	var funcPageFiles=fs.readdirSync(folder)
 	var funcPages={};
 	for(var i=0;i<funcPageFiles.length;i++){
 		var s='';
@@ -405,7 +420,7 @@ function loadFunctionPages(path,module,pageName){
 			if(s.substr(s.length-4)=='.ejs'){
 				if(s[0]=='-' && s.length>1){
 					s=s.substr(1,s.length-5)
-					funcPages[s]=path_module.join(module,pageName,funcPageFiles[i])
+					funcPages[s]=path.join(module,pageName,funcPageFiles[i])
 				}
 			}
 		}
@@ -416,8 +431,8 @@ function loadFunctionPages(path,module,pageName){
 	return funcPages;
 }
 
-function loadFunctionSystemPages(path,pageName){
-	var funcPageFiles=fs.readdirSync(path)
+function loadFunctionSystemPages(folder,pageName){
+	var funcPageFiles=fs.readdirSync(folder)
 	var funcPages={};
 	for(var i=0;i<funcPageFiles.length;i++){
 		var s='';
@@ -426,7 +441,7 @@ function loadFunctionSystemPages(path,pageName){
 			if(s.substr(s.length-4)=='.ejs'){
 				if(s[0]=='-' && s.length>1){
 					s=s.substr(1,s.length-5)
-					funcPages[s]=path_module.join('system',pageName,funcPageFiles[i])
+					funcPages[s]=path.join('system',pageName,funcPageFiles[i])
 				}
 			}
 		}
@@ -461,7 +476,6 @@ function getMenuItem(req, urlPath){
 	}else{
 		m0=menu;
 	}
-	console.log('urlPath:',urlPath)
 	m0.forEach((m1)=>{
 		
 		if(m1.path){
@@ -511,6 +525,61 @@ function getMenuItem(req, urlPath){
 
 }
 
+function getBreadCrumbs(req,urlPath){
+	var menuItem={text:'',icon:''};
+	var m0=[];
+	if((req.params.isSysUser || false)){
+		m0=sysmenu;
+	}else{
+		m0=menu;
+	}
+	m0.forEach((m1)=>{
+		if(m1.path){
+			if(m1.path==urlPath.substr(0,m1.path.length)){
+				menuItem.text=m1.text;
+				menuItem.icon=m1.icon;
+				return;
+			}
+		}
+		if(m1.nodes){
+			if(m1.nodes.length>0){
+				m1.nodes.forEach((m2)=>{
+					if(m2.path){
+						if(m2.path==urlPath.substr(0,m2.path.length)){
+							menuItem.text=m2.text;
+							menuItem.icon=m2.icon;
+							return;
+						}
+					}
+					if(m2.nodes){
+						if(m2.nodes.length>0){
+							m2.nodes.forEach((m3)=>{
+								if(m3.path==urlPath.substr(0,m3.path.length)){
+									menuItem.text=m3.text;
+									menuItem.icon=m3.icon;
+									return;
+								}
+								if(m3.nodes){
+									if(m3.nodes.length>0){
+										m3.nodes.forEach((m4)=>{
+											if(m4.path==urlPath.substr(0,m4.path.length)){
+												menuItem.text=m4.text;
+												menuItem.icon=m4.icon;
+												return;
+											}
+										})
+									}
+								}
+							})
+						}
+					}
+				})
+			}
+		}
+	})
+	return menuItem;
+}
+
 function localApi(req,res,dbApi){
 	var dburl='';
 	if(dbApi){
@@ -531,8 +600,6 @@ function localApi(req,res,dbApi){
 			}
 		}
 	}
-	console.log(`localApi.endpoint:`,dburl+endpoint)
-	console.log('req.method',req.method)
 
 	switch(req.method){
 		
@@ -581,4 +648,32 @@ function localApi(req,res,dbApi){
 			
 		break;
 	}
+}
+
+function apiDownload(req,res){
+	var dburl='';
+	if(req.query.db) 
+		dburl+='/' + req.query.db + '';
+
+	var endpoint='';
+	if(req.params.func){
+		endpoint = '/' + req.params.func;
+		if(req.params.param1){
+			endpoint =endpoint + '/' + req.params.param1;
+			if(req.params.param2){
+				endpoint =endpoint + '/' + req.params.param2;
+				if(req.params.param3){
+					endpoint =endpoint + '/' + req.params.param3;
+					
+				}
+			}
+		}
+	}
+	console.log('dburl+endpoint:',dburl+endpoint)
+	//res.redirect(dburl+endpoint)
+	api.downloadFile(dburl+endpoint,req,res,{},(err)=>{
+		if(err){
+			res.status(403).send(err.message)
+		}
+	})
 }

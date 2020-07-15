@@ -98,6 +98,8 @@ exports.getFile=(endpoint,req, params, callback)=>{
 	})
 }
 
+var http = require('http')
+
 exports.downloadFile=(endpoint,req, res, params, callback)=>{
 	sessionId2Token(req,(err,token)=>{
 		if(!err){
@@ -107,8 +109,38 @@ exports.downloadFile=(endpoint,req, res, params, callback)=>{
 					url = url + '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
 				}
 			}
-			res.redirect(url)
-			callback(null)
+			var tmpFile=path.join(os.tmpdir(),`${uuid.v4()}.portal`)
+			
+			const file = fs.createWriteStream(tmpFile)
+
+		    const request = http.get(url, (response) => {
+		        // check if response is success
+		        if (response.statusCode !== 200) {
+		            return callback({code:'DOWNLOAD_ERROR',message:'Response status was ' + response.statusCode})
+		        }
+
+		        response.pipe(file)
+		    })
+			file.on('finish', () => {
+
+				file.close()
+				res.setHeader('Content-Type','application/xml; charset=UTF-8')
+				res.sendFile(tmpFile,{},(err)=>{
+					fs.unlinkSync(tmpFile)
+				})
+
+			});
+
+		    request.on('error', (err) => {
+		        fs.unlinkSync(tmpFile)
+
+		        return callback(err)
+		    });
+
+		    file.on('error', (err) => { 
+		        fs.unlinkSync(tmpFile)
+		        return callback(err)
+		    });
 		}else{
 			callback(err)
 		}
