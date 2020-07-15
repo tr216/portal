@@ -55,7 +55,9 @@
     deleteButton:true,
     selection:true,
     customButtons:[
-        {href:'javascript:popupCenter("/despatch/inbox/view/{_id}?db=' + db + '&sid=' + sid + '","Yazdir","900","600");', title:'Yazdir',icon:'fas fa-print'},
+        {inline:true, class:'btn-secondary', href:'javascript:popupCenter("/despatch/inbox/view/{_id}?db=' + db + '&sid=' + sid + '","Yazdir","900","600");', title:'Yazdir',icon:'fas fa-print'},
+        {inline:true, class:'btn-info', href:`javascript:approve('{despatchStatus}','{_id}?db=${db}&sid=${sid}')`, title:'Onayla',icon:'fas fa-check'}
+
     ],
     deleteUrl:'/dbapi/despatch/{_id}?db='+db+'&sid=' + sid
 }) 

@@ -79,6 +79,11 @@
     <div class="row m-0 border">
         <div class="col-12 pt-1 px-1">
             <div class="float-left form-inline m-0 p-0 mt-1 mb-1">
+                <% if(showFilterRow){ %>
+                <a class="btn btn-secondary btn-sm mr-3" data-toggle="collapse" href="#filterRow" role="button" aria-expanded="false" aria-controls="filterRow" title="Filtre satırını göster/gizle">
+                    <i class="fas fa-filter"></i>    
+                </a>
+                <% } %>
                 <% if(typeof pageSize!='undefined'){ %>
                 <div class="form-group" style="display: inline-block;">
                     Sayfada
@@ -144,14 +149,14 @@
                     <%});%>
                     <th class="text-center" style="width: <%=(ctrlCol*30)%>px;">
                          <% if(addNewButton){ %>
-                            <a href="javascript:addNewUrl('<% if(typeof addNewUrl!='undefined'){%><%=addNewUrl%><%}else{%><%=urlPath%>/addnew?db=<%=db%>&sid=<%=sid%><%}%>');" class="btn btn-primary far fa-plus-square"  title="Yeni Ekle"></a>
+                            <a href="javascript:addNewUrl('<% if(typeof addNewUrl!='undefined'){%><%=addNewUrl%><%}else{%><%=urlPath%>/addnew?db=<%=db%>&sid=<%=sid%><%}%>');" class="btn btn-primary  btn-sm far fa-plus-square"  title="Yeni Ekle"></a>
                         <% } else {%>
                         #
                         <% } %>
                     </th>
                 </tr>
                 <% if(showFilterRow){ %>
-                <tr>
+                <tr class="collapse" id="filterRow">
                     <% if(selection) { %>
                     <th class=""></th>
                     <% } %>
@@ -173,7 +178,9 @@
                         </th>
                     <%});%>
 
-                    <th></th>
+                    <th>
+                        
+                    </th>
                 </tr>
                 <% } %>
             </thead>
@@ -282,7 +289,7 @@
                             <% } else { %>
                             <div class="dropdown ml-1">
                                 <!-- <button class="btn btn-secondary btn-sm fas fa-caret-square-down" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Yazdır"></button> -->
-                                <button class="btn invoice-satis" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Yazdır"><i class="fas fa-print"></i></button>
+                                <button class="btn  btn-sm invoice-satis" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Yazdır"><i class="fas fa-print"></i></button>
                                 <div class="dropdown-menu">
                                     <% 
                                         console.log(printButton.printDesignList);
@@ -303,13 +310,13 @@
                                 
 
                             %>
-                            <a href="javascript:popupCenter('<%=viewUrlRow%>','İncele','900','600');" class="btn btn-info fa fa-eye ml-1" title="İncele"></a>
+                            <a href="javascript:popupCenter('<%=viewUrlRow%>','İncele','900','600');" class="btn btn-info  btn-sm fa fa-eye ml-1" title="İncele"></a>
                             <% } %>
                             <% if(editButton){ %>
-                            <a href="javascript:openUrl('<% if(typeof editUrl!='undefined'){%><%=editUrl%><%}else{%><%=urlPath%>/edit/{_id}?db=<%=db%>&sid=<%=sid%><%}%>','<%=item._id%>');" class="btn btn-primary fas fa-edit ml-1"  title="Düzenle"></a>
+                            <a href="javascript:openUrl('<% if(typeof editUrl!='undefined'){%><%=editUrl%><%}else{%><%=urlPath%>/edit/{_id}?db=<%=db%>&sid=<%=sid%><%}%>','<%=item._id%>');" class="btn btn-primary  btn-sm fas fa-edit ml-1"  title="Düzenle"></a>
                             <% } %>
                             <% if(deleteButton && typeof deleteUrl!='undefined'){ %>
-                            <a href="javascript:deleteItem('<%=deleteUrl%>','<%=item._id%>');"  class="btn btn-danger fas fa-trash-alt ml-1" title="Sil"></a>
+                            <a href="javascript:deleteItem('<%=deleteUrl%>','<%=item._id%>');"  class="btn btn-danger btn-sm fas fa-trash-alt ml-1" title="Sil"></a>
                             <% } %>
                             </div>
                         </td>
@@ -321,8 +328,8 @@
         <div class="col-12">
             <div class="float-left form-inline p-0 mt-1 mb-1 mr-4">
                 <div class="" style="display: inline-block;">
-                    <button class="btn btn-success" id="btnExportExcel" title="Excel Export"><i class="fas fa-file-excel"></i></button>
-                    <button class="btn btn-success" id="btnExportCsv" title="Csv Export"><i class="fas fa-file-csv"></i></button>
+                    <button class="btn btn-success btn-sm" id="btnExportExcel" title="Excel Export"><i class="fas fa-file-excel"></i></button>
+                    <button class="btn btn-success btn-sm" id="btnExportCsv" title="Csv Export"><i class="fas fa-file-csv"></i></button>
                 </div>
             </div>
             <div class="float-left form-inline m-0 p-0 mt-2 mb-1">
@@ -365,15 +372,11 @@
         </div>
     </div>
 </div>
-<style type="text/css">
-    <% if(showSearch==false){ %>
-    .dataTables_filter {
-        display: none; 
-    }
-    <% } %>
-</style>
+
 <script type="text/javascript">
     
+    
+
     $(document).ready(function(){
         $("#btnExportExcel").click(function () {
             fnExcelReport('grid1','<%=title%>');
@@ -395,6 +398,7 @@
         <% } %>
 
         <% if(showFilterRow) { 
+
             fields.forEach(function(field,index){
                 if(field.filter){
             %>
@@ -460,6 +464,19 @@
                     //window.location.reload();
                 }
             }
+            if(localStorage.getItem('grid-filterBtn<%- urlPath %>')=='true'){
+                $('#filterRow').collapse({toggle:true});
+            }else{
+                $('#filterRow').collapse({toggle:false});
+            }
+
+            $('#filterRow').on('hidden.bs.collapse', function () {
+                localStorage.setItem('grid-filterBtn<%- urlPath %>',false);
+            })
+            $('#filterRow').on('shown.bs.collapse', function () {
+                localStorage.setItem('grid-filterBtn<%- urlPath %>',true);
+            })
+
         <% } %>
        
     });
@@ -487,11 +504,18 @@
             url:url,
             type:'DELETE',
             success:function(result){
+            	console.log(`result:`,result)
+            	console.log(`type of result:`,typeof result)
                 if(result.success){
                     window.location.reload();
                 }else{
+
                     alert('Hata:' + result.error.message);
                 }
+            },
+            error:function(err){
+            	console.log(`error:`,err)
+            	alert(err)
             }
         });
         // localStorage.setItem('returnUrl',window.location.href);

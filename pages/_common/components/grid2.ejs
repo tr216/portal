@@ -1,8 +1,5 @@
 <%
 
-
-
-
     if(typeof dataSourceUrl=='undefined') dataSourceUrl='';
     if(typeof showSearch=='undefined') showSearch=false;
     if(typeof filter=='undefined') filter={};
@@ -18,16 +15,29 @@
     if(editButton) ctrlCol++;
     if(deleteButton) ctrlCol++;
     if(viewButton) ctrlCol++;
+    var inlineButtons=[]
+    var menuButtons=[]
+
     if(typeof customButtons!='undefined') {
         
         for(var i=0;i<customButtons.length;i++){
             
+            if(typeof customButtons[i].inline=='undefined') customButtons[i].inline=false;
             if(typeof customButtons[i].icon=='undefined') customButtons[i].icon='';
             if(typeof customButtons[i].text=='undefined') customButtons[i].text='';
             if(typeof customButtons[i].title=='undefined') customButtons[i].title='';
 
         }
-    }
+    }else{
+    	customButtons=[]
+	}
+	customButtons.forEach((e)=>{
+		if(e.inline){
+			inlineButtons.push(e)
+		}else{
+			menuButtons.push(e)
+		}
+	})
     if(addNewButton){
         if(typeof pageHeaderButtons=='undefined'){
             pageHeaderButtons={visible:true, addNew:true}
@@ -232,49 +242,49 @@
                         <%}); %>
                         <td class="text-nowrap">
                             <div style="display: inline-flex;">
-                            <% 
-                            if(typeof customButtons!='undefined') { 
-                                if(customButtons.length>1){
-                            %>
+                            <% if(menuButtons.length>1){ %>
                             <div class="dropdown ml-1">
 
                                 <button class="btn btn-secondary btn-sm fas fa-caret-square-down" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Diğer işlemler"></button>
                                 <div class="dropdown-menu">
                                 <% 
-                                    for(var i=0;i<customButtons.length;i++){ 
-                                    var target='_self';
-                                    var href='';
+                                	menuButtons.forEach((e)=>{
+                                    var target='_self'
+                                    var href=''
 
-                                    if(typeof customButtons[i].href!='undefined'){
-                                        
-                                        href=replaceUrlCurlyBracket(customButtons[i].href, item, fields);
-                                    }
-                                    if(typeof customButtons[i].target!='undefined') target=customButtons[i].target;
+                                    if(typeof e.href!='undefined')
+                                        href=replaceUrlCurlyBracket(e.href, item, fields)
+                                    
+                                    if(typeof e.target!='undefined')
+                                    	target=e.target
                                     
                                 %>
-                                    <a class="dropdown-item" href="<%=href%>" title="<%=customButtons[i].title%>" target="<%=target%>"><% if(customButtons[i].icon!=''){%><i class="<%=customButtons[i].icon%>"></i> <%}%><%=customButtons[i].text%></a>
-                                    <% if(typeof customButtons[i].divider!='undefined'){
-                                        if(customButtons[i].divider==true){ %>
-                                    <div class="dropdown-divider my-1"></div>
-                                        <% } %>
-                                    <% } %>
-                                
-
-                                    <% } %>
+                                    <a class="dropdown-item" href="<%=href%>" title="<%=e.title%>" target="<%=target%>"><% if(e.icon!=''){%><i class="<%=e.icon%>"></i> <%}%><%=e.text%></a>
+	                                    <% if(typeof e.divider!='undefined'){
+	                                        if(e.divider==true){ %>
+	                                    		<div class="dropdown-divider my-1"></div>
+	                                        <% } %>
+	                                    <% } %>
+                                    <% }) %>
                                 </div>
                             </div>
-                                <% }else if(customButtons.length==1){ 
-                                    var target='_self';
-                                    var href='';
-                                    if(typeof customButtons[0].href!='undefined'){
-                                        href=replaceUrlCurlyBracket(customButtons[0].href, item, fields);
-                                    } 
-                                    if(typeof customButtons[0].target!='undefined') target=customButtons[0].target;
-                                    if(customButtons[0].title=='') customButtons[0].title=customButtons[0].text;
-                                    %> 
-                                    <a class="btn btn-secondary btn-sm ml-1" href="<%=href%>" title="<%=customButtons[0].title%>" target="<%=target%>"><% if(customButtons[0].icon!=''){%><i class="<%=customButtons[0].icon%>"></i><% }else{ %><i class="fas fa-chess-board"></i><% } %><% if(customButtons[0].text!=''){%> <%=customButtons[0].text%><%}%></a>
-                                <% } %>
                             <% } %>
+
+                            <% inlineButtons.forEach((e)=>{ 
+                                var target='_self'
+                                var href=''
+                                if(typeof e.href!='undefined')
+                                    href=replaceUrlCurlyBracket(e.href, item, fields)
+                                
+                                if(typeof e.target!='undefined')
+                                	target=e.target
+
+                                if(e.title=='')
+                                	e.title=e.text
+                                %> 
+                                <a class="btn btn-sm ml-1 <% if(typeof e.class!='undefined'){%><%- e.class %><%} else {%>btn-secondary<%}%>" href="<%- href %>" title="<%- e.title %>" target="<%- target %>"><% if(e.icon!=''){%><i class="<%- e.icon %>"></i><% }else{ %><i class="fas fa-chess-board"></i><% } %><% if(e.text!=''){%> <%- e.text %><%}%></a>
+                            <% }) %>
+                            
                             <% 
                             if(typeof printButton!='undefined'){ 
                                if(typeof printButton.path!='undefined'){ 
