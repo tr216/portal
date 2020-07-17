@@ -19,15 +19,17 @@
     var menuButtons=[]
 
     if(typeof customButtons!='undefined') {
+        customButtons.forEach((e)=>{
+        	if(typeof e.inline=='undefined')
+        		e.inline=false
+            if(typeof e.icon=='undefined')
+            	e.icon=''
+            if(typeof e.text=='undefined')
+            	e.text=''
+            if(typeof e.title=='undefined')
+            	e.title=''
+    	})
         
-        for(var i=0;i<customButtons.length;i++){
-            
-            if(typeof customButtons[i].inline=='undefined') customButtons[i].inline=false;
-            if(typeof customButtons[i].icon=='undefined') customButtons[i].icon='';
-            if(typeof customButtons[i].text=='undefined') customButtons[i].text='';
-            if(typeof customButtons[i].title=='undefined') customButtons[i].title='';
-
-        }
     }else{
     	customButtons=[]
 	}
@@ -54,23 +56,39 @@
     var showFilterRow=false;
 
     fields.forEach((field)=>{
-        if(typeof field.type=='undefined') field['type']='label';
+        if(typeof field.visible=='undefined')
+        	field['visible']=true
 
-        if(typeof field.valueField=='undefined') field['valueField']='value';
-        if(typeof field.textField=='undefined') field['textField']='text';
-        if(typeof field.icon=='undefined') field['icon']='';
+        if(typeof field.type=='undefined')
+        	field['type']='label'
 
-        if(typeof field.path=='undefined') field['path']='';
-        if(typeof field.buttonTarget=='undefined') field['buttonTarget']='_self';
-        if(typeof field.filterField=='undefined') field.filterField=field.name;
-        if(typeof field.dontUseLookup=='undefined') field.dontUseLookup=false;
+        if(typeof field.valueField=='undefined')
+        	field['valueField']='value'
+
+        if(typeof field.textField=='undefined')
+        	field['textField']='text'
+
+        if(typeof field.icon=='undefined')
+        	field['icon']=''
+
+        if(typeof field.path=='undefined')
+        	field['path']=''
+
+        if(typeof field.buttonTarget=='undefined')
+        	field['buttonTarget']='_self'
+
+        if(typeof field.filterField=='undefined')
+        	field.filterField=field.name
+
+        if(typeof field.dontUseLookup=='undefined')
+        	field.dontUseLookup=false
 
         if(typeof field.filter!='undefined'){
             if(field.filter){
-                showFilterRow=true;
+                showFilterRow=true
             }
         }else{
-            field.filter=false;
+            field.filter=false
         }
 
         
@@ -121,8 +139,8 @@
                 <ul class="pagination mb-1">
                     <%  
                         if(page>1){ %>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=1&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">|&lt;</a></li>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(page-1)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&lt;</a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=1&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>">|&lt;</a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=${(page-1)}&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>">&lt;</a></li>
                         <% }
                         var sayfalar=pagination(page,pageCount);
                         for(var i=0;i<sayfalar.length;i++){
@@ -131,13 +149,13 @@
                             <% } else if(sayfalar[i]=='...') { %>
                             <li class="page-item"><span class="page-link">...</span></li>
                             <% } else { %>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=sayfalar[i]%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>"><%=sayfalar[i]%></a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=${sayfalar[i]}&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>"><%=sayfalar[i]%></a></li>
                             <% } %>
                         <% } %>
                         
                         <% if(page<pageCount) { %>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(page+1)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&gt;</a></li>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(pageCount)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&gt;|</a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=${(page+1)}&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>">&gt;</a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=${pageCount}&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>">&gt;|</a></li>
                         <% } %>
                     
                 </ul>
@@ -154,12 +172,14 @@
                     <th style="width: 30px;"><input type="checkbox" value="true" name="selectAll" id="selectAll"></th>
                     <% } %>
 
-                    <% fields.forEach(function(field){%> 
+                    <% fields.forEach(function(field){ %>
+                    	<% if(field.visible){ %>
                         <th class="" style="<% if(typeof field.width!='undefined'){%>width:<%=field.width%><%}%>"><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %><%=field.text%></th>
+                        <% } %>
                     <%});%>
                     <th class="text-center" style="width: <%=(ctrlCol*30)%>px;">
                          <% if(addNewButton){ %>
-                            <a href="javascript:addNewUrl('<% if(typeof addNewUrl!='undefined'){%><%=addNewUrl%><%}else{%><%=urlPath%>/addnew?db=<%=db%>&sid=<%=sid%><%}%>');" class="btn btn-primary  btn-sm far fa-plus-square"  title="Yeni Ekle"></a>
+                            <a href="javascript:addNewUrl('<% if(typeof addNewUrl!='undefined'){%><%=addNewUrl%><%}else{%><%=urlPath%>/addnew?db=<%- db %>&sid=<%- sid %>&mid=<%- mid %><%}%>');" class="btn btn-primary  btn-sm far fa-plus-square"  title="Yeni Ekle"></a>
                         <% } else {%>
                         #
                         <% } %>
@@ -171,8 +191,8 @@
                     <th class=""></th>
                     <% } %>
                     
-                    <% fields.forEach(function(field,index){%> 
-                        <!-- <th class="<% if(typeof field.width!='undefined'){%>ctrl-col-<%=field.width%><%}%> nowrap"> -->
+                    <% fields.forEach(function(field,index){%>
+                    	<% if(field.visible){ %>
                         <th class="" style="">
                             <% if(field.filter){ %>
                                 <% if(field.type=='lookup' && typeof field.lookupList!='undefined'){ %>
@@ -186,59 +206,56 @@
                                 <% } %>
                             <% } %>
                         </th>
+                        <% } %>
                     <%});%>
 
-                    <th>
-                        
-                    </th>
+                    <th></th>
                 </tr>
                 <% } %>
             </thead>
             <tbody>
                 <% 
-                    
-                    
-                    
                     list.forEach((item,index)=>{ %>
                     <tr>
                         <% if(selection && typeof item._id!='undefined') { %>
                         <td><input type="checkbox" class="checkSingle" value="<%- encodeURIComponent(JSON.stringify(item))%>" name="selected[<%=index%>]"  id="selected[<%=index%>]"></td>
                         <% } %>
                         <% fields.forEach((field)=>{
-                            var itemValue;
-                            if(typeof item!='undefined'){
-                                itemValue=getPropertyByKeyPath(item,field);
-                            }
-                            
-                            if(typeof itemValue=='undefined'){
-                                itemValue='';
-                            }
-                        %>
-                        <% if(typeof field.type!='undefined'){
-                                if(field.type=='lookup' && typeof field.lookupList!='undefined' && field.dontUseLookup==false ){
-                                    var bFound=false;
-                                    
-                                    field.lookupList.forEach(function(e){
-                                        if(e[field.valueField]==itemValue){
-                                            %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%=e[field.textField]%></td><%
-                                            bFound=true;
-                                            return;
-                                        }
-                                    });
-                                    if(bFound==false){
-                                        %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%=itemValue%></td><%
-                                    }
-                                }else if(field.type=='checkbox'){
-                                    %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}else{%>text-center"<%}%>><% if(itemValue){%>evet<%}else{%>hayır<%}%></td><%
-                                }else if(field.type=='button'){
-                                    %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}else{%>text-center"<%}%>><a href="<%=field.path%>/<%=item._id%>?db=<%=db%>&sid=<%=sid%>" class="btn btn-info" title="<%=field.text%>" <% if(typeof field.buttonTarget!='undefined'){%>target="<%=field.buttonTarget%>"<%}%>><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %></a></td><%
-                                }else{
-                                    %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%- mrutil.formatCol(itemValue,field) %></td><%
-                                }
-                            }else{
-                            %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%- mrutil.formatCol(itemValue,field)%></td>
-                            <%} %>
-                        
+                        	if(field.visible){
+	                            var itemValue;
+	                            if(typeof item!='undefined'){
+	                                itemValue=getPropertyByKeyPath(item,field);
+	                            }
+	                            
+	                            if(typeof itemValue=='undefined'){
+	                                itemValue='';
+	                            }
+	                        %>
+	                        	<% if(typeof field.type!='undefined'){
+	                                if(field.type=='lookup' && typeof field.lookupList!='undefined' && field.dontUseLookup==false ){
+	                                    var bFound=false;
+	                                    
+	                                    field.lookupList.forEach(function(e){
+	                                        if(e[field.valueField]==itemValue){
+	                                            %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%=e[field.textField]%></td><%
+	                                            bFound=true;
+	                                            return;
+	                                        }
+	                                    });
+	                                    if(bFound==false){
+	                                        %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%=itemValue%></td><%
+	                                    }
+	                                }else if(field.type=='checkbox'){
+	                                    %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}else{%>text-center"<%}%>><% if(itemValue){%>evet<%}else{%>hayır<%}%></td><%
+	                                }else if(field.type=='button'){
+	                                    %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}else{%>text-center"<%}%>><a href="<%=field.path%>/<%=item._id%>?db=<%- db %>&sid=<%- sid %>&mid=<%- mid %>" class="btn btn-info" title="<%=field.text%>" <% if(typeof field.buttonTarget!='undefined'){%>target="<%=field.buttonTarget%>"<%}%>><% if(field.icon!=''){%><i class="fa fa-<%=field.icon%>"></i> <% } %></a></td><%
+	                                }else{
+	                                    %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%- mrutil.formatCol(itemValue,field) %></td><%
+	                                }
+	                            }else{
+	                            %><td class="<% if(typeof field.class!='undefined'){%><%=field.class%><%}%>"><%- mrutil.formatCol(itemValue,field)%></td>
+	                            <%} %>
+                        	<% } %>
                         <%}); %>
                         <td class="text-nowrap">
                             <div style="display: inline-flex;">
@@ -323,7 +340,7 @@
                             <a href="javascript:popupCenter('<%=viewUrlRow%>','İncele','900','600');" class="btn btn-info  btn-sm fa fa-eye ml-1" title="İncele"></a>
                             <% } %>
                             <% if(editButton){ %>
-                            <a href="javascript:openUrl('<% if(typeof editUrl!='undefined'){%><%=editUrl%><%}else{%><%=urlPath%>/edit/{_id}?db=<%=db%>&sid=<%=sid%><%}%>','<%=item._id%>');" class="btn btn-primary  btn-sm fas fa-edit ml-1"  title="Düzenle"></a>
+                            <a href="javascript:openUrl('<% if(typeof editUrl!='undefined'){%><%=editUrl%><%}else{%><%=urlPath%>/edit/{_id}?db=<%- db %>&sid=<%- sid %>&mid=<%- mid %><%}%>','<%=item._id%>');" class="btn btn-primary  btn-sm fas fa-edit ml-1"  title="Düzenle"></a>
                             <% } %>
                             <% if(deleteButton && typeof deleteUrl!='undefined'){ %>
                             <a href="javascript:deleteItem('<%=deleteUrl%>','<%=item._id%>');"  class="btn btn-danger btn-sm fas fa-trash-alt ml-1" title="Sil"></a>
@@ -357,8 +374,8 @@
                 <ul class="pagination mb-1">
                     <%  
                         if(page>1){ %>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=1&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">|&lt;</a></li>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(page-1)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&lt;</a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=1&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>">|&lt;</a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=${(page-1)}&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>">&lt;</a></li>
                         <% }
                         var sayfalar=pagination(page,pageCount);
                         for(var i=0;i<sayfalar.length;i++){
@@ -367,13 +384,13 @@
                             <% } else if(sayfalar[i]=='...') { %>
                             <li class="page-item"><span class="page-link">...</span></li>
                             <% } else { %>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=sayfalar[i]%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>"><%=sayfalar[i]%></a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=${sayfalar[i]}&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>"><%=sayfalar[i]%></a></li>
                             <% } %>
                         <% } %>
                         
                         <% if(page<pageCount) { %>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(page+1)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&gt;</a></li>
-                            <li class="page-item"><a class="page-link" href="<%=urlPath%>?page=<%=(pageCount)%>&<%=filterString%>&db=<%=db%>&sid=<%=sid%>">&gt;|</a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=${(page+1)}&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>">&gt;</a></li>
+                            <li class="page-item"><a class="page-link" href="<%- `${urlPath}?page=${pageCount}&${filterString}&db=${db}&sid=${sid}&mid=${mid}` %>">&gt;|</a></li>
                         <% } %>
                 </ul>
             </div>
@@ -397,7 +414,7 @@
         $('#pageSize').change(function(e){
             savePageFilter('<%=urlPath%>','pageSize',$('#pageSize').val());
             var filterUrl='<% for(let k in filterObjects){%><%=k%>=<%=filterObjects[k]%>&<%}%>';
-            window.location.href='<%=urlPath%>?page=1&pageSize=' + $('#pageSize').val() + '&' + filterUrl + 'db=<%=db%>&sid=<%=sid%>';
+            window.location.href='<%=urlPath%>?page=1&pageSize=' + $('#pageSize').val() + '&' + filterUrl + 'db=<%- db %>&sid=<%- sid %>&mid=<%- mid %>';
         });
 
         <% if(selection){ %>

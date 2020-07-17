@@ -12,6 +12,7 @@ module.exports = function(req,res,callback){
 		list:[],
 		filter:{}
 	}
+
 	data.form.ioType=0;
 	
 	if(!req.query.db){
@@ -37,6 +38,9 @@ module.exports = function(req,res,callback){
 		case 'logs':
 			logs(req,res,data,callback);
 		break;
+		case 'errors':
+			errors(req,res,data,callback);
+		break;
 		default:
 			data.filter=getFilter(data.filter,req,res)
 			if(req.method!='POST') 
@@ -46,22 +50,20 @@ module.exports = function(req,res,callback){
 
 }
 
-function xslt(req,res,data,callback){
-	var _id=req.params.id || ''
-	data.form._id=_id
-	callback(null,data)
-}
 
-
-function view(req,res,data,callback){
-	var _id=req.params.id || ''
-	data.form._id=_id
-	api.get('/' + req.query.db + '/despatch/view/' + _id,req,null,(err,resp)=>{
+function errors(req,res,data,callback){
+	var _id=req.params.id || '';
+	if(_id.trim()==''){
+		data['message']='id bos olamaz';
+		callback(null,data);
+		return;
+	}
+	api.get('/' + req.query.db + '/despatch/errors/' + _id,req,null,(err,resp)=>{
 		if(!err){
-			data['html']=resp.data;
+			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);
 		}else{
-			data['html']=err.message;
+			data['message']=err.message;
 			callback(null,data);
 		}
 	});
@@ -86,6 +88,27 @@ function logs(req,res,data,callback){
 	});
 }
 
+
+function xslt(req,res,data,callback){
+	var _id=req.params.id || ''
+	data.form._id=_id
+	callback(null,data)
+}
+
+
+function view(req,res,data,callback){
+	var _id=req.params.id || ''
+	data.form._id=_id
+	api.get('/' + req.query.db + '/despatch/view/' + _id,req,null,(err,resp)=>{
+		if(!err){
+			data['html']=resp.data;
+			callback(null,data);
+		}else{
+			data['html']=err.message;
+			callback(null,data);
+		}
+	});
+}
 
 function getList(req,res,data,callback){
 	data.docStatusTypes.unshift({text:'-Tümü-',value:''});

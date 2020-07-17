@@ -835,6 +835,32 @@ const despatchAdviceType={
     lineCountNumeric:numberValueType,
     despatchLine:[], //despatchLineType
     localDocumentId: '',
+    despatchReceiptAdvice:''
+}
+
+
+const receiptAdviceInfoType={
+	despatch:'', //connected despatch
+    receiptAdviceNumber:idType,
+    localDocumentId:'',
+    inboxDespatchId:valueType,
+    note:valueType,
+    deliveryContactName:valueType, 
+    despatchContactName:valueType, 
+    actualDeliveryDate:valueType, 
+    receiptAdviceLineInfo:[] //receiptAdviceLineInfoType
+}
+
+
+const receiptAdviceLineInfoType={
+	lineId:idType,
+    timingComplaint:valueType,
+    receivedQuantity:numberValueType,
+    rejectedQuantity:numberValueType,
+    rejectReason:valueType,
+    rejectReasonCode:valueType,
+    shortQuantity:numberValueType,
+    oversupplyQuantity:numberValueType
 }
 
 exports.types = Object.freeze({
@@ -899,7 +925,9 @@ exports.types = Object.freeze({
     recipeProcessType:recipeProcessType,
     materialType:materialType,
     qualityControlType:qualityControlType,
-    despatchAdviceType:despatchAdviceType
+    despatchAdviceType:despatchAdviceType,
+    receiptAdviceInfoType:receiptAdviceInfoType,
+    receiptAdviceLineInfoType:receiptAdviceLineInfoType
 });
 
        

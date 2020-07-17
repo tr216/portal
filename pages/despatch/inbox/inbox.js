@@ -76,7 +76,9 @@ function getList(req,res,data,callback){
 					docs.push(docFormHelper.makeSimpleDespatchList(e));
 				});
 				resp.data.docs=docs;
+
 				data=mrutil.setGridData(data,resp);
+				// console.log(`data.list:`,data.list)
 			}
 			callback(null,data);
 		});

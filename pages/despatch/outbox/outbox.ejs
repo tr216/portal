@@ -84,6 +84,11 @@
 		popupCenter(url,"Yazdir","900","600")
 	}
 
+	function showErrors(_id){
+		var url=`${window.location.origin}/despatch/outbox/errors/${_id}?db=${q.db}&sid=${q.sid}`
+		popupCenter(url,"Hatalar","900","600")
+	}
+
 	$(document).ready(function(){
 		
 		$("#btnImportFromFile").click(function() {
@@ -159,7 +164,6 @@
 				data:data,
 				type:'POST',
 				success:function(result){
-					console.log('result:',result)
 					if(result.success){
 						alert(result.data)
 						window.location.reload();

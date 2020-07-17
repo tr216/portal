@@ -59,7 +59,6 @@ function getAllUrlParams(){
 }
 	
 var q=getAllUrlParams();
-console.log('function.js q.db:',q.db)
 
   
 function getUrlParameter(name) {
@@ -624,3 +623,4 @@ function generatePagination(page,pageCount,url){
     return nav;         
    
 }
+

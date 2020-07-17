@@ -40,7 +40,27 @@
             <div id="layoutSidenav_content">
                 <main id="main-container" style="display: none;">
                 	<div class="mt-2 mb-1 px-3" style="height: 36px">
-                    	<h1 class="float-left m-0 page-title font-weight-bold text-secondary" style="font-size:16pt"><% if(typeof icon!='undefined'){%><i class="<%=icon%>"></i> <%}%><%=title%><% if(funcTitle!=''){%> - <%=funcTitle%><% } %></h1>
+                    	<h1 class="float-left m-0 page-title text-secondary" style="font-size:16pt">
+                    		<% if(breadCrumbs.length>0){ %>
+                    			<!-- <i class="<%- breadCrumbs[breadCrumbs.length-1].icon %> text-primary"></i>  -->
+                    			<i class="<%- breadCrumbs[breadCrumbs.length-1].icon %>"></i> 
+                    			<% breadCrumbs.forEach((e,index)=>{ %>
+                    				<% if(index<breadCrumbs.length-1){ %>
+                    					<%- e.text %> \
+                    				<% } else { %>
+                    					<% if(funcTitle!=''){ %>
+                    						<%- e.text %>
+                    					<% } else { %>
+                    					<span class="font-weight-bold text-primary"><%- e.text %></span>
+                    					<% } %>
+                    				<% } %>
+                    			<% }) %>
+                    		<% }else{ %>
+	                    		<% if(typeof icon!='undefined'){%><i class="<%=icon%>"></i> 
+	                    		<%}%><%=title%>
+                    		<% } %>
+                    		<% if(funcTitle!=''){%> - <span class="font-weight-bold text-primary"><%=funcTitle%></span><% } %>
+                    	</h1>
                     	<div id="headerButtons" class="float-right" style="min-height: 26px;"></div>
                     </div>
                     <div class="clearfix"></div>
@@ -178,4 +198,12 @@
         a.style.display='initial';
         spinner.style.display='none';
     })
+
+    $('input').keypress(function(e) {
+		if(e.keyCode == 13){
+		    $(this).next('input').focus()
+		    e.preventDefault()
+		}
+	})
+
 </script>

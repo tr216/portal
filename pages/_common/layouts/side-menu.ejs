@@ -74,9 +74,9 @@
     function generateMenuLink(path){
         var url='';
         if(path.indexOf('?')>-1){
-            url=path + '&db=' + q.db + '&sid=' + q.sid;
+            url=path + '&db=' + q.db + '&sid=' + q.sid
         }else{
-            url=path + '?db=' + q.db + '&sid=' + q.sid;
+            url=path + '?db=' + q.db + '&sid=' + q.sid
         }
         
         if(localStorage.getItem(path + '_filter')){

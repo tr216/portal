@@ -595,19 +595,16 @@ function saveDocument(callback){
 		    }
 		break;
 		case 'despatch':
-			if(doc.ioType==0){
-		        doc.deliveryCustomerParty.party=party;
-		        if((doc._id || '')=='')
-			 			url='/dbapi/despatch/saveOutboxDespatch?db=' + db + '&sid=' + sid;
-			 		else
-			 			url='/dbapi/despatch/saveOutboxDespatch/' + doc._id  + '?db=' + db + '&sid=' + sid;
-		    }else{
-		        doc.despatchSupplierParty.party=party;
-		        if((doc._id || '')=='')
-				        url='/dbapi/despatch/saveInboxDespatch?db=' + db + '&sid=' + sid;
-				   	else
-				        url='/dbapi/despatch/saveInboxDespatch/' + doc._id  + '?db=' + db + '&sid=' + sid;
-		    }
+			if((doc._id || '')=='')
+			    url='/dbapi/despatch?db=' + db + '&sid=' + sid
+			else
+			    url='/dbapi/despatch/' + doc._id  + '?db=' + db + '&sid=' + sid
+			
+			if(doc.ioType==0)
+		        doc.deliveryCustomerParty.party=party
+		    else
+		        doc.despatchSupplierParty.party=party
+
 		break;
 	}
     

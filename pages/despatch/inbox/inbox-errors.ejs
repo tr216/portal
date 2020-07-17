@@ -6,27 +6,36 @@
     <div class="card-body p-1">
         <div class="row">
             <div class="form-group col-md-3">
-                <label for="" class="m-0">Fatura No</label>
+                <label for="" class="m-0">Belge No</label>
                 <input type="text" class="form-control" name="ID[value]" value="<%=form.ID.value%>" readonly="true">
             </div>
             <div class="form-group col-md-3">
                 <label for="" class="m-0">Tarih</label>
-                <input type="text" name="issueDate[value]" class="form-control" value="<%=form.issueDate.value %>">
+                <input type="text" name="issueDate[value]" class="form-control" value="<%=form.issueDate.value %>"  readonly="true">
             </div>
             <div class="form-group col-md-3">
                 <label for="" class="m-0">Senaryo</label>
-                <input type="text" name="profileId[value]" class="form-control" value="<%=form.profileId.value %>">
+                <input type="text" name="profileId[value]" class="form-control" value="<%=form.profileId.value %>"  readonly="true">
             </div>
             <div class="form-group col-md-3">
-                <label for="" class="m-0">Fatura Tipi</label>
-                <input type="text" name="invoiceTypeCode[value]" class="form-control" value="<%=form.invoiceTypeCode.value %>">
+                <label for="" class="m-0">Belge Tipi</label>
+                <input type="text" name="despatchAdviceTypeCode[value]" class="form-control" value="<%=form.despatchAdviceTypeCode.value %>"  readonly="true">
+            </div>
+        </div>
+        <div class="row">
+        	<div class="form-group col-md-9">
+                <label for="" class="m-0">Tedarikci Bilgisi</label>
+                <input type="text" class="form-control" value="<%=form.despatchSupplierParty.party.partyName.name.value%>" readonly="true">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="" class="m-0">Son durum</label>
+                <input type="text" class="form-control" value="<%=form.despatchStatus%>" readonly="true">
             </div>
         </div>
         <% var hataVar=false; %>
-        <% if(typeof form.invoiceErrors!='undefined'){ %>
-            <% if(form.invoiceErrors.length>0){ %>
+        <% if(typeof form.despatchErrors!='undefined'){ %>
+            <% if(form.despatchErrors.length>0){ %>
                 <% hataVar=true; %>
-        <label class="bold">Fatura Hataları</label>
         <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
             <thead>
                 <tr class="text-nowrap">
@@ -36,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-                <% form.invoiceErrors.forEach((e)=>{ %>
+                <% form.despatchErrors.forEach((e)=>{ %>
                 <tr>
                     <td><% if(typeof e._date!='undefined'){%><%=(new Date(e._date)).yyyymmddhhmmss()%><%}%></td>
                     <td><% if(typeof e.code!='undefined'){%><%=e.code%><%}%></td>
@@ -50,7 +59,7 @@
         <% if(typeof form.localErrors!='undefined'){ %>
             <% if(form.localErrors.length>0){ %>
                 <% hataVar=true; %>
-        <label class="bold">Fatura Lokal Entegrasyon Hataları</label>
+        <label class="bold">Yerel Entegrasyon Hataları</label>
         <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
             <thead>
                 <tr class="text-nowrap">
