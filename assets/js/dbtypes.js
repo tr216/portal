@@ -442,6 +442,26 @@ const shipmentStageType={
     transportModeCode:codeType
 }
 
+
+const deliveryType={
+    ID:idType,
+    quantity:quantityType,
+    actualDeliveryDate:valueType,
+    actualDeliveryTime:valueType,
+    latestDeliveryDate:valueType,
+    latestDeliveryTime:valueType,
+    trackingId:valueType,
+    deliveryAddress:addressType,
+    alternativeDeliveryLocation:locationType,
+    estimatedDeliveryPeriod:periodType,
+    carrierParty:partyType,
+    deliveryParty:partyType,
+    despatch:{},
+    deliveryTerms:[],
+    shipment:{}
+}
+
+
 const shipmentType={
     ID:idType,
     declaredCustomsValueAmount : amountType,
@@ -467,23 +487,6 @@ const shipmentType={
     transportHandlingUnit:[transportHandlingUnitType] 
 }
 
-const deliveryType={
-    ID:idType,
-    actualDeliveryDate:valueType,
-    actualDeliveryTime:valueType,
-    alternativeDeliveryLocation:locationType,
-    carrierParty:partyType,
-    deliveryAddress:addressType,
-    deliveryParty:partyType,
-    deliveryTerms:[deliveryTermsType],
-    despatch:despatchType,
-    estimatedDeliveryPeriod:periodType,
-    latestDeliveryDate:valueType,
-    latestDeliveryTime:valueType,
-    quantity:quantityType,
-    trackingId :idType,
-    shipment:shipmentType
-}
 
 const invoiceLineType={
     ID:idType,
@@ -835,8 +838,51 @@ const despatchAdviceType={
     lineCountNumeric:numberValueType,
     despatchLine:[], //despatchLineType
     localDocumentId: '',
-    despatchReceiptAdvice:''
+    receiptAdvice:''
 }
+
+
+const receiptAdviceType={
+	ioType:1,
+	despatch:'',
+    eIntegrator: '',
+    profileId: valueType,
+    ID: idType,
+    uuid: valueType,
+    issueDate: valueType,
+    issueTime: valueType,
+    receiptAdviceTypeCode: valueType,
+    note:[valueType],
+    despatchDocumentReference:documentReferenceType,
+    additionalDocumentReference:[], //documentReferenceType
+    orderReference:[], //orderReferenceType
+    originatorDocumentReference:[], //documentReferenceType
+    despatchSupplierParty:{
+        party:partyType,
+        despatchContact:contactType
+    },
+    deliveryCustomerParty:{
+        party:partyType,
+        deliveryContact:contactType
+    },
+    originatorCustomerParty:{
+        party:partyType,
+        deliveryContact:contactType
+    },
+    sellerSupplierParty:{
+        party:partyType,
+        despatchContact:contactType
+    },
+    buyerCustomerParty:{
+        party:partyType,
+        deliveryContact:contactType
+    },
+    shipment:shipmentType,
+    lineCountNumeric:numberValueType,
+    receiptLine:[], //receiptLineType
+    localDocumentId: ''
+}
+
 
 
 const receiptAdviceInfoType={
@@ -848,7 +894,7 @@ const receiptAdviceInfoType={
     deliveryContactName:valueType, 
     despatchContactName:valueType, 
     actualDeliveryDate:valueType, 
-    receiptAdviceLineInfo:[] //receiptAdviceLineInfoType
+    receiptAdviceLineInfos:[] //receiptAdviceLineInfoType
 }
 
 
@@ -926,8 +972,7 @@ exports.types = Object.freeze({
     materialType:materialType,
     qualityControlType:qualityControlType,
     despatchAdviceType:despatchAdviceType,
-    receiptAdviceInfoType:receiptAdviceInfoType,
-    receiptAdviceLineInfoType:receiptAdviceLineInfoType
+    receiptAdviceType:receiptAdviceType
 });
 
        

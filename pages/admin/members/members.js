@@ -34,7 +34,7 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
-	api.get('/system/members',req,{page:req.query.page},(err,resp)=>{
+	api.get(`/system/members`,req,{page:req.query.page},(err,resp)=>{
 		if(!err){
 			data['recordCount']=resp.data.recordCount;
 			data['page']=resp.data.page;
@@ -49,9 +49,9 @@ function getList(req,res,data,callback){
 function addnew(req,res,data,callback){
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body);
-		api.post('/system/members',req,data.form,(err,resp)=>{
+		api.post(`/system/members`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/admin/members?sid=' + req.query.sid);
+				res.redirect(`/admin/members?sid=${req.query.sid}`)
 			}else{
 				data['message']=err.message;
 				callback(null,data);
@@ -66,9 +66,9 @@ function edit(req,res,data,callback){
 	var _id=req.params.id || '';
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body);
-		api.put('/system/members/' + _id,req,data.form,(err,resp)=>{
+		api.put(`/system/members/${_id}`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/admin/members?sid=' + req.query.sid);
+				res.redirect(`/admin/members?sid=${req.query.sid}`)
 
 			}else{
 				data['message']=err.message;
@@ -77,7 +77,7 @@ function edit(req,res,data,callback){
 		});
 		
 	}else{
-		api.get('/system/members/' + _id,req,null,(err,resp)=>{
+		api.get(`/system/members/${_id}`,req,null,(err,resp)=>{
 			if(!err){
 				data.form=Object.assign(data.form,resp.data);
 				callback(null,data);
@@ -91,7 +91,7 @@ function edit(req,res,data,callback){
 
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.get('/system/members/' + _id,req,null,(err,resp)=>{
+	api.get(`/system/members/${_id}`,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);
@@ -105,13 +105,13 @@ function view(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/system/members/' + _id,req,(err,resp)=>{
+	api.delete(`/system/members/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/admin/members?sid=' + req.query.sid);
+			res.redirect(`/admin/members?sid=${req.query.sid}`)
 			
 		}else{
 			
-			//data['message']=err.message;
+			
 			callback(err,data);
 		}
 	});
@@ -120,7 +120,7 @@ function deleteItem(req,res,data,callback){
 function login(req,res,data,callback){
 
 	var _id=req.params.id || '';
-	api.post('/system/login-for-member/' + _id,req,null,(err,resp)=>{
+	api.post(`/system/login-for-member/${_id}`,req,null,(err,resp)=>{
 		if(!err){
 
 			var userAgent=req.headers['user-agent'] || '';
@@ -139,7 +139,7 @@ function login(req,res,data,callback){
 			
 			doc.save((err,sessionDoc)=>{
 				if(!err){
-					res.redirect('/general/dashboard?db=&sid=' + sessionDoc._id);
+					res.redirect(`/general/dashboard?db=&sid=${sessionDoc._id}`)
 				}else{
 					data['message']=err.message;
 					callback(null,data);

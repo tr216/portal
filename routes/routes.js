@@ -153,7 +153,7 @@ function setGeneralParams(req,data){
 	var current2=req.originalUrl.split('?')[0]
 	var filter = ''
 	var filterObj = {}
-	console.log(`req.originalUrl:`,req.originalUrl)
+	
 	if(req.params.id){
 		current2=current2.substr(0,current2.length-req.params.id.length-1)
 	}
@@ -174,7 +174,7 @@ function setGeneralParams(req,data){
 			}
 		}
 	}
-	console.log(`current2:`,current2)
+
 
 	if(current.substr(-1)=='&'){
 		current=current.substr(0,current.length-1)

@@ -45,7 +45,7 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
-	api.get('/dbinvite/' +  req.query.db,req,data.filter,(err,resp)=>{
+	api.get(`/dbinvite/${req.query.db}`,req,data.filter,(err,resp)=>{
 		if(!err){
 			data['recordCount']=resp.data.authorizedMembers.length;
 			data['list']=resp.data.authorizedMembers;
@@ -63,9 +63,9 @@ function addnew(req,res,data,callback){
 	initValues(req,res,data,(err,data)=>{
 		if(req.method=='POST'){
 			data.form=Object.assign(data.form,req.body);
-			api.post('/dbinvite/' + req.query.db,req,data.form,(err,resp)=>{
+			api.post(`/dbinvite/${req.query.db}`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/settings/dbinvite?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect(`/settings/dbinvite?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 				}else{
 					data['message']=err.message;
 					callback(null,data);
@@ -79,7 +79,7 @@ function addnew(req,res,data,callback){
 }
 
 function edit(req,res,data,callback){
-	api.get('/dbinvite/' + req.query.db + '/' + req.params.id,req,{},(err,resp)=>{
+	api.get(`/dbinvite/${req.query.db}/${req.params.id}`,req,{},(err,resp)=>{
 		if(err){
 			data['message']=err.message;
 
@@ -100,9 +100,9 @@ function edit(req,res,data,callback){
 			data.form.username=resp.data.username;
 
 			if(req.method=='POST'){
-				api.put('/dbinvite/' + req.query.db + '/' + data.form.memberId ,req,data.form,(err,resp)=>{
+				api.put(`/dbinvite/${req.query.db}/${data.form.memberId}` ,req,data.form,(err,resp)=>{
 					if(!err){
-						res.redirect('/dbinvite?db=' + req.query.db +'&sid=' + req.query.sid);
+						res.redirect(`/dbinvite?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 					}else{
 						data['message']=err.message;
 						callback(null,data);
@@ -118,7 +118,7 @@ function edit(req,res,data,callback){
 }
 
 function view(req,res,data,callback){
-	api.get('/dbinvite/' + req.query.db + '/' + req.params.id,req,{},(err,resp)=>{
+	api.get(`/dbinvite/${req.query.db}/${req.params.id}`,req,{},(err,resp)=>{
 		if(err){
 			data['message']=err.message;
 
@@ -147,9 +147,9 @@ function view(req,res,data,callback){
 
 
 function deleteItem(req,res,data,callback){
-	api.delete('/dbinvite/' + req.query.db + '/' + req.params.id,req,(err,resp)=>{
+	api.delete(`/dbinvite/${req.query.db}/${req.params.id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/settings/dbinvite?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect(`/settings/dbinvite?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 			
 		}else{
 			data['message']=err.message;
@@ -159,7 +159,7 @@ function deleteItem(req,res,data,callback){
 }
 
 function initValues(req,res,data,cb){
-	api.get('/mydbdefines/' +  req.query.db,req,{},(err,resp)=>{
+	api.get(`/mydbdefines/${req.query.db}`,req,{},(err,resp)=>{
 
 		if(!err){
 			data['dbName']=resp.data.dbName;

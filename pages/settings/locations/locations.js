@@ -40,7 +40,7 @@ module.exports = function(req,res,callback){
 
 function getList(req,res,data,callback){
 	data.locationTypeList.unshift({text:'-- Tümü --', value:-1});
-	api.get('/' + req.query.db + '/locations',req,data.filter,(err,resp)=>{
+	api.get(`/${req.query.db}/locations`,req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp);
 		}
@@ -51,9 +51,9 @@ function getList(req,res,data,callback){
 function addnew(req,res,data,callback){
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body);
-		api.post('/' + req.query.db + '/locations',req,data.form,(err,resp)=>{
+		api.post(`/${req.query.db}/locations`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/settings/locations?db=' + req.query.db +'&sid=' + req.query.sid);
+				res.redirect(`/settings/locations?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 			}else{
 				data['message']=err.message;
 				callback(null,data);
@@ -75,9 +75,9 @@ function edit(req,res,data,callback){
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body);
 
-		api.put('/' + req.query.db + '/locations/' + _id, req,data.form,(err,resp)=>{
+		api.put(`/${req.query.db}/locations/${_id}`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/settings/locations?db=' + req.query.db +'&sid=' + req.query.sid);
+				res.redirect(`/settings/locations?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 
 			}else{
 				data['message']=err.message;
@@ -85,7 +85,7 @@ function edit(req,res,data,callback){
 			}
 		});
 	}else{
-		api.get('/' + req.query.db + '/locations/' + _id,req,null,(err,resp)=>{
+		api.get(`/${req.query.db}/locations/${_id}`,req,null,(err,resp)=>{
 			if(!err){
 				data.form=Object.assign(data.form,resp.data);
 				callback(null,data);
@@ -99,9 +99,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/locations/' + _id,req,(err,resp)=>{
+	api.delete(`/${req.query.db}/locations/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/settings/locations?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect(`/settings/locations?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 			
 		}else{
 			

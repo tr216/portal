@@ -34,7 +34,7 @@ function verify(req,res,data,cb){
 	console.log('req.query.username:',req.query.username);
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form.authCode=req.body.authCode;
-		api.post('/verify',req,data.form,(err,resp)=>{
+		api.post(`/verify`,req,data.form,(err,resp)=>{
 			if(!err){
 				var userAgent=req.headers['user-agent'] || '';
 				var IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
@@ -42,7 +42,7 @@ function verify(req,res,data,cb){
 				var doc=new db.sessions({token:resp.data.token,username:resp.data.username,isSysUser:resp.data.isSysUser,isMember: resp.data.isMember, ip:IP,userAgent:userAgent});
 				doc.save((err,sessionDoc)=>{
 					if(!err){
-						res.redirect('/passport?sid=' + sessionDoc._id);
+						res.redirect(`/passport?sid=' + sessionDoc._id);
 					}else{
 						data['message']=err.message;
 						cb(null,data);

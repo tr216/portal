@@ -3,6 +3,7 @@ module.exports = function(req,res,callback){
 		eIntegratorList:[],
 		locationList:[],
 		docStatusTypes:Array.from(staticValues.despatchStatusTypes),
+		receiptStatusTypes:Array.from(staticValues.receiptStatusTypes),
 		currencyList:Array.from(staticValues.currencyList),
 		docProfileIdList:Array.from(staticValues.despatchProfileIdList),
 		docTypeCodeList:Array.from(staticValues.despatchAdviceTypeCodeList),
@@ -49,7 +50,7 @@ function showErrors(req,res,data,callback){
 		callback(null,data);
 		return;
 	}
-	api.get('/' + req.query.db + '/despatch/errors/' + _id,req,null,(err,resp)=>{
+	api.get(`/${req.query.db}/despatch/errors/${_id}`,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);
@@ -63,13 +64,14 @@ function showErrors(req,res,data,callback){
 
 function getList(req,res,data,callback){
 	data.docStatusTypes.unshift({text:'-Tümü-',value:''});
+	data.receiptStatusTypes.unshift({text:'-Tümü-',value:''});
 	data.currencyList.unshift({text:'-Tümü-',value:''});
 	data.docProfileIdList.unshift({text:'-Tümü-',value:''});
 	data.docTypeCodeList.unshift({text:'-Tümü-',value:''});
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
-		api.get('/' + req.query.db + '/despatch/inbox',req,data.filter,(err,resp)=>{
+		api.get(`/${req.query.db}/despatch/inbox`,req,data.filter,(err,resp)=>{
 			if(!err){
 				var docs=[];
 				resp.data.docs.forEach((e)=>{
@@ -91,7 +93,7 @@ function initLookUpLists(req,res,data,cb){
 	data.eIntegratorList=[];
 	data.locationList=[];
 
-	api.get('/' + req.query.db + '/integrators',req,{passive:false},(err,resp)=>{
+	api.get(`/${req.query.db}/integrators`,req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
 			if(data.eIntegratorList.length>0){
@@ -102,7 +104,7 @@ function initLookUpLists(req,res,data,cb){
 				})
 			}
 		}
-		api.get('/' + req.query.db + '/locations',req,{passive:false},(err,resp)=>{
+		api.get(`/${req.query.db}/locations`,req,{passive:false},(err,resp)=>{
 			if(!err){
 				data.locationList=resp.data.docs;
 			}
@@ -117,9 +119,9 @@ function addnew(req,res,data,callback){
 			data.form=Object.assign(data.form,req.body);
 			data.form['sellerSupplierParty']={party:(data.form.party || {})}
 			data.form.ioType=1;
-			api.post('/' + req.query.db + '/despatch/despatch',req,data.form,(err,resp)=>{
+			api.post(`/${req.query.db}/despatch/despatch`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/despatch/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect(`/despatch/inbox?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 					return;
 				}else{
 					data['message']=err.message;
@@ -138,7 +140,7 @@ function addnew(req,res,data,callback){
 
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.get('/' + req.query.db + '/despatch/view/' + _id,req,null,(err,resp)=>{
+	api.get(`/${req.query.db}/despatch/view/${_id}`,req,null,(err,resp)=>{
 		if(!err){
 			data['html']=resp.data;
 			callback(null,data);
@@ -151,7 +153,7 @@ function view(req,res,data,callback){
 
 function pdf(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.downloadFile('/' + req.query.db + '/despatch/despatchPdf/' + _id,req,res,null,(err,resp)=>{
+	api.downloadFile(`/${req.query.db}/despatch/despatchPdf/${_id}`,req,res,null,(err,resp)=>{
 		return;
 		
 	});
@@ -170,9 +172,9 @@ function edit(req,res,data,callback){
 			
 			data.form['buyerCustomerParty']={party:(data.form.party || {})}
 			data.form.ioType=1;
-			api.put('/' + req.query.db + '/despatch/' + _id,req,data.form,(err,resp)=>{
+			api.put(`/${req.query.db}/despatch/${_id}`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/despatch/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect(`/despatch/inbox?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 					return;
 				}else{
 					data['message']=err.message;
@@ -181,7 +183,7 @@ function edit(req,res,data,callback){
 			});
 		}else{
 			
-			api.get('/' + req.query.db + '/despatch/' + _id,req,null,(err,resp)=>{
+			api.get(`/${req.query.db}/despatch/${_id}`,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					callback(null,data);
@@ -197,9 +199,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/despatch/despatch/' + _id,req,(err,resp)=>{
+	api.delete(`/${req.query.db}/despatch/despatch/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/despatch/inbox?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect(`/despatch/inbox?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 		}else{
 			data['message']=err.message;
 			callback(null,data);

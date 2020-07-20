@@ -23,7 +23,7 @@ module.exports = function(req,res,callback){
 
 
 function getList(req,res,data,callback){
-	api.get('/' + req.query.db + '/invoice/eInvoiceUserList',req,data.filter,(err,resp)=>{
+	api.get(`/${req.query.db}/invoice/eInvoiceUserList`,req,data.filter,(err,resp)=>{
 		if(!err){
 			
 			data=mrutil.setGridData(data,resp);

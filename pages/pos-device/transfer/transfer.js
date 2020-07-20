@@ -51,7 +51,7 @@ module.exports = function(req,res,callback){
 }
 function getList(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		api.get('/' + req.query.db + '/pos-device-zreports',req,data.filter,(err,resp)=>{
+		api.get(`/${req.query.db}/pos-device-zreports`,req,data.filter,(err,resp)=>{
 			if(!err){
 				
 				data=mrutil.setGridData(data,resp);
@@ -63,7 +63,7 @@ function getList(req,res,data,callback){
 
 function initLookUpLists(req,res,data,cb){
 	data.locationList=[];
-	api.get('/' + req.query.db + '/locations',req,{},(err,resp)=>{
+	api.get(`/${req.query.db}/locations`,req,{},(err,resp)=>{
 		if(!err){
 			data.locationList=resp.data.docs;
 			data.locationList.unshift({_id:'',locationName:'Tümü'});
@@ -98,7 +98,7 @@ function transfer(req,res,data,callback){
 			data.list.forEach((e)=>{
 				smallData.list.push({_id:e._id});
 			});
-			api.post('/' + req.query.db + '/pos-device-zreports/transfer',req,smallData,(err,resp)=>{
+			api.post(`/${req.query.db}/pos-device-zreports/transfer`,req,smallData,(err,resp)=>{
 				if(!err){
 
 					data['success']=resp.data.length + ' adet Z Raporu aktarim icin kuyruga alindi.';
@@ -113,7 +113,7 @@ function transfer(req,res,data,callback){
 		}
 		
 	}else{
-		res.redirect('/pos-device/transfer?db=' + req.query.db +'&sid=' + req.query.sid);
+		res.redirect(`/pos-device/transfer?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 	}
 	
 }
@@ -144,7 +144,7 @@ function rollback(req,res,data,callback){
 			data.list.forEach((e)=>{
 				smallData.list.push({_id:e._id});
 			});
-			api.post('/' + req.query.db + '/pos-device-zreports/rollback',req,smallData,(err,resp)=>{
+			api.post(`/${req.query.db}/pos-device-zreports/rollback`,req,smallData,(err,resp)=>{
 				if(!err){
 
 					data['success']=resp.data.n + ' adet Z Raporu aktarilmamis olarak geri alindi.';
@@ -159,7 +159,7 @@ function rollback(req,res,data,callback){
 		}
 		
 	}else{
-		res.redirect('/pos-device/transfer?db=' + req.query.db +'&sid=' + req.query.sid);
+		res.redirect(`/pos-device/transfer?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 	}
 	
 }
@@ -190,7 +190,7 @@ function setTransferred(req,res,data,callback){
 			data.list.forEach((e)=>{
 				smallData.list.push({_id:e._id});
 			});
-			api.post('/' + req.query.db + '/pos-device-zreports/settransferred',req,smallData,(err,resp)=>{
+			api.post(`/${req.query.db}/pos-device-zreports/settransferred`,req,smallData,(err,resp)=>{
 				if(!err){
 
 					data['success']=resp.data.n + ' adet Z Raporu aktarilmis olarak isaretlendi.';
@@ -205,14 +205,14 @@ function setTransferred(req,res,data,callback){
 		}
 		
 	}else{
-		res.redirect('/pos-device/transfer?db=' + req.query.db +'&sid=' + req.query.sid);
+		res.redirect(`/pos-device/transfer?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 	}
 	
 }
 
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.get('/' + req.query.db + '/pos-device-zreports/' + _id,req,null,(err,resp)=>{
+	api.get(`/${req.query.db}/pos-device-zreports/${_id}`,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);
@@ -226,9 +226,9 @@ function view(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/pos-device-zreports/' + _id,req,(err,resp)=>{
+	api.delete(`/${req.query.db}/pos-device-zreports/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/pos-device/transfer?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect(`/pos-device/transfer?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 			
 		}else{
 			data['message']=err.message;

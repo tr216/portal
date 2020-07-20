@@ -33,9 +33,9 @@ function signup(req,res,data,cb){
 		data.message='Tekrar parola ayni degil!';
 		return cb(null,data);
 	}
-	api.post('/signup',req,data.form,(err,resp)=>{
+	api.post(`/signup`,req,data.form,(err,resp)=>{
 		if(!err){
-			res.redirect('/login/verify?username=' + data.form.username);
+			res.redirect(`/login/verify?username=' + data.form.username);
 		}else{
 			data.message=err.message;
 			cb(null,data);

@@ -3,7 +3,7 @@ module.exports = function(req,res,callback){
 		form:{
 			name:'',
 			importerType:'',
-			importFileExtensions:'*.*;',
+			importFileExtensions:'*.*',
 			passive:false
 		},
 		message:'',
@@ -12,145 +12,145 @@ module.exports = function(req,res,callback){
 	}
 
 	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
+		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'})
 	}
 	
 	switch(req.params.func || ''){
 		case 'addnew':
-			addnew(req,res,data,callback);
-		break;
+		addnew(req,res,data,callback)
+		break
 		case 'edit':
-			edit(req,res,data,callback);
-		break;
+		edit(req,res,data,callback)
+		break
 		case 'delete':
-			deleteItem(req,res,data,callback);
-		break;
+		deleteItem(req,res,data,callback)
+		break
 		case 'view':
-			view(req,res,data,callback);
-		break;
+		view(req,res,data,callback)
+		break
 		case 'code':
-			require('./file-importers-code.js')(req,res,callback);
-		break;
+		require('./file-importers-code.js')(req,res,callback)
+		break
 		default:
-			data.filter=getFilter(data.filter,req,res)
-			if(req.method!='POST') 
-				getList(req,res,data,callback)
-		break;
+		data.filter=getFilter(data.filter,req,res)
+		if(req.method!='POST') 
+			getList(req,res,data,callback)
+		break
 	}
 	
 }
 
 function getList(req,res,data,callback){
-	api.get('/' + req.query.db + '/file-importers',req,data.filter,(err,resp)=>{
+	api.get(`/${req.query.db}/file-importers`,req,data.filter,(err,resp)=>{
 		if(!err){
-			data=mrutil.setGridData(data,resp);
+			data=mrutil.setGridData(data,resp)
 		}
-		callback(null,data);
-	});
+		callback(null,data)
+	})
 }
 
 function addnew(req,res,data,callback){
 	if(req.method=='POST'){
-		data.form=Object.assign(data.form,req.body);
+		data.form=Object.assign(data.form,req.body)
 		if(req.body['btnConnectorTest']!=undefined){
-			api.post('/' + req.query.db + '/file-importers/test',req,data.form,(err,resp)=>{
-				data['testResult']=resp;
-				callback(null,data);
-			});
+			api.post(`/${req.query.db}/file-importers/test`,req,data.form,(err,resp)=>{
+				data['testResult']=resp
+				callback(null,data)
+			})
 		}else{
-			api.post('/' + req.query.db + '/file-importers',req,data.form,(err,resp)=>{
+			api.post(`/${req.query.db}/file-importers`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/settings/file-importers?db=' + req.query.db +'&sid=' + req.query.sid + '&importerType=' + (req.query.importerType || ''));
+					res.redirect(`/settings/file-importers?db=${req.query.db}&sid=${req.query.sid}&importerType=${(req.query.importerType || '')}`)
 				}else{
-					data['message']=err.message;
-					callback(null,data);
+					data['message']=err.message
+					callback(null,data)
 				}
-			});
+			})
 		}
 	}else{
-		callback(null,data);
+		callback(null,data)
 	}
 }
 
 function edit(req,res,data,callback){
-	var _id=req.params.id || '';
+	var _id=req.params.id || ''
 	if(req.method=='POST' || req.method=='PUT'){
-		data.form=Object.assign(data.form,req.body);
+		data.form=Object.assign(data.form,req.body)
 		if(req.body['btnConnectorTest']!=undefined){
-			api.post('/' + req.query.db + '/file-importers/test',req,data.form,(err,resp)=>{
-				data['testResult']=resp;
-				callback(null,data);
-			});
+			api.post(`/${req.query.db}/file-importers/test`,req,data.form,(err,resp)=>{
+				data['testResult']=resp
+				callback(null,data)
+			})
 		}else{
-			api.put('/' + req.query.db + '/file-importers/' + _id,req,data.form,(err,resp)=>{
+			api.put(`/${req.query.db}/file-importers/${_id}`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/settings/file-importers?db=' + req.query.db +'&sid=' + req.query.sid + '&importerType=' + (req.query.importerType || ''));
+					res.redirect(`/settings/file-importers?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}&importerType=${(req.query.importerType || '')}`)
 
 				}else{
-					data['message']=err.message;
-					callback(null,data);
+					data['message']=err.message
+					callback(null,data)
 				}
-			});
+			})
 		}
 		
 		
 	}else{
-		api.get('/' + req.query.db + '/file-importers/' + _id,req,null,(err,resp)=>{
+		api.get(`/${req.query.db}/file-importers/${_id}`,req,null,(err,resp)=>{
 			if(!err){
-				data.form=Object.assign(data.form,resp.data);
-				callback(null,data);
+				data.form=Object.assign(data.form,resp.data)
+				callback(null,data)
 			}else{
-				data['message']=err.message;
-				callback(null,data);
+				data['message']=err.message
+				callback(null,data)
 			}
-		});
+		})
 	}
 }
 
 function view(req,res,data,callback){
-	var _id=req.params.id || '';
+	var _id=req.params.id || ''
 	if(req.method=='POST' || req.method=='PUT'){
-		data.form=Object.assign(data.form,req.body);
+		data.form=Object.assign(data.form,req.body)
 		if(req.body['btnConnectorTest']!=undefined){
-			api.post('/' + req.query.db + '/file-importers/test',req,data.form,(err,resp)=>{
-				data['testResult']=resp;
-				callback(null,data);
-			});
+			api.post(`/${req.query.db}/file-importers/test`,req,data.form,(err,resp)=>{
+				data['testResult']=resp
+				callback(null,data)
+			})
 		}else{
-			api.get('/' + req.query.db + '/file-importers/' + _id,req,null,(err,resp)=>{
+			api.get(`/${req.query.db}/file-importers/${_id}`,req,null,(err,resp)=>{
 				if(!err){
-					data.form=Object.assign(data.form,resp.data);
-					callback(null,data);
+					data.form=Object.assign(data.form,resp.data)
+					callback(null,data)
 				}else{
-					data['message']=err.message;
-					callback(null,data);
+					data['message']=err.message
+					callback(null,data)
 				}
-			});
+			})
 		}
 	}else{
-		api.get('/' + req.query.db + '/file-importers/' + _id,req,null,(err,resp)=>{
+		api.get(`/${req.query.db}/file-importers/${_id}`,req,null,(err,resp)=>{
 			if(!err){
-				data.form=Object.assign(data.form,resp.data);
-				callback(null,data);
+				data.form=Object.assign(data.form,resp.data)
+				callback(null,data)
 			}else{
-				data['message']=err.message;
-				callback(null,data);
+				data['message']=err.message
+				callback(null,data)
 			}
-		});
+		})
 	}
 }
 
 
 function deleteItem(req,res,data,callback){
-	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/file-importers/' + _id,req,(err,resp)=>{
+	var _id=req.params.id || ''
+	api.delete(`/${req.query.db}/file-importers/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/settings/file-importers?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect(`/settings/file-importers?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 			
 		}else{
 			
-			//data['message']=err.message;
-			callback(err,data);
+			//data['message']=err.message
+			callback(err,data)
 		}
-	});
+	})
 }

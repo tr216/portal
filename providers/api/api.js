@@ -301,7 +301,7 @@ function sessionId2Token(req,cb){
 
 				// if(userAgent!=doc.userAgent) return cb({code:'WRONT_AGENT',message:'Yanlis userAgent'})
 				
-				if(IP!=doc.ip) return cb({code:'WRONT_IP',message:'Yanlis IP'})
+				// if(IP!=doc.ip) return cb({code:'WRONT_IP',message:'Yanlis IP'})
 				doc.lastOnline=new Date()
 				doc.save((err,doc2)=>{
 					cb(null,doc.token)

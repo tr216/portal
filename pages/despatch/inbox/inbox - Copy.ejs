@@ -45,9 +45,8 @@
 	{name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
 	{name:'doc.ID',text:'ID',type:'label', visible:false},
 	{name:'doc.despatchStatus',text:'despatchStatus',type:'label', visible:false},
-	{name:'receiptStatusHtml',text:'Teslim Durumu', width:'100px',type:'lookup',filter:true, lookupList:receiptStatusTypes, orderable:false , dontUseLookup:true},
-	{name:'receiptStatus',text:'receiptStatus',type:'label', visible:false},
-	{name:'despatchStatusHtml',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, orderable:false , dontUseLookup:true}
+	{name:'receiptAdviceStatusHtml',text:'Teslim Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, orderable:false , dontUseLookup:true},
+	{name:'despatchStatusHtml',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:staticValues.receiptAdviceStatusTypes, orderable:false , dontUseLookup:true}
 	],
 	caption:'İrsaliyeler',
 	addNewButton:true,
@@ -117,26 +116,21 @@
 			success:function(result){
 				if(result.success){
 					despatchDoc=result.data
-					if((despatchDoc.receiptAdvice || '')!=''){
-						$.ajax({
-							url:`/dbapi/despatch-receipt-advice/${despatchDoc.receiptAdvice}?db=${q.db}&sid=${q.sid}`,
-							type:'GET',
-							dataType: 'json',
-							success:function(result){
-								if(result.success){
-									receiptAdvice=result.data
-								}
-								showModal()
-							},
-							error:function(err){
-								console.log(`err:`,err)
-								alert('hata2:' + err)
+					$.ajax({
+						url:`/dbapi/despatch-receipt-advice/${_id}?db=${q.db}&sid=${q.sid}`,
+						type:'GET',
+						dataType: 'json',
+						success:function(result){
+							if(result.success){
+								receiptAdvice=result.data
 							}
-						});
-					}else{
-						showModal()
-					}
-					
+							showModal()
+						},
+						error:function(err){
+							console.log(`err:`,err)
+							alert('hata2:' + err)
+						}
+					});
 					
 				}else{
 					alert(result.error.code + ' - ' + result.error.message);
@@ -155,12 +149,10 @@
 		$('#profileId').val(despatchDoc.profileId.value)
 		$('#despatchAdviceTypeCode').val(despatchDoc.despatchAdviceTypeCode.value)
 		if(receiptAdvice){
-			$('#deliveryContactName').val(receiptAdvice.deliveryCustomerParty.deliveryContact.name.value)
-			$('#despatchContactName').val(receiptAdvice.despatchSupplierParty.despatchContact.name.value)
-			$('#actualDeliveryDate').val(receiptAdvice.actualDeliveryDate.value)
-			var note=''
-			receiptAdvice.note.forEach((e)=>{note+=e.value})
-			$('#note').val(note.trim())
+			$('#DeliveryContactName').val(receiptAdvice.deliveryContactName.value)
+			$('#DespatchContactName').val(receiptAdvice.despatchContactName.value)
+			$('#ActualDeliveryDate').val(receiptAdvice.actualDeliveryDate.value)
+			$('#Note').val(receiptAdvice.note.value)
 		}
 
 		$('#approveGrid tr').remove()
@@ -169,11 +161,11 @@
 			var receivedQuantity=0, rejectedQuantity=0, timingComplaint='', lineId=`${index+1}`
 
 			if(receiptAdvice){
-				if(receiptAdvice.receiptLine.length>index){
-					receivedQuantity=receiptAdvice.receiptLine[index].receivedQuantity.value
-					rejectedQuantity=receiptAdvice.receiptLine[index].rejectedQuantity.value
-					timingComplaint=receiptAdvice.receiptLine[index].timingComplaint.value
-					lineId=receiptAdvice.receiptLine[index].lineId.value
+				if(receiptAdvice.receiptAdviceLineInfos.length>index){
+					receivedQuantity=receiptAdvice.receiptAdviceLineInfos[index].receivedQuantity.value
+					rejectedQuantity=receiptAdvice.receiptAdviceLineInfos[index].rejectedQuantity.value
+					timingComplaint=receiptAdvice.receiptAdviceLineInfos[index].timingComplaint.value
+					lineId=receiptAdvice.receiptAdviceLineInfos[index].lineId.value
 				}
 			}
 			var newRow=approveGrid.insertRow(approveGrid.rows.length);
@@ -194,79 +186,88 @@
 			cell4.classList.add('text-right')
 			cell4.innerHTML=`${e.outstandingQuantity?e.outstandingQuantity.value:0}`
 
-			newRow.insertCell(5).innerHTML=`<input type="number" class="form-control text-right" name="receiptLine[${index}][receivedQuantity]" value="${receivedQuantity}" min="0" onchange="receivedQuantityChange(${index})" />`
-			newRow.insertCell(6).innerHTML=`<input type="number" class="form-control text-right" name="receiptLine[${index}][rejectedQuantity]" value="${rejectedQuantity}" min="0" onchange="rejectedQuantityChange(${index})" />`
-			newRow.insertCell(7).innerHTML=`<input type="text" class="form-control" name="receiptLine[${index}][timingComplaint]" value="${timingComplaint}" />`
+			newRow.insertCell(5).innerHTML=`<input type="number" class="form-control text-right" name="receiptAdviceLineInfos[${index}][receivedQuantity]" value="${receivedQuantity}" min="0" onchange="receivedQuantityChange(${index})" />`
+			newRow.insertCell(6).innerHTML=`<input type="number" class="form-control text-right" name="receiptAdviceLineInfos[${index}][rejectedQuantity]" value="${rejectedQuantity}" min="0" onchange="rejectedQuantityChange(${index})" />`
+			newRow.insertCell(7).innerHTML=`<input type="text" class="form-control" name="receiptAdviceLineInfos[${index}][timingComplaint]" value="${timingComplaint}" />`
 		})
 
 		$('#approveModal').modal('show')
 		
 	}
 
+	var bChanging=false
+
+	function receivedQuantityChange(index){
+		if(bChanging)
+			return
+		bChanging=true
+		var deliveredQuantity=despatchDoc.despatchLine[index].deliveredQuantity?despatchDoc.despatchLine[index].deliveredQuantity.value:0
+		var oversupplyQuantity=despatchDoc.despatchLine[index].oversupplyQuantity?despatchDoc.despatchLine[index].oversupplyQuantity.value:0
+		var outstandingQuantity=despatchDoc.despatchLine[index].outstandingQuantity?despatchDoc.despatchLine[index].outstandingQuantity.value:0
+
+		var receivedQuantity=Number($(`input[name="receiptAdviceLineInfos[${index}][receivedQuantity]"]`).val())
+		var value=deliveredQuantity-receivedQuantity;
+		if(value<0)
+			value=0
+		$(`input[name="receiptAdviceLineInfos[${index}][rejectedQuantity]"]`).val(value)
+
+		bChanging=false
+	}
+
+	function rejectedQuantityChange(index){
+		if(bChanging)
+			return
+		bChanging=true
+		var deliveredQuantity=despatchDoc.despatchLine[index].deliveredQuantity?despatchDoc.despatchLine[index].deliveredQuantity.value:0
+		var oversupplyQuantity=despatchDoc.despatchLine[index].oversupplyQuantity?despatchDoc.despatchLine[index].oversupplyQuantity.value:0
+		var outstandingQuantity=despatchDoc.despatchLine[index].outstandingQuantity?despatchDoc.despatchLine[index].outstandingQuantity.value:0
+
+		var rejectedQuantity=Number($(`input[name="receiptAdviceLineInfos[${index}][rejectedQuantity]"]`).val())
+
+		var value=deliveredQuantity-rejectedQuantity;
+		if(value<0)
+			value=0
+
+		$(`input[name="receiptAdviceLineInfos[${index}][receivedQuantity]"]`).val(value)
+
+		bChanging=false
+	}
+
+
 	function approveAdvice(approveType){
 		if(!receiptAdvice){
-			receiptAdvice=clone(dbType.receiptAdviceType)
-			receiptAdvice.despatch=despatchDoc._id
-			receiptAdvice.ioType=despatchDoc.ioType
-			receiptAdvice.eIntegrator=despatchDoc.eIntegrator
-			receiptAdvice.profileId=despatchDoc.profileId
-			receiptAdvice.receiptAdviceTypeCode=despatchDoc.despatchAdviceTypeCode
-			receiptAdvice.orderReference=despatchDoc.orderReference
-			receiptAdvice.despatchSupplierParty=despatchDoc.despatchSupplierParty
-			receiptAdvice.deliveryCustomerParty=despatchDoc.deliveryCustomerParty
-			receiptAdvice.sellerSupplierParty=despatchDoc.sellerSupplierParty
-			receiptAdvice.buyerCustomerParty=despatchDoc.buyerCustomerParty
-			receiptAdvice.shipment=despatchDoc.shipment
-			receiptAdvice.localDocumentId=despatchDoc.localDocumentId
-			
+			receiptAdvice=clone(dbType.receiptAdviceInfoType)
 		}
-		receiptAdvice.despatchDocumentReference={
-			ID:{value:despatchDoc.uuid.value},
-			issueDate:{value:despatchDoc.issueDate.value}
-		}
-		receiptAdvice.despatchSupplierParty.despatchContact=clone(dbType.contactType)
-		receiptAdvice.despatchSupplierParty.despatchContact.name.value=$('#despatchContactName').val()
-		receiptAdvice.issueDate.value=$('#actualDeliveryDate').val()
-		receiptAdvice.note=[{value:$('#actualDeliveryDate').val()}]
-
-		receiptAdvice.deliveryCustomerParty.deliveryContact=clone(dbType.contactType)
-		receiptAdvice.deliveryCustomerParty.deliveryContact.name.value=$('#deliveryContactName').val()
-
-		receiptAdvice.receiptLine=[]
+		
+		receiptAdvice.despatch=despatchDoc._id
+		receiptAdvice.inboxDespatchId.value=despatchDoc.uuid.value
+		receiptAdvice.receiptAdviceNumber.value=''
+		receiptAdvice.localDocumentId=despatchDoc.localDocumentId
+		receiptAdvice.note.value=$('#Note').val()
+		receiptAdvice.deliveryContactName.value=$('#DeliveryContactName').val()
+		receiptAdvice.despatchContactName.value=$('#DespatchContactName').val()
+		receiptAdvice.actualDeliveryDate.value=$('#ActualDeliveryDate').val()
+		receiptAdvice.receiptAdviceLineInfos=[]
 
 		despatchDoc.despatchLine.forEach((e,index)=>{
-			var line={
-				ID:{value:(index+1).toString()},
-				item:e.item,
-				note:e.note,
-				receivedDate:{value:$('#actualDeliveryDate').val()},
-				despatchLineReference:{
-					lineId:{value:e.ID.value}
-				},
-				receivedQuantity:dbType.quantityType,
-				rejectedQuantity:dbType.quantityType,
-				rejectReason:[],
-				rejectReasonCode:dbType.codeType,
-				shortQuantity:e.shortQuantity,
-				orderLineReference:e.orderLineReference,
-				oversupplyQuantity:e.oversupplyQuantity,
-				timingComplaint:{value:$(`input[name="receiptLine[${index}][timingComplaint]"]`).val()},
-				timingComplaintCode:dbType.codeType,
-				shipment:e.shipment
-			}
+			var line=clone(dbType.receiptAdviceLineInfoType)
+			line.lineId.value=e.ID.value
 			if(approveType=='all'){
 				line.receivedQuantity.value=e.deliveredQuantity.value
 				line.rejectedQuantity.value=0
+				line.timingComplaint.value=$(`input[name="receiptAdviceLineInfos[${index}][timingComplaint]"]`).val()
 			}else if(approveType=='partial'){
-				line.receivedQuantity.value=Number($(`input[name="receiptLine[${index}][receivedQuantity]"]`).val())
-				line.rejectedQuantity.value=Number($(`input[name="receiptLine[${index}][rejectedQuantity]"]`).val())
+				line.receivedQuantity.value=Number($(`input[name="receiptAdviceLineInfos[${index}][receivedQuantity]"]`).val())
+				line.rejectedQuantity.value=Number($(`input[name="receiptAdviceLineInfos[${index}][rejectedQuantity]"]`).val())
+				line.timingComplaint.value=$(`input[name="receiptAdviceLineInfos[${index}][timingComplaint]"]`).val()
 			}else if(approveType=='declineAll'){
 				line.receivedQuantity.value=0
 				line.rejectedQuantity.value=e.deliveredQuantity.value
+				line.timingComplaint.value=$(`input[name="receiptAdviceLineInfos[${index}][timingComplaint]"]`).val()
 			}
-			receiptAdvice.receiptLine.push(line)
+			receiptAdvice.receiptAdviceLineInfos.push(line)
 		})
-		
+
 		var url=`/dbapi/despatch-receipt-advice?db=${q.db}&sid=${q.sid}`
 		var method='POST'
 		if((receiptAdvice._id || '')!=''){
@@ -287,46 +288,6 @@
 			}
 		});
 	}
-	var bChanging=false
-
-	function receivedQuantityChange(index){
-		if(bChanging)
-			return
-		bChanging=true
-		var deliveredQuantity=despatchDoc.despatchLine[index].deliveredQuantity?despatchDoc.despatchLine[index].deliveredQuantity.value:0
-		var oversupplyQuantity=despatchDoc.despatchLine[index].oversupplyQuantity?despatchDoc.despatchLine[index].oversupplyQuantity.value:0
-		var outstandingQuantity=despatchDoc.despatchLine[index].outstandingQuantity?despatchDoc.despatchLine[index].outstandingQuantity.value:0
-
-		var receivedQuantity=Number($(`input[name="receiptLine[${index}][receivedQuantity]"]`).val())
-		var value=deliveredQuantity-receivedQuantity;
-		if(value<0)
-			value=0
-		$(`input[name="receiptLine[${index}][rejectedQuantity]"]`).val(value)
-
-		bChanging=false
-	}
-
-	function rejectedQuantityChange(index){
-		if(bChanging)
-			return
-		bChanging=true
-		var deliveredQuantity=despatchDoc.despatchLine[index].deliveredQuantity?despatchDoc.despatchLine[index].deliveredQuantity.value:0
-		var oversupplyQuantity=despatchDoc.despatchLine[index].oversupplyQuantity?despatchDoc.despatchLine[index].oversupplyQuantity.value:0
-		var outstandingQuantity=despatchDoc.despatchLine[index].outstandingQuantity?despatchDoc.despatchLine[index].outstandingQuantity.value:0
-
-		var rejectedQuantity=Number($(`input[name="receiptLine[${index}][rejectedQuantity]"]`).val())
-
-		var value=deliveredQuantity-rejectedQuantity;
-		if(value<0)
-			value=0
-
-		$(`input[name="receiptLine[${index}][receivedQuantity]"]`).val(value)
-
-		bChanging=false
-	}
-
-
-	
 </script>
 
 <div class="modal" id="approveModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="approveModalLabel" aria-hidden="true">
@@ -360,16 +321,16 @@
 				<div class="row">
 					<div class="form-group col-md-3">
 						<label for="" class="m-0">Teslim Eden</label>
-						<input type="text" class="form-control" id="despatchContactName" value="">
+						<input type="text" class="form-control" id="DespatchContactName" value="">
 					</div>
 					<div class="form-group col-md-3">
 						<label for="" class="m-0">Teslim Alan</label>
-						<input type="text" class="form-control" id="deliveryContactName" value="">
+						<input type="text" class="form-control" id="DeliveryContactName" value="">
 					</div>
 					<div class="form-group col-md-3">
 						<label for="" class="m-0">Teslim Tarihi</label>
 						<div class="input-group date">
-							<input type="text" id="actualDeliveryDate" id="" class="form-control" value="<%=moment().format('YYYY-MM-DD')%>">
+							<input type="text" id="ActualDeliveryDate" id="" class="form-control" value="<%=moment().format('YYYY-MM-DD')%>">
 							<div class="input-group-addon">
 								<i class="fa fa-calendar fa-2x"></i>
 							</div>

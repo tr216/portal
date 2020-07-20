@@ -37,7 +37,7 @@ function getList(req,res,data,callback){
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
-		api.get('/' + req.query.db + '/order/outboxWaitingOrders',req,data.filter,(err,resp)=>{
+		api.get(`/${req.query.db}/order/outboxWaitingOrders`,req,data.filter,(err,resp)=>{
 			if(!err){
 				var docs=[];
 				resp.data.docs.forEach((e)=>{
@@ -57,7 +57,7 @@ function getList(req,res,data,callback){
 function initLookUpLists(req,res,data,cb){
 	data.eIntegratorList=[];
 	
-	api.get('/' + req.query.db + '/integrators',req,{passive:false},(err,resp)=>{
+	api.get(`/${req.query.db}/integrators`,req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
 			

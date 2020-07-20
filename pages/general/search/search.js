@@ -29,7 +29,7 @@ function getList(req,res,data,callback){
             }
         }
 
-        res.redirect('/general/search?db=' + req.query.db + '&' + mrutil.encodeUrl(filter) + '&sid=' + req.query.sid);
+        res.redirect(`/general/search?db=${req.query.db}&sid=${req.query.sid}&${mrutil.encodeUrl(filter)}`);
     }else{
         data.filter=Object.assign(data.filter,req.query);
         data.filter.db=undefined;
@@ -37,7 +37,7 @@ function getList(req,res,data,callback){
         data.filter.sid=undefined;
         delete data.filter.sid;
 
-        api.get('/' + req.query.db + '/search',req,data.filter,(err,resp)=>{
+        api.get(`/${req.query.db}/search`,req,data.filter,(err,resp)=>{
             if(!err){
                 data=mrutil.setGridData(data,resp);
             }

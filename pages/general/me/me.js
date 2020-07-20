@@ -30,7 +30,7 @@ function myprofile(req,res,data,callback){
 				data.form['rePassword']='';
 				return callback(null,data);
 			}else{
-				api.put('/me/change-password',req,req.body,(err,resp)=>{
+				api.put(`/me/change-password`,req,req.body,(err,resp)=>{
 					if(!err){
 						data.form=Object.assign(data.form,resp.data);
 					}else{
@@ -44,7 +44,7 @@ function myprofile(req,res,data,callback){
 				});
 			}
 		}else{
-			api.put('/me',req,req.body,(err,resp)=>{
+			api.put(`/me`,req,req.body,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 				}else{
@@ -60,7 +60,7 @@ function myprofile(req,res,data,callback){
 
 		
 	}else{
-		api.get('/me',req,{},(err,resp)=>{
+		api.get(`/me`,req,{},(err,resp)=>{
 			if(!err){
 				data.form=Object.assign(data.form,resp.data);
 			}else{

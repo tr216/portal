@@ -106,9 +106,7 @@
 			{"text":"Veri Ambarları",					"path":"/settings/dbdefine",		"icon":"fas fa-database", "visible":true, "nodes":[]},
 			{"text":"Görev Yöneticisi",					"path":"/system/tasks",		"icon":"fas fa-tasks", "visible":true, "nodes":[]},
 			{"text":"Developer console",	"module":"",				"path":"",		"icon":"fas fa-code", "visible":true, 
-				"nodes":[
-					{"text":"irsaliye xslt test",					"path":"/zzdeveloper/outbox",		"icon":"fas fa-paper-plane", "visible":true , "nodes":[]}
-				]
+				"nodes":[]
 			}
 		]
 	},

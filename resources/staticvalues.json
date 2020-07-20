@@ -138,6 +138,16 @@
 		{"text":"Silindi","value": "Deleted"},
 		{"text":"Hata","value": "Error"}
 	],
+	"receiptStatusTypes":[
+		{"text":"Teslimat bekleniyor","value": "Waiting"},
+		{"text":"Taslak","value": "Draft"},
+		{"text":"Gönderiliyor","value": "Pending"},
+		{"text":"Kuyrukta","value": "Queued"},
+		{"text":"İşleniyor","value": "Processing"},
+		{"text":"GİB e iletildi","value": "SentToGib"},
+		{"text":"Başarılı","value": "Success"},
+		{"text":"Hata","value": "Error"}
+	],
 	"despatchProfileIdList":[
 		{"text":"Temel","value": "TEMELIRSALIYE"}
 		

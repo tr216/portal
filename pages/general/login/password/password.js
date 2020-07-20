@@ -22,9 +22,9 @@ function forgotPassword(req,res,data,cb){
 		
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form.username=req.body.username;
-		api.post('/forgot-password',req,data.form,(err,resp)=>{
+		api.post(`/forgot-password`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/login');
+				res.redirect(`/login');
 				
 			}else{
 				data.message=err.message;

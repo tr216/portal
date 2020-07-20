@@ -31,7 +31,7 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
-	api.get('/dbdefine',req,data.filter,(err,resp)=>{
+	api.get(`/dbdefine`,req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp);
 		}
@@ -49,9 +49,9 @@ function addnew(req,res,data,callback){
 			callback(null,data);
 		}else{
 			data['dbName']=dbName;
-			api.post('/dbdefine',req,{dbName:dbName},(err,resp)=>{
+			api.post(`/dbdefine`,req,{dbName:dbName},(err,resp)=>{
 				if(!err){
-					res.redirect('/settings/dbdefine?sid=' + req.query.sid);
+					res.redirect(`/settings/dbdefine?mid=${req.query.mid}&sid=${req.query.sid}`)
  					//callback(null,data);
  				}else{
  					data['message']=err.message;
@@ -69,9 +69,9 @@ function edit(req,res,data,callback){
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body);
 		
-		api.put('/dbdefine/' + _id,req,data.form,(err,resp)=>{
+		api.put(`/dbdefine/${_id}`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/settings/dbdefine?sid=' + req.query.sid);
+				res.redirect(`/settings/dbdefine?mid=${req.query.mid}&sid=${req.query.sid}`)
 
 			}else{
 				data['message']=err.message;
@@ -79,7 +79,7 @@ function edit(req,res,data,callback){
 			}
 		});
 	}else{
-		api.get('/dbdefine/' + _id,req,null,(err,resp)=>{
+		api.get(`/dbdefine/${_id}`,req,null,(err,resp)=>{
 			if(!err){
 				data.form.dbName=resp.data.dbName;
 
@@ -94,9 +94,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/dbdefine/' + _id,req,(err,resp)=>{
+	api.delete(`/dbdefine/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/dbdefine?sid=' + req.query.sid);
+			res.redirect(`/dbdefine?mid=${req.query.mid}&sid=${req.query.sid}`)
 			
 		}else{
 			data['message']=err.message;

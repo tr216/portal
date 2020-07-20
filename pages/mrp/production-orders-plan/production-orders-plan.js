@@ -27,7 +27,7 @@ function getList(req,res,data,callback){
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		
-		api.get('/' + req.query.db + '/production-orders',req,data.filter,(err,resp)=>{
+		api.get(`/${req.query.db}/production-orders`,req,data.filter,(err,resp)=>{
 			if(!err){
 				resp.data.docs.forEach((e)=>{
 					e['musteri']='';

@@ -33,7 +33,7 @@ module.exports = function(req,res,callback){
 
 function getList(req,res,data,callback){
 	
-	api.get('/' + req.query.db + '/inventory',req,data.filter,(err,resp)=>{
+	api.get(`/${req.query.db}/inventory`,req,data.filter,(err,resp)=>{
 		if(!err){
 
 			data=mrutil.setGridData(data,resp);
@@ -46,7 +46,7 @@ function getList(req,res,data,callback){
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
 
-	api.get('/' + req.query.db + '/inventory/' + _id,req,null,(err,resp)=>{
+	api.get(`/${req.query.db}/inventory/${_id}`,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign({},data.form,resp.data);
 			callback(null,data);

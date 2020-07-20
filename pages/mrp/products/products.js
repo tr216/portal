@@ -87,7 +87,7 @@ function getList(req,res,data,callback){
 	if(!data.filter['itemType']) data.filter['itemType']=data.form.itemType;
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.accountGroupList.unshift({name:'',_id:''});
-		api.get('/' + req.query.db + '/items',req,data.filter,(err,resp)=>{
+		api.get(`/${req.query.db}/items`,req,data.filter,(err,resp)=>{
 			if(!err){
 				data=mrutil.setGridData(data,resp);
 			}
@@ -103,25 +103,25 @@ function initLookUpLists(req,res,data,cb){
 	// data.palletTypeList=[];
 	// data.packingTypeList=[];
 	
-	api.get('/' + req.query.db + '/mrp-stations',req,{passive:false},(err,resp)=>{
+	api.get(`/${req.query.db}/mrp-stations`,req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.stationList=resp.data.docs;
 			data.stationList.unshift({_id:'',name:'-Tümü-'})
 		}
-		api.get('/' + req.query.db + '/mrp-process-steps',req,{passive:false},(err,resp)=>{
+		api.get(`/${req.query.db}/mrp-process-steps`,req,{passive:false},(err,resp)=>{
 			if(!err){
 				data.stepList=resp.data.docs;
 				data.stepList.unshift({_id:'',name:'-Tümü-'})
 			}
-			api.get('/' + req.query.db + '/account-groups',req,{},(err,resp)=>{
+			api.get(`/${req.query.db}/account-groups`,req,{},(err,resp)=>{
 				if(!err){
 					data.accountGroupList=resp.data.docs;
 				}
-				// api.get('/' + req.query.db + '/pallet-types',req,{},(err,resp)=>{
+				// api.get(`/${req.query.db}/pallet-types`,req,{},(err,resp)=>{
 				// 	if(!err){
 				// 		data.palletTypeList=resp.data.docs;
 				// 	}
-				// 	api.get('/' + req.query.db + '/packing-types',req,{},(err,resp)=>{
+				// 	api.get(`/${req.query.db}/packing-types`,req,{},(err,resp)=>{
 				// 		if(!err){
 				// 			data.packingTypeList=resp.data.docs;
 				// 		}
@@ -148,9 +148,9 @@ function addnew(req,res,data,callback){
 			
 			
 
-			api.post('/' + req.query.db + '/items',req,data.form,(err,resp)=>{
+			api.post(`/${req.query.db}/items`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect('/mrp/products?db=' + req.query.db +'&sid=' + req.query.sid);
+					res.redirect(`/mrp/products?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 				}else{
 					data['message']=err.message;
 					callback(null,data);
@@ -169,7 +169,7 @@ function edit(req,res,data,callback){
 	data.recipeList=[];
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.accountGroupList.unshift({name:'-- Seçiniz --',_id:''});
-		api.get('/' + req.query.db + '/recipes',req,{item:_id},(err,resp)=>{
+		api.get(`/${req.query.db}/recipes`,req,{item:_id},(err,resp)=>{
 			if(!err){
 				data.recipeList=resp.data.docs;
 				//data.recipeList.unshift({_id:'',name:'-Tümü-'})
@@ -192,9 +192,9 @@ function edit(req,res,data,callback){
 				
 				
 
-				api.put('/' + req.query.db + '/items/' + _id, req,data.form,(err,resp)=>{
+				api.put(`/${req.query.db}/items/${_id}`,req,data.form,(err,resp)=>{
 					if(!err){
-						res.redirect('/mrp/products?db=' + req.query.db +'&sid=' + req.query.sid);
+						res.redirect(`/mrp/products?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 
 					}else{
 						data['message']=err.message;
@@ -203,7 +203,7 @@ function edit(req,res,data,callback){
 				});
 			}else{
 				
-					api.get('/' + req.query.db + '/items/' + _id,req,null,(err,resp)=>{
+					api.get(`/${req.query.db}/items/${_id}`,req,null,(err,resp)=>{
 						if(!err){
 							data.form=Object.assign(data.form,resp.data);
 							data.form.barkodlar='';
@@ -232,9 +232,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete('/' + req.query.db + '/items/' + _id,req,(err,resp)=>{
+	api.delete(`/${req.query.db}/items/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect('/mrp/products?db=' + req.query.db +'&sid=' + req.query.sid);
+			res.redirect(`/mrp/products?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
 			
 		}else{
 			

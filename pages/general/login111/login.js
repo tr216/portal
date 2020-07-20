@@ -32,7 +32,7 @@ function login(req,res,data, cb){
 		data.form.username=req.body.username || '';
 		data.form.password=req.body.password || '';
 		eventLog('data.form:',data.form);
-		api.post('/login',req,data.form,(err,resp)=>{
+		api.post(`/login`,req,data.form,(err,resp)=>{
 			if(!err){
 				var userAgent=req.headers['user-agent'] || '';
 				var IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
@@ -41,7 +41,7 @@ function login(req,res,data, cb){
 				doc.save((err,sessionDoc)=>{
 					if(!err){
 						eventLog('res.redirect(/passport?sid=' + sessionDoc._id);
-						res.redirect('/passport?sid=' + sessionDoc._id);
+						res.redirect(`/passport?sid=' + sessionDoc._id);
 					}else{
 						data['message']=err.message;
 						cb(null,data);
@@ -70,9 +70,9 @@ function signup(req,res,data,cb){
 		data.message='Tekrar parola ayni degil!';
 		return cb(null,data);
 	}
-	api.post('/signup',req,data.form,(err,resp)=>{
+	api.post(`/signup`,req,data.form,(err,resp)=>{
 		if(!err){
-			res.redirect('/general/login/verify?username=' + data.form.username);
+			res.redirect(`/general/login/verify?username=' + data.form.username);
 		}else{
 			data.message=err.message;
 			cb(null,data);
@@ -91,7 +91,7 @@ function verify(req,res,data,cb){
 		eventLog('req.query.username:',req.query.username);
 		if(req.method=='POST' || req.method=='PUT'){
 			data.form.authCode=req.body.authCode;
-			api.post('/verify',req,data.form,(err,resp)=>{
+			api.post(`/verify`,req,data.form,(err,resp)=>{
 				if(!err){
 					var userAgent=req.headers['user-agent'] || '';
 					var IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '';
@@ -99,7 +99,7 @@ function verify(req,res,data,cb){
 					var doc=new db.sessions({token:resp.data,ip:IP,userAgent:userAgent});
 					doc.save((err,sessionDoc)=>{
 						if(!err){
-							res.redirect('/passport?sid=' + sessionDoc._id);
+							res.redirect(`/passport?sid=' + sessionDoc._id);
 						}else{
 							data['message']=err.message;
 							cb(null,data);
@@ -122,9 +122,9 @@ function forgotPassword(req,res,data,cb){
 		
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form.username=req.body.username;
-		api.post('/forgot-password',req,data.form,(err,resp)=>{
+		api.post(`/forgot-password`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect('/general/login');
+				res.redirect(`/general/login');
 				
 			}else{
 				data.message=err.message;
