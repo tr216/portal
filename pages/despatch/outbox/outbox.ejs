@@ -1,74 +1,63 @@
 <%
-    
+
 %>
 <%layout('../../_common/layouts/general')%>
 <form action="" method="POST" role="form" name="form1">
-    <div class="row m-0 mt-2">
-        <div class="col-12 p-0">
-            <%- partial('../../_common/components/date-filter',{includeForm:false,includeFilterButton:false}) %>
-            
-            <div class="float-left form-inline ml-md-4">
-                <label class="text-primary">Senaryo:</label>
-                <select class="form-control input-inline input-sm" name="profileId" id="profileId">
-                    <% docProfileIdList.forEach((e)=>{ %> 
-                    <option value="<%=e.value%>"<% if(typeof filter.profileId!='undefined') if(filter.profileId==e.value){%>selected<% } %>><%=e.text%></option>
-                    <% }) %>
-                </select>
-            </div>
-            <div class="float-left form-inline ml-md-2">
-                <label class="text-primary">Sipariş Türü:</label>
-                <select class="form-control input-inline input-sm" name="despatchAdviceTypeCode" id="despatchAdviceTypeCode">
-                    <% docTypeCodeList.forEach((e)=>{ %> 
-                    <option value="<%=e.value%>"<% if(typeof filter.despatchAdviceTypeCode!='undefined') if(filter.despatchAdviceTypeCode==e.value){%>selected<% } %>><%=e.text%></option>
-                    <% }) %>
-                </select>
-            </div>
-            <div class="float-md-right">
-                <button type="submit" name="btnFilter" class="btn btn-primary" value="true"><i class="fa fa-filter"></i> Filtrele</button>
-            </div>
-        </div>
-    </div>
+	<div class="row m-0 mt-2">
+		<div class="col-12 p-0">
+			<%- partial('../../_common/components/date-filter',{includeForm:false,includeFilterButton:false}) %>
+
+			<div class="float-left form-inline ml-md-4">
+				<label class="text-primary">Senaryo:</label>
+				<select class="form-control input-inline input-sm" name="profileId" id="profileId">
+					<% docProfileIdList.forEach((e)=>{ %> 
+					<option value="<%=e.value%>"<% if(typeof filter.profileId!='undefined') if(filter.profileId==e.value){%>selected<% } %>><%=e.text%></option>
+					<% }) %>
+				</select>
+			</div>
+			<div class="float-left form-inline ml-md-2">
+				<label class="text-primary">Sipariş Türü:</label>
+				<select class="form-control input-inline input-sm" name="despatchAdviceTypeCode" id="despatchAdviceTypeCode">
+					<% docTypeCodeList.forEach((e)=>{ %> 
+					<option value="<%=e.value%>"<% if(typeof filter.despatchAdviceTypeCode!='undefined') if(filter.despatchAdviceTypeCode==e.value){%>selected<% } %>><%=e.text%></option>
+					<% }) %>
+				</select>
+			</div>
+			<div class="float-md-right">
+				<button type="submit" name="btnFilter" class="btn btn-primary" value="true"><i class="fa fa-filter"></i> Filtrele</button>
+			</div>
+		</div>
+	</div>
 </form>
-
-
-<div class="btn-toolbar mt-2 border p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<a class="btn btn-primary" href="javascript:sendToGib()" >Gönder</a>
+<div class="row m-0 mt-2 button-bar">
+	<div class="col-12 p-1 m-0">
+		<div style="display: inline-flex;">
+			<a class="btn btn-primary btn-sm" href="javascript:sendToGib()" >Gönder</a>
+			<a class="btn btn-info btn-sm ml-1" href="javascript:sendToArchive()" >Arşive Kaldır</a>
+			<a class="btn btn-info btn-sm ml-1" href="javascript:$('#fileUpload').trigger('click')" title="File Importar kullanarak iceri al"><i class="fas fa-file-import"></i> Dosyadan İçeri Al</a>
+			<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.csv,*.txt" multiple>
+		</div>
 	</div>
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<a class="btn btn-info" href="javascript:sendToArchive()" >Arşive Kaldır</a>
-	</div>
-	
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<a class="btn btn-info" href="javascript:$('#fileUpload').trigger('click')" title="File Importar kullanarak iceri al"><i class="fas fa-file-import"></i> Dosyadan İçeri Al</a>
-		<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.csv,*.txt" multiple>
-	</div>
-	
 </div>
 
-<%- formError(message) %>
 
 <%- partial('../../_common/components/grid2',{
-    fields:[
-        {name:'despatchNo',text:'İrs.No',type:'label', filterField:'despatchNo', filter:true,orderable:true},
-        {name:'issueDate',text:'İrs. Tarihi',type:'label', orderable:true},
-        {name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
-        {name:'despatchStatusHtml',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
-    ],
-    caption:'İrsaliyeler',
-    addNewButton:true,
-    viewButton:false,
-    editButton:true,
-    deleteButton:true,
-    selection:true,
-    //printButton:{
-    //    path:'/despatch/despatch/{_id}',
-    //    printDesignList:printDesignList
-    //},
-    customButtons:[
-        {inline:true, class:'btn-secondary', href:`javascript:yazdir('{despatchStatus}','{_id}?db=${db}&sid=${sid}')`, title:'Yazdir',icon:'fas fa-print'},
-    ],
-    deleteUrl:'/dbapi/despatch/{_id}?db='+db+'&sid=' + sid
+	fields:[
+	{name:'despatchNo',text:'İrs.No',type:'label', filterField:'despatchNo', filter:true,orderable:true},
+	{name:'issueDate',text:'İrs. Tarihi',type:'label', orderable:true},
+	{name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
+	{name:'despatchStatusHtml',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
+	],
+	caption:'İrsaliyeler',
+	addNewButton:true,
+	viewButton:false,
+	editButton:true,
+	deleteButton:true,
+	selection:true,
+	customButtons:[
+	{inline:true, class:'btn-secondary', href:`javascript:yazdir('{despatchStatus}','{_id}?db=${db}&sid=${sid}')`, title:'Yazdir',icon:'fas fa-print'},
+	],
+	deleteUrl:'/dbapi/despatch/{_id}?db='+db+'&sid=' + sid
 }) 
 %>
 
@@ -89,7 +78,7 @@
 		popupCenter(url,"Hatalar","900","600")
 	}
 
-	
+
 	function sendToGib(){
 		var data={list:[]}
 		$(".checkSingle").each(function() {
@@ -98,7 +87,7 @@
 				if(satir.doc.despatchStatus=='Draft' || satir.doc.despatchStatus=='Error'){
 					data.list.push({_id:satir._id, ID:satir.doc.ID})
 				}
-				
+
 			}
 		})
 		if(data.list.length==0)
@@ -123,18 +112,18 @@
 				alert(err)
 			}
 		})
-			
+
 	}
 
 	$(document).ready(function(){
 		$("#fileUpload").change(function() {
-			
+
 			var reader  = new FileReader()
 			var fileIndex=0
 			var files=this.files
 			var willBeSentFiles=[]
 			reader.addEventListener("load", function(){
-				
+
 				if(reader.result){
 					willBeSentFiles[willBeSentFiles.length-1].base64Data=reader.result.split('base64,')[1]
 				}
@@ -151,35 +140,35 @@
 				willBeSentFiles.push({name:file.name,modifiedDate:file.lastModifiedDate,size:file.size,base64Data:''})
 				reader.readAsDataURL(file)
 			}
-			
+
 			runReader()
-	    })
+		})
 
 		function sendFileImport(files){
 			if(files.length==0) 
 				return
 
 			if(!confirm(files.length + ' adet dosya iceri alinacaktir. Onayliyor musunuz?')) return
-			$.ajax({
-				url:'/dbapi/despatch/importOutbox?db=<%=db%>&sid=<%=sid%>',
-				data:{fileImporter:'', files:files},
-				type:'POST',
-				success:function(result){
-					if(result.success==undefined){
-						alert('Hata: Dosya iceri alinamadi! Hatali dosya icerigi')
-					}else{
-						if(result.success){
-							window.location.reload()
+				$.ajax({
+					url:'/dbapi/despatch/importOutbox?db=<%=db%>&sid=<%=sid%>',
+					data:{fileImporter:'', files:files},
+					type:'POST',
+					success:function(result){
+						if(result.success==undefined){
+							alert('Hata: Dosya iceri alinamadi! Hatali dosya icerigi')
 						}else{
-							alert(result.error.message)
+							if(result.success){
+								window.location.reload()
+							}else{
+								alert(result.error.message)
+							}
 						}
+					},
+					error:function(err){
+						console.log(err)
+						alert(err)
 					}
-				},
-				error:function(err){
-					console.log(err)
-					alert(err)
-				}
-			})
+				})
 		}
 	})
 

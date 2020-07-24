@@ -30,13 +30,14 @@
 	</div>
 </form>
 
-<div class="btn-toolbar mt-2 border p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<a class="btn btn-primary" href="javascript:sendReceiptAdvice()" >Teslim yanıtını gönder</a>
+<div class="row m-0 mt-2 button-bar">
+	<div class="col-12 p-1 m-0">
+		<div style="display: inline-flex;">
+			<a class="btn btn-primary btn-sm" href="javascript:sendReceiptAdvice()" ><i class="fas fa-cloud-upload-alt"></i> Teslim yanıtını gönder</a>
+		</div>
 	</div>
 </div>
 
-<%- formError(message) %>
 
 <%- partial('../../_common/components/grid2',{
 	fields:[
@@ -45,7 +46,7 @@
 	{name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
 	{name:'doc.ID',text:'ID',type:'label', visible:false},
 	{name:'doc.despatchStatus',text:'despatchStatus',type:'label', visible:false},
-	{name:'receiptStatusHtml',text:'Teslim Durumu', width:'100px',type:'lookup',filter:true, lookupList:receiptStatusTypes, orderable:false , dontUseLookup:true},
+	{name:'receiptStatusHtml',text:'Teslim Durumu', width:'150px',type:'lookup',filter:true, lookupList:receiptStatusTypes, orderable:false , dontUseLookup:true},
 	{name:'receiptStatus',text:'receiptStatus',type:'label', visible:false},
 	{name:'despatchStatusHtml',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, orderable:false , dontUseLookup:true}
 	],
@@ -57,35 +58,39 @@
 	selection:true,
 	customButtons:[
 	{inline:true, class:'btn-secondary', href:`javascript:popupCenter('/despatch/inbox/view/{_id}?db=${db}&sid=${sid}','Yazdir','900','600');`, title:'Yazdir',icon:'fas fa-print'},
-	{inline:true, class:'btn-info', href:`javascript:approve('{_id}','{doc.despatchStatus}');`, title:'Onayla',icon:'fas fa-check'}
+	// {inline:true, class:'btn-info', href:`javascript:setReceiptAdviceInformation('{_id}','{doc.despatchStatus}');`, title:'Onayla',icon:'fas fa-check'}
 	],
 	deleteUrl:'/dbapi/despatch/{_id}?db='+db+'&sid=' + sid
 }) 
 %>
 
 <script type="text/javascript">
-
-	function sendReceiptAdvice(){
+	function sendReceiptAdvice(receiptAdviceId=undefined){
 		var data={list:[]}
-		$(".checkSingle").each(function() {
-			if(this.checked){
-				var satir=JSON.parse(decodeURIComponent(this.value))
-				if(satir.doc.despatchStatus=='WaitingForApprovement'){
-					data.list.push({_id:satir._id, ID:satir.doc.ID,uuid:satir.doc.uuid})
+
+		if(receiptAdviceId){
+			data.list.push({_id:receiptAdviceId})
+		}else{
+			$(".checkSingle").each(function() {
+				if(this.checked){
+					var satir=JSON.parse(decodeURIComponent(this.value))
+					if(satir.doc.receiptAdvice.receiptStatus=='Draft' || satir.doc.receiptAdvice.receiptStatus=='Error'){
+						data.list.push({_id:satir.doc.receiptAdvice._id})
+					}
 				}
-			}
-		})
+			})
+		}
+		
 		if(data.list.length==0)
-			return alert('Kayit secilmemis!\nDurum: Onay bekliyor')
+			return alert('Kayit secilmemis! Teslim durumu: "Taslak" veya "Hata" olanlar gonderilebilir')
 		if(!confirm(data.list.length + ' adet irsaliye teslim bilgisi gönderilecektir. Onayliyor musunuz?'))
 			return
 
 		$.ajax({
-			url:'/dbapi/despatch-receipt-advice/send?db=<%=db%>&sid=<%=sid%>',
+			url:`/dbapi/despatch-receipt-advice/send?db=${q.db}&sid=${q.sid}`,
 			data:data,
 			type:'POST',
 			success:function(result){
-				
 				if(result.success){
 					alert(result.data)
 					window.location.reload()
@@ -94,7 +99,6 @@
 				}
 			},
 			error:function(err){
-				console.log(err)
 				alert(err)
 			}
 		})
@@ -107,7 +111,7 @@
 		popupCenter(url,"Hatalar","900","600")
 	}
 
-	function approve(_id){
+	function setReceiptAdviceInformation(_id){
 		despatchDoc=null
 		receiptAdvice=null
 		$.ajax({
@@ -154,10 +158,16 @@
 		$('#issueDate').val(despatchDoc.issueDate.value)
 		$('#profileId').val(despatchDoc.profileId.value)
 		$('#despatchAdviceTypeCode').val(despatchDoc.despatchAdviceTypeCode.value)
+		$('#deliveryContactName').val('')
+		$('#despatchContactName').val('')
+		$('#actualDeliveryDate').val((new Date()).yyyymmdd())
+		$('#note').val('')
+
+
 		if(receiptAdvice){
 			$('#deliveryContactName').val(receiptAdvice.deliveryCustomerParty.deliveryContact.name.value)
 			$('#despatchContactName').val(receiptAdvice.despatchSupplierParty.despatchContact.name.value)
-			$('#actualDeliveryDate').val(receiptAdvice.actualDeliveryDate.value)
+			$('#actualDeliveryDate').val(receiptAdvice.shipment.delivery.actualDeliveryDate.value)
 			var note=''
 			receiptAdvice.note.forEach((e)=>{note+=e.value})
 			$('#note').val(note.trim())
@@ -173,7 +183,9 @@
 					receivedQuantity=receiptAdvice.receiptLine[index].receivedQuantity.value
 					rejectedQuantity=receiptAdvice.receiptLine[index].rejectedQuantity.value
 					timingComplaint=receiptAdvice.receiptLine[index].timingComplaint.value
-					lineId=receiptAdvice.receiptLine[index].lineId.value
+					if(receiptAdvice.receiptLine[index])
+						if(receiptAdvice.receiptLine[index].lineId)
+							lineId=receiptAdvice.receiptLine[index].lineId.value
 				}
 			}
 			var newRow=approveGrid.insertRow(approveGrid.rows.length);
@@ -200,10 +212,12 @@
 		})
 
 		$('#approveModal').modal('show')
-		
 	}
 
-	function approveAdvice(approveType){
+	function saveReceiptAdvice(action){
+		if($('#actualDeliveryDate').val().trim()=='')
+			return alert('Teslim Tarihini giriniz')
+
 		if(!receiptAdvice){
 			receiptAdvice=clone(dbType.receiptAdviceType)
 			receiptAdvice.despatch=despatchDoc._id
@@ -218,7 +232,7 @@
 			receiptAdvice.buyerCustomerParty=despatchDoc.buyerCustomerParty
 			receiptAdvice.shipment=despatchDoc.shipment
 			receiptAdvice.localDocumentId=despatchDoc.localDocumentId
-			
+			receiptAdvice.issueTime.value='13:00:00'
 		}
 		receiptAdvice.despatchDocumentReference={
 			ID:{value:despatchDoc.uuid.value},
@@ -227,7 +241,8 @@
 		receiptAdvice.despatchSupplierParty.despatchContact=clone(dbType.contactType)
 		receiptAdvice.despatchSupplierParty.despatchContact.name.value=$('#despatchContactName').val()
 		receiptAdvice.issueDate.value=$('#actualDeliveryDate').val()
-		receiptAdvice.note=[{value:$('#actualDeliveryDate').val()}]
+		
+		receiptAdvice.note=[{value:$('#note').val()}]
 
 		receiptAdvice.deliveryCustomerParty.deliveryContact=clone(dbType.contactType)
 		receiptAdvice.deliveryCustomerParty.deliveryContact.name.value=$('#deliveryContactName').val()
@@ -235,35 +250,23 @@
 		receiptAdvice.receiptLine=[]
 
 		despatchDoc.despatchLine.forEach((e,index)=>{
-			var line={
-				ID:{value:(index+1).toString()},
-				item:e.item,
-				note:e.note,
-				receivedDate:{value:$('#actualDeliveryDate').val()},
-				despatchLineReference:{
-					lineId:{value:e.ID.value}
-				},
-				receivedQuantity:dbType.quantityType,
-				rejectedQuantity:dbType.quantityType,
-				rejectReason:[],
-				rejectReasonCode:dbType.codeType,
-				shortQuantity:e.shortQuantity,
-				orderLineReference:e.orderLineReference,
-				oversupplyQuantity:e.oversupplyQuantity,
-				timingComplaint:{value:$(`input[name="receiptLine[${index}][timingComplaint]"]`).val()},
-				timingComplaintCode:dbType.codeType,
-				shipment:e.shipment
-			}
-			if(approveType=='all'){
-				line.receivedQuantity.value=e.deliveredQuantity.value
-				line.rejectedQuantity.value=0
-			}else if(approveType=='partial'){
+			var line=clone(dbType.receiptLineType)
+			line.ID.value=(index+1).toString()
+			line.item=e.item
+			line.note=e.note
+			line.receivedDate.value=$('#actualDeliveryDate').val()
+			line.despatchLineReference.lineId.value=e.ID.value
+			line.shortQuantity=e.shortQuantity
+			line.oversupplyQuantity=e.oversupplyQuantity
+			line.orderLineReference=e.orderLineReference
+			line.timingComplaint.value=$(`input[name="receiptLine[${index}][timingComplaint]"]`).val()
+			line.shipment=e.shipment
+
 				line.receivedQuantity.value=Number($(`input[name="receiptLine[${index}][receivedQuantity]"]`).val())
 				line.rejectedQuantity.value=Number($(`input[name="receiptLine[${index}][rejectedQuantity]"]`).val())
-			}else if(approveType=='declineAll'){
-				line.receivedQuantity.value=0
-				line.rejectedQuantity.value=e.deliveredQuantity.value
-			}
+				if(line.receivedQuantity.value==0 && line.rejectedQuantity.value==0){
+					alert(`Satir:${line.ID.value} Kabul ve Red miktarlari ikisi birden sifir olamaz`)
+				}
 			receiptAdvice.receiptLine.push(line)
 		})
 		
@@ -280,14 +283,39 @@
 			success:function(result){
 				if(result.success){
 					//$('#approveModal').modal('hide')
-					window.location.reload()
+					if(action=='Send'){
+						sendReceiptAdvice(result.data._id)
+					}else{
+						window.location.reload()
+					}
+					
 				}else{
 					alert(result.error.message)
 				}
 			}
-		});
+		})
 	}
+
 	var bChanging=false
+
+	function btnApproveAll(){
+		bChanging=true
+		despatchDoc.despatchLine.forEach((e,index)=>{
+			$(`input[name="receiptLine[${index}][receivedQuantity]"]`).val(e.deliveredQuantity.value)
+			$(`input[name="receiptLine[${index}][rejectedQuantity]"]`).val(0)
+		})
+		bChanging=false
+	}
+
+	function btnRejectAll(){
+		bChanging=true
+		despatchDoc.despatchLine.forEach((e,index)=>{
+			$(`input[name="receiptLine[${index}][receivedQuantity]"]`).val(0)
+			$(`input[name="receiptLine[${index}][rejectedQuantity]"]`).val(e.deliveredQuantity.value)
+		})
+		bChanging=false
+	}
+	
 
 	function receivedQuantityChange(index){
 		if(bChanging)
@@ -324,9 +352,6 @@
 
 		bChanging=false
 	}
-
-
-	
 </script>
 
 <div class="modal" id="approveModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="approveModalLabel" aria-hidden="true">
@@ -377,7 +402,7 @@
 					</div>
 					<div class="form-group col-md-3">
 						<label for="" class="m-0">Not</label>
-						<input type="text" class="form-control" id="Note" value="">
+						<input type="text" class="form-control" id="note" value="">
 					</div>
 				</div>
 				<div style="width:100%; overflow: scroll;">
@@ -400,10 +425,11 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<a class="btn btn-primary" href="javascript:approveAdvice('all');" title=""><i class="fas fa-check-double"></i> Tümünü Onayla</a>
-				<a class="btn btn-warning" href="javascript:approveAdvice('partial');" title=""><i class="fas fa-check"></i> Kısmi onay Onayla</a>
-				<a class="btn btn-danger" href="javascript:approveAdvice('declineAll');" title=""><i class="fas fa-times"></i> Tümünü reddet</a>
-				<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
+				<a class="btn btn-info float-left" href="javascript:btnApproveAll();" title=""><i class="fas fa-check-double"></i> Tümünü kabul et</a>
+				<a class="btn btn-danger float-left" href="javascript:btnRejectAll();" title=""><i class="fas fa-times"></i> Tümünü reddet</a>
+				<button class="btn btn-secondary float-right" type="button" data-dismiss="modal">Vazgeç</button>
+				<a class="btn btn-info float-right" href="javascript:saveReceiptAdvice('Send');" title="Teslim bilgisini kaydet ve gönder"><i class="fas fa-cloud-upload-alt"></i> Kaydet ve Gönder</a>
+				<a class="btn btn-primary float-right" href="javascript:saveReceiptAdvice('Draft');" title="Teslim bilgisini daha sonra göndermek için kaydet (Taslak)"><i class="fas fa-save"></i> Kaydet</a>
 			</div>
 		</div>
 	</div>

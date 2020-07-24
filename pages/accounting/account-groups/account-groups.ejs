@@ -16,7 +16,7 @@
     deleteButton:true,
     viewButton:true,
     customButtons:[
-        {href:'javascript:copyConfirm("{_id}","{name}")', title:'Kopyala',icon:'far fa-copy'}
+        {inline:true, href:'javascript:copyConfirm("{_id}","{name}")', title:'Kopyala',icon:'far fa-copy'}
     ],
     deleteUrl:'/dbapi/account-groups/{_id}?db=' + db + '&sid=' + sid
     }) 

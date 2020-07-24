@@ -1,134 +1,122 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/date-filter',{includeForm:true,includeFilterButton:true}) %>
 
-<div class="btn-toolbar mt-2 border p-1 rounded" role="toolbar" aria-label="Toolbar with button groups">
-  <div class="btn-group mr-2" role="group" aria-label="First group">
-    <button type="button" class="btn btn-primary" id="btnTransfer"><i class="fa fa-cloud-upload-alt"></i> Aktar</button>
-    <button type="button" class="btn btn-warning" id="btnRollback"><i class="fa fa-reply"></i> Geri Al</button>
-    <button type="button" class="btn btn-info" id="btnSetTransferred"><i class="fa fa-check"></i> Işeretle</button>
-  </div>
+<div class="row m-0 mt-2 button-bar">
+	<div class="col-12 p-1 m-0">
+		<div style="display: inline-flex">
+			<a class="btn btn-primary btn-sm" href="javascript:transfer()" ><i class="fa fa-cloud-upload-alt"></i> Aktar</a>
+			<a class="btn btn-warning btn-sm ml-1" href="javascript:rollback()" ><i class="fa fa-reply"></i> Geri Al</a>
+			<a class="btn btn-info btn-sm ml-1" href="javascript:setTransferred()" ><i class="fa fa-check"></i> Işeretle</a>
+		</div>
+	</div>
 </div>
-<% if(typeof message!='undefined') { %>
-    <% if(message!='') { %>
-<div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-danger" role="alert">
-            <%=message %>
-        </div>
-    </div>
-</div>
-    <% } %>
-<% } %>
-
 
 <%- partial('../../_common/components/grid2',{
-    fields:[
-        {name:'status', text:'Durum',     type:'lookup', 
-            lookupList:[
-                {text:'Bekleyen',value:''},
-                {text:'Islemde',value:'pending'},
-                {text:'Aktarılmış',value:'transferred'}
-            ], 
-            textField:'text', valueField:'value', filter:true},
-        {name:'posDevice.location.locationName',    text:'Lokasyon',    type:'lookup' , filter:true, filterField:'location', lookupList:locationList, textField:'locationName', valueField:'_id'}, 
-        {name:'posDevice.deviceSerialNo',           text:'Seri No',     type:'label', filter:true,  filterField:'deviceSerialNo'}, 
-        {name:'zNo',                               text:'zNo',  dataType:'num-fmt',  type:'label' , className: 'text-right' , width:'50px', orderable:true, filter:true},
-        {name:'zDate',                               text:'zDate',  width:'80px',   type:'label', orderable:true},
-        {name:'zTotal',                               text:'zTotal',   width:'80px',  type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-        {name:'data',                               text:'Açıklama',    type:'label'},
-        {name:'posDevice.service.name',             text:'Servis adı',  type:'label' ,icon:'cogs'}, 
-        {name:'posDevice.localConnector.name',      text:'Local Connector',  type:'label' ,icon:'plug'}, 
-        
-    ],
-    caption:'ZRaporları',
-    addNewButton:false,
-    editButton:false,
-    deleteButton:true,
-    viewButton:true,
-    selection:true,
-    showPanel:false
-    })
+	fields:[
+	{name:'status', text:'Durum',     type:'lookup', 
+	lookupList:[
+	{text:'Bekleyen',value:''},
+	{text:'Islemde',value:'pending'},
+	{text:'Aktarılmış',value:'transferred'}
+	], 
+	textField:'text', valueField:'value', filter:true},
+	{name:'posDevice.location.locationName',    text:'Lokasyon',    type:'lookup' , filter:true, filterField:'location', lookupList:locationList, textField:'locationName', valueField:'_id'}, 
+	{name:'posDevice.deviceSerialNo',           text:'Seri No',     type:'label', filter:true,  filterField:'deviceSerialNo'}, 
+	{name:'zNo',                               text:'zNo',  dataType:'num-fmt',  type:'label' , className: 'text-right' , width:'50px', orderable:true, filter:true},
+	{name:'zDate',                               text:'zDate',  width:'80px',   type:'label', orderable:true},
+	{name:'zTotal',                               text:'zTotal',   width:'80px',  type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
+	{name:'data',                               text:'Açıklama',    type:'label'},
+	{name:'posDevice.service.name',             text:'Servis adı',  type:'label' ,icon:'cogs'}, 
+	{name:'posDevice.localConnector.name',      text:'Local Connector',  type:'label' ,icon:'plug'}, 
+
+	],
+	caption:'ZRaporları',
+	addNewButton:false,
+	editButton:false,
+	deleteButton:true,
+	viewButton:true,
+	selection:true,
+	showPanel:false
+})
 %>
 
 <script type="text/javascript">
+	function transfer(){
+		var data={list:[]}
+		$(".checkSingle").each(function() {
+			if(this.checked){
+				data.list.push({_id:JSON.parse(decodeURIComponent(this.value))._id})
+			}
+		})
+		if(data.list.length==0)
+			return alert('secili kayit yok!')
+		if(!confirm(data.list.length + ' adet Z Raporu aktarilacaktir. Onayliyor musunuz?'))
+			return
 
-    $(document).ready(function(){
+		$.ajax({
+			url:`/dbapi/pos-device-zreports/transfer?db=${q.db}&sid=${q.sid}`,
+			data:data,
+			type:'POST',
+			success:function(result){
+				if(result.success){
+					window.location.reload()
+				}else{
+					alert(result.error)
+				}
+			}
+		})
 
-        $('#btnTransfer').click(function(){
-            var data={list:[]};
-            $(".checkSingle").each(function() {
-                if(this.checked){
-                    data.list.push({_id:JSON.parse(decodeURIComponent(this.value))._id});
-                }
-            });
-            if(data.list.length==0)  return alert('secili kayit yok!');
-            if(!confirm(data.list.length + ' adet Z Raporu aktarilacaktir. Onayliyor musunuz?')) return;
-            $.ajax({
-                url:'/dbapi/pos-device-zreports/transfer?db=<%=db%>&sid=<%=sid%>',
-                data:data,
-                type:'POST',
-                success:function(result){
-                    if(result.success){
-                        //alert('Aktarim basladi.');
-                        window.location.reload();
-                    }else{
-                        alert(result.error);
-                    }
-                }
-            });
-            
-        });
+	}
 
-        $('#btnRollback').click(function(){
-            var data={list:[]};
-            $(".checkSingle").each(function() {
-                if(this.checked){
-                    data.list.push({_id:JSON.parse(decodeURIComponent(this.value))._id});
-                }
-            });
-            if(data.list.length==0)  return alert('secili kayit yok!');
-            if(!confirm(data.list.length + ' adet Z Raporu aktarilmamis olarak geri alinacaktir (Muhasebe yaziliminizi kontrol ediniz). Onayliyor musunuz?')) return;
-            $.ajax({
-                url:'/dbapi/pos-device-zreports/rollback?db=<%=db%>&sid=<%=sid%>',
-                data:data,
-                type:'POST',
-                success:function(result){
-                    if(result.success){
-                        //alert('Aktarim basladi.');
-                        window.location.reload();
-                    }else{
-                        alert(result.error);
-                    }
-                }
-            });
-            
-        });
-        $('#btnSetTransferred').click(function(){
-            var data={list:[]};
-            $(".checkSingle").each(function() {
-                if(this.checked){
-                    data.list.push({_id:JSON.parse(decodeURIComponent(this.value))._id});
-                }
-            });
-            if(data.list.length==0)  return alert('secili kayit yok!');
-            if(!confirm(data.list.length + ' adet Z Raporu aktarilmamis olarak isaretlenecektir. Onayliyor musunuz?')) return;
-            $.ajax({
-                url:'/dbapi/pos-device-zreports/settransferred?db=<%=db%>&sid=<%=sid%>',
-                data:data,
-                type:'POST',
-                success:function(result){
-                    if(result.success){
-                        //alert('Aktarim basladi.');
-                        window.location.reload();
-                    }else{
-                        alert(result.error);
-                    }
-                }
-            });
-            
-        });
-       
-    });
+	function rollback(){
+		var data={list:[]}
+		$(".checkSingle").each(function() {
+			if(this.checked){
+				data.list.push({_id:JSON.parse(decodeURIComponent(this.value))._id})
+			}
+		})
+		if(data.list.length==0)
+			return alert('secili kayit yok!')
+		if(!confirm(data.list.length + ' adet Z Raporu aktarilmamis olarak geri alinacaktir (Muhasebe yaziliminizi kontrol ediniz). Onayliyor musunuz?'))
+			return
+		$.ajax({
+			url:`/dbapi/pos-device-zreports/rollback?db=${q.db}&sid=${q.sid}`,
+			data:data,
+			type:'POST',
+			success:function(result){
+				if(result.success){
+					window.location.reload()
+				}else{
+					alert(result.error)
+				}
+			}
+		})
+	}
+
+	function setTransferred(){
+		var data={list:[]}
+		$(".checkSingle").each(function() {
+			if(this.checked){
+				data.list.push({_id:JSON.parse(decodeURIComponent(this.value))._id})
+			}
+		})
+		if(data.list.length==0)
+			return alert('secili kayit yok!')
+		if(!confirm(data.list.length + ' adet Z Raporu aktarilmamis olarak isaretlenecektir. Onayliyor musunuz?'))
+			return
+		$.ajax({
+			url:`/dbapi/pos-device-zreports/settransferred?db=${q.db}&sid=${q.sid}`,
+			data:data,
+			type:'POST',
+			success:function(result){
+				if(result.success){
+					window.location.reload()
+				}else{
+					alert(result.error)
+				}
+			}
+		})
+	}
 </script>
 
 

@@ -14,7 +14,7 @@
     viewButton:true,
     deleteUrl:'/dbapi/print-designs/{_id}?db=' + db + '&sid=' + sid,
     customButtons:[
-        {href:'javascript:itemCopyConfirm("{_id}","{name}")', title:'Kopyala',icon:'far fa-copy'}
+        {inline:true, href:'javascript:itemCopyConfirm("{_id}","{name}")', title:'Kopyala',icon:'far fa-copy'}
     ]
     }) 
 %>

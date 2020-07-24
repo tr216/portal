@@ -30,22 +30,15 @@
 	</div>
 </form>
 
-<div class="btn-toolbar mt-2 border p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<button type="button" class="btn btn-primary" id="btnSendToGib">Gönder</button>
+<div class="row m-0 mt-2 button-bar">
+	<div class="col-12 p-1 m-0">
+		<div style="display: inline-flex;">
+			<a class="btn btn-info btn-sm ml-1" href="javascript:$('#fileUpload').trigger('click')" title="File Importar kullanarak iceri al"><i class="fas fa-file-import"></i> Dosyadan İçeri Al</a>
+			<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.csv,*.txt" multiple>
+		</div>
 	</div>
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<button type="button" class="btn btn-info" id="btnSendToArchive">Arşive Kaldır</button>
-	</div>
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<button type="button" class="btn btn-info" id="btnImportFromLocal" title="Local Connector ile iceri al"><i class="fas fa-plug"></i> İçeri Al</button>
-	</div>
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<button type="button" class="btn btn-info" id="btnImportFromFile" title="File Importer kullanarak iceri al"><i class="fas fa-file-import"></i> Dosyadan İçeri Al</button>
-		<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.csv,*.txt" multiple>
-	</div>
-	
 </div>
+
 
 <% if(typeof message!='undefined') { %>
 <% if(message!='') { %>
@@ -86,10 +79,6 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
-		$("#btnImportFromFile").click(function() {
-			$("#fileUpload").trigger('click'); 
-	    });
-
 		$("#fileUpload").change(function() {
 			
 			var reader  = new FileReader();
@@ -135,54 +124,8 @@
 			});
 		}
 
-		$('#btnImportFromLocal').click(function(){
-			$.ajax({
-				url:'/dbapi/order/transfer/import?db=<%=db%>&sid=<%=sid%>',
-				data:{},
-				type:'POST',
-				success:function(result){
-					if(result.success){
-						alert('Islem gorev yoneticisine eklendi. Birazdan tamamlanir.');
-						window.location.reload();
-					}else{
-
-					   alert(result.error.code + '\n' + result.error.message);
-				   }
-			   }
-		   });
-			
-		});
 		
-		
-		$('#btnSendToGib').click(function(){
-			var data={list:[]};
-			$(".checkSingle").each(function() {
-				if(this.checked){
-					var satir=JSON.parse(decodeURIComponent(this.value));
-					if(satir.doc.orderStatus=='Draft' || satir.doc.orderStatus=='Error'){
-						data.list.push({_id:satir._id, ID:satir.doc.ID});
-					}
-					
-				}
-			});
-			if(data.list.length==0)  return alert('Kayit secilmemis!\nDurum: Taslak + Hata');
-			if(!confirm(data.list.length + ' adet siparis kesinlestirilecektir. Onayliyor musunuz?')) return;
-			$.ajax({
-				url:'/dbapi/order/sendToGib?db=<%=db%>&sid=<%=sid%>',
-				data:data,
-				type:'POST',
-				success:function(result){
-					if(result.success){
-						//alert('Aktarim basladi.');
-						window.location.reload();
-					}else{
-						alert(result.error.code + '\n' + result.error.message);
-					}
-				}
-			});
-			
-		});
-	});
+	})
 
 	function showErrors(_id){
 		var url='<%=urlPath%>/errors/'+ _id + '?db=<%=db%>&sid=<%=sid%>';

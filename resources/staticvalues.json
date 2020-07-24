@@ -139,7 +139,7 @@
 		{"text":"Hata","value": "Error"}
 	],
 	"receiptStatusTypes":[
-		{"text":"Teslimat bekleniyor","value": "Waiting"},
+		{"text":"Yolda","value": "OnTheWay"},
 		{"text":"Taslak","value": "Draft"},
 		{"text":"Gönderiliyor","value": "Pending"},
 		{"text":"Kuyrukta","value": "Queued"},

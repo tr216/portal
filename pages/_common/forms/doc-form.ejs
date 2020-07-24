@@ -61,15 +61,15 @@
     doc.ioType=<%=ioType%>;
 
     doc.issueDate.value=(new Date()).yyyymmdd();
-    doc.issueTime.value=(new Date()).hhmm();
+    doc.issueTime.value=(new Date()).hhmmss();
 
-    var unitCodeList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(staticValues.unitCodeList)) %>'));
+    var unitCodeList=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(staticValues.unitCodeList)) %>'));
 
     <% 
         if(typeof form._id!='undefined'){
         if((form._id || '')!=''){ 
     %>
-    doc=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form))%>'));
+    doc=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(form))%>'));
     
     <%  }
     } %>
@@ -217,7 +217,6 @@
                         </div>
                         <% } %>
                     </div>
-
                 </div>
             </div>
             <div class="card mt-2">

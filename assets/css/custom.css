@@ -143,111 +143,148 @@ footer.footer {
     border-color: #F0f0f0;
 }
 
-.badge-invoice {
+.badge-status {
     border-radius: 0.15rem;
     font-size: 100%;
-    padding: 0.30rem;
+    /*padding: 0.30rem;*/
+    padding: 0.35rem 0.30rem;
     text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
     /*white-space: nowrap;*/
+    height: 1.6rem;
 }
 
-.invoice-temel {
+.badge-status a{
+    color:#fff;
+}
+
+.badge-status a:hover{
+    text-decoration: none;
+}
+
+.status-temel {
     color:#fff;
     background-color: #47d1de;
 }
-.invoice-ticari {
+.status-ticari {
     color:#fff;
     background-color: #ffa037;
 }
 
-.invoice-ihracat {
+.status-ihracat {
     color:#fff;
     background-color: #990099;
 }
-.invoice-yolcuberaber {
+.status-yolcuberaber {
     color:#fff;
     background-color: #996099;
 }
 
-.invoice-earsiv {
+.status-earsiv {
     color:#fff;
     background-color: #50CC66;
 }
 
 
-.invoice-satis {
+.status-satis {
     color:#fff;
     background-color: #00CC66;
 }
 
-.invoice-iade {
+.status-iade {
     color:#fff;
     background-color: #990099;
 }
 
-.invoice-tevkifat {
+.status-tevkifat {
     color:#fff;
     background-color: #3333FF;
 }
 
-.invoice-istisna {
+.status-istisna {
     color:#fff;
-    background-color: #0000FF;
+    background-color: #101080;
 }
 
-.invoice-ozelmatrah {
+.status-ozelmatrah {
     color:#fff;
     background-color: #0033CC;
 }
 
-.invoice-ihrackayitli {
+.status-ihrackayitli {
     color:#fff;
     background-color: #468847;
 }
 
-
-
-
-.invoice-approved {
+.status-approved {
     color:#fff;
     background-color: #468847;
 }
-.invoice-partial-approved {
+.status-partial-approved {
     color:#fff;
     background-color: #66A867;
 }
-.invoice-waitingforapprovement {
+.status-waitingforapprovement {
     color:#fff;
     background-color: #00CC66;
 }
 
-.invoice-declined {
+.status-success {
+    color:#fff;
+    background-color: #286A29;
+}
+
+.status-declined {
     color:#fff;
     background-color: #FF6666;
 }
 
-.invoice-error {
+.status-error {
     color:#fff;
     background-color: #FF0000;
 }
 
-.invoice-senttogib {
+
+.status-senttogib {
     color:#fff;
     background-color: #0000FF;
 }
 
-.invoice-draft {
+.status-draft {
     color:#fff;
-    background-color: #D0D0D0;
+    background-color: #C0C0C0;
 }
-.invoice-processing {
+.status-processing {
     color:#fff;
     background-color: #444444;
 }
-.invoice-pending {
+.status-pending {
     color:#fff;
     background-color: #4444FF;
 }
+
+.status-queued {
+    color:#fff;
+    background-color: #3333DD;
+}
+.status-deleted {
+    color:#fff;
+    background-color: #333333;
+}
+.status-canceled {
+    color:#fff;
+    background-color: #33FF33;
+}
+
+.status-ontheway {
+    color:#fff;
+    background-color: #A68855;
+}
+
+.status-default {
+    color:#fff;
+    background-color: #55859f;
+}
+
 
 .bold {
     font-weight: bold;
@@ -384,4 +421,14 @@ footer.footer {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     margin: 0;
+}
+
+.modal-footer {
+    display: block;
+}
+
+.button-bar {
+	background-color: #f8f9fa;
+	border-radius: 0.25rem !important;
+	border: 1px solid #dee2e6 !important;
 }

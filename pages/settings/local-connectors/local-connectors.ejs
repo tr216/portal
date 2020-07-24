@@ -12,7 +12,7 @@
     editButton:true,
     deleteButton:true,
     viewButton:true,
-    customButtons:[{href:'/settings/local-connectors/code/{_id}?db=' + db + '&sid=' + sid,text:'Kodlama',icon:'fas fa-code'}],
+    customButtons:[{inline:true, href:'/settings/local-connectors/code/{_id}?db=' + db + '&sid=' + sid,text:'Kodlama',icon:'fas fa-code'}],
     deleteUrl:'/dbapi/local-connectors/{_id}?db=' + db + '&sid=' + sid
     }) 
 %>

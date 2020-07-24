@@ -1,14 +1,21 @@
 {
-  "httpserver":{
-  	"port" : 5100
-  },
-  "api": {
-  	"url":"http://localhost:3500/api/v1"
-  },
-  "mongodb": {
-    "address":"mongodb://localhost:27017/portalweb"
-  },
-  "pagination":{
-  	"pageSize":10
-  }
+	"httpserver":{
+		"port" : 5100
+	},
+	"api": {
+		"url" : "http://localhost:3500/api/v1"
+	},
+	"mongodb": {
+		"address" : "mongodb://localhost:27017/portalweb"
+	},
+	"pagination":{
+		"pageSize":10
+	},
+	"customize":{
+		"logo" : "/img/plaset-web-logo.png",
+		"icon" : "/img/plaset-icon-256x256.png",
+		"brand_name" : "Plaset MRP",
+		"styles" : "/css/custom.css"
+	}
+
 }

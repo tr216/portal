@@ -197,6 +197,7 @@ function setGeneralParams(req,data){
 	data['sid']=req.query.sid
 	data['func']=req.params.func
 	data['message']=data['message'] || ''
+	data['successMessage']=data['successMessage'] || ''
 	data['db']=req.query.db || ''
 	data['mid']=req.query.mid || ''
 	data['apiUrl']=config.api.url
