@@ -12,9 +12,9 @@
     editButton:true,
     deleteButton:true,
     viewButton:true,
-    deleteUrl:'/dbapi/print-designs/{_id}?db=' + db + '&sid=' + sid,
+    deleteUrl:`/dbapi/print-designs/{_id}?db=${db}&sid=${sid}`,
     customButtons:[
-        {inline:true, href:'javascript:itemCopyConfirm("{_id}","{name}")', title:'Kopyala',icon:'far fa-copy'}
+        {inline:true, href:`javascript:itemCopyConfirm('{_id}','{name}')`, title:'Kopyala',icon:'far fa-copy'}
     ]
     }) 
 %>
@@ -24,7 +24,7 @@
     modalId:'itemCopyModal',
     caption:'Kopya',
     formControls:{
-        newName:{caption:'Yeni Palet isim/kod/numara', type:'textbox', default:''}
+        newName:{caption:'Yeni yazdirma tasarimi', type:'textbox', default:''}
     },
     mode:'addnew',
     buttons:[

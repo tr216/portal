@@ -97,16 +97,7 @@
             obj.palletRowCount=Number($('#palletRowCount').val());
             obj.packingCountInRow=Number($('#packingCountInRow').val());
             
-            // var bFound=false;
-            // packingOptions.forEach(function(e){
-            //     if((e.packingType._id || '')!=''){
-            //         if(e.packingType._id.toString()==obj.packingType._id.toString()){
-            //             bFound=true;
-            //             return;
-            //         }
-            //     }
-            // })
-            // if(bFound) return alert( obj.packingType.name + '  daha once eklenmis');
+            
             packingOptions.push(obj);
             $('#palletTypeName').val('');
             $('#palletTypeId').val('');

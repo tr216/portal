@@ -1,0 +1,97 @@
+<%
+
+%>
+<div class="card">
+	<div class="card-body p-1">
+		<table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+			<thead>
+				<tr>
+					<td width="40%">Çalışma zamanı</td>
+					<td>Başlangıç</td>
+					<td>Bitiş</td>
+					<td width="60">#</td>
+				</tr>
+			</thead>
+            <tbody id="timesGrid">
+                <% form.times.forEach((e)=>{ %>
+                <tr>
+					<td width="40%"></td>
+					<td></td>
+					<td></td>
+					<td width="60"></td>
+				</tr>
+            	<% }) %>
+            </tbody>
+        </table>
+	</div>
+	<% if(mode!='view'){ %>
+	<div class="card-footer p-2">
+		<i class="fas fa-info-circle"></i> <b>Çalışma zamanı</b>: Sabah, öğleden sonra, akşam, gece vb.
+	</div>
+	<% } %>
+</div>
+
+<script type="text/javascript">
+	
+	var times=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.times)) %>'));
+
+
+	function loadTimesGrid(){
+		$("#timesGrid tr").remove();
+        //var timesGrid=document.getElementById('timesGrid');
+        times.forEach(function(zaman,index){
+        	addTimesGridRow(zaman)
+	        
+        })
+        
+	}
+
+	if(times.length==0){
+		addTimesGridRow({name:'Sabah',startHour:8,startMinute:0,endHour:12,endMinute:30})
+	}else{
+		loadTimesGrid();
+	}
+	
+
+	function addTimesGridRow(obj={name:'',startHour:0,startMinute:0,endHour:0,endMinute:0}){
+		
+		var timesGrid=document.getElementById('timesGrid');
+		var index=timesGrid.rows.length;
+		
+		var newRow=timesGrid.insertRow(index);
+		times.push(obj);
+
+		newRow.id='timesGridRow' + index;
+        //newRow.classList.add('text-nowrap');
+        var cell0=newRow.insertCell(0);
+        cell0.width='40%';
+        cell0.innerHTML='<input type="text" class="form-control" name="times['+ index +'][name]" value="' + times[index].name + '" required="true" <%- mode=='view'?'readonly':'' %>>';
+
+        var cell1=newRow.insertCell(1);
+        cell1.innerHTML='<div class="form-inline">\n' + 
+				    	'<input type="number" class="form-control" name="times['+ index +'][startHour]" min="0" max="23" value="' + times[index].startHour + '" <%- mode=='view'?'readonly':'' %>>\n'+
+				    	'<input type="number" class="form-control" name="times['+ index +'][startMinute]" min="0" max="59" value="' + times[index].startMinute + '" <%- mode=='view'?'readonly':'' %>>\n'+
+					'</div>\n';
+
+        var cell2=newRow.insertCell(2);
+        cell2.innerHTML='<div class="form-inline">\n' + 
+				    	'<input type="number" class="form-control" name="times['+ index +'][endHour]" min="0" max="23" value="' + times[index].endHour + '" <%- mode=='view'?'readonly':'' %>>\n'+
+				    	'<input type="number" class="form-control" name="times['+ index +'][endMinute]" min="0" max="59" value="' + times[index].endMinute + '" <%- mode=='view'?'readonly':'' %>>\n'+
+					'</div>\n';
+        var cell3=newRow.insertCell(3);
+        cell3.width='60';
+        <% if(mode!='view'){ %>
+        if(index>0){
+        	cell3.innerHTML='<a href="javascript:removeTimesGridRow(' + index + ')" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>';
+        }else{
+        	cell3.innerHTML='<a href="javascript:addTimesGridRow()" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></a>';
+        }
+        <% } %>
+	}
+
+	function removeTimesGridRow(index){
+		document.getElementById('timesGridRow' + index).remove();
+	}
+
+	
+</script>

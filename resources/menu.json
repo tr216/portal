@@ -101,6 +101,7 @@
 			{"text":"Yazdırma Tasarımları",	"path":"/settings/print-designs",		"icon":"fas fa-print", "visible":true, "nodes":[]},
 			{"text":"Evrak Seri ve Entegrator",		"path":"/settings/integrators",	"icon":"fas fa-cogs", "visible":true, "nodes":[]},
 			{"text":"File Importer",	"path":"/settings/file-importers",	"icon":"fas fa-file-import", "visible":true, "nodes":[]},
+			{"text":"Özel programlar",	"path":"/settings/programs",	"icon":"fas fa-code", "visible":true, "nodes":[]},
 			{"text":"Çalışma Parametreleri",		"path":"",					"icon":"fas fa-sliders-h", "visible":true,
 			"nodes":[
 				{"text":"Genel",					"path":"/settings/params-general",		"icon":"fas fa-sliders-h", "visible":true, "nodes":[]},

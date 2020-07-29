@@ -1,0 +1,24 @@
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/forms/form',{
+    formControls:{
+        name            :{caption:'Adı',                   type:'textbox'    ,required:true},
+        connectorId     :{caption:'Connector ID',          type:'textbox'    ,required:true},
+        connectorPass   :{caption:'Connector Password',    type:'textbox'    ,required:true},
+        connectionType  :{caption:'Baglanti Turu',         type:'lookup',    required:true,  lookup:connectionTypes
+            ,formControls:{
+                server          :{name:'connection.server', caption:'Server',             type:'textbox'},
+                port            :{name:'connection.port',caption:'port',                  type:'textbox'},
+                database        :{name:'connection.database',caption:'Database',          type:'textbox'},
+                username        :{name:'connection.username',caption:'Username',          type:'textbox'},
+                password        :{name:'connection.password',caption:'Password',          type:'textbox'},
+                file            :{name:'connection.file', caption:'Dosya(lar) veya klasör',  type:'textbox'}
+            }
+        },
+        passive         :{caption:'Pasif',                 type:'checkbox'},
+        connectorTest :{caption:'Connector Test', type:'partial', partial:'../../settings/local-connectors/connector-test.ejs'}
+    },
+    action:'',
+    mode:'addnew'
+    }) 
+%>
+

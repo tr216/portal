@@ -1,0 +1,16 @@
+<%layout('../../_common/layouts/general')%>
+
+<%- partial('../../_common/components/grid2',{
+    fields:[
+        {name:'name',text:'Vardiya adı',type:'label',filter:true, orderable:true},
+        {name:'zaman',text:'Zaman',type:'label'},
+        {name:'passive',text:'Pasif?',type:'checkbox',width:1}
+    ],
+    caption:'Vardiya Tanımları',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    viewButton:true,
+    deleteUrl:'/dbapi/shifts/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>

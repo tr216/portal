@@ -1,0 +1,72 @@
+<%layout('../../_common/layouts/general')%>
+<form action="" method="POST" role="form" name="form1">
+    <div class="card">
+        <div class="row px-4 ">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="control-label" for=""><i class="fa fa-databases"></i> Secili Veri Ambari</label>
+                    <input type="text" name="dbName" class="form-control" value="<%=dbName%>" readonly="true">
+                </div>
+            </div>
+            <div class="col-md-2 text-right">
+                <div class="form-group py-3">
+                    <a href="/settings/dbinvite/addnew?db=<%=db%>&sid=<%=sid%>" class="btn btn-primary" title="Yeni ekle"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-responsive table-bordered table-striped nowrap"  cellspacing="0" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th class="col-md-6">Kullanici adi</th>
+                        <th class="col">Okuyabilir?</th>
+                        <th class="col">Yazabilir?</th>
+                        <th class="col">Silebilir?</th>
+                        <th class="col">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% list.forEach((e)=>{ %>
+                    <tr>
+                        <td class="col-md-6"><%=e.memberId.username%></td>
+                        <td class="col"><%=e.canRead%></td>
+                        <td class="col"><%=e.canWrite%></td>
+                        <td class="col"><%=e.canDelete%></td>
+                        <td class="col"><a href="javascript:deleteItem('<%=e.memberId._id%>','<%=e.memberId.username%>')" class="btn btn-danger btn-sm" title="Sil"><i class="fas fa-trash-alt"></i></a></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function deleteItem(_id, username){
+            if(!confirm(username + ' kullanicisini silmek istiyor musunuz?')) return;
+
+            $.ajax({
+                url: '/api/dbinvite/<%=db%>/' + _id + '?db=<%=db%>&sid=<%=sid%>',
+                type:'DELETE',
+                success:function(result){
+                    if(result.success){
+                        window.location.reload();
+                    }else{
+                        alert(JSON.stringify(result.error));
+                    }
+                },
+                error:function(error){
+                    alert(JSON.stringify(error));
+                }
+
+            });
+        }
+    </script>
+    
+          
+        
+
+</form>
+
+
+ 
+

@@ -1,0 +1,37 @@
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/forms/form',{
+    tabs:[
+    {
+        caption:'Bilgiler',
+        formControls:{
+            station        :{caption:'Istasyon', type:'lookup', lookup:stationList, textField:'name', valueField:'_id'    ,required:true},
+            firstName     :{ name:'firstName.value', caption:'Adı',   type:'textbox' ,required:true},
+            familyName     :{ name:'familyName.value', caption:'Soyadı',  type:'textbox' ,required:true},
+            shift        :{caption:'Vardiya', type:'lookup', lookup:shiftList, textField:'name', valueField:'_id' },
+            bloodGroup   :{caption:'Kan Grubu', type:'lookup', lookup:bloodGroups },
+            account:{ name:'account', caption:'Muhasebe Hesabı', type:'partial' , partial:'../components/account-selection.ejs'},
+            monthlyCost      :{caption:'Aylık Maliyeti',                 type:'number'},
+            passive      :{caption:'Pasif',                 type:'checkbox'}
+        }
+    },
+    {
+        caption:'Adres',
+        formControls:{
+            streetName:{ name:'postalAddress.streetName.value', caption:'Cadde/Sokak', type:'textbox'},
+            buildingNumber:{ name:'postalAddress.buildingNumber.value', caption:'Cadde Sokak Kapı No', type:'textbox'},
+            buildingName:{ name:'postalAddress.buildingName.value', caption:'Bina/Site adı', type:'textbox'},
+            blockName:{ name:'postalAddress.blockName.value', caption:'Blok adı', type:'textbox'},
+            room:{ name:'postalAddress.room.value', caption:'Daire', type:'textbox'},
+            citySubdivisionName:{ name:'postalAddress.citySubdivisionName.value', caption:'Mahalle/Semt', type:'textbox'},
+            district:{ name:'postalAddress.district.value', caption:'İlçe', type:'textbox'},
+            cityName:{ name:'postalAddress.cityName.value', caption:'Şehir', type:'textbox'},
+            region:{ name:'postalAddress.region.value', caption:'Bölge', type:'textbox'},
+            country:{ name:'postalAddress.country.name.value', caption:'Ülke', type:'textbox'},
+            postbox:{ name:'postalAddress.postbox.value', caption:'Posta Kutusu', type:'textbox'}
+        }
+    }],
+    action:'',
+    mode:'addnew'
+    }) 
+%>
+

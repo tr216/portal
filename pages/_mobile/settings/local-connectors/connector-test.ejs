@@ -1,0 +1,16 @@
+	<button type="submit" class="btn btn-info" name="btnConnectorTest" form="<%=formName%>"><i class="fa fa-check-double"></i> Connector Test</button>
+
+<% if(typeof testResult!='undefined'){ %>
+	<% if(testResult.success){ %>
+		<p>Basarili :-)</p>
+	<% } else { %>
+		<p>Error Code:<%=testResult.error.code%></p>
+		<p>Error Desc:<%=testResult.error.message%></p>
+	<% } %>
+
+<% 
+	testResult=undefined;
+	delete testResult;
+
+	} %>
+	

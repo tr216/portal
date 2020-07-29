@@ -20,7 +20,7 @@
     editUrl:urlPath + '/edit/{_id}?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
     viewUrl:urlPath + '/view/{_id}?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
     customButtons:[
-        {inline:true, href:'javascript:itemCopyConfirm("{_id}","{name.value}")', title:'Kopyala',icon:'far fa-copy'}
+        {inline:true, href:`javascript:itemCopyConfirm('{_id}','{name}')`, title:'Kopyala',icon:'far fa-copy'}
     ],
     deleteUrl:'/dbapi/items/{_id}?db=' + db + '&sid=' + sid
     }) 

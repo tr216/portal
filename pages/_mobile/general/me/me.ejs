@@ -1,0 +1,27 @@
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/forms/form',{
+    tabs:[
+        {
+            caption:'Profilim',
+            formControls:{
+                username        :{caption:'Kullanici Adi',             type:'textbox', readonly:true},
+                name        :{caption:'Isim',             type:'textbox', required:true},
+                lastName         :{caption:'Soyad',           type:'textbox', required:true},
+                gender  :{caption:'Cinsiyet', type:'lookup' , lookup:genderList, textField:'text', valueField:'value' },
+                email         :{caption:'Iletisim email',           type:'textbox'}
+            }
+        },
+        {
+            caption:'Sifre',
+            formControls:{
+                username        :{caption:'Kullanici Adi',             type:'textbox', readonly:true},
+                oldPassword     :{caption:'Eski Parola',                type:'password' },
+                newPassword     :{caption:'Yeni Parola',                type:'password' },
+                rePassword     :{caption:'Yeni Parola Tekrar',       type:'password' }
+            }
+        }
+    ],
+    action:'',
+    mode:'edit'
+    }) 
+%>

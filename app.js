@@ -98,6 +98,7 @@ app.use(function(err, req, res, next) {
 
 
 global.menu=require('./resources/menu.json')
+global.mobileMenu=require('./resources/mobile-menu.json')
 
 // global.sysmenu=require('./app/sysmenu.json')
 global.staticValues=require('./resources/staticvalues.json')

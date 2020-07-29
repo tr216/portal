@@ -1,188 +1,203 @@
 
 <div class="row m-0 p-0">
-    <div class="col-md-12 m-0 p-0">
-        <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
-            <thead>
-                <tr class="text-nowrap">
-                    <th width="10%">Birim</th>
-                    <th  class="text-right">Ağırlık</th>
-                    <th  class="text-right">En</th>
-                    <th class="text-right">Boy</th>
-                    <th  class="text-right">Yukseklik</th>
-                    <th style="min-width: 60px;width: 60px;" class="text-center">#</th>
-                </tr>
-            </thead>
-            <tbody id="unitPackGrid">
-                <tr <% if(mode=='view'){%>style="display:none"<%}%>>
-                    <td class="pr-1">
-                        <select class="form-control" id="unitPacks-unitCode" >
-                            <option value="" selected>-- Seç --</option>
-                            <option value="NIU">Adet</option>
-                            <option value="GRM">gr</option>
-                            <option value="KGM">kg</option>
-                            <option value="LTR">lt</option>
-                            <option value="MTR">m</option>
-                            <option value="CMT">cm</option>
-                            <option value="MMT">mm</option>
-                            <option value="MTK">m2</option>
-                        </select>
-                    </td>
-                    <td class="pr-1">
-                        <div class="form-inline">
-                            <input type="number" class="form-control" id="unitPacks-netWeight" placeholder="" value="0" style="width:50%;">
-                            <select class="form-control" id="unitPacks-netWeight-unitCode" style="width:50%;">
-                                <option value="GRM">Gr</option>
-                                <option value="KGM">kg</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td class="pr-1">
-                        <div class="form-inline">
-                            <input type="number" class="form-control" id="unitPacks-dimension-width" placeholder="" value="0" style="width:50%;">
-                            <select class="form-control" id="unitPacks-dimension-width-unitCode" style="width:50%;">
-                                <option value="MMT">mm</option>
-                                <option value="CMT">cm</option>
-                                <option value="MTR">m</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td class="pr-3">
-                        <div class="form-inline">
-                            <input type="number" class="form-control" id="unitPacks-dimension-length" placeholder="" value="0" style="width:50%;">
-                            <select class="form-control" id="unitPacks-dimension-length-unitCode" style="width:50%;">
-                                <option value="MMT">mm</option>
-                                <option value="CMT">cm</option>
-                                <option value="MTR">m</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td class="pr-3">
-                        <div class="form-inline">
-                            <input type="number" class="form-control" id="unitPacks-dimension-height" placeholder="" value="0" style="width:50%;">
-                            <select class="form-control" id="unitPacks-dimension-height-unitCode" style="width:50%;">
-                                <option value="MMT">mm</option>
-                                <option value="CMT">cm</option>
-                                <option value="MTR">m</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td class="text-center"><a href="javascript:addUnitPack();" id="addUnitPackButton" class="btn btn-primary far fa-plus-square"  title="Ekle"></a></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+	<div class="col-md-12 m-0 p-0">
+		<table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
+			<thead>
+				<tr class="text-nowrap">
+					<th width="10%">Birim</th>
+					<th  class="text-right">Ağırlık</th>
+					<th  class="text-right">En</th>
+					<th class="text-right">Boy</th>
+					<th  class="text-right">Yukseklik</th>
+					<th style="min-width: 60pxwidth: 60px" class="text-center">#</th>
+				</tr>
+			</thead>
+			<tbody id="unitPackGrid">
+				<tr <% if(mode=='view'){%>style="display:none"<%}%>>
+					<td class="pr-1">
+						<select class="form-control" id="unitPacks-unitCode" >
+							<option value="" selected>-- Seç --</option>
+							<option value="NIU">Adet</option>
+							<option value="GRM">gr</option>
+							<option value="KGM">kg</option>
+							<option value="LTR">lt</option>
+							<option value="MTR">m</option>
+							<option value="CMT">cm</option>
+							<option value="MMT">mm</option>
+							<option value="MTK">m2</option>
+						</select>
+					</td>
+					<td class="pr-1">
+						<div class="form-inline">
+							<input type="number" class="form-control" id="unitPacks-netWeight" placeholder="" value="0" style="width:50%">
+							<select class="form-control" id="unitPacks-netWeight-unitCode" style="width:50%">
+								<option value="GRM">Gr</option>
+								<option value="KGM">kg</option>
+							</select>
+						</div>
+					</td>
+					<td class="pr-1">
+						<div class="form-inline">
+							<input type="number" class="form-control" id="unitPacks-dimension-width" placeholder="" value="0" style="width:50%">
+							<select class="form-control" id="unitPacks-dimension-width-unitCode" style="width:50%">
+								<option value="MMT">mm</option>
+								<option value="CMT">cm</option>
+								<option value="MTR">m</option>
+							</select>
+						</div>
+					</td>
+					<td class="pr-3">
+						<div class="form-inline">
+							<input type="number" class="form-control" id="unitPacks-dimension-length" placeholder="" value="0" style="width:50%">
+							<select class="form-control" id="unitPacks-dimension-length-unitCode" style="width:50%">
+								<option value="MMT">mm</option>
+								<option value="CMT">cm</option>
+								<option value="MTR">m</option>
+							</select>
+						</div>
+					</td>
+					<td class="pr-3">
+						<div class="form-inline">
+							<input type="number" class="form-control" id="unitPacks-dimension-height" placeholder="" value="0" style="width:50%">
+							<select class="form-control" id="unitPacks-dimension-height-unitCode" style="width:50%">
+								<option value="MMT">mm</option>
+								<option value="CMT">cm</option>
+								<option value="MTR">m</option>
+							</select>
+						</div>
+					</td>
+					<td class="text-center"><a href="javascript:addUnitPack()" id="addUnitPackButton" class="btn btn-primary far fa-plus-square"  title="Ekle"></a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 
 <script type="text/javascript">
-    var unitPacks=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.unitPacks)) %>'));
+	var unitPacks=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.unitPacks)) %>'))
+	var mode='<%- mode %>'
 
-    if((unitPacks || '')=='') unitPacks=[];
-    function load_unitPacks(){
-        var unitPackGrid=document.getElementById('unitPackGrid');
-        while(unitPackGrid.rows.length>1){
-            unitPackGrid.deleteRow(0);
-        }
-        unitPacks.forEach(function(e,index){
-            addUnitPack(e);
-        });
-    }
+	if((unitPacks || '')=='')
+		unitPacks=[]
 
-    function addUnitPack(obj){
-        var unitPackGrid=document.getElementById('unitPackGrid');
-        var index=unitPackGrid.rows.length-1;
-        var newRow=unitPackGrid.insertRow(unitPackGrid.rows.length-1);
-        if(obj==undefined){
-            if($('#unitPacks-unitCode').val()=='') return;
-            obj={
-                unitCode:$('#unitPacks-unitCode').val(),
-                netWeight:{value:$('#unitPacks-netWeight').val(),attr:{unitCode:$('#unitPacks-netWeight-unitCode').val()}},
-                dimension:{ 
-                    width:{
-                        value:$('#unitPacks-dimension-width').val(),
-                        attr:{
-                            unitCode:$('#unitPacks-dimension-width-unitCode').val()
-                        }
-                    }, 
-                    height:{value:$('#unitPacks-dimension-height').val(),attr:{unitCode:$('#unitPacks-dimension-height-unitCode').val()}}, 
-                    length:{value:$('#unitPacks-dimension-length').val(),attr:{unitCode:$('#unitPacks-dimension-length-unitCode').val()}}
-                },
-                barcode:''
-            }
-            var bFound=false;
-            unitPacks.forEach(function(e){
-                if((e.unitCode || '')!=''){
-                    if(e.unitCode==obj.unitCode){
-                        bFound=true;
-                        return;
-                    }
-                }
-            })
-            if(bFound) return alert(getUnitCodeText(obj.unitCode) + '  birim daha once eklenmis');
-            unitPacks.push(obj);
-            $('#unitPacks-unitCode').val('');
-            $('#unitPacks-netWeight').val(0);
-            $('#unitPacks-netWeight-unitCode').val('GRM');
-            $('#unitPacks-dimension-width').val(0);
-            $('#unitPacks-dimension-width-unitCode').val('MMT');
-            $('#unitPacks-dimension-height').val(0);
-            $('#unitPacks-dimension-height-unitCode').val('MMT');
-            $('#unitPacks-dimension-length').val(0);
-            $('#unitPacks-dimension-length-unitCode').val('MMT');
-        }
-        
-       
+	function load_unitPacks(){
+		var unitPackGrid=document.getElementById('unitPackGrid')
+		while(unitPackGrid.rows.length>1){
+			unitPackGrid.deleteRow(0)
+		}
+		unitPacks.forEach(function(e,index){
+			addUnitPack(e)
+		})
+	}
 
-        var cell0=newRow.insertCell(0);
-        cell0.innerHTML=getUnitCodeText(obj.unitCode) + '<input type="hidden" name="unitPacks[' + index + '][unitCode]" value="' + obj.unitCode + '">';
-       
+	function addUnitPack(obj){
+		var unitPackGrid=document.getElementById('unitPackGrid')
+		var index=unitPackGrid.rows.length-1
+		var newRow=unitPackGrid.insertRow(unitPackGrid.rows.length-1)
+		var bFound=false
 
-        var cell1=newRow.insertCell(1);
-        cell1.innerHTML=obj.netWeight.value + ' ' + getUnitCodeText(obj.netWeight.attr.unitCode) + '<input type="hidden"  name="unitPacks[' + index + '][netWeight][value]" value="' + obj.netWeight.value + '"><input type="hidden"  name="unitPacks[' + index + '][netWeight][attr][unitCode]" value="' + obj.netWeight.attr.unitCode + '">';
-        cell1.classList.add('text-right');
+		if(obj==undefined){
+			if($('#unitPacks-unitCode').val()=='')
+				return
+			
+			obj={
+				unitCode:$('#unitPacks-unitCode').val(),
+				netWeight:{
+					value:$('#unitPacks-netWeight').val(),
+					attr:{
+						unitCode:$('#unitPacks-netWeight-unitCode').val()
+					}
+				},
+				dimension:{ 
+					width:{
+						value:$('#unitPacks-dimension-width').val(),
+						attr:{
+							unitCode:$('#unitPacks-dimension-width-unitCode').val()
+						}
+					}, 
+					height:{
+						value:$('#unitPacks-dimension-height').val(),
+						attr:{
+							unitCode:$('#unitPacks-dimension-height-unitCode').val()
+						}
+					}, 
+					length:{
+						value:$('#unitPacks-dimension-length').val(),
+						attr:{
+							unitCode:$('#unitPacks-dimension-length-unitCode').val()
+						}
+					}
+				},
+				barcode:''
+			}
 
-        var cell2=newRow.insertCell(2);
-        cell2.innerHTML=obj.dimension.width.value + ' ' + getUnitCodeText(obj.dimension.width.attr.unitCode) + '<input type="hidden"  name="unitPacks[' + index + '][dimension][width][value]" value="' + obj.dimension.width.value + '"><input type="hidden"  name="unitPacks[' + index + '][dimension][width][attr][unitCode]" value="' + obj.dimension.width.attr.unitCode + '">';
-        cell2.classList.add('text-right');
+			
 
-        var cell3=newRow.insertCell(3);
-        cell3.innerHTML=obj.dimension.length.value + ' ' + getUnitCodeText(obj.dimension.length.attr.unitCode) + '<input type="hidden"  name="unitPacks[' + index + '][dimension][length][value]" value="' + obj.dimension.length.value + '"><input type="hidden"  name="unitPacks[' + index + '][dimension][length][attr][unitCode]" value="' + obj.dimension.length.attr.unitCode + '">';
-        cell3.classList.add('text-right');
+			unitPacks.forEach(function(e){
+				if((e.unitCode || '')!=''){
+					if(e.unitCode==obj.unitCode){
+						bFound=true
+						return
+					}
+				}
+			})
 
-        
+			if(bFound)
+				return alert(getUnitCodeText(obj.unitCode) + '  birim daha once eklenmis')
 
-        var cell4=newRow.insertCell(4);
-        cell4.innerHTML=obj.dimension.height.value + ' ' + getUnitCodeText(obj.dimension.height.attr.unitCode) + '<input type="hidden"  name="unitPacks[' + index + '][dimension][height][value]" value="' + obj.dimension.height.value + '"><input type="hidden"  name="unitPacks[' + index + '][dimension][height][attr][unitCode]" value="' + obj.dimension.height.attr.unitCode + '">';
-        cell4.classList.add('text-right');
+			unitPacks.push(obj)
+			$('#unitPacks-unitCode').val('')
+			$('#unitPacks-netWeight').val(0)
+			$('#unitPacks-netWeight-unitCode').val('GRM')
+			$('#unitPacks-dimension-width').val(0)
+			$('#unitPacks-dimension-width-unitCode').val('MMT')
+			$('#unitPacks-dimension-height').val(0)
+			$('#unitPacks-dimension-height-unitCode').val('MMT')
+			$('#unitPacks-dimension-length').val(0)
+			$('#unitPacks-dimension-length-unitCode').val('MMT')
+		}
 
 
-        var cell5=newRow.insertCell(5);
-        <% if(mode=='view'){%>
-        cell5.innerHTML='';
-        <%}else{%>
-        cell5.innerHTML='<a href="javascript:unitPackGrid_RemoveRow(' + index + ');" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>';
-        <% } %>
-        cell5.classList.add('text-center');
-    }
 
-    function unitPackGrid_RemoveRow(index){
-        if(confirm('Satiri silmek istiyor musunuz?')==false) return;
-        unitPacks.splice(index,1);
-        load_unitPacks();
-        
-        // var table1=document.getElementById('unitPackGrid');
-        // if(index<0 || index>=table1.rows.length-1) return;
-        // table1.deleteRow(index);
-        // for(var i=0;i<table1.rows.length-1;i++){
-        //     table1.rows[i].cells[0].innerHTML=(i+1).toString();
-        // }
-        //document.getElementById('docLinePackageGrid-ID').value=table1.rows.length;
-    }
+		var cell0=newRow.insertCell(0)
+		cell0.innerHTML=getUnitCodeText(obj.unitCode) + '<input type="hidden" name="unitPacks[' + index + '][unitCode]" value="' + obj.unitCode + '">'
 
-    load_unitPacks();
 
-    $(document).ready(function(){
-        
+		var cell1=newRow.insertCell(1)
+		cell1.innerHTML=obj.netWeight.value + ' ' + getUnitCodeText(obj.netWeight.attr.unitCode) + '<input type="hidden"  name="unitPacks[' + index + '][netWeight][value]" value="' + obj.netWeight.value + '"><input type="hidden"  name="unitPacks[' + index + '][netWeight][attr][unitCode]" value="' + obj.netWeight.attr.unitCode + '">'
+		cell1.classList.add('text-right')
 
-        
-    });
+		var cell2=newRow.insertCell(2)
+		cell2.innerHTML=obj.dimension.width.value + ' ' + getUnitCodeText(obj.dimension.width.attr.unitCode) + '<input type="hidden"  name="unitPacks[' + index + '][dimension][width][value]" value="' + obj.dimension.width.value + '"><input type="hidden"  name="unitPacks[' + index + '][dimension][width][attr][unitCode]" value="' + obj.dimension.width.attr.unitCode + '">'
+		cell2.classList.add('text-right')
+
+		var cell3=newRow.insertCell(3)
+		cell3.innerHTML=obj.dimension.length.value + ' ' + getUnitCodeText(obj.dimension.length.attr.unitCode) + '<input type="hidden"  name="unitPacks[' + index + '][dimension][length][value]" value="' + obj.dimension.length.value + '"><input type="hidden"  name="unitPacks[' + index + '][dimension][length][attr][unitCode]" value="' + obj.dimension.length.attr.unitCode + '">'
+		cell3.classList.add('text-right')
+
+
+
+		var cell4=newRow.insertCell(4)
+		cell4.innerHTML=obj.dimension.height.value + ' ' + getUnitCodeText(obj.dimension.height.attr.unitCode) + '<input type="hidden"  name="unitPacks[' + index + '][dimension][height][value]" value="' + obj.dimension.height.value + '"><input type="hidden"  name="unitPacks[' + index + '][dimension][height][attr][unitCode]" value="' + obj.dimension.height.attr.unitCode + '">'
+		cell4.classList.add('text-right')
+
+
+		var cell5=newRow.insertCell(5)
+		if(mode=='view'){
+			cell5.innerHTML=''
+		}else{
+			cell5.innerHTML='<a href="javascript:unitPackGrid_RemoveRow(' + index + ')" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>'
+		}
+		cell5.classList.add('text-center')
+	}
+
+	function unitPackGrid_RemoveRow(index){
+		if(confirm('Satiri silmek istiyor musunuz?')==false)
+			return
+		unitPacks.splice(index,1)
+		load_unitPacks()
+	}
+
+	load_unitPacks()
+
 </script>

@@ -10,7 +10,7 @@ if (!window.Bliss) {
 	console.log("Bliss not loaded. Loading remotely from blissfuljs.com");
 
 	let bliss = document.createElement("script");
-	bliss.src = "https://blissfuljs.com/bliss.shy.min.js";
+	bliss.src = "bliss.shy.min.js";
 	document.head.appendChild(bliss);
 
 	await new Promise(resolve => bliss.onload = resolve);

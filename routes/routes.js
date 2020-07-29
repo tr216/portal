@@ -1,13 +1,13 @@
 
 global.pages = {}
+global.mobilePages = {}
 
 
 module.exports = function(app){
 	
-	var DIR = path.join(__dirname, '../pages')
 
-
-	loadPages(DIR)
+	loadPages(pages,'',path.join(__dirname, '../pages'))
+	loadPages(mobilePages,'_mobile', path.join(__dirname, '../pages/_mobile'))
 
 	app.all("/*", function(req, res, next) {
 
@@ -93,7 +93,44 @@ module.exports = function(app){
 		apiDownload(req,res)
 	})
 
+	// -- start MOBILE PAGES ---
+	app.all('/mobile', function(req, res) {
+		if(req.query.sid){
+			res.redirect(`/mobile/general/dashboard?db=${req.query.db}&sid=${req.query.sid}&mid=${req.query.mid}`)
+		}else{
+			res.redirect('/mobile/general/login')
+		}
+	})
+
+	app.all('/mobile/passport', function(req, res) {
+ 		var data={
+ 			databases:[],
+ 			sid:(req.query.sid || '')
+ 		}
+		api.get('/mydbdefines',req,null,(err,resp)=>{
+	 		if(!err){
+	 			data['databases']=resp.data
+	 		}
+	 		res.render('_mobile/_common/activedb', data)
+	 	})
+		
+	})
+
+	app.all('/mobile/:module/:page', userInfo, function(req, res) {
+		mobilePageRander(req,res)
+	})
+
+	app.all('/mobile/:module/:page/:func', userInfo,  function(req, res) {
+		mobilePageRander(req,res)
+	})
 	
+	app.all('/mobile/:module/:page/:func/:id', userInfo, function(req, res) {
+		mobilePageRander(req,res)
+	})
+
+	// -- end MOBILE PAGES ---
+
+
 	app.all('/:module/:page', userInfo, function(req, res) {
 		pageRander(req,res)
 	})
@@ -106,6 +143,161 @@ module.exports = function(app){
 		pageRander(req,res)
 	})
 }
+
+function mobilePageRander(req,res){
+	if(mobilePages[req.params.module]==undefined){
+			errorPage(req,res,null)
+		}else if (mobilePages[req.params.module][req.params.page] == undefined) {
+			errorPage(req,res,null)
+		} else {
+			console.log(`req.params:`,req.params)
+			mobilePages[req.params.module][req.params.page].code(req, res, (err,data,view)=>{
+				if(!data)
+					data={}
+				data=setMobileParams(req,data)
+
+				if(!err){
+					if(view){
+						res.render(view, data)
+					}else{
+						var funcName=req.params.func || 'index'
+						if(mobilePages[req.params.module][req.params.page].view[funcName]){
+							res.render(mobilePages[req.params.module][req.params.page].view[funcName], data,(err,html)=>{
+								if(!err){
+									res.status(200).send(applyLanguage(req,html))
+								}else{
+									errorPage(req,res,err)
+								}
+							})
+						}else{
+							errorPage(req,res,null)
+						}
+					}
+				}else{
+					errorPage(req,res,err)
+				}
+			})
+		}
+}
+
+function setMobileParams(req,data){
+	var referer=req.headers.referer 
+	var current = req.protocol + '://' + req.get('host') + req.originalUrl + '?'
+	var current2=req.originalUrl.split('?')[0]
+	var filter = ''
+	var filterObj = {}
+	
+	if(req.params.id){
+		current2=current2.substr(0,current2.length-req.params.id.length-1)
+	}
+	if(req.params.func){
+		current2=current2.substr(0,current2.length-req.params.func.length-1)
+	}
+	current2+='?'
+
+	for(let k in req.query){
+		current +=encodeURIComponent(k) + '=' + encodeURIComponent(req.query[k]) + '&'
+		current2 +=encodeURIComponent(k) + '=' + encodeURIComponent(req.query[k]) + '&'
+		if(k!='page' && k!='db' && k!='sid' && k!='mid'){
+			filter +=encodeURIComponent(k) + '=' +  encodeURIComponent(req.query[k]) + '&'
+			if(k!='pageSize'){
+				filterObj[k]=req.query[k]
+			}else{
+				data['pageSize']=req.query[k]
+			}
+		}
+	}
+
+
+	if(current.substr(-1)=='&'){
+		current=current.substr(0,current.length-1)
+	}
+	if(filter.substr(-1)=='&'){
+		filter=filter.substr(0,filter.length-1)
+	}
+	
+	data['currentUrl']=current
+	if(referer!=current){
+		data['setGeneralParams']=referer
+	}
+	data['filterString']=filter
+	data['filterObjects']=filterObj
+	data['isSysUser']=req.params.isSysUser || false
+	data['isMember']=req.params.isMember || true
+	data['isSysUser']=req.params.isSysUser || false
+	data['role']=req.params.role || 'user'
+	data['username']=req.params.username || ''
+	data['sid']=req.query.sid
+	data['func']=req.params.func
+	data['message']=data['message'] || ''
+	data['successMessage']=data['successMessage'] || ''
+	data['db']=req.query.db || ''
+	data['mid']=req.query.mid || ''
+	data['apiUrl']=config.api.url
+
+	
+	
+	data['leftMenu']=mobileMenu
+
+	if(req.params.id && req.params.func && req.params.page && req.params.module){
+
+		data['urlPath']='/mobile/' + req.params.module + '/' + req.params.page + '/' + req.params.func + '/' + req.params.id
+
+	}else if(req.params.func && req.params.page && req.params.module ){
+
+		data['urlPath']='/mobile/' + req.params.module + '/' + req.params.page + '/' + req.params.func
+
+	}else if(req.params.page && req.params.module){
+
+		data['urlPath']='/mobile/' + req.params.module + '/' + req.params.page
+
+	}else{
+		
+		data['urlPath']='/mobile'
+	}
+		
+	data['page']=1
+	if(req.query.pageSize!=undefined)
+		data['pageSize']=req.query.pageSize
+	
+	if(req.query.page!=undefined)
+		data['page']=req.query.page
+	if(data.pageSize==undefined)
+		data['pageSize']=config.pagination.pageSize
+	if(data.pageCount==undefined)
+		data['pageCount']=1
+	if(data.recordCount==undefined)
+		data['recordCount']=0
+
+	data['icon']=getMenuIcon(mobileMenu, req, current2)
+	data['pageTitle']=getMenuText(mobileMenu, req, current2)
+	data['breadCrumbs']=getBreadCrumbs(mobileMenu, req, current2)
+
+	data['pagePath']='/mobile/' + req.params.module + '/' + req.params.page
+				
+	data['title']=data['pageTitle']
+	data['funcTitle']=''
+	if(req.params.func){
+		switch(req.params.func){
+			case 'addnew':
+				data['funcTitle']='Yeni Ekle'
+				break
+			case 'edit':
+				data['funcTitle']='Düzenle'
+				break
+			case 'view':
+				data['funcTitle']='İncele'
+				break
+			default:
+				data['funcTitle']=req.params.func
+				break
+		}
+		data['title']=data['title'] + ' - ' + data['funcTitle']
+	}
+
+	return data
+}
+
 
 function pageRander(req,res){
 	if(pages[req.params.module]==undefined){
@@ -239,9 +431,9 @@ function setGeneralParams(req,data){
 	if(data.recordCount==undefined)
 		data['recordCount']=0
 
-	data['icon']=getMenuIcon(req,current2)
-	data['pageTitle']=getMenuText(req,current2)
-	data['breadCrumbs']=getBreadCrumbs(req,current2)
+	data['icon']=getMenuIcon(menu, req, current2)
+	data['pageTitle']=getMenuText(menu, req, current2)
+	data['breadCrumbs']=getBreadCrumbs(menu, req, current2)
 
 	data['pagePath']='/' + req.params.module + '/' + req.params.page
 				
@@ -305,14 +497,14 @@ function errorPage(req,res,err){
 	res.render('general/error/error', data)
 }
 
-function loadPages(folder) {
+function loadPages(sayfalar, basePath, folder) {
 	var modules=fs.readdirSync(folder)
 	
 	modules.forEach((e)=>{
 		if(fs.statSync(path.join(folder,e)).isDirectory() && e[0]!='_'){
 			var pageFolders=fs.readdirSync(path.join(folder,e))
 			
-			pages[e]={}
+			sayfalar[e]={}
 			pageFolders.forEach((e2)=>{
 				var pageDir = path.join(folder,e, e2)
 				if(fs.statSync(pageDir).isDirectory() && e2[0]!='_'){
@@ -321,15 +513,24 @@ function loadPages(folder) {
 
 					if(pageFiles.findIndex((x)=>{return x==e2+'.js'})>-1){
 						var requireFileName=path.join(pageDir, e2 + '.js')
-						pages[e][e2]={}
+						sayfalar[e][e2]={}
 
-						pages[e][e2]['code']=require(requireFileName)
+						sayfalar[e][e2]['code']=require(requireFileName)
 						if(pageFiles.findIndex((x)=>{return x==e2+'.ejs'})>-1){
-							pages[e][e2]['view']=[]
-							pages[e][e2]['view']['index']=path.join(e, e2, e2)
+							sayfalar[e][e2]['view']=[]
+							if(basePath!=''){
+								sayfalar[e][e2]['view']['index']=path.join(basePath, e, e2, e2)
+							}else{
+								sayfalar[e][e2]['view']['index']=path.join(e, e2, e2)
+							}
+							
 							var funcP= loadFunctionPages(pageDir,e,e2)
 							for(var k in funcP){
-								pages[e][e2]['view'][k]=funcP[k]
+								if(basePath!=''){
+									sayfalar[e][e2]['view'][k]=path.join(basePath,funcP[k])
+								}else{
+									sayfalar[e][e2]['view'][k]=funcP[k]
+								}
 								
 							}
 						}
@@ -362,9 +563,9 @@ function loadFunctionPages(folder,module,pageName){
 }
 
 
-function getMenuIcon(req,urlPath){
+function getMenuIcon(menu, req, urlPath){
 
-	var dizi=getBreadCrumbs(req,urlPath)
+	var dizi=getBreadCrumbs(menu, req, urlPath)
 	if(dizi.length>0){
 		return dizi[dizi.length-1].icon
 	}else{
@@ -373,8 +574,8 @@ function getMenuIcon(req,urlPath){
 
 }
 
-function getMenuText(req, urlPath){
-	var dizi=getBreadCrumbs(req,urlPath)
+function getMenuText(menu, req, urlPath){
+	var dizi=getBreadCrumbs(menu, req, urlPath)
 	if(dizi.length>0){
 		return dizi[dizi.length-1].text
 	}else{
@@ -386,14 +587,10 @@ function getMenuText(req, urlPath){
 }
 
 
-function getBreadCrumbs(req,urlPath){
+function getBreadCrumbs(menu, req, urlPath){
 	var menuItem=[]
-	var m0=[]
-	if((req.params.isSysUser || false)){
-		m0=sysmenu
-	}else{
-		m0=menu
-	}
+	var m0=menu
+	
 	m0.forEach((m1)=>{
 		if(m1.path){
 			if(m1.mid==req.query.mid){
@@ -540,7 +737,7 @@ function apiDownload(req,res){
 	})
 }
 
-function repairMenu(){
+function repairMenu(menu){
 	menu.forEach((m1,index1)=>{
 		m1.mid=`m${index1}`
 		m1=repairMenuPath(m1)
@@ -585,4 +782,5 @@ function repairMenuPath(menu){
 	return menu
 }
 
-repairMenu()
+repairMenu(menu)
+repairMenu(mobileMenu)

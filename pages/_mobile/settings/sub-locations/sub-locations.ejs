@@ -1,0 +1,15 @@
+<%layout('../../_common/layouts/general')%>
+<%- partial('../../_common/components/grid2',{
+    fields:[
+        {name:'location',text:'Lokasyon',type:'lookup', lookupList:locationList,filter:true, valueField:'_id', textField:'locationName', orderable:true},
+        {name:'name',text:'Alt Lokasyon Ismi',type:'label' , filter:true, orderable:true},
+        {name:'passive',text:'Pasif',type:'checkbox', filter:true, width:'120px', orderable:true}
+    ],
+    caption:'Alt Lokasyon Listesi',
+    addNewButton:true,
+    editButton:true,
+    deleteButton:true,
+    deleteUrl:'/dbapi/sub-locations/{_id}?db=' + db + '&sid=' + sid
+    }) 
+%>
+

@@ -1,0 +1,184 @@
+<div class="card"  id="debug" >
+	<div class="card-header p-1 text-primary bold">
+		<div class="float-left">
+			<a class="btn btn-sm btn-light border collapsed" data-toggle="collapse" data-target="#collapseDebug" aria-expanded="false" aria-controls="collapseDebug" href="#">
+				<i class="far fa-caret-square-up"></i>
+			</a>
+			Çalıştırılacak Örnek Veri
+		</div>
+		<div class="float-right">
+			<a class="btn btn-sm btn-light border" href="javascript:$('#fileUpload2').trigger('click')" title="Ornek veriyi dosdan iceri al"><i class="fas fa-file-import"></i></a>
+			<a class="btn btn-sm btn-light border ml-1" href="javascript:copyToClipboard('debug')" title="Kopyala"><i class="far fa-copy"></i></a>
+
+		</div>
+	</div>
+	<div id="collapseDebug" class="collapse" aria-labelledby="headingDebug" data-parent="#debug">
+		<div class="card-body p-0">
+			<pre class="prism-live language-js fill" style="min-height: 22rem;max-height: 22rem;"><code>var obj={}</code></pre>
+		</div>
+	</div>
+	<div class="card-footer p-2">
+		<div class="row">
+			<div class="col-md-4">
+				<a href="javascript:render()" class="btn btn-primary" title="programi ornek data ile render et"><i class="far fa-list-alt"></i> Render</a>
+				<a href="javascript:exporter()" class="btn btn-primary ml-1" title="programi ornek data ile render edip file export eder"><i class="fas fa-file-download"></i> Render+Export</a>
+			</div>
+			<div class="col-md-8">
+				<div class="card"  id="connector">
+					<div class="card-header p-1 text-primary bold">
+						<div class="float-left">
+							<a class="btn btn-sm btn-light border mr-1 collapsed" data-toggle="collapse" data-target="#collapseConnector" aria-expanded="false" aria-controls="collapseConnector" href="#">
+								<i class="far fa-caret-square-up"></i>
+							</a>
+							<i class="fas fa-plug"></i> Connector
+						</div>
+					</div>
+					<div id="collapseConnector" class="collapse" aria-labelledby="headingconnector" data-parent="#connector">
+						<div class="card-body p-0">
+							<div class="table-responsive">
+								<table id="grid1" class="table table-bordered table-striped m-0"  cellspacing="0">
+									<thead>
+										<tr>
+											<th width="40%">Kayıtlı Connector</th>
+											<th width="60%">
+												<select id="localConnector" class="form-control" onchange="localConnectorChange()">
+													<option value="">-- Seç --</option>
+													<% localConnectors.forEach((e)=>{ %>
+													<option value="<%- encodeURIComponent2(JSON.stringify(e)) %>"><%- e.name %> [<%- e.connectorId %>]</option>
+													<% }) %>
+												</select>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Connector ID</td>
+											<td><input type="text" class="form-control" id="connectorId" placeholder="connector Id" autocomplete="off"></td>
+										</tr>
+										<tr>
+											<td>Connector Pass</td>
+											<td><input type="text" class="form-control" id="connectorPass" placeholder="connector password" autocomplete="off"></td>
+										</tr>
+										<tr>
+											<td>Bağlantı Türü</td>
+											<td>
+												<select id="connectionType" class="form-control" onchange="connectionTypeChange()">
+													<option value="">-- Seç --</option>
+													<% staticValues.localConnectorConnectionTypes.forEach((e)=>{ %>
+													<option value="<%- e.value%>"><%- e.text %></option>
+													<% }) %>
+												</select>
+											</td>
+										</tr>
+										<tr class="sqlconnection-row">
+											<td>Server</td>
+											<td><input type="text" class="form-control" id="connection-server" placeholder="server" autocomplete="off"></td>
+										</tr>
+										<tr class="sqlconnection-row">
+											<td>Port</td>
+											<td><input type="number" class="form-control" id="connection-port" placeholder="port" autocomplete="off"></td>
+										</tr>
+										<tr class="sqlconnection-row">
+											<td>Database</td>
+											<td><input type="text" class="form-control" id="connection-database" placeholder="database" autocomplete="off"></td>
+										</tr>
+										<tr class="sqlconnection-row">
+											<td>Username</td>
+											<td><input type="text" class="form-control" id="connection-username" placeholder="username" autocomplete="off"></td>
+										</tr>
+										<tr class="sqlconnection-row">
+											<td>Password</td>
+											<td><input type="text" class="form-control" id="connection-password" placeholder="password" autocomplete="off"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="float-left">
+								<a href="javascript:connectorTest()" class="btn btn-info" title="programi ornek data ile render edip connector uzerinde calistir"><i class="fas fa-plug"></i> Test</a>
+							</div>
+							<div class="float-right">
+								<a href="javascript:connector()" class="btn btn-primary" title="programi ornek data ile render edip connector uzerinde calistir"><i class="fas fa-play"></i> Çalıştır</a>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card mt-2"  id="rendered">
+	<div class="card-header p-1 text-primary bold">
+		<div class="float-left">
+			<a class="btn btn-sm btn-light border collapsed" data-toggle="collapse" data-target="#collapseRendered" aria-expanded="false" aria-controls="collapseRendered" href="#">
+				<i class="far fa-caret-square-up"></i>
+			</a>
+			rendered
+		</div>
+		<div class="float-right">
+			<a class="btn btn-sm btn-light border ml-1" href="javascript:copyToClipboard('rendered')" title="Kopyala"><i class="far fa-copy"></i></a>
+		</div>
+	</div>
+	<div id="collapseRendered" class="collapse" aria-labelledby="headingrendered" data-parent="#rendered">
+		<div class="card-body p-0">
+			<pre class="prism-live language-js fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
+		</div>
+	</div>
+</div>
+
+<div class="card mt-2"  id="console" >
+	<div class="card-header p-1 text-primary bold">
+		<div class="float-left">
+			<a class="btn btn-sm btn-light border collapsed" data-toggle="collapse" data-target="#collapseConsole" aria-expanded="false" aria-controls="collapseConsole" href="#">
+				<i class="far fa-caret-square-up"></i>
+			</a>
+			console
+		</div>
+		<div class="float-right">
+			<a class="btn btn-sm btn-light border ml-1" href="javascript:copyToClipboard('console')" title="Kopyala"><i class="far fa-copy"></i></a>
+		</div>
+	</div>
+	<div id="collapseConsole" class="collapse" aria-labelledby="headingConsole" data-parent="#console">
+		<div class="card-body p-0">
+			<pre class="prism-live language-js fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
+		</div>
+	</div>
+</div>
+<input type="file" name="fileUpload2" id="fileUpload2" style="visibility:hidden;display: none;" accept="*.*">
+
+<script type="text/javascript">
+	function calistir(){
+		alert(doc.files.length)
+	}
+
+	function connectionTypeChange(){
+		if($('#connectionType').val()=='mssql' || $('#connectionType').val()=='mysql'){
+			$('.sqlconnection-row').show()
+		}else{
+			$('.sqlconnection-row').hide()
+		}
+	}
+	connectionTypeChange()
+
+	function localConnectorChange(){
+		if($('#localConnector').val()=='')
+			return
+		var a=JSON.parse(decodeURIComponent($('#localConnector').val()))
+		$('#connectorId').val(a.connectorId)
+		$('#connectorPass').val(a.connectorPass)
+		$('#connectionType').val(a.connectionType)
+		$('#connection-server').val(a.connection.server)
+		$('#connection-port').val(a.connection.port)
+		$('#connection-database').val(a.connection.database)
+		$('#connection-username').val(a.connection.username)
+		$('#connection-password').val(a.connection.password)
+		connectionTypeChange()
+
+	}
+
+	function connectorTest(){
+		$('#collapseConsole').collapse('show')
+		document.getElementById('console').getElementsByTagName('code')[0].innerHTML=`Baglanti basarili :-)`
+	}
+</script>

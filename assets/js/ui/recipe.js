@@ -111,13 +111,14 @@ function saveRecipe(callback){
         }
     }
     
-
+    console.log(`saveRecipe doc:`,doc)
     
     $.ajax({
         url:url,
         data:doc,
         type:type,
         success:function(result){
+        		console.log(`result:`,result)
             if(result.success){
                 doc=result.data;
                 callback(null);
@@ -136,6 +137,8 @@ function receteKaydet(){
         if(!err){
             refreshRecipeList((doc._id || ''));
 
+        }else{
+        	alert(err.message)
         }
     });
 }
@@ -257,12 +260,14 @@ function refreshProcessInputMaterialGrid(adimIndex){
     if(doc.process[adimIndex].input==undefined) doc.process[adimIndex].input=[];
     var toplamOran=0;
     var receteMiktari=0;
-    if(recipeFormType=='products') receteMiktari=doc.totalQuantity;
+    if(recipeFormType=='products') 
+    	receteMiktari=doc.totalQuantity;
 
     doc.process[adimIndex].input.forEach(function(e,index2){
 
         var newRow=malzemeGrid.insertRow(malzemeGrid.rows.length-1);
         var cell0=newRow.insertCell(0);
+
         cell0.innerHTML=e.item.name.value;
         cell0.innerHTML+=e.item.description.value!=''?' - ' + e.item.description.value:'';
 
@@ -315,16 +320,20 @@ function removeProcessInputMaterial(adimIndex,rowIndex){
 
 function addProcessInputMaterial(adimIndex){
     
-    var itemId=$('#adim'+ adimIndex + ' #itemId').val();
-    var itemName=$('#adim'+ adimIndex + ' #itemName').val();
+    if($('#adim'+ adimIndex + ' #itemDoc').val()=='')
+    	return alert('Hammadde secilmemis!')
+    // var itemId=$('#adim'+ adimIndex + ' #itemId').val();
+    // var itemName=$('#adim'+ adimIndex + ' #itemName').val();
+    var itemDoc=JSON.parse(decodeURIComponent($('#adim'+ adimIndex + ' #itemDoc').val()));
     var unitCode=$('#adim'+ adimIndex + ' #quantity-unitCode').val();
     var quantity=Number($('#adim'+ adimIndex + ' #quantity').val());
     var percent=Number($('#adim'+ adimIndex + ' #percent').val());
     
     if(!(itemId && quantity>0)) return;
     if(!doc.process[adimIndex].input) doc.process[adimIndex].input=[];
-    doc.process[adimIndex].input.push({item:{_id:itemId,name:{value:itemName}},quantity:quantity,unitCode:unitCode,percent:percent});
+    doc.process[adimIndex].input.push({item:itemDoc,quantity:quantity,unitCode:unitCode,percent:percent});
     $('#adim'+ adimIndex + ' #itemId').val('');
+    $('#adim'+ adimIndex + ' #itemDoc').val('');
     $('#adim'+ adimIndex + ' #itemName').val('');
     $('#adim'+ adimIndex + ' #quantity').val(0);
     $('#adim'+ adimIndex + ' #percent').val(0);
@@ -375,16 +384,22 @@ function removeProcessOutputMaterial(adimIndex,rowIndex){
 
 function addProcessOutputMaterial(adimIndex){
     
-    var itemId=$('#adim'+ adimIndex + ' #itemIdOutput').val();
-    var itemName=$('#adim'+ adimIndex + ' #itemNameOutput').val();
+     if($('#adim'+ adimIndex + ' #itemDocOutput').val()=='')
+    	return alert('Malzeme secilmemis!')
+
+    var itemDoc=JSON.parse(decodeURIComponent($('#adim'+ adimIndex + ' #itemDocOutput').val()));
+
+    // var itemId=$('#adim'+ adimIndex + ' #itemIdOutput').val();
+    // var itemName=$('#adim'+ adimIndex + ' #itemNameOutput').val();
     var unitCode=$('#adim'+ adimIndex + ' #quantity-unitCodeOutput').val();
     var quantity=Number($('#adim'+ adimIndex + ' #quantityOutput').val());
     var percent=Number($('#adim'+ adimIndex + ' #percentOutput').val());
     
     if(!(itemId && quantity>0)) return;
     if(!doc.process[adimIndex].output) doc.process[adimIndex].output=[];
-    doc.process[adimIndex].output.push({item:{_id:itemId,name:{value:itemName}},quantity:quantity,unitCode:unitCode, percent:percent});
+    doc.process[adimIndex].output.push({item:itemDoc,quantity:quantity,unitCode:unitCode, percent:percent});
     $('#adim'+ adimIndex + ' #itemIdOutput').val('');
+    $('#adim'+ adimIndex + ' #itemDocOutput').val('');
     $('#adim'+ adimIndex + ' #itemNameOutput').val('');
     $('#adim'+ adimIndex + ' #quantityOutput').val(0);
     $('#adim'+ adimIndex + ' #percentOutput').val(0);
@@ -597,6 +612,7 @@ function autoCompleteItemName(adimIndex){
         select: function (event, ui) {
                 $('#adim' + adimIndex + ' #itemName').val(ui.item.label); 
                 $('#adim' + adimIndex + ' #itemId').val(ui.item.obj._id); 
+                $('#adim' + adimIndex + ' #itemDoc').val(encodeURIComponent2(JSON.stringify(ui.item.obj))); 
                 return false;
             }
     });
@@ -661,7 +677,8 @@ function autoCompleteItemName(adimIndex){
         },
         select: function (event, ui) {
                 $('#adim' + adimIndex + ' #itemNameOutput').val(ui.item.label); 
-                $('#adim' + adimIndex + ' #itemIdOutput').val(ui.item.obj._id); 
+                $('#adim' + adimIndex + ' #itemIdOutput').val(ui.item.obj._id);
+                $('#adim' + adimIndex + ' #itemDocOutput').val(encodeURIComponent2(JSON.stringify(ui.item.obj))); 
                 return false;
             }
     });

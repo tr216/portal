@@ -432,3 +432,7 @@ footer.footer {
 	border-radius: 0.25rem !important;
 	border: 1px solid #dee2e6 !important;
 }
+
+.btn.collapsed .fa-caret-square-up {
+    transform: rotate(-180deg);
+}
