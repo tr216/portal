@@ -1033,6 +1033,14 @@
 		{"text":"B-","value":"B-"},
 		{"text":"AB+","value":"AB+"},
 		{"text":"AB-","value":"AB-"}
+	],
+	"programTypes":[
+		{"text":"file-importer","value":"file-importer"},
+		{"text":"file-exporter","value":"file-exporter"},
+		{"text":"connector-importer","value":"connector-importer"},
+		{"text":"connector-exporter","value":"connector-exporter"},
+		{"text":"email","value":"email"},
+		{"text":"sms","value":"sms"}
 	]
 }
 

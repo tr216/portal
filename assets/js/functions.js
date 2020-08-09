@@ -625,14 +625,14 @@ function generatePagination(page,pageCount,url){
 }
 
 
-function b64EncodeUnicode(str){
+function btoa2(str){
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
         function toSolidBytes(match, p1) {
             return String.fromCharCode('0x' + p1)
     }))
 }
 
-function b64DecodeUnicode(str){
+function atob2(str){
     return decodeURIComponent(atob(str).split('').map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
     }).join(''))
@@ -641,4 +641,46 @@ function b64DecodeUnicode(str){
 
 function encodeURIComponent2(str){
   return encodeURIComponent(str).replace(/[!'()*]/g, escape)
+}
+
+function htmlEncode(str) {
+	var buf = []
+	if(str){
+		for (var i=str.length-1;i>=0;i--) {
+			buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''))
+		}
+	}else{
+		return ''
+	}
+	
+	
+	return buf.join('')
+}
+
+function htmlDecode(str) {
+	return str.replace(/&#(\d+);/g, function(match, dec) {
+		return String.fromCharCode(dec)
+	})
+}
+
+
+function download(content, fileName, mimeType) {
+  var a = document.createElement('a');
+  mimeType = mimeType || 'application/octet-stream';
+
+  if (navigator.msSaveBlob) { // IE10
+    navigator.msSaveBlob(new Blob([content], {
+      type: mimeType
+    }), fileName);
+  } else if (URL && 'download' in a) { //html5 A[download]
+    a.href = URL.createObjectURL(new Blob([content], {
+      type: mimeType
+    }));
+    a.setAttribute('download', fileName);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } else {
+    location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
+  }
 }

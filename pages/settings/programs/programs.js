@@ -1,9 +1,28 @@
 module.exports = function(req,res,callback){
 	var data={
 		localConnectors:[],
+		collectionList:[],
 		form:{
 			name:'',
+			type: '',
+			collections:[{
+				name:'',
+				filter:'{_id:${data._id} }'
+			}],
 			files:[],
+			connector:{
+				connectorId: '',
+				connectorPass: '',
+				connectionType:'mssql',
+				connection:{
+					server: 'localhost',
+					port:1433,
+					database:'',
+					username: '',
+					password: ''
+				}
+			},
+			crontab:'',	
 			passive:false
 		},
 		filter:{
@@ -55,13 +74,18 @@ function getList(req,res,data,callback){
 
 function initLookUpLists(req,res,data,cb){
 	data.localConnectors=[]
-	
 	api.get(`/${req.query.db}/local-connectors`,req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.localConnectors=resp.data.docs
 		}
-		cb(null,data)
+		api.get(`/${req.query.db}/collections`,req,{passive:false},(err,resp)=>{
+			if(!err){
+				data.collectionList=resp.data
+			}
+			cb(null,data)
+		})
 	})
+	
 }
 
 
@@ -89,7 +113,7 @@ function edit(req,res,data,callback){
 	var _id=req.params.id || ''
 	initLookUpLists(req,res,data,(err,data)=>{
 		if(req.method=='POST' || req.method=='PUT'){
-			data.form=Object.assign(data.form,req.body)
+			data.form=Object.assign({}, data.form,req.body)
 			api.put(`/${req.query.db}/programs/${_id}`,req,data.form,(err,resp)=>{
 				if(!err){
 					res.redirect(`/settings/programs?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)

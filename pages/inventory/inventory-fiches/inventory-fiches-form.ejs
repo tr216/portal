@@ -30,21 +30,11 @@
                     </div>
                     <div class="form-group float-left ml-md-2">
                         <label for="" class="m-0">Tarih</label>
-                        <div class="input-group date">
-                            <input type="text" name="issueDate" id="issueDate" class="form-control" value="<% if(typeof form.issueDate=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar fa-2x"></i>
-                            </div>
-                        </div>
+                        <input type="date" name="issueDate" id="issueDate" class="form-control" required autocomplete="off" value="<% if(typeof form.issueDate=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
                     </div>
                     <div class="form-group float-left ml-md-2">
                         <label for="" class="m-0">Saat</label>
-                        <div class="input-group" id="issueTime1">
-                            <input type="text" name="issueTime" id="issueTime" class="form-control" value="<% if(typeof form.issueTime=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.substr(0,8)%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
-                            <div class="input-group-addon">
-                                <i class="fa fa-clock fa-2x"></i>
-                            </div>
-                        </div>
+                        <input type="time" name="issueTime" id="issueTime" class="form-control" required autocomplete="off" value="<% if(typeof form.issueTime=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.substr(0,8)%><%}%>" <% if(mode=='view'){%>readonly="true"<%}%> >
                     </div>
                     <div class="form-group float-left ml-md-2">
                         <label for="" class="m-0">Fiş Tipi</label>
@@ -850,24 +840,4 @@
     }
 
 
-</script>
-
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('.input-group.date').datepicker({
-            format: 'yyyy-mm-dd',
-            language: "tr",
-            orientation: "bottom auto",
-            // todayBtn: "linked",
-            autoclose: true,
-            todayHighlight: true,
-            clearBtn: true
-
-            // startDate: -4,
-            // endDate: +8,
-        });
-
-
-
-    });
 </script>

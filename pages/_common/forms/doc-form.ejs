@@ -1,451 +1,439 @@
 <%
-    if(typeof docFormType=='undefined') docFormType='';
+if(typeof docFormType=='undefined')
+	docFormType=''
 
-    switch(docFormType){
-        case 'order':
-            title=ioType==0?'Satış Şipariş':'Alım Sipariş';
-            form.party=ioType==0?form.buyerCustomerParty.party:form.sellerSupplierParty.party;
-        break;
-        case 'invoice':
-            title=ioType==0?'Giden Fatura':'Gelen Fatura';
-            form.party=ioType==0?form.accountingCustomerParty.party:form.accountingSupplierParty.party;
-        break;
-        case 'despatch':
-            title=ioType==0?'Giden İrsaliye':'Gelen İrsaliye';
-            form.party=ioType==0?form.deliveryCustomerParty.party:form.despatchSupplierParty.party;
-        break;
-    }
-   
-    form['vknTckn']='';
-    try{
-        form.party.partyIdentification.forEach((e)=>{
-            if(e.ID.attr.schemeID.toUpperCase()=='VKN' || e.ID.attr.schemeID.toUpperCase()=='TCKN'){
-                form['vknTckn']=e.ID.value;
-                return;
-            }
-        });
-    }catch(err){}
-    headerButtons='';
-    formName='form1';
+switch(docFormType){
+	case 'order':
+	title=ioType==0?'Satış Şipariş':'Alım Sipariş'
+	form.party=ioType==0?form.buyerCustomerParty.party:form.sellerSupplierParty.party
+	break
+	case 'invoice':
+	title=ioType==0?'Giden Fatura':'Gelen Fatura'
+	form.party=ioType==0?form.accountingCustomerParty.party:form.accountingSupplierParty.party
+	break
+	case 'despatch':
+	title=ioType==0?'Giden İrsaliye':'Gelen İrsaliye'
+	form.party=ioType==0?form.deliveryCustomerParty.party:form.despatchSupplierParty.party
+	break
+}
 
-    headerButtons +='<button type="button" class="btn btn-primary btn-form-header" title="Kaydet" onclick="formKaydet()"><i class="fas fa-save"></i></button>';
-    
-    headerButtons +='<a href="javascript:goBack();" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>';
+form['vknTckn']=''
+try{
+	form.party.partyIdentification.forEach((e)=>{
+		if(e.ID.attr.schemeID.toUpperCase()=='VKN' || e.ID.attr.schemeID.toUpperCase()=='TCKN'){
+			form['vknTckn']=e.ID.value
+			return
+		}
+	})
+}catch(err){}
+headerButtons=''
+formName='form1'
+
+headerButtons +='<button type="button" class="btn btn-primary btn-form-header" title="Kaydet" onclick="formKaydet()"><i class="fas fa-save"></i></button>'
+
+headerButtons +='<a href="javascript:goBack();" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>'
 
 %>
 <script type="text/javascript" src="<%- assetVersion('/js/ui/doc-form.js') %>"></script>
 <script type="text/javascript">
-    var headerButtons=document.getElementById('headerButtons');
-    if(headerButtons){
-      headerButtons.innerHTML='<%- headerButtons %>';
-    }
-    var ioType=<%=ioType%>;
-    var db='<%=db%>';
-    var sid='<%=sid%>';
-    var _id='<%=(form._id || '')%>';
-    var doc;
-    var docFormType='<%=docFormType%>';
+	var headerButtons=document.getElementById('headerButtons')
+	if(headerButtons){
+		headerButtons.innerHTML='<%- headerButtons %>'
+	}
+	var ioType=<%=ioType%>
+	var db='<%=db%>'
+	var sid='<%=sid%>'
+	var _id='<%=(form._id || '')%>'
+	var doc
+	var docFormType='<%=docFormType%>'
 
-    
-    <% switch(docFormType){
-        case 'order': %>
-        doc=clone(dbType.orderType);
-        <% break;
-        case 'invoice': %>
-        doc=clone(dbType.invoiceType);
-        <% break;
-        case 'despatch': %>
-        doc=clone(dbType.despatchAdviceType);
-        <% break;
-    } %>
-    doc.ioType=<%=ioType%>;
 
-    doc.issueDate.value=(new Date()).yyyymmdd();
-    doc.issueTime.value=(new Date()).hhmmss();
+	<% switch(docFormType){
+		case 'order': %>
+		doc=clone(dbType.orderType)
+		<% break
+		case 'invoice': %>
+		doc=clone(dbType.invoiceType)
+		<% break
+		case 'despatch': %>
+		doc=clone(dbType.despatchAdviceType)
+		<% break
+	} %>
 
-    var unitCodeList=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(staticValues.unitCodeList)) %>'));
+	doc.ioType=<%=ioType%>
 
-    <% 
-        if(typeof form._id!='undefined'){
-        if((form._id || '')!=''){ 
-    %>
-    doc=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(form))%>'));
-    
-    <%  }
-    } %>
+	doc.issueDate.value=(new Date()).yyyymmdd()
+	doc.issueTime.value=(new Date()).hhmmss()
+
+	var unitCodeList=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(staticValues.unitCodeList)) %>'))
+
+	<% 
+	if(typeof form._id!='undefined'){ 
+		if((form._id || '')!=''){
+			%>
+			doc=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(form)) %>'))
+			<%  
+		}
+	} 
+	%>
 </script>
 
 <form action="" method="POST" role="form" name="form1" id="form1">
-    <% if(typeof message!='undefined'){ if(message!=''){ %>
-    <div class="row">
-        <div class="col-lg-12 col-md-12">
-            <div class="alert alert-danger" role="alert">
-                <%=message %>
-            </div>
-        </div>
-    </div>
-    <% } } %>
-    <ul class="nav nav-tabs form-tabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" href="#tab1" role="tab" data-toggle="tab" id="IDtab1" aria-controls="tab1" aria-selected="true">
-                <i class="fas fa-file-alt"></i> Bilgiler
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#tab2" role="tab" data-toggle="tab" id="IDtab2" aria-controls="tab2" aria-selected="false">
-                <i class="fas fa-table"></i> Satirlar
-            </a>
-        </li>
-    </ul>
-    <div class="tab-content p-1" style="min-height: 70vh;overflow: auto;">
-        <!-- IDtab1 -->
-        <div class="tab-pane show active" id="tab1" role="tabpanel" aria-labelledby="IDtab1">
-            <div class="card">
-                <div class="card-header p-1">
-                    <div class="float-left bold text-primary">Genel Bilgiler</div>
-                    <div class="float-right bold text-primary form-inline">
-                        <label>Entegrator:</label>
-                        <select name="eIntegrator" class="form-control">
-                            <% eIntegratorList.forEach((e)=>{ %>
-                            <option value="<%=e._id%>" <% if(form.eIntegrator==e._id){%> selected <%}%>><%=e.name%></option>
-                            <%  }); %>
-                        </select>
-                    </div>
-                    
-                </div>
-                <div class="card-body p-1">
-                    <div class="row">
-                        <div class="form-group col-md-3">
-                            <label for="" class="m-0"><%=title%> No</label>
-                            <input type="text" class="form-control" name="ID[value]" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.ID.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Tarih</label>
-                            <div class="input-group date">
-                                <input type="text" name="issueDate[value]" id="issueDate" class="form-control" value="<% if(typeof form.issueDate.value=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate.value%><%}%>">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Saat</label>
-                            <div class="input-group" id="issueTime1">
-                                <input type="text" name="issueTime[value]" id="issueTime" class="form-control" value="<% if(typeof form.issueTime.value=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.value.substr(0,8)%><%}%>">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-clock fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Senaryo</label>
-                            <select name="profileId[value]" class="form-control">
-                                <% docProfileIdList.forEach(function(e){ %>
-                                <option value="<%=e.value%>" <% if(e.value==form.profileId.value){%>selected<%} %> ><%=e.text%></option>
-                                <% }); %>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                             <% switch(docFormType){
-                                case 'order':%>
-                            <label for="" class="m-0">Siparis Tipi</label>
-                            <select name="orderTypeCode[value]" class="form-control">
-                                <% docTypeCodeList.forEach(function(e){ %>
-                                    <option value="<%=e.value%>" <% if(e.value==form.orderTypeCode.value){%>selected<%} %> ><%=e.text%></option>
-                                <% }); %>
-                            </select>
-                                <% break;
-                                case 'invoice':%>
-                            <label for="" class="m-0">Fatura Tipi</label>
-                            <select name="invoiceTypeCode[value]" class="form-control">
-                                <% docTypeCodeList.forEach(function(e){ %>
-                                <option value="<%=e.value%>" <% if(e.value==form.invoiceTypeCode.value){%>selected<%} %> ><%=e.text%></option>
-                             <% }); %>
-                            </select>
-                                <% break; 
-                                case 'despatch':%>
-                            <label for="" class="m-0">Irsaliye Tipi</label>
-                            <select name="despatchAdviceTypeCode[value]" class="form-control">
-                                <% docTypeCodeList.forEach(function(e){ %>
-                                    <option value="<%=e.value%>" <% if(e.value==form.despatchAdviceTypeCode.value){%>selected<%} %> ><%=e.text%></option>
-                                <% }); %>
-                            </select>
-                                <% break;
-                             } %>
-                        </div>
-                        <div class="w-100"></div>
-                        <div class="form-group col-md-3">
-                            <label for="" class="m-0">ETTN(uuid)</label>
-                            <input type="text" class="form-control" name="uuid[value]" placeholder="ETTN(uuid)" autocomplete="off"  value="<%=form.uuid.value%>" readonly="true">
-                        </div>
-                        <% if(docFormType!='despatch'){ %>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Para Birimi</label>
-                            <select name="documentCurrencyCode[value]" class="form-control">
-                                <% staticValues.currencyList.forEach(function(e){ %>
-                                <option value="<%=e.value%>" <% if(e.value==form.documentCurrencyCode.value){%>selected<%} %> ><%=e.text%></option>
-                                <% }); %>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Döviz Kuru</label>
-                            <div class="input-group align-items-center">
-                                <input type="text" class="form-control text-right" name="pricingExchangeRate[calculationRate][value]" placeholder="" autocomplete="off" value="<%=form.pricingExchangeRate.calculationRate.value%>">
-                                <div class="input-group-addon">
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="btnTCMB" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            TCMB
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="btnTCMB">
-                                            <a class="dropdown-item" href="javascript:void(0)" onclick="alert('döviz alış')">Döviz alış</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" onclick="alert('döviz satış')">Döviz satış</a>
-                                        </div>
-                                    </div>
-                                </div>
+	<% if(typeof message!='undefined'){ 
+		if(message!=''){ %>
+		<div class="row">
+			<div class="col-lg-12 col-md-12">
+				<div class="alert alert-danger" role="alert">
+					<%=message %>
+				</div>
+			</div>
+		</div>
+		<% } 
+	} %>
+	
+	<div class="card">
+		<div class="card-header">
+			Genel Bilgiler
+			<div class="float-right bold text-primary form-inline">
+				<label>Entegrator:</label>
+				<select name="eIntegrator" class="ml-1" style="min-width: 80px;">
+					<% eIntegratorList.forEach((e)=>{ %>
+					<option value="<%=e._id%>" <% if(form.eIntegrator==e._id){%> selected <%}%>><%=e.name%></option>
+					<%  }); %>
+				</select>
+			</div>
+		</div>
+		<div class="card-body p-1">
+			<div class="row">
+				<div class="form-group col-md-3">
+					<label for="" class="m-0"><%=title%> No</label>
+					<input type="text" class="form-control" name="ID[value]" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.ID.value%>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Tarih</label>
+					<input type="date" name="issueDate[value]" id="issueDate" class="form-control date" autocomplete="off" required value="<% if(typeof form.issueDate.value=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate.value%><%}%>">
+				</div>
 
-                            </div>
-                        </div>
-                         <% } %>
-                        <div class="form-group col-md-3">
-                            <label for="" class="m-0">Yerel <%=title%> No</label>
-                            <input type="text" class="form-control" name="localDocumentId" placeholder="localDocumentId" autocomplete="off"  value="<%=form.localDocumentId%>">
-                        </div>
-                       
-                        <% if(docFormType=='despatch' || docFormType=='invoice'){ %>
-                        <div class="col-md-4">
-                            <%- partial('../components/location-selection.ejs',{name:'location',subLocationName:'subLocation'}) %>
-                        </div>
-                        <% } %>
-                    </div>
-                </div>
-            </div>
-            <div class="card mt-2">
-                <div class="card-header p-1">
-                    <div class="text-primary bold float-left">Cari Bilgiler</div>
-                    <div class="float-right"><a href="/finance/<% if(form.ioType==0){%>customers<%}else{%>vendors<%}%>?db=<%=db%>&sid=<%=sid%>" target="_blank" class="btn btn-primary btn-sm" title="<% if(form.ioType==0){%>Müşteri listesini aç<%}else{%>Tedarikçi listesini aç<%}%>"><i class="fas fa-users"></i></a></div>
-                </div>
-                <div class="card-body p-1">
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label for="" class="m-0">Cari Ünvan</label>
-                            <input type="text" class="form-control" name="party[partyName][name][value]" id="partyName" placeholder="" autocomplete="off"  value="<%=form.party.partyName.name.value%>">
-                            <input type="hidden" class="form-control" name="partyId" id="partyId" value="<% if(typeof form.party._id!='undefined'){%><%=form.party._id%><%}%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Adı(Şahıs)</label>
-                            <input type="text" class="form-control" name="party[person][firstName][value]" placeholder="" autocomplete="off"  value="<%=form.party.person.firstName.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Soyad(Şahıs)</label>
-                            <input type="text" class="form-control" name="party[person][familyName][value]" placeholder="" autocomplete="off"  value="<%=form.party.person.familyName.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">VKN/TCKN</label>
-                            <input type="text" class="form-control" name="vknTckn" placeholder="Vergi No/TC Kimlik No" autocomplete="off"  value="<%=form.vknTckn%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Vergi Dairesi</label>
-                            <input type="text" class="form-control" name="party[partyTaxScheme][taxScheme][name][value]" placeholder="" autocomplete="off"  value="<%=form.party.partyTaxScheme.taxScheme.name.value%>">
-                        </div>
-                        <div class="w-100"></div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Ülke</label>
-                            <input type="text" class="form-control" name="party[postalAddress][country][name][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.country.name.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Sehir</label>
-                            <input type="text" class="form-control" name="party[postalAddress][cityName][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.cityName.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Mahalle/İlçe</label>
-                            <input type="text" class="form-control" name="party[postalAddress][district][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.district.value%>">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="" class="m-0">Cadde/Sokak</label>
-                            <input type="text" class="form-control" name="party[postalAddress][streetName][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.streetName.value%>">
-                        </div>
-                        
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Bina/Site ismi</label>
-                            <input type="text" class="form-control" name="party[postalAddress][buildingName][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.buildingName.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Blok</label>
-                            <input type="text" class="form-control" name="party[postalAddress][blockName][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.blockName.value%>">
-                        </div>
-                        <div class="form-group col-md-1">
-                            <label for="" class="m-0">Bina numarası</label>
-                            <input type="text" class="form-control" name="party[postalAddress][buildingNumber][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.buildingNumber.value%>" title="Bina No veya Sokak/Cadde no">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Daire/Oda No</label>
-                            <input type="text" class="form-control" name="party[postalAddress][room][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.room.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Posta Kodu</label>
-                            <input type="text" class="form-control" name="party[postalAddress][postbox][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.postbox.value%>">
-                        </div>
-                        <div class="w-100"></div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Tel</label>
-                            <input type="text" class="form-control" name="party[contact][telephone][value]" placeholder="" autocomplete="off"  value="<%=form.party.contact.telephone.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Fax</label>
-                            <input type="text" class="form-control" name="party[contact][telefax][value]" placeholder="" autocomplete="off"  value="<%=form.party.contact.telefax.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Email</label>
-                            <input type="text" class="form-control" name="party[contact][electronicMail][value]" placeholder="" autocomplete="off"  value="<%=form.party.contact.electronicMail.value%>">
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="" class="m-0">Web Sitesi</label>
-                            <input type="text" class="form-control" name="party[websiteURI][value]" placeholder="" autocomplete="off"  value="<%=form.party.websiteURI.value%>">
-                        </div>
-                    </div>
-                </div>
-            </div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Saat</label>
+					<input type="time" name="issueTime[value]" id="issueTime" class="form-control" autocomplete="off" required value="<% if(typeof form.issueTime.value=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.value.substr(0,8)%><%}%>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Senaryo</label>
+					<select name="profileId[value]" class="form-control">
+						<% docProfileIdList.forEach(function(e){ %>
+						<option value="<%=e.value%>" <% if(e.value==form.profileId.value){%>selected<%} %> ><%=e.text%></option>
+						<% }); %>
+					</select>
+				</div>
+				<div class="form-group col-md-2">
+					<% switch(docFormType){
+						case 'order':%>
+						<label for="" class="m-0">Siparis Tipi</label>
+						<select name="orderTypeCode[value]" class="form-control">
+							<% docTypeCodeList.forEach(function(e){ %>
+							<option value="<%=e.value%>" <% if(e.value==form.orderTypeCode.value){%>selected<%} %> ><%=e.text%></option>
+							<% }); %>
+						</select>
+						<% break
+						case 'invoice':%>
+						<label for="" class="m-0">Fatura Tipi</label>
+						<select name="invoiceTypeCode[value]" class="form-control">
+							<% docTypeCodeList.forEach(function(e){ %>
+							<option value="<%=e.value%>" <% if(e.value==form.invoiceTypeCode.value){%>selected<%} %> ><%=e.text%></option>
+							<% }); %>
+						</select>
+						<% break; 
+						case 'despatch':%>
+						<label for="" class="m-0">Irsaliye Tipi</label>
+						<select name="despatchAdviceTypeCode[value]" class="form-control">
+							<% docTypeCodeList.forEach(function(e){ %>
+							<option value="<%=e.value%>" <% if(e.value==form.despatchAdviceTypeCode.value){%>selected<%} %> ><%=e.text%></option>
+							<% }); %>
+						</select>
+						<% break
+					} %>
+				</div>
+				<div class="w-100"></div>
+				<div class="form-group col-md-3">
+					<label for="" class="m-0">ETTN(uuid)</label>
+					<input type="text" class="form-control" name="uuid[value]" placeholder="ETTN(uuid)" autocomplete="off"  value="<%=form.uuid.value%>" readonly="true">
+				</div>
+				<% if(docFormType!='despatch'){ %>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Para Birimi</label>
+					<select name="documentCurrencyCode[value]" class="form-control">
+						<% staticValues.currencyList.forEach(function(e){ %>
+						<option value="<%=e.value%>" <% if(e.value==form.documentCurrencyCode.value){%>selected<%} %> ><%=e.text%></option>
+						<% }); %>
+					</select>
+				</div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Döviz Kuru</label>
+					<div class="input-group align-items-center">
+						<input type="number" class="form-control text-right" name="pricingExchangeRate[calculationRate][value]" placeholder="" autocomplete="off" value="<%=form.pricingExchangeRate.calculationRate.value%>">
+						<div class="input-group-addon">
+							<div class="dropdown">
+								<button class="btn btn-primary dropdown-toggle" type="button" id="btnTCMB" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									TCMB
+								</button>
+								<div class="dropdown-menu" aria-labelledby="btnTCMB">
+									<a class="dropdown-item" href="javascript:void(0)" onclick="alert('döviz alış')">Döviz alış</a>
+									<a class="dropdown-item" href="javascript:void(0)" onclick="alert('döviz satış')">Döviz satış</a>
+								</div>
+							</div>
+						</div>
 
-            <div class="card mt-2">
-                <div class="card-header p-1 text-primary"><b>Genel Toplamları</b></div>
-                <div class="card-body p-1 pr-4">
-                    <div class="row">
-                        <div class="col-md-3 border-right pr-4">
-                            <div class="row">
-                                <label for="" class="col-12 text-center bold">Tutarlar</label>
-                            </div>
-                            <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-                                <tbody id="monetaryTotalGrid">
-                                    <tr>
-                                        <td>Satır Toplam</td><td class="text-right" id="lineExtensionAmount"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Toplam İskonto</td><td class="text-right" id="allowanceTotalAmount"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Toplam Masraf</td><td class="text-right" id="chargeTotalAmount"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Vergisiz Toplam</td><td class="text-right" id="taxExclusiveAmount"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Vergili Toplam</td><td class="text-right" id="taxInclusiveAmount"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bold">Ödenecek Tutar</td><td class="text-right bold" id="payableAmount"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-md-3 border-right pr-4">
-                            <div class="row">
-                                <label for="" class="col-12 text-center bold">Vergiler</label>
-                            </div>
-                            <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-                                <tbody id="vergiGrid">
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-md-3 border-right">
-                            <div class="row">
-                                <label for="" class="col-12 text-center bold">Indirimler/Artirimlar</label>
-                            </div>
-                            <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-                                <tbody id="iskontoGrid">
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+					</div>
+				</div>
+				<% } %>
+				<div class="form-group col-md-3">
+					<label for="" class="m-0">Yerel <%=title%> No</label>
+					<input type="text" class="form-control" name="localDocumentId" placeholder="localDocumentId" autocomplete="off"  value="<%=form.localDocumentId%>">
+				</div>
 
-            <div class="card mt-2">
-                <div class="card-header p-1 text-primary">Notlar</div>
-                <div class="card-body p-1">
-                    <div class="row">
-                        <div class="col-12">
-                            <textarea name="notes" class="form-control" rows="<% if(form.note.length>3){%><%=form.note.length%><%}else{%>3<%}%>"><% form.note.forEach((e)=>{%><%=(e.value + '\r\n')%><%});%></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
+				<% if(docFormType=='despatch' || docFormType=='invoice'){ %>
+				<div class="col-md-4">
+					<%- partial('../components/location-selection.ejs',{name:'location',subLocationName:'subLocation'}) %>
+				</div>
+				<% } %>
+			</div>
+		</div>
+	</div>
+	<div class="card mt-2">
+		<div class="card-header collapsible">
+			Cari Bilgiler
+			<div class="float-right"><a href="/finance/<% if(form.ioType==0){%>customers<%}else{%>vendors<%}%>?db=<%=db%>&sid=<%=sid%>" target="_blank" class="btn btn-primary btn-sm" title="<% if(form.ioType==0){%>Müşteri listesini aç<%}else{%>Tedarikçi listesini aç<%}%>"><i class="fas fa-users"></i></a></div>
+		</div>
+		<div class="card-body p-1">
+			<div class="row">
+				<div class="form-group col-md-4">
+					<label for="" class="m-0">Cari Ünvan</label>
+					<input type="text" class="form-control" name="party[partyName][name][value]" id="partyName" placeholder="" autocomplete="off"  value="<%=form.party.partyName.name.value%>">
+					<input type="hidden" class="form-control" name="partyId" id="partyId" value="<% if(typeof form.party._id!='undefined'){%><%=form.party._id%><%}%>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Adı(Şahıs)</label>
+					<input type="text" class="form-control" name="party[person][firstName][value]" placeholder="" autocomplete="off"  value="<%=form.party.person.firstName.value%>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Soyad(Şahıs)</label>
+					<input type="text" class="form-control" name="party[person][familyName][value]" placeholder="" autocomplete="off"  value="<%=form.party.person.familyName.value%>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">VKN/TCKN</label>
+					<input type="text" class="form-control" name="vknTckn" placeholder="Vergi No/TC Kimlik No" autocomplete="off"  value="<%=form.vknTckn%>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Vergi Dairesi</label>
+					<input type="text" class="form-control" name="party[partyTaxScheme][taxScheme][name][value]" placeholder="" autocomplete="off"  value="<%=form.party.partyTaxScheme.taxScheme.name.value%>">
+				</div>
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header collapsed">Adres</div>
+						<div class="card-body p-1">
+							<div class="row">
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Ülke</label>
+									<input type="text" class="form-control" name="party[postalAddress][country][name][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.country.name.value%>">
+								</div>
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Sehir</label>
+									<input type="text" class="form-control" name="party[postalAddress][cityName][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.cityName.value%>">
+								</div>
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Mahalle/İlçe</label>
+									<input type="text" class="form-control" name="party[postalAddress][district][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.district.value%>">
+								</div>
+								<div class="form-group col-md-4">
+									<label for="" class="m-0">Cadde/Sokak</label>
+									<input type="text" class="form-control" name="party[postalAddress][streetName][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.streetName.value%>">
+								</div>
 
-        </div>
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Bina/Site ismi</label>
+									<input type="text" class="form-control" name="party[postalAddress][buildingName][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.buildingName.value%>">
+								</div>
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Blok</label>
+									<input type="text" class="form-control" name="party[postalAddress][blockName][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.blockName.value%>">
+								</div>
+								<div class="form-group col-md-1">
+									<label for="" class="m-0">Bina numarası</label>
+									<input type="text" class="form-control" name="party[postalAddress][buildingNumber][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.buildingNumber.value%>" title="Bina No veya Sokak/Cadde no">
+								</div>
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Daire/Oda No</label>
+									<input type="text" class="form-control" name="party[postalAddress][room][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.room.value%>">
+								</div>
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Posta Kodu</label>
+									<input type="text" class="form-control" name="party[postalAddress][postbox][value]" placeholder="" autocomplete="off"  value="<%=form.party.postalAddress.postbox.value%>">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="card mt-1">
+						<div class="card-header collapsed">İletişim</div>
+						<div class="card-body p-1">
+							<div class="row">
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Tel</label>
+									<input type="text" class="form-control" name="party[contact][telephone][value]" placeholder="" autocomplete="off"  value="<%=form.party.contact.telephone.value%>">
+								</div>
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Fax</label>
+									<input type="text" class="form-control" name="party[contact][telefax][value]" placeholder="" autocomplete="off"  value="<%=form.party.contact.telefax.value%>">
+								</div>
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Email</label>
+									<input type="text" class="form-control" name="party[contact][electronicMail][value]" placeholder="" autocomplete="off"  value="<%=form.party.contact.electronicMail.value%>">
+								</div>
+								<div class="form-group col-md-2">
+									<label for="" class="m-0">Web Sitesi</label>
+									<input type="text" class="form-control" name="party[websiteURI][value]" placeholder="" autocomplete="off"  value="<%=form.party.websiteURI.value%>">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card mt-2">
+		<div class="card-header card-header-info collapsible">Belge Satırları</div>
+		<div class="card-body p-1">
+			<table id="grid1" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+				<thead>
+					<tr class="text-nowrap">
+						<th width="30" class=""><input type="checkbox" class="mt-1" value="true" name="selectAll" id="selectAll"></th>
+						<th width="50" class="">No</th>
+						<th width="30%" class="">Mal/Hizmet</th>
+						<th width="5%" class="text-right">Miktar</th>
+						<th width="7%">Birim</th>
+						<th width="7%" class="text-right">B.Fiyat</th>
+						<th width="7%" class="text-right">Isk.%</th>
+						<th width="9%" class="text-right">Isk.Tutar</th>
+						<th width="10%" class="text-right">Tutar</th>
+						<th width="7%" class="text-right">Kdv%</th>
+						<th width="10%" class="text-right">Kdv Tutar</th>
+						<th width="10%" class="text-right">Kdv Dahil</th>
+						<th style="min-width:140px;" class="text-center">
+							<a href="javascript:addNewLine();" class="btn btn-primary far fa-plus-square"  title="Yeni satir"></a>                  
+						</th>
+					</tr>
+				</thead>
+				<tbody id="lineGrid">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="card mt-2">
+		<div class="card-header collapsible">Genel Toplamlar</div>
+		<div class="card-body p-1 pr-4">
+			<div class="row">
+				<div class="col-md-3 border-right pr-4">
+					<b>Tutarlar</b>
+					<table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+						<tbody id="monetaryTotalGrid">
+							<tr>
+								<td>Satır Toplam</td><td class="text-right" id="lineExtensionAmount"></td>
+							</tr>
+							<tr>
+								<td>Toplam İskonto</td><td class="text-right" id="allowanceTotalAmount"></td>
+							</tr>
+							<tr>
+								<td>Toplam Masraf</td><td class="text-right" id="chargeTotalAmount"></td>
+							</tr>
+							<tr>
+								<td>Vergisiz Toplam</td><td class="text-right" id="taxExclusiveAmount"></td>
+							</tr>
+							<tr>
+								<td>Vergili Toplam</td><td class="text-right" id="taxInclusiveAmount"></td>
+							</tr>
+							<tr>
+								<td class="bold">Ödenecek Tutar</td><td class="text-right bold" id="payableAmount"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-3 border-right pr-4">
+					<b>Vergiler</b>
+					<table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+						<tbody id="vergiGrid">
 
-        <!-- IDtab2 -->
-        <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="IDtab2">
-            <table id="grid1" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-                <thead>
-                    <tr class="text-nowrap">
-                        <th width="30" class=""><input type="checkbox" class="mt-1" value="true" name="selectAll" id="selectAll"></th>
-                        <th width="50" class="">No</th>
-                        <th width="30%" class="">Mal/Hizmet</th>
-                        <th width="5%" class="text-right">Miktar</th>
-                        <th width="7%">Birim</th>
-                        <th width="7%" class="text-right">B.Fiyat</th>
-                        <th width="7%" class="text-right">Isk.%</th>
-                        <th width="9%" class="text-right">Isk.Tutar</th>
-                        <th width="10%" class="text-right">Tutar</th>
-                        <th width="7%" class="text-right">Kdv%</th>
-                        <th width="10%" class="text-right">Kdv Tutar</th>
-                        <th width="10%" class="text-right">Kdv Dahil</th>
-                        <th style="min-width:140px;" class="text-center">
-                            <a href="javascript:addNewLine();" class="btn btn-primary far fa-plus-square"  title="Yeni satir"></a>                  
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="lineGrid">
-                    
-                </tbody>
-            </table>
-        </div>
-    </div>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-3 border-right">
+					<b>İndirim/Artırım</b>
+					<table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+						<tbody id="iskontoGrid">
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card mt-2">
+		<div class="card-header text-primary collapsed">Notlar</div>
+		<div class="card-body p-1">
+			<div class="row">
+				<div class="col-12">
+					<textarea name="notes" class="form-control" rows="<% if(form.note.length>3){%><%=form.note.length%><%}else{%>3<%}%>"><% form.note.forEach((e)=>{%><%=(e.value + '\r\n')%><%});%></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
 </form>
+<%- partial('./doc-form-line.ejs') %>
 
 <script type="text/javascript">
-    $(document).ready(function(){
-        $('select[name="profileId[value]"]').change(function(){
-            
-        });
+	$(document).ready(function(){
+		$('#selectAll').change(function(e){
+			$('.checkSingle').not(this).prop('checked', this.checked)
+		})
 
-        $('.input-group.date').datepicker({
-            format: 'yyyy-mm-dd',
-            language: "tr",
-            orientation: "bottom auto",
-            // todayBtn: "linked",
-            autoclose: true,
-            todayHighlight: true,
-            clearBtn: true
+		$("input[name='issueDate[value]']").val(doc.issueDate.value)
+		$("input[name='issueTime[value]']").val(doc.issueTime.value)
 
-            // startDate: -4,
-            // endDate: +8,
-        });
-        
+		reloadLineGrid()
+		reloadTotals()
 
-        $('#selectAll').change(function(e){
-            $('.checkSingle').not(this).prop('checked', this.checked);
-        });
+		const cardList = document.querySelectorAll(".card-collapse")
 
-        $("input[name='issueDate[value]']").val(doc.issueDate.value);
-        $("input[name='issueTime[value]']").val(doc.issueTime.value);
+		// for (let i = 0; i < cardList.length; i++) {
+		// 	console.log(`cardList[i]:`,cardList[i].id)
+		// 	$(`#${cardList[i].id}`).on('show.bs.collapse',(e)=>{
+		// 		console.log(`show.bs.collapse e1:`,e)
+		// 		save_form_settings(e)	
+		// 	})
+		// 	$(`#${cardList[i].id}`).on('hide.bs.collapse',(e)=>{
+		// 		console.log(`hide.bs.collapse e1:`,e)
+		// 		save_form_settings(e)
+		// 	})
+		// 	// cardList[i].addEventListener('show.bs.collapse', function(e) {
+		// 	// 	console.log(`show.bs.collapse e:`,e)
+		// 	// })
+		// 	// cardList[i].addEventListener('hide.bs.collapse', function(e) {
+		// 	// 	console.log(`hide.bs.collapse e:`,e)
+		// 	// })
+		// }
 
-        reloadLineGrid();
-        reloadTotals();
-    });
+	
+	})
 
-    function formKaydet(){
-        
-
-        saveDocument(function(err){
-            if(err){
-                alert(err.code + ' - ' + err.message);
-            }else{
-                window.location.href=document.referrer;
-                //history.back(-1);
-            }
-        });
-    }
+	function formKaydet(){
+		saveDocument(function(err){
+			if(err){
+				alert(err.code + ' - ' + err.message)
+			}else{
+				window.location.href=document.referrer
+			}
+		})
+	}
 </script>
-<%- partial('./doc-form-line.ejs') %>
+

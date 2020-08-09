@@ -619,8 +619,10 @@ pre code {
 .col-auto, .col-12, .col-11, .col-10, .col-9, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3, .col-2, .col-1 {
   position: relative;
   width: 100%;
-  padding-right: 0.75rem;
-  padding-left: 0.75rem;
+  /*padding-right: 0.75rem;*/
+  padding-right: 0.35rem;
+  /*padding-left: 0.75rem;*/
+  padding-left: 0.35rem;
 }
 
 .col {
@@ -4397,7 +4399,10 @@ input[type=button].btn-block {
 }
 
 .card-header {
-  padding: 0.75rem 1.25rem;
+	padding: 0.25rem !important;
+  /*padding: 0.75rem 1.25rem;*/
+  color:var(--primary);
+  font-weight: bold;
   margin-bottom: 0;
   background-color: rgba(0, 0, 0, 0.03);
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
@@ -4405,6 +4410,10 @@ input[type=button].btn-block {
 .card-header:first-child {
   border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
 }
+.card-header:last-child {
+	padding-top: 0.20rem;
+}
+
 .card-header + .list-group .list-group-item:first-child {
   border-top: 0;
 }

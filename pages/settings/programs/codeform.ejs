@@ -16,19 +16,106 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 <div class="tab-content" style="min-height: 35rem;overflow: auto;">
 	<div class="tab-pane show active" id="formTab1" role="tabpanel" aria-labelledby="IDtab1">
 		<div class="row m-0 p-0  ">
-			<div class="col-12 m-0 p-1">
-				<label class="float-left mt-1">Program adı:</label>
-				<input type="text" class="form-control float-left ml-md-2" name="name" value="<%- form.name %>" style="width: 150px;max-width: 100%;">
-				<label class="float-left mt-1 ml-md-2">
+			<div class="form-group col-md-2">
+				<label for="" class="m-0">Program adı:</label>
+				<input type="text" class="form-control"  name="name" placeholder="program adı" autocomplete="off" value="<%- form.name %>">
+			</div>
+			<div class="form-group col-md-2">
+				<label for="" class="m-0">Türü</label>
+				<select name="type" class="form-control" onchange="programTypeChange()">
+					<option value="">-- Seç --</option>
+					<% staticValues.programTypes.forEach((e)=>{ %>
+					<option value="<%- e.value %>" <% if(e.value==form.type){%>selected<%}%>><%- e.text %></option>
+					
+					<% }) %>
+				</select>
+			</div>
+			<div class="form-group col-md-2">
+				<label for="" class="m-0">Collection Name:</label>
+				<select name="collections[0][name]" class="form-control" >
+					<option value="">-- Yok --</option>
+					<% collectionList.forEach((e)=>{ %>
+					<option value="<%- e %>" <% if(e==form.collections[0].name){%>selected<%}%> ><%- e %></option>
+					<% }) %>
+				</select>
+			</div>
+			<div class="form-group col-md-3">
+				<label for="" class="m-0">Collection Filter:</label>
+				<input type="text" class="form-control"  name="collections[0][filter]" placeholder="" autocomplete="off" value="<%- form.collections[0].filter %>">
+			</div>
+			<div class="form-group col-md-2">
+				<br>
+				<label class="m-0">
 					<input type="checkbox" class="" name="passive" value="true" <%- (form.passive?'checked':'')%> />
 					Pasif?
 				</label>
 			</div>
+			<div class="form-group col-md-3">
+				<label for="" class="m-0">crontab (zamanlayici) m h dom dow</label>
+				<input type="text" class="form-control"  name="crontab" placeholder="" autocomplete="off" value="<%- form.crontab %>">
+			</div>
 		</div>
-		<div class="row m-0 p-0">
+		<div class="card">
+			<div class="card-header collapsed">
+				<i class="fas fa-plug"></i> Connector
+			</div>
+			<div class="card-body p-2">
+				<div class="table-responsive">
+					<table id="grid1" class="table table-bordered table-striped m-0"  cellspacing="0">
+						<tbody>
+							<tr>
+								<td>Connector ID</td>
+								<td><input type="text" class="form-control" name="connector[connectorId]" id="connectorId" placeholder="connector Id" autocomplete="off" value="<%- form.connector.connectorId%>"></td>
+							</tr>
+							<tr>
+								<td>Connector Pass</td>
+								<td><input type="text" class="form-control" name="connector[connectorPass]"  id="connectorPass" placeholder="connector password" autocomplete="off" value="<%- form.connector.connectorPass%>"></td>
+							</tr>
+							<tr>
+								<td>Bağlantı Türü</td>
+								<td>
+									<select name="connector[connectionType]" id="connectionType" class="form-control" onchange="connectionTypeChange()">
+										<option value="">-- Seç --</option>
+										<% staticValues.localConnectorConnectionTypes.forEach((e)=>{ %>
+										<option value="<%- e.value%>" <% if(e.value==form.connector.connectionType){%>selected<%}%>><%- e.text %></option>
+										<% }) %>
+									</select>
+								</td>
+							</tr>
+							<tr class="sqlconnection-row">
+								<td>Server</td>
+								<td><input type="text" class="form-control" name="connector[connection][server]" id="connection-server" placeholder="server" autocomplete="off" value="<%- form.connector.connection.server %>"></td>
+							</tr>
+							<tr class="sqlconnection-row">
+								<td>Port</td>
+								<td><input type="number" class="form-control" name="connector[connection][port]" id="connection-port" placeholder="port" autocomplete="off" value="<%- form.connector.connection.port %>"></td>
+							</tr>
+							<tr class="sqlconnection-row">
+								<td>Database</td>
+								<td><input type="text" class="form-control" name="connector[connection][database]" id="connection-database" placeholder="database" autocomplete="off" value="<%- form.connector.connection.database %>" ></td>
+							</tr>
+							<tr class="sqlconnection-row">
+								<td>Username</td>
+								<td><input type="text" class="form-control" name="connector[connection][username]" id="connection-username" placeholder="username" autocomplete="off" value="<%- form.connector.connection.username %>" ></td>
+							</tr>
+							<tr class="sqlconnection-row">
+								<td>Password</td>
+								<td><input type="text" class="form-control" name="connector[connection][password]" id="connection-password" placeholder="password" autocomplete="off" value="<%- form.connector.connection.password %>" ></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="mt-3 mb-1" style="display: flow-root;">
+					<a href="javascript:connectorTest()" class="btn btn-info float-left" title="Local connector test"><i class="fas fa-plug"></i> Connector Test</a>
+					<div class="float-left ml-md-3 mt-1 bold" id="connectorTestResult"></div>					
+				</div>
+			</div>
+		</div>
+
+		<div class="row m-0 p-0 mt-md-2">
 			<div class="col-md-3 m-0 p-1">
 				<div class="card">
-					<div class="card-header p-1 text-primary">Dosyalar</div>
+					<div class="card-header p-1 text-primary">Kod dosyaları</div>
 					<div class="card-body p-0">
 						<div class="list-group"  role="list">
 							<div id="file-list"></div>
@@ -42,19 +129,20 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 					<i class="fas fa-file-import"></i> İçeri al
 				</a>
 				<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.*" multiple>
-
 			</div>
 			<div class="col-md-9 m-0 p-1">
 				<div class="card"  id="code" >
 					<div class="card-header p-1 text-primary bold">
-						<div class="float-left"><input id="fileName" type="text" class="form-control" value=""></div>
+						<input id="fileName" type="text" class="form-control" value="" style="min-width: 120px;max-width: 200px;display: inline;">
 						<div class="float-right">
 							<a class="btn btn-sm btn-light border" href="javascript:copyToClipboard('code')" title="Kopyala"><i class="far fa-copy"></i></a>
 						</div>
 
 					</div>
 					<div class="card-body p-0">
-						<pre class="prism-live language-js fill" style="min-height: 33rem;max-height: 33rem;"><code>var obj={}</code></pre>
+						<pre class="prism-live language-js fill" style="min-height: 33rem;max-height: 33rem;"><code>
+
+						</code></pre>
 					</div>
 					<div class="card-footer">
 						<div class="float-left">
@@ -65,9 +153,10 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 						<div class="float-right"><a href="javascript:deleteFile()" class="btn btn-danger btn-sm" title="Dosyayi sil"><i class="fas fa-trash-alt"></i></a></div>
 					</div>
 				</div>
-
 			</div>
 		</div>
+
+		
 	</div>
 	<div class="tab-pane" id="formTab2" role="tabpanel" aria-labelledby="IDtab2">
 		<%- partial('./codedebug') %>
@@ -95,7 +184,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		if(obj==undefined){
 			obj={
 				fileName:nextNewFileName(),
-				code:btoa(`// EJS Embedded Javascript\r\n// https://ejs.co/\r\n// author: <%- username %>\r\n// date: ${(new Date()).yyyymmdd()}\r\n<\%\r\n\t// ejs kodlarinizi bu sekilde yazabilirsiniz\r\n%>\r\n`)
+				data:btoa2(`// EJS Embedded Javascript\r\n// https://ejs.co/\r\n// author: <%- username %>\r\n// date: ${(new Date()).yyyymmdd()}\r\n<\%\r\n\t// ejs kodlarinizi bu sekilde yazabilirsiniz\r\n%>\r\n`)
 			}
 		}
 		doc.files.push(obj)
@@ -126,13 +215,11 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 	reloadFiles()
 
 	function showFile(index){
-		document.getElementById('code').getElementsByTagName('code')[0].innerHTML=atob(doc.files[index].code)
-		document.getElementById('fileName').value=doc.files[index].fileName
+		$('#code code').html(htmlEncode(atob2(doc.files[index].data)))
+		$('#fileName').val(doc.files[index].fileName)
 		activeIndex=index
 		document.getElementById('code').style.display='flex'
 		var fileList=document.getElementById('file-list').getElementsByTagName('a')
-		console.log(`fileList.length:`,fileList.length)
-		console.log(`activeIndex:`,activeIndex)
 		for(let i=0;i<fileList.length;i++){
 			fileList[i].classList.remove('active')
 		}
@@ -187,9 +274,85 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		document.execCommand("copy")
 	}
 
+	function getConnectorInfo(){
+		var obj={
+			connectorId:$('#connectorId').val(),
+			connectorPass:$('#connectorPass').val(),
+			connectionType:$('#connectionType').val(),
+			connection:{
+				server:$('#connection-server').val(),
+				port:Number($('#connection-port').val()),
+				database:$('#connection-database').val(),
+				username:$('#connection-username').val(),
+				password:$('#connection-password').val()
+			}
+		}
+		return obj
+	}
+
+	function connectorTest(){
+		var data=getConnectorInfo()
+		if(data.connectorId=='' || data.connectorPass==''){
+			alert('Connector Id ve Pass giriniz')
+			return
+		}
+		$('#connectorTestResult').html(`connector test ediliyor...`)
+
+		$.ajax({
+			url:`/dbapi/local-connectors/test?db=${q.db}&sid=${q.sid}`,
+			data:data,
+			type:'POST',
+			dataType: "json",
+			success:function(result){
+				if(result.success){
+					if(typeof result.data=='string'){
+						$('#connectorTestResult').html(`Baglanti basarili :-) Result:${result.data}`)
+					}else{
+						$('#connectorTestResult').html(`Baglanti basarili :-) Result:${htmlEncode(JSON.stringify(result.data,null,2))})`)
+					}
+					
+				}else{
+					$('#connectorTestResult').html(`Error:\r\n${result.error.code} - ${result.error.message}`)
+				}
+			},
+			error:function(err){
+				console.log(err)
+				alert(err)
+			}
+		})
+	}
+
+	function programTypeChange(){
+		switch($('select[name="type"]').val()){
+			case 'connector-importer':
+			case 'connector-exporter':
+			case 'email':
+			case 'sms':
+			$('input[name="crontab"]').attr('readonly', false);
+			break
+			default:
+			$('input[name="crontab"]').attr('readonly', true);
+			break
+		}
+	}
+
+	programTypeChange()
+
 	function save(){
 		doc.name=$('input[name="name"]').val()
+		doc.type=$('select[name="type"]').val()
+		doc.collections[0].name=$('select[name="collections[0][name]"]').val()
+		doc.collections[0].filter=$('input[name="collections[0][filter]"]').val()
 		doc.passive=$('input[name="passive"]').prop('checked')
+		doc.connector.connectorId=$('input[name="connector[connectorId]"]').val()
+		doc.connector.connectorPass=$('input[name="connector[connectorPass]"]').val()
+		doc.connector.connectionType=$('select[name="connector[connectionType]"]').val()
+		doc.connector.connection.server=$('input[name="connector[connection][server]"]').val()
+		doc.connector.connection.port=Number($('input[name="connector[connection][port]"]').val())
+		doc.connector.connection.database=$('input[name="connector[connection][database]"]').val()
+		doc.connector.connection.username=$('input[name="connector[connection][username]"]').val()
+		doc.connector.connection.password=$('input[name="connector[connection][password]"]').val()
+		doc.crontab=$('input[name="crontab"]').val()
 		if(doc.name==''){
 			alert('isim bos olamaz!')
 			return;
@@ -228,10 +391,16 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 			$(`#list-file${activeIndex}`).html($('#fileName').val())
 		})
 
+		// $('#code textarea').on('change',function(event){
+		// 	if(activeIndex<0)
+		// 		return
+		// 	doc.files[activeIndex].data=btoa($('#code textarea').val())
+		// })
 		document.getElementById("code").getElementsByTagName('textarea')[0].addEventListener("change", function(){
 			if(activeIndex<0)
 				return
-			doc.files[activeIndex].code=btoa(document.getElementById("code").getElementsByTagName('textarea')[0].value)
+			doc.files[activeIndex].data=btoa2(htmlDecode(document.getElementById("code").getElementsByTagName('textarea')[0].value))
+
 		})
 
 		$('#fileName').on('change',()=>{
@@ -278,7 +447,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 			files.forEach((e)=>{
 				var obj={
 					fileName:e.name,
-					code:e.base64Data
+					data:e.base64Data
 				}
 
 				addNewFile(obj,false)

@@ -150,7 +150,6 @@ function mobilePageRander(req,res){
 		}else if (mobilePages[req.params.module][req.params.page] == undefined) {
 			errorPage(req,res,null)
 		} else {
-			console.log(`req.params:`,req.params)
 			mobilePages[req.params.module][req.params.page].code(req, res, (err,data,view)=>{
 				if(!data)
 					data={}
@@ -336,7 +335,8 @@ function pageRander(req,res){
 }
 
 function applyLanguage(req,html){
-	return html.replaceAll('{{','').replaceAll('}}','')
+	return html
+	//return html.replaceAll('{{','').replaceAll('}}','')
 }
 
 function setGeneralParams(req,data){

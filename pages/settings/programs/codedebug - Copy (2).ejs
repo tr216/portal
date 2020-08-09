@@ -1,6 +1,12 @@
-<div class="row button-bar">
-	<div class="col-md-12">
-		<div class="form-group">
+<div id="data" class="card">
+	<div class="card-header collapsible">
+		Çalıştırılacak Örnek Veri (data)
+		<div class="float-right">
+			<a class="btn btn-sm btn-light border ml-1" href="javascript:copyToClipboard('data')" title="Kopyala"><i class="far fa-copy"></i></a>
+		</div>
+	</div>
+	<div class="card-body p-0">
+		<div class="form-group mx-3">
 			<label>Örnek veri türü</label>
 			<select id="dataType" class="form-control" onchange="dataTypeChange()">
 				<option value="">-- Seç --</option>
@@ -9,75 +15,50 @@
 				<option value="file" <% if(form.type=='file-importer'){%>selected<%}%>>Dosya(lar)dan seç</option>
 			</select>
 		</div>
-	</div>
-</div>
-
-<div id="dataJson" class="card" style="display: none;">
-	<div class="card-header collapsible">
-		JSON veya text veri (data)
-		<div class="float-right">
-			<a class="btn btn-sm btn-light border ml-1" href="javascript:copyToClipboard('dataJson')" title="Kopyala"><i class="far fa-copy"></i></a>
+		<div id="dataJson" style="display: none;">
+			<div id="dataColl" style="display: none;">
+				<div class="row mx-2">
+					<div class="form-group col-md-3">
+						<label for="" class="m-0">Collection Name:</label>
+						<select id="dataCollCollection" class="form-control" >
+							<option value="">-- Yok --</option>
+							<% collectionList.forEach((e)=>{ %>
+							<option value="<%- e %>" <% if(e==form.collections[0].name){%>selected<%}%> ><%- e %></option>
+							<% }) %>
+						</select>
+					</div>
+					<div class="form-group col-md-3">
+						<label for="" class="m-0">Collection Filter:</label>
+						<input type="text" class="form-control"  id="dataCollFilter" placeholder="" autocomplete="off" value="<%- form.collections[0].filter %>">
+					</div>
+					<div class="form-group col-md-3">
+						<br>
+						<a href="javascript:getCollectionData();" class="btn btn-sm btn-primary"><i class="fas fa-play"></i> Collection Data Getir</a>
+					</div>
+				</div>
+			</div>
+			EJS kodlarinda "data" degiskeninde kullanilir
+			<pre class="prism-live language-js fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
+		</div>
+		
+		<div id="dataFile" class="mb-3 mx-3" style="display: none;">
+			EJS kodlarinda "data.files[{name:'filename',data:'dosya icerigi',size:dosyaKapasitesi}]" degiskeninde kullanilir
+			<ul id="data-file-list">
+			</ul>
+			<a class="btn btn-primary" href="javascript:$('#fileUpload2').trigger('click')" title="Ornek veriyi dosdan iceri al"><i class="fas fa-file-import"></i> Dosya(lar) seç</a>
+			<a class="btn btn-primary" href="javascript:clearDataFileList()" title="Dosyalari temizle"><i class="fas fa-close"></i> Temizle</a>
 		</div>
 	</div>
-	<div class="card-body p-0">
-		<pre class="prism-live language-js fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
-	</div>
-</div>
-
-<div id="dataColl" class="card" style="display: none;">
-	<div class="card-header collapsible">
-		Collection dan alinan veri (data)
-		<div class="float-right">
-			<a class="btn btn-sm btn-light border ml-1" href="javascript:copyToClipboard('dataColl')" title="Kopyala"><i class="far fa-copy"></i></a>
-		</div>
-	</div>
-	<div class="card-body p-0">
-		<div class="row mx-2">
-			<div class="form-group col-md-3">
-				<label for="" class="m-0">Collection Name:</label>
-				<select id="dataCollCollection" class="form-control" >
-					<option value="">-- Yok --</option>
-					<% collectionList.forEach((e)=>{ %>
-					<option value="<%- e %>" <% if(e==form.collections[0].name){%>selected<%}%> ><%- e %></option>
-					<% }) %>
-				</select>
-			</div>
-			<div class="form-group col-md-3">
-				<label for="" class="m-0">Collection Filter:</label>
-				<input type="text" class="form-control"  id="dataCollFilter" placeholder="" autocomplete="off" value="<%- form.collections[0].filter %>">
-			</div>
-			<div class="form-group col-md-3">
-				<br>
-				<a href="javascript:getCollectionData();" class="btn btn-sm btn-secondary"><i class="fas fa-database"></i> Collection Data Getir</a>
-			</div>
-		</div>
-		<pre class="prism-live language-js fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
-	</div>
-</div>
-
-<div id="dataFile"class="card" style="display: none;">
-	<div class="card-header collapsible">
-	</div>
-	<div class="card-body">
-		EJS kodlarinda "data.files[{name:'filename',data:'dosya icerigi',size:dosyaKapasitesi}]" degiskeninde kullanilir
-		<ul id="data-file-list">
-		</ul>
+	<div class="card-footer p-2">
 		<div class="row">
 			<div class="col-md-12">
-				<a class="btn btn-sm btn-secondary" href="javascript:$('#fileUpload2').trigger('click')" title="Ornek veriyi dosdan iceri al"><i class="fas fa-file-import"></i> Dosya(lar) seç</a>
-				<a class="btn btn-sm btn-secondary" href="javascript:clearDataFileList()" title="Dosyalari temizle"><i class="fas fa-close"></i> Temizle</a>
+				<a href="javascript:render()" class="btn btn-primary" title="programi ornek data ile render et"><i class="far fa-list-alt"></i> Sadece Render</a>
+				<a href="javascript:run()" class="btn btn-primary" title="programi ornek data ile render edip calistirir"><i class="fas fa-play"></i> Çalıştır</a>
 			</div>
 		</div>
 	</div>
 </div>
 
-
-<div class="row mt-3 button-bar">
-	<div class="col-md-12 p-2">
-		<a href="javascript:render()" class="btn  btn-sm btn-primary" title="programi ornek data ile render et"><i class="far fa-list-alt"></i> Sadece Render</a>
-		<a href="javascript:run()" class="btn  btn-sm btn-primary" title="programi ornek data ile render edip calistirir"><i class="fas fa-play"></i> Çalıştır</a>
-	</div>
-</div>
 <div id="render" class="card mt-2">
 	<div class="card-header collapsed">
 		rendered
@@ -86,7 +67,7 @@
 		</div>
 	</div>
 	<div class="card-body p-0">
-		<pre class="prism-live language-js fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
+		<pre class="prism-live language-ejs fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
 	</div>
 </div>
 
@@ -98,7 +79,7 @@
 		</div>
 	</div>
 	<div class="card-body p-0">
-		<pre class="prism-live language-js fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
+		<pre class="prism-live language-ejs fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
 	</div>
 </div>
 <input type="file" name="fileUpload2" id="fileUpload2" style="visibility:hidden;display: none;" accept="*.*" multiple>
@@ -152,10 +133,10 @@
 
 		switch($('#dataType').val()){
 			case 'json':
-			doc['data']=btoa2($('#dataJson textarea').val())
+			doc['data']=btoa2($('#data textarea').val())
 			break
 			case 'collection':
-			doc['data']=btoa2($('#dataColl textarea').val())
+			doc['data']=btoa2($('#data textarea').val())
 			break
 			case 'file':
 			doc['data']['files']=dataFileList
@@ -192,18 +173,7 @@
 		$('#render .card-collapse').collapse('hide')
 		$('#console .card-collapse').collapse('show')
 		doc['data']={}
-		switch($('#dataType').val()){
-			case 'json':
-			doc['data']=btoa2($('#dataJson textarea').val())
-			break
-			case 'file':
-			doc.data['files']=dataFileList
-			break
-			case 'collection':
-			doc['data']=btoa2($('#dataColl textarea').val())
-			break
-		}
-		
+		doc.data['files']=dataFileList
 		doc.name=$('input[name="name"]').val()
 		doc.type=$('select[name="type"]').val()
 		doc.collections[0].name=$('select[name="collections[0][name]"]').val()
@@ -250,10 +220,10 @@
 		// 		}else{
 		// 			data.content=renderedCode
 		// 		}
-
-
+				
+			
 		// 		console.log(`data:`,data)
-
+				
 		// 	}
 		// })
 	}
@@ -272,6 +242,7 @@
 			$('#dataFile').show()
 			break
 			case 'collection':
+			$('#dataJson').show()
 			$('#dataColl').show()
 			break
 		}
@@ -281,15 +252,17 @@
 		if($('#dataCollCollection').val()=='')
 			return alert('collection secilmemis')
 
+		console.log(`collection:`,$('#dataCollCollection').val())
+		console.log(`collection filter:`,$('#dataCollFilter').val())
 		$.ajax({
 			url:`/dbapi/collections/${$('#dataCollCollection').val()}?db=${q.db}&sid=${q.sid}`,
 			type:'GET',
 			success:function(result){
 				if(result.success){
-					$('#dataColl code').html(htmlEncode(JSON.stringify(result.data,null,2)))
+					$('#data code').html(htmlEncode(JSON.stringify(result.data,null,2)))
 					
 				}else{
-					$('#dataColl code').html(`Error:\r\n${result.error.code} - ${result.error.message}`)
+					$('#data code').html(`Error:\r\n${result.error.code} - ${result.error.message}`)
 				}
 			},
 			error:function(err){
@@ -320,20 +293,6 @@
 	//   console.log(`event.relatedTarget:`,event.relatedTarget)
 	// });
 	
-	// document.getElementById("dataJson").getElementsByTagName('textarea')[0].addEventListener("change", function(){
-	// 	localStorage.setItem('codedebug_dataJson',$('#dataJson textarea').val())
-	// })
-
-	// document.getElementById("dataColl").getElementsByTagName('textarea')[0].addEventListener("change", function(){
-	// 	localStorage.setItem('codedebug_dataColl',$('#dataJson textarea').val())
-	// })
-
-	// if(localStorage.getItem('codedebug_dataJson')!=null)
-	// 	$('#dataJson textarea').val(localStorage.getItem('codedebug_dataJson'))
-	
-	// if(localStorage.getItem('codedebug_dataColl')!=null)
-	// 	$('#dataColl textarea').val(localStorage.getItem('codedebug_dataColl'))
-	
 	$(document).ready(()=>{
 		$("#fileUpload2").change(function() {
 
@@ -362,7 +321,6 @@
 
 			runReader()
 		})
-
 
 	})
 </script>

@@ -104,21 +104,11 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 					</div>
 					<div class="form-group col-md-2">
 						<label for="" class="m-0">Tarih</label>
-						<div class="input-group <% if(mode!='view'){%>date<%}%>">
-							<input type="text" name="issueDate" id="issueDate" class="form-control" value="" title="Evrak tarihi" <% if(mode=='view'){%>readonly="true"<%}%>>
-							<div class="input-group-addon">
-								<i class="fa fa-calendar fa-2x"></i>
-							</div>
-						</div>
+						<input type="date" name="issueDate" id="issueDate" class="form-control"  required autocomplete="off" value="" title="Evrak tarihi" <% if(mode=='view'){%>readonly="true"<%}%>>
 					</div>
 					<div class="form-group col-md-2">
 						<label for="" class="m-0">Saat</label>
-						<div class="input-group" id="issueTime1">
-							<input type="text" name="issueTime" id="issueTime" class="form-control" value="" title="Evrak saati" <% if(mode=='view'){%>readonly="true"<%}%>>
-							<div class="input-group-addon">
-								<i class="fa fa-clock fa-2x"></i>
-							</div>
-						</div>
+						<input type="text" name="issueTime" id="issueTime" class="form-control" required autocomplete="off" value="" title="Evrak saati" <% if(mode=='view'){%>readonly="true"<%}%>>
 					</div>
 					<div class="form-group col-md-2">
 						<label for="" class="m-0">Türü</label>
@@ -1433,21 +1423,6 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
       		loadMainItemAndRecipe();
       		calculatePlannedQuantity();
       	});
-
-      	$('.input-group.date').datepicker({
-      		format: 'yyyy-mm-dd',
-      		language: "tr",
-      		orientation: "bottom auto",
-            // todayBtn: "linked",
-            autoclose: true,
-            todayHighlight: true,
-            clearBtn: true
-
-            // startDate: -4,
-            // endDate: +8,
-          });
-
-
 
 
       	$('#production-item-name').autocomplete({

@@ -101,8 +101,8 @@
         <!-- IDtab1 -->
         <div class="tab-pane show active" id="tab1" role="tabpanel" aria-labelledby="IDtab1">
             <div class="card">
-                <div class="card-header p-1">
-                    <div class="float-left bold text-primary">Genel Bilgiler</div>
+                <div class="card-header">
+                    Genel Bilgiler
                     <div class="float-right bold text-primary form-inline">
                         <label>Entegrator:</label>
                         <select name="eIntegrator" class="form-control">
@@ -111,7 +111,6 @@
                             <%  }); %>
                         </select>
                     </div>
-                    
                 </div>
                 <div class="card-body p-1">
                     <div class="row">
@@ -121,21 +120,12 @@
                         </div>
                         <div class="form-group col-md-2">
                             <label for="" class="m-0">Tarih</label>
-                            <div class="input-group date">
-                                <input type="text" name="issueDate[value]" id="issueDate" class="form-control" value="<% if(typeof form.issueDate.value=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate.value%><%}%>">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar fa-2x"></i>
-                                </div>
-                            </div>
+                            <input type="date" name="issueDate[value]" id="issueDate" class="form-control date" autocomplete="off" required value="<% if(typeof form.issueDate.value=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=form.issueDate.value%><%}%>">
                         </div>
+                        
                         <div class="form-group col-md-2">
                             <label for="" class="m-0">Saat</label>
-                            <div class="input-group" id="issueTime1">
-                                <input type="text" name="issueTime[value]" id="issueTime" class="form-control" value="<% if(typeof form.issueTime.value=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.value.substr(0,8)%><%}%>">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-clock fa-2x"></i>
-                                </div>
-                            </div>
+                            <input type="time" name="issueTime[value]" id="issueTime" class="form-control" autocomplete="off" required value="<% if(typeof form.issueTime.value=='undefined'){%><%=moment().format('mm:hh:ss')%><%}else{%><%=form.issueTime.value.substr(0,8)%><%}%>">
                         </div>
                         <div class="form-group col-md-2">
                             <label for="" class="m-0">Senaryo</label>
@@ -190,7 +180,7 @@
                         <div class="form-group col-md-2">
                             <label for="" class="m-0">Döviz Kuru</label>
                             <div class="input-group align-items-center">
-                                <input type="text" class="form-control text-right" name="pricingExchangeRate[calculationRate][value]" placeholder="" autocomplete="off" value="<%=form.pricingExchangeRate.calculationRate.value%>">
+                                <input type="number" class="form-control text-right" name="pricingExchangeRate[calculationRate][value]" placeholder="" autocomplete="off" value="<%=form.pricingExchangeRate.calculationRate.value%>">
                                 <div class="input-group-addon">
                                     <div class="dropdown">
                                         <button class="btn btn-primary dropdown-toggle" type="button" id="btnTCMB" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -220,8 +210,8 @@
                 </div>
             </div>
             <div class="card mt-2">
-                <div class="card-header p-1">
-                    <div class="text-primary bold float-left">Cari Bilgiler</div>
+                <div class="card-header">
+                    Cari Bilgiler
                     <div class="float-right"><a href="/finance/<% if(form.ioType==0){%>customers<%}else{%>vendors<%}%>?db=<%=db%>&sid=<%=sid%>" target="_blank" class="btn btn-primary btn-sm" title="<% if(form.ioType==0){%>Müşteri listesini aç<%}else{%>Tedarikçi listesini aç<%}%>"><i class="fas fa-users"></i></a></div>
                 </div>
                 <div class="card-body p-1">
@@ -307,7 +297,7 @@
             </div>
 
             <div class="card mt-2">
-                <div class="card-header p-1 text-primary"><b>Genel Toplamları</b></div>
+                <div class="card-header text-primary"><b>Genel Toplamları</b></div>
                 <div class="card-body p-1 pr-4">
                     <div class="row">
                         <div class="col-md-3 border-right pr-4">
@@ -362,7 +352,7 @@
             </div>
 
             <div class="card mt-2">
-                <div class="card-header p-1 text-primary">Notlar</div>
+                <div class="card-header text-primary">Notlar</div>
                 <div class="card-body p-1">
                     <div class="row">
                         <div class="col-12">
@@ -410,18 +400,18 @@
             
         });
 
-        $('.input-group.date').datepicker({
-            format: 'yyyy-mm-dd',
-            language: "tr",
-            orientation: "bottom auto",
-            // todayBtn: "linked",
-            autoclose: true,
-            todayHighlight: true,
-            clearBtn: true
+        // $('.date').datepicker({
+        //     format: 'yyyy-mm-dd',
+        //     language: "tr",
+        //     orientation: "bottom auto",
+        //     // todayBtn: "linked",
+        //     autoclose: true,
+        //     todayHighlight: true,
+        //     clearBtn: true
 
-            // startDate: -4,
-            // endDate: +8,
-        });
+        //     // startDate: -4,
+        //     // endDate: +8,
+        // });
         
 
         $('#selectAll').change(function(e){

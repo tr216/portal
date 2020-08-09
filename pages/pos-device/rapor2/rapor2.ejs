@@ -1,50 +1,6 @@
 <%layout('../../_common/layouts/general')%>
-<form action="" method="POST" role="form" name="form1">
-        <div class="row align-items-end shadow-sm">
-            <div class="col-sm-3">
-              <div class="form-group">
-                <label class="control-label" for="date1">Başlangıç</label>
-                <div class="input-group date">
-                    <input type="text" name="date1" id="date1" class="form-control" value="<% if(typeof filter.date1=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=filter.date1%><%}%>">
-                    <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
-                    </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-3">
-              <div class="form-group">
-                <label class="control-label" for="date2">Bitiş</label>
-                <div class="input-group date">
-                    <input type="text" name="date2" id="date2" class="form-control" value="<% if(typeof filter.date2=='undefined'){%><%=moment().format('YYYY-MM-DD')%><%}else{%><%=filter.date2%><%}%>">
-                    <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
-                    </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-3">
-            </div>
-            <div class="col-sm-3 text-right">
-                <div class="form-group">
-                    <button type="submit" name="btnFilter" class="btn btn-primary" value="true"><i class="fa fa-filter"></i> Süzgeç</button>
-                </div>
-            </div>
-        </div>
 
-</form>
-    <!-- </div> -->
-<% if(typeof message!='undefined') { %>
-    <% if(message!='') { %>
-<div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-danger" role="alert">
-            <%=message %>
-        </div>
-    </div>
-</div>
-    <% } %>
-<% } %>
+<%- partial('../../_common/components/date-filter',{includeForm:true,includeFilterButton:true}) %>
 
 
 <%- partial('../../_common/components/grid2',{
@@ -79,26 +35,6 @@
     })
 %>
 
-<script type="text/javascript">
-
-    $(document).ready(function(){
-        $('.input-group.date').datepicker({
-            format: 'yyyy-mm-dd',
-            language: "tr",
-            orientation: "bottom auto",
-            // todayBtn: "linked",
-            autoclose: true,
-            todayHighlight: true,
-            clearBtn: true
-
-            // startDate: -4,
-            // endDate: +8,
-        });
-  
-
-       
-    });
-</script>
 
 
 

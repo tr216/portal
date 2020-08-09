@@ -10,7 +10,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		<a class="nav-link active" id="IDtab1" href="#formTab1" role="tab" data-toggle="tab" aria-controls="formTab1" aria-selected="true">Program</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" id="IDtab2" href="#formTab2" role="tab" data-toggle="tab" aria-controls="formTab2" aria-selected="false">Çalıştır</a>
+		<a class="nav-link" id="IDtab2" href="#formTab2" role="tab" data-toggle="tab" aria-controls="formTab2" aria-selected="false">Çalıştır/Test</a>
 	</li>
 </ul>
 <div class="tab-content" style="min-height: 35rem;overflow: auto;">
@@ -28,7 +28,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		<div class="row m-0 p-0">
 			<div class="col-md-3 m-0 p-1">
 				<div class="card">
-					<div class="card-header p-1 text-primary">Dosyalar</div>
+					<div class="card-header p-1 text-primary">Kod dosyaları</div>
 					<div class="card-body p-0">
 						<div class="list-group"  role="list">
 							<div id="file-list"></div>
@@ -47,14 +47,16 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 			<div class="col-md-9 m-0 p-1">
 				<div class="card"  id="code" >
 					<div class="card-header p-1 text-primary bold">
-						<div class="float-left"><input id="fileName" type="text" class="form-control" value=""></div>
+						<input id="fileName" type="text" class="form-control" value="" style="max-width: 120px;display: inline;">
 						<div class="float-right">
-							<a class="btn btn-sm btn-light border" href="javascript:copyToClipboard()" title="Kopyala"><i class="far fa-copy"></i></a>
+							<a class="btn btn-sm btn-light border" href="javascript:copyToClipboard('code')" title="Kopyala"><i class="far fa-copy"></i></a>
 						</div>
 
 					</div>
 					<div class="card-body p-0">
-						<pre class="prism-live language-js fill" style="min-height: 33rem;max-height: 33rem;"><code>var obj={}</code></pre>
+						<pre class="prism-live language-ejs fill" style="min-height: 33rem;max-height: 33rem;"><code>
+							
+						</code></pre>
 					</div>
 					<div class="card-footer">
 						<div class="float-left">
@@ -70,7 +72,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		</div>
 	</div>
 	<div class="tab-pane" id="formTab2" role="tabpanel" aria-labelledby="IDtab2">
-		kod calistir
+		<%- partial('./codedebug') %>
 	</div>
 </div>
 <script type="text/javascript" src="<%- assetVersion('/vendor/js/bliss.shy.min.js') %>"></script>
@@ -95,7 +97,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		if(obj==undefined){
 			obj={
 				fileName:nextNewFileName(),
-				code:btoa(`// EJS Embedded Javascript\r\n// https://ejs.co/\r\n// author: <%- username %>\r\n// date: ${(new Date()).yyyymmdd()}\r\n<\%\r\n\t// ejs kodlarinizi bu sekilde yazabilirsiniz\r\n%>\r\n`)
+				data:btoa2(`// EJS Embedded Javascript\r\n// https://ejs.co/\r\n// author: <%- username %>\r\n// date: ${(new Date()).yyyymmdd()}\r\n<\%\r\n\t// ejs kodlarinizi bu sekilde yazabilirsiniz\r\n%>\r\n`)
 			}
 		}
 		doc.files.push(obj)
@@ -126,13 +128,11 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 	reloadFiles()
 
 	function showFile(index){
-		document.getElementById('code').getElementsByTagName('code')[0].innerHTML=atob(doc.files[index].code)
-		document.getElementById('fileName').value=doc.files[index].fileName
+		$('#code code').html(htmlEncode(atob2(doc.files[index].data)))
+		$('#fileName').val(doc.files[index].fileName)
 		activeIndex=index
 		document.getElementById('code').style.display='flex'
 		var fileList=document.getElementById('file-list').getElementsByTagName('a')
-		console.log(`fileList.length:`,fileList.length)
-		console.log(`activeIndex:`,activeIndex)
 		for(let i=0;i<fileList.length;i++){
 			fileList[i].classList.remove('active')
 		}
@@ -179,8 +179,8 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		goBack()
 	}
 
-	function copyToClipboard(){
-		var copyText =document.getElementById('code').getElementsByTagName('textarea')[0]
+	function copyToClipboard(id){
+		var copyText =document.getElementById(id).getElementsByTagName('textarea')[0]
 
 		copyText.select()
 		copyText.setSelectionRange(0, 99999)
@@ -228,10 +228,16 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 			$(`#list-file${activeIndex}`).html($('#fileName').val())
 		})
 
+		// $('#code textarea').on('change',function(event){
+		// 	if(activeIndex<0)
+		// 		return
+		// 	doc.files[activeIndex].data=btoa($('#code textarea').val())
+		// })
 		document.getElementById("code").getElementsByTagName('textarea')[0].addEventListener("change", function(){
 			if(activeIndex<0)
 				return
-			doc.files[activeIndex].code=btoa(document.getElementById("code").getElementsByTagName('textarea')[0].value)
+			doc.files[activeIndex].data=btoa2(htmlDecode(document.getElementById("code").getElementsByTagName('textarea')[0].value))
+
 		})
 
 		$('#fileName').on('change',()=>{
@@ -278,7 +284,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 			files.forEach((e)=>{
 				var obj={
 					fileName:e.name,
-					code:e.base64Data
+					data:e.base64Data
 				}
 
 				addNewFile(obj,false)

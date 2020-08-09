@@ -5,7 +5,8 @@ var favicon = require('serve-favicon')
 var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
-var engine = require('ejs-locals')
+// var engine = require('ejs-locals')
+var hoca = require('./hoca/hoca')
 var errorHandler = require('errorhandler')
 
 global.path = require('path')
@@ -44,9 +45,11 @@ global.dbType=require('./assets/js/dbtypes.js').types
 var app = express()
 var flash = require('connect-flash')
 
-app.engine('ejs', engine)
+// app.engine('ejs', engine)
+app.engine('ejs', hoca)
 app.set('views', path.join(__dirname, 'pages'))
 app.set('view engine', 'ejs')
+// app.set('view engine', 'hoca')
 
 app.set('port', config.httpserver.port)
 

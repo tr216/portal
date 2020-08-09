@@ -1,0 +1,337 @@
+<div id="data" class="card">
+	<div class="card-header collapsible">
+		Çalıştırılacak Örnek Veri (data)
+		<div class="float-right">
+			<a class="btn btn-sm btn-light border ml-1" href="javascript:copyToClipboard('data')" title="Kopyala"><i class="far fa-copy"></i></a>
+		</div>
+	</div>
+	<div class="card-body p-0">
+		<div class="form-group mx-3">
+			<label>Örnek veri türü</label>
+			<select id="dataType" class="form-control" onchange="dataTypeChange()">
+				<option value="">-- Seç --</option>
+				<option value="json">JSON veya text veri</option>
+				<option value="file">Dosya(lar)dan seç</option>
+			</select>
+		</div>
+		<div id="dataJson" style="display: none;">
+			EJS kodlarinda "data" degiskeninde kullanilir
+			<pre class="prism-live language-js fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
+		</div>
+		<div id="dataFile" class="mb-3 mx-3" style="display: none;">
+			EJS kodlarinda "data.files[{name:'filename',data:'dosya icerigi',size:dosyaKapasitesi}]" degiskeninde kullanilir
+			<ul id="data-file-list">
+			</ul>
+			<a class="btn btn-primary" href="javascript:$('#fileUpload2').trigger('click')" title="Ornek veriyi dosdan iceri al"><i class="fas fa-file-import"></i> Dosya(lar) seç</a>
+			<a class="btn btn-primary" href="javascript:clearDataFileList()" title="Dosyalari temizle"><i class="fas fa-close"></i> Temizle</a>
+		</div>
+	</div>
+	<div class="card-footer p-2">
+		<div class="row">
+			<div class="col-md-4">
+				<a href="javascript:render(false)" class="btn btn-primary" title="programi ornek data ile render et"><i class="far fa-list-alt"></i> Render</a>
+				<a href="javascript:render(true)" class="btn btn-primary ml-1" title="programi ornek data ile render edip file export eder"><i class="fas fa-file-download"></i> Render+Export</a>
+			</div>
+			<div class="col-md-8">
+				<div class="card">
+					<div class="card-header collapsed">
+						<i class="fas fa-plug"></i> Connector
+					</div>
+					<div class="card-body p-2">
+						<div class="table-responsive">
+							<table id="grid1" class="table table-bordered table-striped m-0"  cellspacing="0">
+								<thead>
+									<tr>
+										<th width="40%">Kayıtlı Connector</th>
+										<th width="60%">
+											<select id="localConnector" class="form-control" onchange="localConnectorChange()">
+												<option value="">-- Seç --</option>
+												<% localConnectors.forEach((e)=>{ %>
+												<option value="<%- encodeURIComponent2(JSON.stringify(e)) %>"><%- e.name %> [<%- e.connectorId %>]</option>
+												<% }) %>
+											</select>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Connector ID</td>
+										<td><input type="text" class="form-control" id="connectorId" placeholder="connector Id" autocomplete="off"></td>
+									</tr>
+									<tr>
+										<td>Connector Pass</td>
+										<td><input type="text" class="form-control" id="connectorPass" placeholder="connector password" autocomplete="off"></td>
+									</tr>
+									<tr>
+										<td>Bağlantı Türü</td>
+										<td>
+											<select id="connectionType" class="form-control" onchange="connectionTypeChange()">
+												<option value="">-- Seç --</option>
+												<% staticValues.localConnectorConnectionTypes.forEach((e)=>{ %>
+												<option value="<%- e.value%>"><%- e.text %></option>
+												<% }) %>
+											</select>
+										</td>
+									</tr>
+									<tr class="sqlconnection-row">
+										<td>Server</td>
+										<td><input type="text" class="form-control" id="connection-server" placeholder="server" autocomplete="off"></td>
+									</tr>
+									<tr class="sqlconnection-row">
+										<td>Port</td>
+										<td><input type="number" class="form-control" id="connection-port" placeholder="port" autocomplete="off"></td>
+									</tr>
+									<tr class="sqlconnection-row">
+										<td>Database</td>
+										<td><input type="text" class="form-control" id="connection-database" placeholder="database" autocomplete="off"></td>
+									</tr>
+									<tr class="sqlconnection-row">
+										<td>Username</td>
+										<td><input type="text" class="form-control" id="connection-username" placeholder="username" autocomplete="off"></td>
+									</tr>
+									<tr class="sqlconnection-row">
+										<td>Password</td>
+										<td><input type="text" class="form-control" id="connection-password" placeholder="password" autocomplete="off"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="mt-3 mb-1" style="display: flow-root;">
+							<div class="float-left">
+								<a href="javascript:connectorTest()" class="btn btn-info" title="programi ornek data ile render edip connector uzerinde calistir"><i class="fas fa-plug"></i> Test</a>
+							</div>
+							<div class="float-right">
+								<a href="javascript:connectorRun()" class="btn btn-primary" title="programi ornek data ile render edip connector uzerinde calistir"><i class="fas fa-play"></i> Çalıştır</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="render" class="card mt-2">
+	<div class="card-header collapsed">
+		rendered
+		<div class="float-right">
+			<a class="btn btn-sm btn-light border ml-1" href="javascript:copyToClipboard('rendered')" title="Kopyala"><i class="far fa-copy"></i></a>
+		</div>
+	</div>
+	<div class="card-body p-0">
+		<pre class="prism-live language-ejs fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
+	</div>
+</div>
+
+<div id="console" class="card mt-2">
+	<div class="card-header collapsed">
+		console
+		<div class="float-right">
+			<a class="btn btn-sm btn-light border ml-1" href="javascript:copyToClipboard('console')" title="Kopyala"><i class="far fa-copy"></i></a>
+		</div>
+	</div>
+	<div class="card-body p-0">
+		<pre class="prism-live language-ejs fill" style="min-height: 22rem;max-height: 22rem;"><code></code></pre>
+	</div>
+</div>
+<input type="file" name="fileUpload2" id="fileUpload2" style="visibility:hidden;display: none;" accept="*.*" multiple>
+
+<script type="text/javascript">
+	var dataFileList=[]
+
+	function calistir(){
+		alert(doc.files.length)
+	}
+
+	function connectionTypeChange(){
+		if($('#connectionType').val()=='mssql' || $('#connectionType').val()=='mysql'){
+			$('.sqlconnection-row').show()
+		}else{
+			$('.sqlconnection-row').hide()
+		}
+	}
+	connectionTypeChange()
+
+	function localConnectorChange(){
+		if($('#localConnector').val()=='')
+			return
+		var a=JSON.parse(decodeURIComponent($('#localConnector').val()))
+		$('#connectorId').val(a.connectorId)
+		$('#connectorPass').val(a.connectorPass)
+		$('#connectionType').val(a.connectionType)
+		$('#connection-server').val(a.connection.server)
+		$('#connection-port').val(a.connection.port)
+		$('#connection-database').val(a.connection.database)
+		$('#connection-username').val(a.connection.username)
+		$('#connection-password').val(a.connection.password)
+		connectionTypeChange()
+
+	}
+
+	function getConnectorInfo(){
+		var obj={
+			connectorId:$('#connectorId').val(),
+			connectorPass:$('#connectorPass').val(),
+			connectionType:$('#connectionType').val(),
+			connection:{
+				server:$('#connection-server').val(),
+				port:Number($('#connection-port').val()),
+				database:$('#connection-database').val(),
+				username:$('#connection-username').val(),
+				password:$('#connection-password').val()
+			}
+		}
+		return obj
+	}
+	function printConsole(text){
+		var s=$('#console code').html()
+		s+='\r\n' + text
+		$('#console code').html(s)
+	}
+
+	function connectorTest(){
+		$('#console .card-collapse').collapse('show')
+		var data=getConnectorInfo()
+		$('#console code').html('')
+		if(data.connectorId=='' || data.connectorPass==''){
+			alert('Connector Id ve Pass girisiniz')
+			return
+		}
+		printConsole(`local connector information`)
+		printConsole(`-----------------------`)
+		printConsole(JSON.stringify(data,null,2))
+		printConsole(`-----------------------`)
+		printConsole(`connector test ediliyor...`)
+
+
+		$.ajax({
+			url:`/dbapi/local-connectors/test?db=${q.db}&sid=${q.sid}`,
+			data:data,
+			type:'POST',
+			success:function(result){
+				if(result.success){
+					printConsole('\r\n')
+					printConsole('test başarılı :-)\r\n')
+					if(typeof result.data=='string'){
+						printConsole(result.data)
+						printConsole('\r\n')
+					}else{
+						printConsole(JSON.stringify(result.data,null,2))
+						printConsole('\r\n')
+					}
+					
+				}else{
+					printConsole(`Error:\r\n${result.error.code} - ${result.error.message}`)
+					printConsole('\r\n')
+				}
+			},
+			error:function(err){
+				console.log(err)
+				alert(err)
+			}
+		})
+		// $('#console code').html(`Baglanti basarili :-)`)
+		// document.getElementById('console').getElementsByTagName('code')[0].innerHTML=`Baglanti basarili :-)`
+	}
+
+	function render(bExport){
+		$('#render .card-collapse').collapse('show')
+		$('#render code').html('')
+		doc['data']={}
+
+		switch($('#dataType').val()){
+			case 'json':
+			doc['data']=btoa($('#data textarea').val())
+			break
+			case 'file':
+			doc['data']['files']=dataFileList
+			break
+		}
+		
+
+		$.ajax({
+			url:`/dbapi/programs/render?db=${q.db}&sid=${q.sid}`,
+			data:doc,
+			type:'POST',
+			success:function(result){
+				if(result.success){
+					$('#render code').html(htmlEncode(result.data))
+					if(bExport){
+						download(result.data,'export.txt','data:application/file;charset=utf-8;base64,')
+					}
+				}else{
+					$('#render code').html(`Error:\r\n${result.error.code} - ${result.error.message}`)
+				}
+			},
+			error:function(err){
+				alert(err)
+				console.log(err)
+			}
+		})
+	}
+
+	function dataTypeChange(){
+		$('#dataJson').hide()
+		$('#dataFile').hide()
+		switch($('#dataType').val()){
+			case 'json':
+			$('#dataJson').show()
+			break
+			case 'file':
+			$('#dataFile').show()
+			break
+		}
+	}
+
+	function clearDataFileList(){
+		dataFileList=[]
+		showDataFileList()
+	}
+
+	function showDataFileList(){
+		$('#data-file-list li').remove()
+		var liste=document.getElementById('data-file-list')
+		var s=''
+		dataFileList.forEach((e)=>{
+			s+=`<li><a href="data:application/file;base64,${e.data}" download="${e.name}">${e.name}</a></li>\r\n`
+		})
+		liste.innerHTML=s
+	}
+	// $('.nav-tabs a').on('shown.bs.tab', function(event){
+	//   var x = $(event.target).text();         // active tab
+	//   var y = $(event.relatedTarget).text();  // previous tab
+	//   console.log(`event.target:`,event.target)
+	//   console.log(`event.relatedTarget:`,event.relatedTarget)
+	// });
+	
+	$(document).ready(()=>{
+		$("#fileUpload2").change(function() {
+
+			var reader  = new FileReader()
+			var fileIndex=0
+			var files=this.files
+			dataFileList=[]
+			reader.addEventListener("load", function(){
+
+				if(reader.result){
+					dataFileList[dataFileList.length-1].data=reader.result.split('base64,')[1]
+				}
+				fileIndex++
+				runReader()
+			})
+
+			function runReader(){
+				if(fileIndex>=files.length){
+					showDataFileList()
+					return
+				}
+				var file=files[fileIndex]
+				dataFileList.push({name:file.name,modifiedDate:file.lastModifiedDate,size:file.size,data:''})
+				reader.readAsDataURL(file)
+			}
+
+			runReader()
+		})
+
+	})
+</script>
