@@ -280,7 +280,7 @@
     	
     	var q=getAllUrlParams();
     	$.ajax({
-            url:'/dbapi/production-orders/salesOrders?db=' + q.db + '&sid=' + q.sid,
+            url:`/dbapi/production-orders/salesOrders?db=' + q.db + '&sid=' + q.sid,
             type:'GET',
             dataType: 'json',
             success: function(result) {
@@ -440,7 +440,7 @@
 
 		if((doc.item || '')=='') return;
 		$.ajax({
-	        url:'/dbapi/items/' + doc.item + '?&db=' + q.db + '&sid=' + q.sid,
+	        url:`/dbapi/items/' + doc.item + '?&db=' + q.db + '&sid=' + q.sid,
 	        type:'GET',
 	        dataType: 'json',
 	        success: function(result) {
@@ -450,7 +450,7 @@
                         load_packingTypes();
 	                    $('#production-item-name').val(result.data.name.value);
 	                    $.ajax({
-					        url:'/dbapi/recipes?item=' + doc.item + '&db=' + q.db + '&sid=' + q.sid,
+					        url:`/dbapi/recipes?item=' + doc.item + '&db=' + q.db + '&sid=' + q.sid,
 					        type:'GET',
 					        dataType: 'json',
 					        success: function(result) {
@@ -682,7 +682,7 @@
 		if((doc.sourceRecipe || '')=='') return alert('Recete secilmemis.');
 		if(doc.plannedQuantity<=0) return alert('Planlanan miktar sifir dan buyuk olmalidir.');
 		$.ajax({
-	        url:'/dbapi/recipes/' + doc.sourceRecipe + '?db=' + q.db + '&sid=' + q.sid,
+	        url:`/dbapi/recipes/' + doc.sourceRecipe + '?db=' + q.db + '&sid=' + q.sid,
 	        type:'GET',
 	        dataType: 'json',
 	        success: function(result) {
@@ -824,7 +824,7 @@
 	    $('#production-item-name').autocomplete({
 	        source:function(request,response){
 	            $.ajax({
-	                url:'/dbapi/items?itemType=product&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+	                url:`/dbapi/items?itemType=product&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
 	                type:'GET',
 	                dataType: 'json',
 	                success: function(result) {

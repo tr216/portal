@@ -12,7 +12,7 @@
     editButton:true,
     deleteButton:true,
     viewButton:true,
-    deleteUrl:`/dbapi/print-designs/{_id}?db=${db}&sid=${sid}`,
+    deleteUrl:`/dbapi/print-designs/{_id}?sid=${sid}`,
     customButtons:[
         {inline:true, href:`javascript:itemCopyConfirm('{_id}','{name}')`, title:'Kopyala',icon:'far fa-copy'}
     ]
@@ -51,7 +51,7 @@
 
         var data={id:temp_id, newName:$('#newName').val()}
         $.ajax({
-            url:'/dbapi/print-designs/copy?db=<%=db%>&sid=<%=sid%>',
+            url:`/dbapi/print-designs/copy?sid=${q.sid}`,
             data:data,
             type:'POST',
             success:function(result){

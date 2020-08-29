@@ -30,27 +30,6 @@
     </div>
 </form>
 
-<div class="row m-0 mt-2 button-bar">
-	<div class="col-12 p-1 m-0">
-		<div style="display: inline-flex;">
-			<a class="btn btn-primary btn-sm" href="javascript:approve()" >Onayla</a>
-			<a class="btn btn-info btn-sm ml-1" href="javascript:$('#fileUpload').trigger('click')" title="File Importar kullanarak iceri al"><i class="fas fa-file-import"></i> Dosyadan İçeri Al</a>
-			<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.csv,*.txt" multiple>
-		</div>
-	</div>
-</div>
-
-<% if(typeof message!='undefined') { %>
-    <% if(message!='') { %>
-<div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-danger" role="alert">
-            <%=message %>
-        </div>
-    </div>
-</div>
-    <% } %>
-<% } %>
 
 <%- partial('../../_common/components/grid2',{
     fields:[
@@ -69,65 +48,9 @@
     deleteButton:true,
     selection:true,
     customButtons:[
-        {href:'javascript:popupCenter("/order/inbox/view/{_id}?db=' + db + '&sid=' + sid + '","Ön izleme","900","600");', text:'Goruntule',icon:'fas fa-search-plus'},
-        {href:'/order/inbox/pdf/{_id}?db=' + db + '&sid=' + sid, text:'Pdf',icon:'fas fa-file-pdf'}
+        {href:'javascript:popupCenter("/order/inbox/view/{_id}?sid=${sid}` + '","Ön izleme","900","600");', text:'Goruntule',icon:'fas fa-search-plus'},
+        {href:'/order/inbox/pdf/{_id}?sid=${sid}`, text:'Pdf',icon:'fas fa-file-pdf'}
     ],
-    deleteUrl:'/dbapi/order/order/{_id}?db='+db+'&sid=' + sid
+    deleteUrl:`/dbapi/order/order/{_id}?sid=${sid}`
 }) 
 %>
-
-<script type="text/javascript">
-
-    $(document).ready(function(){
-
-        $("#fileUpload").change(function() {
-			
-			var reader  = new FileReader();
-			var fileIndex=0;
-			var files=this.files;
-			var willBeSentFiles=[];
-			reader.addEventListener("load", function(){
-				
-				if(reader.result){
-					willBeSentFiles[willBeSentFiles.length-1].base64Data=reader.result.split('base64,')[1];
-				}
-				fileIndex++;
-				runReader();
-			});
-
-			function runReader(){
-				if(fileIndex>=files.length){
-					sendFileImport(willBeSentFiles);
-					return;
-				}
-				var file=files[fileIndex];
-				willBeSentFiles.push({name:file.name,modifiedDate:file.lastModifiedDate,size:file.size,base64Data:''});
-				reader.readAsDataURL(file);
-			}
-			
-			runReader();
-	    });
-
-		function sendFileImport(files){
-			if(!confirm(files.length + ' adet dosya iceri alinacaktir. Onayliyor musunuz?')) return;
-			$.ajax({
-				url:'/dbapi/order/importInboxOrder?db=<%=db%>&sid=<%=sid%>',
-				data:{fileImporter:'', files:files},
-				type:'POST',
-				success:function(result){
-					if(result.success){
-						//alert('Aktarim basladi.');
-						window.location.reload();
-					}else{
-						alert(result.error.message);
-					}
-				}
-			});
-		}
-    });
-
-    function showErrors(_id){
-        var url='<%=urlPath%>/errors/'+ _id + '?db=<%=db%>&sid=<%=sid%>';
-        popupCenter(url,'Goster','900','600');
-    }
-</script>

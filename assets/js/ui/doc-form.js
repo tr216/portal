@@ -433,7 +433,7 @@ function saveDocLine(index){
 		newItem['itemType']=$('#docLine-new-itemType').val();
 		
 	    $.ajax({
-	        url:'/dbapi/items?db=' + db + '&sid=' + sid,
+	        url:`/dbapi/items?sid=${q.sid}`,
 	        data:newItem,
 	        type:'POST',
 	        success:function(result){
@@ -528,6 +528,25 @@ function saveDocument(callback){
 		break;
 		case 'despatch':
 			party=doc.ioType==0?doc.deliveryCustomerParty.party:doc.despatchSupplierParty.party;
+			doc.shipment={
+				shipmentStage:[{
+					driverPerson:[{
+						firstName:{
+							value:$('input[name="shipment[shipmentStage][0][driverPerson][0][firstName][value]"]').val() || ''
+						},
+						familyName:{
+							value:$('input[name="shipment[shipmentStage][0][driverPerson][0][familyName][value]"]').val() || ''
+						}
+					}],
+					transportMeans:{
+						roadTransport:{
+							licensePlateId:{
+								value:$('input[name="shipment[shipmentStage][0][transportMeans][roadTransport][licensePlateId][value]"]').val() || ''
+							}
+						}
+					}
+				}]
+			}
 		break;
 	}
     var vknTckn=$("input[name='vknTckn']").val();
@@ -567,15 +586,15 @@ function saveDocument(callback){
 		        doc.buyerCustomerParty.party=party;
 		        
 		        if((doc._id || '')=='')
-		        		url='/dbapi/order/saveOutboxOrder?db=' + db + '&sid=' + sid;
+		        		url=`/dbapi/order/saveOutboxOrder?sid=${q.sid}`
 		        	else
-		        		url='/dbapi/order/saveOutboxOrder/' + doc._id  + '?db=' + db + '&sid=' + sid;
+		        		url=`/dbapi/order/saveOutboxOrder/${doc._id}?sid=${q.sid}`
 		    }else{
 		        doc.sellerSupplierParty.party=party;
 		        if((doc._id || '')=='')
-		        		url='/dbapi/order/saveInboxOrder?db=' + db + '&sid=' + sid;
+		        		url=`/dbapi/order/saveInboxOrder?sid=${q.sid}`
 		        	else
-		       			url='/dbapi/order/saveInboxOrder/' + doc._id  + '?db=' + db + '&sid=' + sid;
+		       			url=`/dbapi/order/saveInboxOrder/${doc._id}?sid=${q.sid}`
 		    }
 			
 		break;
@@ -583,22 +602,22 @@ function saveDocument(callback){
 			if(doc.ioType==0){
 		        doc.accountingCustomerParty.party=party;
 		        if((doc._id || '')=='')
-		        		url='/dbapi/invoice/saveOutboxInvoice?db=' + db + '&sid=' + sid;
+		        		url=`/dbapi/invoice/saveOutboxInvoice?sid=${q.sid}`
 		    		else
-		        		url='/dbapi/invoice/saveOutboxInvoice/' + doc._id  + '?db=' + db + '&sid=' + sid;
+		        		url=`/dbapi/invoice/saveOutboxInvoice/${doc._id}?sid=${q.sid}`
 		    }else{
 		        doc.accountingSupplierParty.party=party;
 		        if((doc._id || '')=='')
-		        		url='/dbapi/invoice/saveInboxInvoice?db=' + db + '&sid=' + sid;
+		        		url=`/dbapi/invoice/saveInboxInvoice?sid=${q.sid}`
 		    		else
-		        		url='/dbapi/invoice/saveInboxInvoice/' + doc._id  + '?db=' + db + '&sid=' + sid;
+		        		url=`/dbapi/invoice/saveInboxInvoice/${doc._id}?sid=${q.sid}`
 		    }
 		break;
 		case 'despatch':
 			if((doc._id || '')=='')
-			    url='/dbapi/despatch?db=' + db + '&sid=' + sid
+			    url=`/dbapi/despatch?sid=${q.sid}`
 			else
-			    url='/dbapi/despatch/' + doc._id  + '?db=' + db + '&sid=' + sid
+			    url=`/dbapi/despatch/${doc._id}?sid=${q.sid}`
 			
 			if(doc.ioType==0)
 		        doc.deliveryCustomerParty.party=party
@@ -1202,7 +1221,7 @@ function docLineItemNameAutoComplete(){
             $("#docLine-item-id").val(''); 
             $("#docLine-item-itemType").val(''); 
             $.ajax({
-                url:'/dbapi/items?itemType=all&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                url:`/dbapi/items?itemType=all&name=` +  encodeURIComponent2(request.term) + '&sid=' + q.sid,
                 type:'GET',
                 dataType: 'json',
                 success: function(result) {
@@ -1242,12 +1261,12 @@ function docFormAutoComplete(){
         source:function(request,response){
         		var url='';
         		if(doc.ioType==0){
-        			url='/dbapi/customers?partyName=';
+        			url=`/dbapi/customers?partyName=`;
         		}else{
-        			url='/dbapi/vendors?partyName=';
+        			url=`/dbapi/vendors?partyName=`;
         		}
                 $.ajax({
-                url:url +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                url:url +  encodeURIComponent2(request.term) + '&sid=' + q.sid,
                 type:'GET',
                 dataType: 'json',
                 success: function(result) {

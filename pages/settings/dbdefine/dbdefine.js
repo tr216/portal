@@ -51,7 +51,7 @@ function addnew(req,res,data,callback){
 			data['dbName']=dbName;
 			api.post(`/dbdefine`,req,{dbName:dbName},(err,resp)=>{
 				if(!err){
-					res.redirect(`/settings/dbdefine?mid=${req.query.mid}&sid=${req.query.sid}`)
+					res.redirect(`/settings/dbdefine?sid=${req.query.sid}&mid=${req.query.mid}`)
  					//callback(null,data);
  				}else{
  					data['message']=err.message;
@@ -71,7 +71,7 @@ function edit(req,res,data,callback){
 		
 		api.put(`/dbdefine/${_id}`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect(`/settings/dbdefine?mid=${req.query.mid}&sid=${req.query.sid}`)
+				res.redirect(`/settings/dbdefine?sid=${req.query.sid}&mid=${req.query.mid}`)
 
 			}else{
 				data['message']=err.message;
@@ -96,7 +96,7 @@ function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
 	api.delete(`/dbdefine/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect(`/dbdefine?mid=${req.query.mid}&sid=${req.query.sid}`)
+			res.redirect(`/dbdefine?sid=${req.query.sid}&mid=${req.query.mid}`)
 			
 		}else{
 			data['message']=err.message;

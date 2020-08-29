@@ -5,73 +5,71 @@ module.exports = function(req,res,callback){
 		form:{
 			_id:'',
 			itemType:(req.query.itemType || 'item'),
-	        name:{ value:''},
-	        additionalItemIdentification:[{ID:{ value:''}}],
-	        brandName:{ value:''},
-	        buyersItemIdentification:{ID:{ value:''}},
-	        commodityClassification:[
-	            { 
-	                itemClassificationCode:{value:''}
-	            }
-	        ],
-	        description:{ value:''},
-	        keyword:{ value:''},
-	        manufacturersItemIdentification:{ID:{ value:''}},
-	        modelName:{ value:''},
-	        sellersItemIdentification:{ID:{ value:''}},
-	        originCountry:{},
-	        itemInstance:[],
-	        accountGroup: '',
-	        similar:[],
-	        unitPacks:[],
-	        vendors:[{
-	            sequenceNumeric:{value:0 },
-	            vendor:null,
-	            supplyDuration:{value:0 }
-	        }],
-	        supplyDuration:{value:0 },
-	        tags:'',
-	        images:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
-	        files:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
-	        localDocumentId:'',
-	        passive:false,
-	        barkodlar:'',
-	        tracking:{
-		        pallet:false,
-		        lotNo:false,
-		        serialNo:false,
-		        color:false,
-		        pattern:false,
-		        size:false
-		    },
-	        packingOptions:[]
+			name:{ value:''},
+			additionalItemIdentification:[{ID:{ value:''}}],
+			brandName:{ value:''},
+			buyersItemIdentification:{ID:{ value:''}},
+			commodityClassification:[
+			{ 
+				itemClassificationCode:{value:''}
+			}
+			],
+			description:{ value:''},
+			keyword:{ value:''},
+			manufacturersItemIdentification:{ID:{ value:''}},
+			modelName:{ value:''},
+			sellersItemIdentification:{ID:{ value:''}},
+			originCountry:{},
+			itemInstance:[],
+			accountGroup: '',
+			similar:[],
+			unitPacks:[],
+			vendors:[{
+				sequenceNumeric:{value:0 },
+				vendor:null,
+				supplyDuration:{value:0 }
+			}],
+			supplyDuration:{value:0 },
+			tags:'',
+			images:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
+			files:[{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' },{ data: '', type: '', fileName: '' }],
+			localDocumentId:'',
+			passive:false,
+			barkodlar:'',
+			tracking:{
+				pallet:false,
+				lotNo:false,
+				serialNo:false,
+				color:false,
+				pattern:false,
+				size:false
+			},
+			packingOptions:[]
 		},
 		filter:{},
 		list:[]
 	}
 
-	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
-	}
+
 	switch(req.params.func || ''){
 		case 'addnew':
 		
 		addnew(req,res,data,callback);
 		break;
 		case 'edit':
-			edit(req,res,data,callback);
+		edit(req,res,data,callback);
 		break;
 		case 'view':
-			edit(req,res,data,callback);
+		edit(req,res,data,callback);
 		break;
 		case 'delete':
 		
 		deleteItem(req,res,data,callback);
 		break;
 		default:
-			data.filter=getFilter(data.filter,req,res)
-			if(req.method!='POST') 
-				getList(req,res,data,callback)
+		data.filter=getFilter(data.filter,req,res)
+		if(req.method!='POST') 
+			getList(req,res,data,callback)
 		break;
 	}
 	
@@ -81,7 +79,7 @@ function getList(req,res,data,callback){
 	data.filter['itemType']=data.form.itemType;
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.accountGroupList.unshift({name:'',_id:''});
-		api.get(`/${req.query.db}/items`,req,data.filter,(err,resp)=>{
+		api.get(`/{db}/items`,req,data.filter,(err,resp)=>{
 			if(!err){
 				data=mrutil.setGridData(data,resp);
 			}
@@ -94,7 +92,7 @@ function getList(req,res,data,callback){
 function initLookUpLists(req,res,data,cb){
 	data.accountGroupList=[];
 	
-	api.get(`/${req.query.db}/account-groups`,req,{},(err,resp)=>{
+	api.get(`/{db}/account-groups`,req,{},(err,resp)=>{
 		if(!err){
 			data.accountGroupList=resp.data.docs;
 			
@@ -120,9 +118,9 @@ function addnew(req,res,data,callback){
 			
 			
 			
-			api.post(`/${req.query.db}/items`,req,data.form,(err,resp)=>{
+			api.post(`/{db}/items`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/inventory/items?itemType=${data.form.itemType}&mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+					res.redirect(`/inventory/items?itemType=${data.form.itemType}&sid=${req.query.sid}&mid=${req.query.mid}`)
 				}else{
 					data['message']=err.message;
 					callback(null,data);
@@ -156,9 +154,9 @@ function edit(req,res,data,callback){
 			
 			
 
-			api.put(`/${req.query.db}/items/${_id}`,req,data.form,(err,resp)=>{
+			api.put(`/{db}/items/${_id}`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/inventory/items?itemType=' + data.form.itemType + '&db=${req.query.db}&sid=${req.query.sid}`);
+					res.redirect(`/inventory/items?itemType=${data.form.itemType}&sid=${req.query.sid}`);
 
 				}else{
 					data['message']=err.message;
@@ -167,7 +165,7 @@ function edit(req,res,data,callback){
 			});
 		}else{
 
-			api.get(`/${req.query.db}/items/${_id}`,req,null,(err,resp)=>{
+			api.get(`/{db}/items/${_id}`,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					data.form.barkodlar='';
@@ -191,9 +189,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete(`/${req.query.db}/items/${_id}`,req,(err,resp)=>{
+	api.delete(`/{db}/items/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect(`/inventory/items?itemType=' + data.form.itemType + '&db=${req.query.db}&sid=${req.query.sid}`);
+			res.redirect(`/inventory/items?itemType=${data.form.itemType}&sid=${req.query.sid}`);
 			
 		}else{
 			

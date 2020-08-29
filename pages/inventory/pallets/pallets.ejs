@@ -10,7 +10,7 @@
     editButton:true,
     deleteButton:true,
     viewButton:true,
-    deleteUrl:'/dbapi/pallets/{_id}?db=' + db + '&sid=' + sid,
+    deleteUrl:`/dbapi/pallets/{_id}?sid=${sid}`,
     customButtons:[
         {inline:true, href:`javascript:itemCopyConfirm('{_id}','{name}')`, title:'Kopyala',icon:'far fa-copy'}
     ]
@@ -48,7 +48,7 @@
 
         var data={id:temp_id, newName:$('#newName').val()}
         $.ajax({
-            url:'/dbapi/pallets/copy?db=<%=db%>&sid=<%=sid%>',
+            url:`/dbapi/pallets/copy?sid=${q.sid}`,
             data:data,
             type:'POST',
             success:function(result){

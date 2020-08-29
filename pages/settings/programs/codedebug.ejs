@@ -164,7 +164,7 @@
 		
 
 		$.ajax({
-			url:`/dbapi/programs/render?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/programs/render?sid=${q.sid}`,
 			data:doc,
 			type:'POST',
 			success:function(result){
@@ -220,15 +220,17 @@
 		doc.crontab=$('input[name="crontab"]').val()
 
 		$.ajax({
-			url:`/dbapi/programs/run?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/programs/run?sid=${q.sid}`,
 			data:doc,
 			type:'POST',
 			dataType: "json",
 			success:function(result){
-				console.log(`result:`,result)
 				if(result.success){
 					if(typeof result.data=='string'){
 						$('#console code').html(result.data)
+						if(doc.type=='file-exporter'){
+							download(result.data,'export1.txt','application/file')
+						}
 					}else{
 						$('#console code').html(htmlEncode(JSON.stringify(result.data,null,2)))
 					}
@@ -242,28 +244,19 @@
 				alert(err)
 			}
 		})
-		// render(false,(err,renderedCode)=>{
-		// 	if(!err){
-		// 		var data=connInfo
-		// 		if(connInfo.connectionType=='mssql' || connInfo.connectionType=='mysql' ){
-		// 			data.query=renderedCode
-		// 		}else{
-		// 			data.content=renderedCode
-		// 		}
-
-
-		// 		console.log(`data:`,data)
-
-		// 	}
-		// })
 	}
+
+	// function indir(base64Data,fileName){
+	// 	window.open(`data:application/file;base64,${base64Data}`)
+    
+	// }
 
 	function dataTypeChange(){
 		$('#dataJson').hide()
 		$('#dataFile').hide()
 		$('#dataColl').hide()
 
-		console.log('dataType:',$('#dataType').val())
+
 		switch($('#dataType').val()){
 			case 'json':
 			$('#dataJson').show()
@@ -282,7 +275,7 @@
 			return alert('collection secilmemis')
 
 		$.ajax({
-			url:`/dbapi/collections/${$('#dataCollCollection').val()}?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/collections/${$('#dataCollCollection').val()}?sid=${q.sid}`,
 			type:'GET',
 			success:function(result){
 				if(result.success){
@@ -333,7 +326,9 @@
 	
 	// if(localStorage.getItem('codedebug_dataColl')!=null)
 	// 	$('#dataColl textarea').val(localStorage.getItem('codedebug_dataColl'))
+
 	
+
 	$(document).ready(()=>{
 		$("#fileUpload2").change(function() {
 

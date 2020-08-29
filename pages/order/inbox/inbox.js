@@ -13,9 +13,7 @@ module.exports = function(req,res,callback){
 
 	data.form.ioType=1;
 
-	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
-	}
+
 
 	switch(req.params.func || ''){
 		case 'addnew':
@@ -48,7 +46,7 @@ function showErrors(req,res,data,callback){
 		callback(null,data);
 		return;
 	}
-	api.get(`/${req.query.db}/order/errors/${_id}`,req,null,(err,resp)=>{
+	api.get(`/{db}/order/errors/${_id}`,req,null,(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data);
 			callback(null,data);
@@ -69,7 +67,7 @@ function getList(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})
 		
-		api.get(`/${req.query.db}/order/inboxOrderList`,req,data.filter,(err,resp)=>{
+		api.get(`/{db}/order/inboxOrderList`,req,data.filter,(err,resp)=>{
 			if(!err){
 				var docs=[];
 				resp.data.docs.forEach((e)=>{
@@ -87,7 +85,7 @@ function getList(req,res,data,callback){
 
 function initLookUpLists(req,res,data,cb){
 	data.eIntegratorList=[];
-	api.get(`/${req.query.db}/integrators`,req,{passive:false},(err,resp)=>{
+	api.get(`/{db}/integrators`,req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.eIntegratorList=resp.data.docs;
 		}
@@ -101,9 +99,9 @@ function addnew(req,res,data,callback){
 			data.form=Object.assign(data.form,req.body);
 			data.form['sellerSupplierParty']={party:(data.form.party || {})}
 			data.form.ioType=1;
-			api.post(`/${req.query.db}/order/order`,req,data.form,(err,resp)=>{
+			api.post(`/{db}/order/order`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/order/inbox?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+					res.redirect(`/order/inbox?sid=${req.query.sid}&mid=${req.query.mid}`)
 					return;
 				}else{
 					data['message']=err.message;
@@ -122,7 +120,7 @@ function addnew(req,res,data,callback){
 
 function view(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.getFile(`/${req.query.db}/order/orderView/${_id}`,req,null,(err,resp)=>{
+	api.getFile(`/{db}/order/orderView/${_id}`,req,null,(err,resp)=>{
 		if(!err){
 			data['html']=resp;
 			callback(null,data);
@@ -135,7 +133,7 @@ function view(req,res,data,callback){
 
 function pdf(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.downloadFile(`/${req.query.db}/order/orderPdf/${_id}`,req,res,null,(err,resp)=>{
+	api.downloadFile(`/{db}/order/orderPdf/${_id}`,req,res,null,(err,resp)=>{
 		return;
 		// if(!err){
 		// 	callback(null,data);
@@ -159,9 +157,9 @@ function edit(req,res,data,callback){
 			
 			data.form['buyerCustomerParty']={party:(data.form.party || {})}
 			data.form.ioType=1;
-			api.put(`/${req.query.db}/order/order/${_id}`,req,data.form,(err,resp)=>{
+			api.put(`/{db}/order/order/${_id}`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/order/inbox?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+					res.redirect(`/order/inbox?sid=${req.query.sid}&mid=${req.query.mid}`)
 					return;
 				}else{
 					data['message']=err.message;
@@ -170,7 +168,7 @@ function edit(req,res,data,callback){
 			});
 		}else{
 			
-			api.get(`/${req.query.db}/order/order/${_id}`,req,null,(err,resp)=>{
+			api.get(`/{db}/order/order/${_id}`,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					callback(null,data);
@@ -186,9 +184,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete(`/${req.query.db}/order/order/${_id}`,req,(err,resp)=>{
+	api.delete(`/{db}/order/order/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect(`/order/inbox?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+			res.redirect(`/order/inbox?sid=${req.query.sid}&mid=${req.query.mid}`)
 		}else{
 			data['message']=err.message;
 			callback(null,data);

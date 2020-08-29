@@ -23,7 +23,7 @@
         $('#parentAccountCode').autocomplete({
             source:function(request,response){
                     $.ajax({
-                    url:'/dbapi/accounts?accountCode=' +  encodeURIComponent(request.term) + '&db=<%=db%>&sid=<%=sid%>',
+                    url:`/dbapi/accounts?accountCode=' +  encodeURIComponent(request.term) + '&sid=<%=sid%>',
                     type:'GET',
                     dataType: 'json',
                     success: function(result) {

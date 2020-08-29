@@ -29,17 +29,12 @@
 		</div>
 	</div>
 </form>
-<div class="row m-0 mt-2 button-bar">
-	<div class="col-12 p-1 m-0">
-		<div style="display: inline-flex;">
-			<a class="btn btn-primary btn-sm" href="javascript:sendToGib()" >Gönder</a>
-			<a class="btn btn-info btn-sm ml-1" href="javascript:sendToArchive()" >Arşive Kaldır</a>
-			<a class="btn btn-info btn-sm ml-1" href="javascript:$('#fileUpload').trigger('click')" title="File Importar kullanarak iceri al"><i class="fas fa-file-import"></i> Dosyadan İçeri Al</a>
-			<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.csv,*.txt" multiple>
-		</div>
-	</div>
-</div>
 
+<%
+	panelButtons=`<a class="btn btn-primary mr-2" href="javascript:sendToGib()" >Gönder</a>
+	<a class="btn btn-info mr-2" href="javascript:sendToArchive()" >Arşive Kaldır</a>
+	`
+%>
 
 <%- partial('../../_common/components/grid2',{
 	fields:[
@@ -55,9 +50,9 @@
 	deleteButton:true,
 	selection:true,
 	customButtons:[
-	{inline:true, class:'btn-secondary', href:`javascript:yazdir('{despatchStatus}','{_id}?db=${db}&sid=${sid}')`, title:'Yazdir',icon:'fas fa-print'},
+	{inline:true, class:'btn-secondary', href:`javascript:yazdir('{despatchStatus}','{_id}?sid=${sid}')`, title:'Yazdir',icon:'fas fa-print'},
 	],
-	deleteUrl:'/dbapi/despatch/{_id}?db='+db+'&sid=' + sid
+	deleteUrl:`/dbapi/despatch/{_id}?sid=${sid}`
 }) 
 %>
 
@@ -74,7 +69,7 @@
 	}
 
 	function showErrors(_id){
-		var url=`${window.location.origin}/despatch/outbox/errors/${_id}?db=${q.db}&sid=${q.sid}`
+		var url=`${window.location.origin}/despatch/outbox/errors/${_id}?sid=${q.sid}`
 		popupCenter(url,"Hatalar","900","600")
 	}
 
@@ -95,7 +90,7 @@
 		if(!confirm(data.list.length + ' adet irsaliye GIB e gonderilecektir. Onayliyor musunuz?'))
 			return
 		$.ajax({
-			url:'/dbapi/despatch/send?db=<%=db%>&sid=<%=sid%>',
+			url:`/dbapi/despatch/send?sid=${q.sid}`,
 			data:data,
 			type:'POST',
 			success:function(result){
@@ -116,33 +111,33 @@
 	}
 
 	$(document).ready(function(){
-		$("#fileUpload").change(function() {
+		// $("#fileUpload").change(function() {
 
-			var reader  = new FileReader()
-			var fileIndex=0
-			var files=this.files
-			var willBeSentFiles=[]
-			reader.addEventListener("load", function(){
+		// 	var reader  = new FileReader()
+		// 	var fileIndex=0
+		// 	var files=this.files
+		// 	var willBeSentFiles=[]
+		// 	reader.addEventListener("load", function(){
 
-				if(reader.result){
-					willBeSentFiles[willBeSentFiles.length-1].base64Data=reader.result.split('base64,')[1]
-				}
-				fileIndex++
-				runReader()
-			})
+		// 		if(reader.result){
+		// 			willBeSentFiles[willBeSentFiles.length-1].base64Data=reader.result.split('base64,')[1]
+		// 		}
+		// 		fileIndex++
+		// 		runReader()
+		// 	})
 
-			function runReader(){
-				if(fileIndex>=files.length){
-					sendFileImport(willBeSentFiles)
-					return
-				}
-				var file=files[fileIndex]
-				willBeSentFiles.push({name:file.name,modifiedDate:file.lastModifiedDate,size:file.size,base64Data:''})
-				reader.readAsDataURL(file)
-			}
+		// 	function runReader(){
+		// 		if(fileIndex>=files.length){
+		// 			sendFileImport(willBeSentFiles)
+		// 			return
+		// 		}
+		// 		var file=files[fileIndex]
+		// 		willBeSentFiles.push({name:file.name,modifiedDate:file.lastModifiedDate,size:file.size,base64Data:''})
+		// 		reader.readAsDataURL(file)
+		// 	}
 
-			runReader()
-		})
+		// 	runReader()
+		// })
 
 		function sendFileImport(files){
 			if(files.length==0) 
@@ -150,7 +145,7 @@
 
 			if(!confirm(files.length + ' adet dosya iceri alinacaktir. Onayliyor musunuz?')) return
 				$.ajax({
-					url:'/dbapi/despatch/importOutbox?db=<%=db%>&sid=<%=sid%>',
+					url:`/dbapi/despatch/importOutbox?sid=${q.sid}`,
 					data:{fileImporter:'', files:files},
 					type:'POST',
 					success:function(result){

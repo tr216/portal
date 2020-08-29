@@ -3,7 +3,7 @@ function refreshRecipeList(recipeId=''){
     var productRecipes=document.getElementById("productRecipes");
     $("#productRecipes option").remove();
     $.ajax({
-        url:'/dbapi/recipes?item=' + form_item_id + '&db=' + q.db + '&sid=' + q.sid,
+        url:`/dbapi/recipes?item=${form_item_id}&sid=${q.sid}`,
         type:'GET',
         success:function(result){
             if(result.success){
@@ -50,7 +50,7 @@ function productRecipesChange(){
         reloadRecipe();
     }else{
         $.ajax({
-            url:'/dbapi/recipes/' + $('#productRecipes').val() + '?db=' + q.db + '&sid=' + q.sid,
+        		url:`/dbapi/recipes/${$('#productRecipes').val()}?sid=${q.sid}`,
             type:'GET',
             success:function(result){
                 if(result.success){
@@ -98,20 +98,19 @@ function saveRecipe(callback){
     var type='POST';
     var url='';
     if(recipeFormType=='products'){
-        url='/dbapi/recipes?db=' + q.db + '&sid=' + q.sid;
+        url=`/dbapi/recipes?sid=${q.sid}`
         if(doc._id!=undefined){
-            type='PUT';
-            url='/dbapi/recipes/' + doc._id + '?db=' + q.db + '&sid=' + q.sid;
+            type='PUT'
+            url=`/dbapi/recipes/${doc._id}?sid=${q.sid}`
         }
     }else if(recipeFormType=='production-orders'){
-        url='/dbapi/production-orders?db=' + q.db + '&sid=' + q.sid;
+    		url=`/dbapi/production-orders?sid=${q.sid}`
         if(doc._id!=undefined){
-            type='PUT';
-            url='/dbapi/production-orders/' + doc._id + '?db=' + q.db + '&sid=' + q.sid;
+            type='PUT'
+            url=`/dbapi/production-orders/${doc._id}?sid=${q.sid}`
         }
     }
     
-    console.log(`saveRecipe doc:`,doc)
     
     $.ajax({
         url:url,
@@ -590,7 +589,7 @@ function autoCompleteItemName(adimIndex){
         source:function(request,response){
                 var itemType=$('#adim' + adimIndex + ' #itemTypeInput').val();
                 $.ajax({
-                url:'/dbapi/items?itemType=' + itemType + '&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                url:`/dbapi/items?itemType=${itemType}&name=${encodeURIComponent2(request.term)}&sid=${q.sid}`,
                 type:'GET',
                 dataType: 'json',
                 success: function(result) {
@@ -656,7 +655,7 @@ function autoCompleteItemName(adimIndex){
         source:function(request,response){
                 var itemType=$('#adim' + adimIndex + ' #itemTypeOutput').val();
                 $.ajax({
-                url:'/dbapi/items?itemType=' + itemType + '&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                url:`/dbapi/items?itemType=${itemType}&name=${encodeURIComponent2(request.term)}&sid=${q.sid}`,
                 type:'GET',
                 dataType: 'json',
                 success: function(result) {
@@ -722,9 +721,9 @@ function autoCompleteItemName(adimIndex){
     
     var url='';
     if(recipeFormType=='products'){
-        url='/dbapi/mrp-machine-groups?db=' + q.db + '&sid=' + q.sid;
+        url=`/dbapi/mrp-machine-groups?sid=${q.sid}`
     }else if(recipeFormType=='production-orders'){
-        url='/dbapi/mrp-machines?recipe=' + doc.sourceRecipe + '&processIndex=' + adimIndex + '&db=' + q.db + '&sid=' + q.sid;
+        url=`/dbapi/mrp-machines?recipe=${doc.sourceRecipe}&processIndex=${adimIndex}&sid=${q.sid}`
     }
 
     $.ajax({
@@ -767,7 +766,7 @@ function selectMachineChange(adimIndex,deger){
 
     var url='';
     if(recipeFormType=='products'){
-        url='/dbapi/mrp-molds?machineGroup=' + deger + '&db=' + q.db + '&sid=' + q.sid;
+        url=`/dbapi/mrp-molds?machineGroup=${deger}&sid=${q.sid}`
     }else if(recipeFormType=='production-orders'){
         var machineGroup='---';
         machineList.forEach(function(e){
@@ -776,7 +775,7 @@ function selectMachineChange(adimIndex,deger){
                 return;
             }
         })
-        url='/dbapi/mrp-molds?machineGroup=' + machineGroup + '&recipe=' + doc.sourceRecipe + '&db=' + q.db + '&sid=' + q.sid;
+        url=`/dbapi/mrp-molds?machineGroup=${machineGroup}&recipe=${doc.sourceRecipe}&sid=${q.sid}`
     }
 
     $.ajax({

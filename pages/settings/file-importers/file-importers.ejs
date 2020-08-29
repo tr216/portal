@@ -12,8 +12,8 @@
     deleteButton:true,
     viewButton:true,
     customButtons:[
-    	{inline:true,href:'/settings/file-importers/code/{_id}?db=' + db + '&sid=' + sid,text:'Kodlama',icon:'fas fa-code'}
+    	{inline:true,href:'/settings/file-importers/code/{_id}?sid=${sid}`,text:'Kodlama',icon:'fas fa-code'}
     ],
-    deleteUrl:'/dbapi/file-importers/{_id}?db=' + db + '&sid=' + sid
+    deleteUrl:`/dbapi/file-importers/{_id}?sid=${sid}`
     }) 
 %>

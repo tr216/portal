@@ -277,7 +277,7 @@
                 $("#content-item-unitCode").val(''); 
                 
                 $.ajax({
-                    url:'/dbapi/items?itemType=all&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                    url:`/dbapi/items?itemType=all&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
                     type:'GET',
                     dataType: 'json',
                     success: function(result) {
@@ -359,9 +359,9 @@
         var type='PUT';
         if((doc._id || '')=='') type='POST';
         if((doc._id || '')=='')
-            url='/dbapi/packing-types?db=' + db + '&sid=' + sid;
+            url='/dbapi/packing-types?sid=${sid}`;
         else
-            url='/dbapi/packing-types/' + doc._id + '?db=' + db + '&sid=' + sid;
+            url='/dbapi/packing-types/' + doc._id + '?sid=${sid}`;
         $.ajax({
             url:url,
             data:doc,

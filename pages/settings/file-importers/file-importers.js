@@ -11,10 +11,6 @@ module.exports = function(req,res,callback){
 		filter:{}
 	}
 
-	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'})
-	}
-	
 	switch(req.params.func || ''){
 		case 'addnew':
 		addnew(req,res,data,callback)
@@ -41,7 +37,7 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
-	api.get(`/${req.query.db}/file-importers`,req,data.filter,(err,resp)=>{
+	api.get(`/{db}/file-importers`,req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp)
 		}
@@ -53,14 +49,14 @@ function addnew(req,res,data,callback){
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body)
 		if(req.body['btnConnectorTest']!=undefined){
-			api.post(`/${req.query.db}/file-importers/test`,req,data.form,(err,resp)=>{
+			api.post(`/{db}/file-importers/test`,req,data.form,(err,resp)=>{
 				data['testResult']=resp
 				callback(null,data)
 			})
 		}else{
-			api.post(`/${req.query.db}/file-importers`,req,data.form,(err,resp)=>{
+			api.post(`/{db}/file-importers`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/settings/file-importers?db=${req.query.db}&sid=${req.query.sid}&importerType=${(req.query.importerType || '')}`)
+					res.redirect(`/settings/file-importers?sid=${req.query.sid}&importerType=${(req.query.importerType || '')}`)
 				}else{
 					data['message']=err.message
 					callback(null,data)
@@ -77,14 +73,14 @@ function edit(req,res,data,callback){
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body)
 		if(req.body['btnConnectorTest']!=undefined){
-			api.post(`/${req.query.db}/file-importers/test`,req,data.form,(err,resp)=>{
+			api.post(`/{db}/file-importers/test`,req,data.form,(err,resp)=>{
 				data['testResult']=resp
 				callback(null,data)
 			})
 		}else{
-			api.put(`/${req.query.db}/file-importers/${_id}`,req,data.form,(err,resp)=>{
+			api.put(`/{db}/file-importers/${_id}`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/settings/file-importers?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}&importerType=${(req.query.importerType || '')}`)
+					res.redirect(`/settings/file-importers?sid=${req.query.sid}&mid=${req.query.mid}&importerType=${(req.query.importerType || '')}`)
 
 				}else{
 					data['message']=err.message
@@ -95,7 +91,7 @@ function edit(req,res,data,callback){
 		
 		
 	}else{
-		api.get(`/${req.query.db}/file-importers/${_id}`,req,null,(err,resp)=>{
+		api.get(`/{db}/file-importers/${_id}`,req,null,(err,resp)=>{
 			if(!err){
 				data.form=Object.assign(data.form,resp.data)
 				callback(null,data)
@@ -112,12 +108,12 @@ function view(req,res,data,callback){
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body)
 		if(req.body['btnConnectorTest']!=undefined){
-			api.post(`/${req.query.db}/file-importers/test`,req,data.form,(err,resp)=>{
+			api.post(`/{db}/file-importers/test`,req,data.form,(err,resp)=>{
 				data['testResult']=resp
 				callback(null,data)
 			})
 		}else{
-			api.get(`/${req.query.db}/file-importers/${_id}`,req,null,(err,resp)=>{
+			api.get(`/{db}/file-importers/${_id}`,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data)
 					callback(null,data)
@@ -128,7 +124,7 @@ function view(req,res,data,callback){
 			})
 		}
 	}else{
-		api.get(`/${req.query.db}/file-importers/${_id}`,req,null,(err,resp)=>{
+		api.get(`/{db}/file-importers/${_id}`,req,null,(err,resp)=>{
 			if(!err){
 				data.form=Object.assign(data.form,resp.data)
 				callback(null,data)
@@ -143,9 +139,9 @@ function view(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || ''
-	api.delete(`/${req.query.db}/file-importers/${_id}`,req,(err,resp)=>{
+	api.delete(`/{db}/file-importers/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect(`/settings/file-importers?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+			res.redirect(`/settings/file-importers?sid=${req.query.sid}&mid=${req.query.mid}`)
 			
 		}else{
 			

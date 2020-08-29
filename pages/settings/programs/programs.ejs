@@ -4,6 +4,7 @@
     fields:[
         {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
         {name:'type',text:'Turu',type:'label',filter:true, orderable:true},
+        {name:'showButtonText',text:'ButtonText?',type:'checkbox',width:1},
         {name:'passive',text:'Pasif?',type:'checkbox',width:1},
     ],
     caption:'Programlar',
@@ -12,7 +13,7 @@
     editButton:true,
     deleteButton:true,
     viewButton:false,
-    deleteUrl:`/dbapi/programs/{_id}?db=${db}&sid=${sid}`,
+    deleteUrl:`/dbapi/programs/{_id}?sid=${sid}`,
     customButtons:[
         {inline:true, href:`javascript:itemCopyConfirm('{_id}','{name}')`, title:'Kopyala',icon:'far fa-copy'}
     ]
@@ -51,7 +52,7 @@
 
         var data={id:temp_id, newName:$('#newName').val()}
         $.ajax({
-            url:'/dbapi/programs/copy?db=<%=db%>&sid=<%=sid%>',
+            url:`/dbapi/programs/copy?sid=${q.sid}`,
             data:data,
             type:'POST',
             success:function(result){

@@ -439,7 +439,8 @@ const transportHandlingUnitType={
 
 const shipmentStageType={
     driverPerson:[personType],
-    transportModeCode:codeType
+    transportModeCode:codeType,
+    transportMeans:{roadTransport:{licensePlateId:valueType}}
 }
 
 

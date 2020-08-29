@@ -1,22 +1,14 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/date-filter',{includeForm:true,includeFilterButton:true}) %>
 
-<div class="row m-0 mt-2 button-bar">
-	<div class="col-12 p-1 m-0">
-		<div style="display: inline-flex">
-			<a class="btn btn-primary btn-sm" href="javascript:transfer()" ><i class="fa fa-cloud-upload-alt"></i> Aktar</a>
-			<a class="btn btn-warning btn-sm ml-1" href="javascript:rollback()" ><i class="fa fa-reply"></i> Geri Al</a>
-			<a class="btn btn-info btn-sm ml-1" href="javascript:setTransferred()" ><i class="fa fa-check"></i> Işeretle</a>
-		</div>
-	</div>
-</div>
 
 <%- partial('../../_common/components/grid2',{
 	fields:[
 	{name:'status', text:'Durum',     type:'lookup', 
 	lookupList:[
+	{text:'-- Tümü --',value:'*'},
 	{text:'Bekleyen',value:''},
-	{text:'Islemde',value:'pending'},
+	{text:'Sadece hatalılar',value:'error'},
 	{text:'Aktarılmış',value:'transferred'}
 	], 
 	textField:'text', valueField:'value', filter:true},
@@ -40,84 +32,6 @@
 })
 %>
 
-<script type="text/javascript">
-	function transfer(){
-		var data={list:[]}
-		$(".checkSingle").each(function() {
-			if(this.checked){
-				data.list.push({_id:JSON.parse(decodeURIComponent(this.value))._id})
-			}
-		})
-		if(data.list.length==0)
-			return alert('secili kayit yok!')
-		if(!confirm(data.list.length + ' adet Z Raporu aktarilacaktir. Onayliyor musunuz?'))
-			return
-
-		$.ajax({
-			url:`/dbapi/pos-device-zreports/transfer?db=${q.db}&sid=${q.sid}`,
-			data:data,
-			type:'POST',
-			success:function(result){
-				if(result.success){
-					window.location.reload()
-				}else{
-					alert(result.error)
-				}
-			}
-		})
-
-	}
-
-	function rollback(){
-		var data={list:[]}
-		$(".checkSingle").each(function() {
-			if(this.checked){
-				data.list.push({_id:JSON.parse(decodeURIComponent(this.value))._id})
-			}
-		})
-		if(data.list.length==0)
-			return alert('secili kayit yok!')
-		if(!confirm(data.list.length + ' adet Z Raporu aktarilmamis olarak geri alinacaktir (Muhasebe yaziliminizi kontrol ediniz). Onayliyor musunuz?'))
-			return
-		$.ajax({
-			url:`/dbapi/pos-device-zreports/rollback?db=${q.db}&sid=${q.sid}`,
-			data:data,
-			type:'POST',
-			success:function(result){
-				if(result.success){
-					window.location.reload()
-				}else{
-					alert(result.error)
-				}
-			}
-		})
-	}
-
-	function setTransferred(){
-		var data={list:[]}
-		$(".checkSingle").each(function() {
-			if(this.checked){
-				data.list.push({_id:JSON.parse(decodeURIComponent(this.value))._id})
-			}
-		})
-		if(data.list.length==0)
-			return alert('secili kayit yok!')
-		if(!confirm(data.list.length + ' adet Z Raporu aktarilmamis olarak isaretlenecektir. Onayliyor musunuz?'))
-			return
-		$.ajax({
-			url:`/dbapi/pos-device-zreports/settransferred?db=${q.db}&sid=${q.sid}`,
-			data:data,
-			type:'POST',
-			success:function(result){
-				if(result.success){
-					window.location.reload()
-				}else{
-					alert(result.error)
-				}
-			}
-		})
-	}
-</script>
 
 
 

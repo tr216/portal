@@ -9,9 +9,9 @@
     editButton:true,
     deleteButton:true,
     customButtons:[
-        {inline:true, href:'javascript:copyConfirm("{_id}","{name}")', title:'Kopyala' ,icon:'far fa-copy'}
+        {inline:true, href:`javascript:copyConfirm('{_id}','{name}')`, title:'Kopyala' ,icon:'far fa-copy'}
     ],
-    deleteUrl:'/dbapi/accounts/{_id}?db=' + db + '&sid=' + sid
+    deleteUrl:`/dbapi/accounts/{_id}?sid=${sid}`
     }) 
 %>
 
@@ -49,7 +49,7 @@
         console.log('temp_id:',temp_id);
         console.log('data:',data);
         $.ajax({
-            url:'/dbapi/accounts/copy?db=<%=db%>&sid=<%=sid%>',
+            url:`/dbapi/accounts/copy?sid=${q.sid}`,
             data:data,
             type:'POST',
             success:function(result){

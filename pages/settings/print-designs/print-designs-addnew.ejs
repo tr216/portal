@@ -20,7 +20,7 @@
             $("select[name='module']").val(urlParams.module);
         }
         $("select[name='module']").on('change',function(){
-            window.location.href='<%=urlPath%>?db=<%=db%>&sid=<%=sid%>&module=' + $("select[name='module']").val();
+            window.location.href='<%=urlPath%>?sid=<%=sid%>&module=' + $("select[name='module']").val();
         });
     })
 </script>

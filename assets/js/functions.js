@@ -17,6 +17,16 @@ Date.prototype.hhmmss = function () {
 	return (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0]); 
 };
 
+Date.prototype.yyyymmddhhmmss = function () {
+	var yyyy = this.getFullYear().toString();
+  var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+  var dd = this.getDate().toString();
+  var HH = this.getHours().toString();
+  var min = this.getMinutes().toString();
+  var sec = this.getSeconds().toString();
+  return yyyy + '-' + (mm[1]?mm:"0" + mm[0]) + '-' + (dd[1]?dd:"0" + dd[0]) + ' ' + (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0]); 
+};
+
 Date.prototype.hhmm = function () {
 	
 	var HH = this.getHours().toString();
@@ -626,7 +636,7 @@ function generatePagination(page,pageCount,url){
 
 
 function btoa2(str){
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+    return btoa(encodeURIComponent2(str).replace(/%([0-9A-F]{2})/g,
         function toSolidBytes(match, p1) {
             return String.fromCharCode('0x' + p1)
     }))
@@ -663,24 +673,11 @@ function htmlDecode(str) {
 	})
 }
 
-
-function download(content, fileName, mimeType) {
-  var a = document.createElement('a');
-  mimeType = mimeType || 'application/octet-stream';
-
-  if (navigator.msSaveBlob) { // IE10
-    navigator.msSaveBlob(new Blob([content], {
-      type: mimeType
-    }), fileName);
-  } else if (URL && 'download' in a) { //html5 A[download]
-    a.href = URL.createObjectURL(new Blob([content], {
-      type: mimeType
-    }));
-    a.setAttribute('download', fileName);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  } else {
-    location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
-  }
+function windowPathToFieldName(path=''){
+	if(path=='')
+		path=window.location.pathname
+	if(path.substr(0,1)=='/')
+		path=path.substr(1)
+	path=path.replaceAll('/','_')
+	return path
 }

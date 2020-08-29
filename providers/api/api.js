@@ -1,12 +1,11 @@
 var request=require('request')
 
 exports.get=(endpoint,req, params, callback)=>{
-	sessionId2Token(req,(err,token)=>{
+	sessionId2Token(req,(err,sessionDoc)=>{
 		if(!err){
-			var url=config.api.url + endpoint;
-			
+			var url=`${config.api.url}${endpoint.replace('{db}',sessionDoc.dbId)}`
 			var headers = {
-			    'token':token
+			    'token':sessionDoc.token
 			}
 			
 			if(params){
@@ -14,9 +13,9 @@ exports.get=(endpoint,req, params, callback)=>{
 					params.sid=undefined;
 					delete params.sid;
 				}
-				if(params.db!=undefined){
-					params.db=undefined;
-					delete params.db;
+				if(params.mid!=undefined){
+					params.mid=undefined;
+					delete params.mid;
 				}
 			}
 			
@@ -58,22 +57,22 @@ exports.get=(endpoint,req, params, callback)=>{
 }
 
 exports.getFile=(endpoint,req, params, callback)=>{
-	sessionId2Token(req,(err,token)=>{
+	sessionId2Token(req,(err,sessionDoc)=>{
 		if(!err){
-			var url=config.api.url + endpoint;
+			var url=`${config.api.url}${endpoint.replace('{db}',sessionDoc.dbId)}`
 			
 			var headers = {
-			    'token':token
+			    'token':sessionDoc.token
 			}
 
 			if(params){
 				if(params.sid!=undefined){
-					params.sid=undefined;
-					delete params.sid;
+					params.sid=undefined
+					delete params.sid
 				}
-				if(params.db!=undefined){
-					params.db=undefined;
-					delete params.db;
+				if(params.mid!=undefined){
+					params.mid=undefined
+					delete params.mid
 				}
 			}
 			
@@ -101,12 +100,12 @@ exports.getFile=(endpoint,req, params, callback)=>{
 var http = require('http')
 
 exports.downloadFile=(endpoint,req, res, params, callback)=>{
-	sessionId2Token(req,(err,token)=>{
+	sessionId2Token(req,(err,sessionDoc)=>{
 		if(!err){
-			var url=config.api.url + endpoint + '?token=' + token;
+			var url=`${config.api.url}${endpoint.replace('{db}',sessionDoc.dbId)}?token=${sessionDoc.token}`
 			if(params){
 				for(var key in params){
-					url = url + '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
+					url = url + '&' + encodeURIComponent2(key) + '=' + encodeURIComponent2(params[key])
 				}
 			}
 			var tmpFile=path.join(os.tmpdir(),`${uuid.v4()}.portal`)
@@ -148,13 +147,13 @@ exports.downloadFile=(endpoint,req, res, params, callback)=>{
 }
 
 exports.post=(endpoint,req, jsonData, callback)=>{
-	sessionId2Token(req,(err,token)=>{
+	sessionId2Token(req,(err,sessionDoc)=>{
 		if(!err){
-			var url=config.api.url  + endpoint;
-			
+			var url=`${config.api.url}${endpoint.replace('{db}',sessionDoc.dbId)}`
+
 			var headers = {
 			    'Content-Type':'application/json; charset=utf-8',
-			    'token':token
+			    'token':sessionDoc.token
 			}
 			
 			var options = {
@@ -200,13 +199,13 @@ exports.post=(endpoint,req, jsonData, callback)=>{
 }
 
 exports.put=(endpoint,req, jsonData, callback)=>{
-	sessionId2Token(req,(err,token)=>{
+	sessionId2Token(req,(err,sessionDoc)=>{
 		if(!err){
-			var url=config.api.url  + endpoint;
-			
+			var url=`${config.api.url}${endpoint.replace('{db}',sessionDoc.dbId)}`
+
 			var headers = {
 			    'Content-Type':'application/json; charset=utf-8',
-			    'token':token
+			    'token':sessionDoc.token
 			}
 
 			var options = {
@@ -224,20 +223,19 @@ exports.put=(endpoint,req, jsonData, callback)=>{
 			    }
 			})
 		}else{
-			console.log('err:',err)
 			callback(err)
 		}
 	})
 }
 
 exports.delete=(endpoint,req, callback)=>{
-	sessionId2Token(req,(err,token)=>{
+	sessionId2Token(req,(err,sessionDoc)=>{
 		if(!err){
-			var url=config.api.url  + endpoint;
-			
+			var url=`${config.api.url}${endpoint.replace('{db}',sessionDoc.dbId)}`
+
 			var headers = {
 			    'Content-Type':'application/json; charset=utf-8',
-			    'token':token
+			    'token':sessionDoc.token
 			}
 			
 			var options = {
@@ -257,7 +255,6 @@ exports.delete=(endpoint,req, callback)=>{
 			        	}else{
 			        		resp=body
 			        	}
-						console.log(`api.js delete typeof resp:`,typeof resp)
 						if(resp.success){
 							callback(null,resp)
 						}else{
@@ -303,8 +300,9 @@ function sessionId2Token(req,cb){
 				
 				// if(IP!=doc.ip) return cb({code:'WRONT_IP',message:'Yanlis IP'})
 				doc.lastOnline=new Date()
+				doc.mId=req.query.mid || ''
 				doc.save((err,doc2)=>{
-					cb(null,doc.token)
+					cb(null,doc2)
 				})
 				
 			}else{

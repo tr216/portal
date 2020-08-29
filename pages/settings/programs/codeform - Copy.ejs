@@ -196,10 +196,10 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		}
 		var type='POST';
 		var url='';
-		url=`/dbapi/programs?db=${q.db}&sid=${q.sid}`
+		url=`/dbapi/programs?sid=${q.sid}`
 		if(doc._id!=undefined){
 			type='PUT';
-			url=`/dbapi/programs/${doc._id}?db=${q.db}&sid=${q.sid}`
+			url=`/dbapi/programs/${doc._id}?sid=${q.sid}`
 		}
 
 		$.ajax({

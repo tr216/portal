@@ -33,6 +33,7 @@ global.rootDir=__dirname
 
 global.mrutil = require('./lib/mrutil.js')
 global.ttext = require('./lib/language.js')
+global.sessionHelper = require('./lib/session.helper.js')
 
 global.api = require('./providers/api/api.js')
 

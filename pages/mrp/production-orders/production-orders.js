@@ -14,9 +14,7 @@ module.exports = function(req,res,callback){
 	}
 	data.form.ioType=1;
 	
-	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
-	}
+
 	switch(req.params.func || ''){
 		case 'addnew':
 			addnew(req,res,data,callback);
@@ -51,7 +49,7 @@ function getList(req,res,data,callback){
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		
-		api.get(`/${req.query.db}/production-orders`,req,data.filter,(err,resp)=>{
+		api.get(`/{db}/production-orders`,req,data.filter,(err,resp)=>{
 			if(!err){
 				
 				var docs=[];
@@ -75,17 +73,17 @@ function initLookUpLists(req,res,data,cb){
 	data.stationList=[];
 	data.stepList=[];
 	data.printDesignList=[];
-	api.get(`/${req.query.db}/mrp-stations`,req,{passive:false},(err,resp)=>{
+	api.get(`/{db}/mrp-stations`,req,{passive:false},(err,resp)=>{
 		if(!err){
 			data.stationList=resp.data.docs;
 			data.stationList.unshift({_id:'',name:'-Tümü-'})
 		}
-		api.get(`/${req.query.db}/mrp-process-steps`,req,{passive:false},(err,resp)=>{
+		api.get(`/{db}/mrp-process-steps`,req,{passive:false},(err,resp)=>{
 			if(!err){
 				data.stepList=resp.data.docs;
 				data.stepList.unshift({_id:'',name:'-Tümü-'})
 			}
-			api.get(`/${req.query.db}/print-designs`,req,{passive:false,module:'mrp-production-order'},(err,resp)=>{
+			api.get(`/{db}/print-designs`,req,{passive:false,module:'mrp-production-order'},(err,resp)=>{
 				if(!err){
 					data.printDesignList=resp.data.docs;
 				}
@@ -102,9 +100,9 @@ function addnew(req,res,data,callback){
 		if(req.method=='POST' || req.method=='PUT'){
 			data.form=Object.assign(data.form,req.body);
 			
-			api.post(`/${req.query.db}/production-orders`,req,data.form,(err,resp)=>{
+			api.post(`/{db}/production-orders`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/mrp/production-orders?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+					res.redirect(`/mrp/production-orders?sid=${req.query.sid}&mid=${req.query.mid}`)
 					return;
 				}else{
 					data['message']=err.message;
@@ -137,7 +135,7 @@ function formaSiparisEkle(req,data,callback){
 
 	function siparisiBul(cb){
 		if(index>=orderLineList.length) return cb(null);
-		api.get(`/${req.query.db}/production-orders/salesOrders`,req,{orderLineId:orderLineList[index]},(err,resp)=>{
+		api.get(`/{db}/production-orders/salesOrders`,req,{orderLineId:orderLineList[index]},(err,resp)=>{
 			if(!err){
 				
 				resp.data.docs.forEach((e)=>{
@@ -188,9 +186,9 @@ function edit(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
 		if(req.method=='POST' || req.method=='PUT'){
 			data.form=Object.assign(data.form,req.body);
-			api.put(`/${req.query.db}/production-orders/${_id}`,req,data.form,(err,resp)=>{
+			api.put(`/{db}/production-orders/${_id}`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/mrp/production-orders?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+					res.redirect(`/mrp/production-orders?sid=${req.query.sid}&mid=${req.query.mid}`)
 					return;
 				}else{
 					data['message']=err.message;
@@ -199,7 +197,7 @@ function edit(req,res,data,callback){
 			});
 		}else{
 			
-			api.get(`/${req.query.db}/production-orders/${_id}`,req,null,(err,resp)=>{
+			api.get(`/{db}/production-orders/${_id}`,req,null,(err,resp)=>{
 				if(!err){
 					data.form=Object.assign(data.form,resp.data);
 					callback(null,data);
@@ -214,9 +212,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete(`/${req.query.db}/production-orders/${_id}`,req,(err,resp)=>{
+	api.delete(`/{db}/production-orders/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect(`/mrp/production-orders?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+			res.redirect(`/mrp/production-orders?sid=${req.query.sid}&mid=${req.query.mid}`)
 		}else{
 			data['message']=err.message;
 			callback(null,data);

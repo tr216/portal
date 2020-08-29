@@ -41,8 +41,6 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark  btn-form-he
 		headerButtons.innerHTML='<%- headerButtons %>'
 	}
 	var ioType=<%=ioType%>
-	var db='<%=db%>'
-	var sid='<%=sid%>'
 	var _id='<%=(form._id || '')%>'
 	var doc
 	var docFormType='<%=docFormType%>'
@@ -79,18 +77,6 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark  btn-form-he
 </script>
 
 <form action="" method="POST" role="form" name="form1" id="form1">
-	<% if(typeof message!='undefined'){ 
-		if(message!=''){ %>
-		<div class="row">
-			<div class="col-lg-12 col-md-12">
-				<div class="alert alert-danger" role="alert">
-					<%=message %>
-				</div>
-			</div>
-		</div>
-		<% } 
-	} %>
-	
 	<div class="card">
 		<div class="card-header">
 			Genel Bilgiler
@@ -186,7 +172,20 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark  btn-form-he
 
 					</div>
 				</div>
-				<% } %>
+				<% }else{%>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Sürücü Adı</label>
+					<input type="text" class="form-control" name="shipment[shipmentStage][0][driverPerson][0][firstName][value]" placeholder="" autocomplete="off"  value="<%- `${form.shipment.shipmentStage[0].driverPerson[0].firstName.value || ''}`%>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Sürücü Soyadı</label>
+					<input type="text" class="form-control" name="shipment[shipmentStage][0][driverPerson][0][familyName][value]" placeholder="" autocomplete="off"  value="<%- `${form.shipment.shipmentStage[0].driverPerson[0].familyName.value || ''}`%>">
+				</div>
+				<div class="form-group col-md-2">
+					<label for="" class="m-0">Araç Plakası</label>
+					<input type="text" class="form-control" name="shipment[shipmentStage][0][transportMeans][roadTransport][licensePlateId][value]" placeholder="" autocomplete="off"  value="<%- `${form.shipment.shipmentStage[0].transportMeans.roadTransport.licensePlateId.value || ''}`%>">
+				</div>
+				<%}%>
 				<div class="form-group col-md-3">
 					<label for="" class="m-0">Yerel <%=title%> No</label>
 					<input type="text" class="form-control" name="localDocumentId" placeholder="localDocumentId" autocomplete="off"  value="<%=form.localDocumentId%>">
@@ -203,7 +202,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark  btn-form-he
 	<div class="card mt-2">
 		<div class="card-header collapsible">
 			Cari Bilgiler
-			<div class="float-right"><a href="/finance/<% if(form.ioType==0){%>customers<%}else{%>vendors<%}%>?db=<%=db%>&sid=<%=sid%>" target="_blank" class="btn btn-primary btn-sm" title="<% if(form.ioType==0){%>Müşteri listesini aç<%}else{%>Tedarikçi listesini aç<%}%>"><i class="fas fa-users"></i></a></div>
+			<div class="float-right"><a href="/finance/<% if(form.ioType==0){%>customers<%}else{%>vendors<%}%>?sid=<%=sid%>" target="_blank" class="btn btn-primary btn-sm" title="<% if(form.ioType==0){%>Müşteri listesini aç<%}else{%>Tedarikçi listesini aç<%}%>"><i class="fas fa-users"></i></a></div>
 		</div>
 		<div class="card-body p-1">
 			<div class="row">

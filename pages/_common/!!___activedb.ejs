@@ -17,10 +17,11 @@
   <script type="text/javascript">
     $(document).ready(function(){
       <% if(typeof databases!='undefined') { %>
-          var databases=JSON.parse(decodeURIComponent("<%-  encodeURIComponent(JSON.stringify(databases)) %>"));
+          var databases=JSON.parse(decodeURIComponent("<%-  encodeURIComponent2(JSON.stringify(databases)) %>"));
       <% }else{ %>
           var databases=[];
       <% } %>
+      console.log(`databases:`,databases)
       localStorage.setItem("databases",JSON.stringify(databases));
 
       if(databases.some(value=>{return value._id==localStorage.getItem('activeDb')})==false){
@@ -39,8 +40,14 @@
           localStorage.removeItem('activeDbModules');
         }
       }else{
-      	console.log('buraya geldi')
-      	var dd=databases.some(value=>{return value._id==localStorage.getItem('activeDb')?value:false})
+      	var dd
+      	databases.forEach((e)=>{
+      		if(e._id==localStorage.getItem('activeDb')){
+      			dd=e
+      			return
+      		}
+      	})
+      	
       	if(dd){
       		if(dd.owner!=undefined){
 	            if(dd.owner.modules!=undefined){
@@ -48,8 +55,9 @@
 	            }
 	        }
       	}
+
       }
-      window.location.href=window.location.origin + '/mobile/general/dashboard?db=' + (localStorage.getItem('activeDb') || '') + '&sid=<%=sid%>';
+      // window.location.href=window.location.origin + '/general/dashboard?db=' + (localStorage.getItem('activeDb') || '') + '&sid=<%=sid%>';
 
     });
   </script>

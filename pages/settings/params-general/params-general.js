@@ -10,10 +10,6 @@ module.exports = function(req,res,callback){
 		list:[]
 	}
 
-	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'})
-	}
-
 	switch(req.method){
 		case 'PUT':
 		case 'POST':
@@ -32,7 +28,7 @@ const bosVeri=`{
 }`
 function getSettings(req,res,data,callback){
 	
-	api.get(`/${req.query.db}/settings`,req,data.filter,(err,resp)=>{
+	api.get(`/{db}/settings`,req,data.filter,(err,resp)=>{
 		if(!err){
 			data.form.default=resp.data.default
 			if(JSON.stringify(data.form.user)!='{}'){
@@ -53,7 +49,7 @@ function saveSettings(req,res,data,callback){
 	var obj={}
 	try{
 		obj=JSON.parse(data.form.user)
-		api.post(`/${req.query.db}/settings`,req,obj,(err,resp)=>{
+		api.post(`/{db}/settings`,req,obj,(err,resp)=>{
 			if(!err){
 				data.form.default=resp.data.default
 				if(JSON.stringify(data.form.user)!='{}'){

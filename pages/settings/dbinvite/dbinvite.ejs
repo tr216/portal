@@ -10,7 +10,7 @@
             </div>
             <div class="col-md-2 text-right">
                 <div class="form-group py-3">
-                    <a href="/settings/dbinvite/addnew?db=<%=db%>&sid=<%=sid%>" class="btn btn-primary" title="Yeni ekle"><i class="fas fa-plus"></i></a>
+                    <a href="/settings/dbinvite/addnew?sid=<%=sid%>" class="btn btn-primary" title="Yeni ekle"><i class="fas fa-plus"></i></a>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
             if(!confirm(username + ' kullanicisini silmek istiyor musunuz?')) return;
 
             $.ajax({
-                url: '/api/dbinvite/<%=db%>/' + _id + '?db=<%=db%>&sid=<%=sid%>',
+                url: '/api/dbinvite/<%=db%>/' + _id + '?sid=${q.sid}`,
                 type:'DELETE',
                 success:function(result){
                     if(result.success){

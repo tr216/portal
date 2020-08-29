@@ -81,7 +81,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 			<div class="card-body p-2">
 				<% printDesignList.forEach((e)=>{ %>
 				<div class="float-left m-2">
-					<a class="btn invoice-satis p-2 bold" href="javascript:popupCenter('/general/print?path=/production-orders/<%=form._id%>&db=<%=db%>&sid=<%=sid%>&designId=<%=e._id%>','Yazd%C4%B1r','900','600');"><i class="fas fa-print"></i> <%=e.name%></a>
+					<a class="btn invoice-satis p-2 bold" href="javascript:popupCenter('/general/print?path=/production-orders/<%=form._id%>&sid=<%=sid%>&designId=<%=e._id%>','Yazd%C4%B1r','900','600');"><i class="fas fa-print"></i> <%=e.name%></a>
 				</div>
 				<% }) %>
 			</div>
@@ -325,7 +325,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 					<div class="card-header p-1">
 						<div class="float-left bold text-primary">Üretime Çıkış Fişleri</div>
 						<div class="float-right bold text-primary">
-							<a class="btn btn-sm btn-primary" href="/inventory/inventory-fiches/addnew?db=<%=db%>&sid=<%=sid%>&docTypeCode=URETIMECIKIS&productionOrderId=<%=form._id%>" title="Uretim recetesine gore hammadde ve malzeme cikisi"><i class="fas fa-boxes"></i> Yeni Üretime Çıkış Fişi</a>
+							<a class="btn btn-sm btn-primary" href="/inventory/inventory-fiches/addnew?sid=<%=sid%>&docTypeCode=URETIMECIKIS&productionOrderId=<%=form._id%>" title="Uretim recetesine gore hammadde ve malzeme cikisi"><i class="fas fa-boxes"></i> Yeni Üretime Çıkış Fişi</a>
 						</div>
 					</div>
 					<div class="card-body p-1">
@@ -378,7 +378,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 					<div class="card-header p-1">
 						<div class="float-left bold text-primary">Üretimden Giriş Fişleri</div>
 						<div class="float-right bold text-primary">
-							<a class="btn btn-sm btn-primary" href="/inventory/inventory-fiches/addnew?db=<%=db%>&sid=<%=sid%>&docTypeCode=URETIMDENGIRIS&productionOrderId=<%=form._id%>" title="Üretilmiş mamul/yarı mamullerin stoğa alınması"><i class="fas fa-box"></i> Yeni Üretimden Giriş Fişi</a>
+							<a class="btn btn-sm btn-primary" href="/inventory/inventory-fiches/addnew?sid=<%=sid%>&docTypeCode=URETIMDENGIRIS&productionOrderId=<%=form._id%>" title="Üretilmiş mamul/yarı mamullerin stoğa alınması"><i class="fas fa-box"></i> Yeni Üretimden Giriş Fişi</a>
 						</div>
 					</div>
 					<div class="card-body p-1">
@@ -449,7 +449,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 
 		var q=getAllUrlParams();
 		$.ajax({
-			url:'/dbapi/production-orders/salesOrders?db=' + q.db + '&sid=' + q.sid,
+			url:`/dbapi/production-orders/salesOrders?sid=${q.sid}`,
 			type:'GET',
 			dataType: 'json',
 			success: function(result) {
@@ -616,7 +616,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 
 		if((doc.item || '')=='') return;
 		$.ajax({
-			url:'/dbapi/items/' + doc.item + '?&db=' + q.db + '&sid=' + q.sid,
+			url:`/dbapi/items/${doc.item}?sid=${q.sid}`,
 			type:'GET',
 			dataType: 'json',
 			success: function(result) {
@@ -625,7 +625,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 					load_packingTypes();
 					$('#production-item-name').val(result.data.name.value);
 					$.ajax({
-						url:'/dbapi/recipes?item=' + doc.item + '&db=' + q.db + '&sid=' + q.sid,
+						url:`/dbapi/recipes?item=${doc.item}&sid=${q.sid}`,
 						type:'GET',
 						dataType: 'json',
 						success: function(result) {
@@ -1203,13 +1203,13 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 
 
       function receteUygula(){
-      	doc.sourceRecipe=$('#main-recipe').val() || '';
+      	doc.sourceRecipe=$('#main-recipe').val() || ''
 
       	if((doc.item || '')=='') return alert('Urun secilmemis.');
       	if((doc.sourceRecipe || '')=='') return alert('Recete secilmemis.');
       	if(doc.plannedQuantity<=0) return alert('Planlanan miktar sifir dan buyuk olmalidir.');
       	$.ajax({
-      		url:'/dbapi/recipes/' + doc.sourceRecipe + '?db=' + q.db + '&sid=' + q.sid,
+      		url:`/dbapi/recipes/${doc.sourceRecipe}?sid=${q.sid}`,
       		type:'GET',
       		dataType: 'json',
       		success: function(result) {
@@ -1294,10 +1294,10 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
       	}
 
       	if(($('#choosePackingOption').val() || '')!=''){
-      			doc.packingOption=JSON.parse(decodeURIComponent($('#choosePackingOption').val()));
-      			doc.packingOption.quantityInPacking=Number($('#quantityInPacking').val());
-      			doc.packingOption.palletRowCount=Number($('#palletRowCount').val());
-      			doc.packingOption.packingCountInRow=Number($('#packingCountInRow').val());
+      		doc.packingOption=JSON.parse(decodeURIComponent($('#choosePackingOption').val()));
+      		doc.packingOption.quantityInPacking=Number($('#quantityInPacking').val());
+      		doc.packingOption.palletRowCount=Number($('#palletRowCount').val());
+      		doc.packingOption.packingCountInRow=Number($('#packingCountInRow').val());
       	}
 
 
@@ -1318,7 +1318,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
       function approve(){
       	if(!confirm("Üretim emrini onaylamak istiyor musunuz?")) return;
       	$.ajax({
-      		url:'/dbapi/production-orders/approve/' + doc._id + '?db=' + q.db + '&sid=' + q.sid,
+      		url:`/dbapi/production-orders/approve/${doc._id}?sid=${q.sid}`,
       		data:{},
       		type:'POST',
       		success:function(result){
@@ -1335,7 +1335,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
       function decline(){
       	if(!confirm("Üretim emri reddetmek istiyor musunuz?")) return;
       	$.ajax({
-      		url:'/dbapi/production-orders/decline/' + doc._id + '?db=' + q.db + '&sid=' + q.sid,
+      		url:`/dbapi/production-orders/decline/${doc._id}?sid=${q.sid}`,
       		data:{},
       		type:'POST',
       		success:function(result){
@@ -1350,9 +1350,10 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
       }
 
       function start(){
-      	if(!confirm("Üretim emrini baslatmak istiyor musunuz?")) return;
+      	if(!confirm("Üretim emrini baslatmak istiyor musunuz?"))
+      		return
       	$.ajax({
-      		url:'/dbapi/production-orders/start/' + doc._id + '?db=' + q.db + '&sid=' + q.sid,
+      		url:`/dbapi/production-orders/start/${doc._id}?sid=${q.sid}`,
       		data:{},
       		type:'POST',
       		success:function(result){
@@ -1367,9 +1368,10 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
       }
 
       function makeDraftBack(){
-      	if(!confirm("Üretim emrinin taslak haline döndürülmesini istiyor musunuz?")) return;
+      	if(!confirm("Üretim emrinin taslak haline döndürülmesini istiyor musunuz?"))
+      		return
       	$.ajax({
-      		url:'/dbapi/production-orders/setDraft/' + doc._id + '?db=' + q.db + '&sid=' + q.sid,
+      		url:`/dbapi/production-orders/setDraft/${doc._id}?sid=${q.sid}`,
       		data:{},
       		type:'POST',
       		success:function(result){
@@ -1384,9 +1386,10 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
       }
 
       function complete(){
-      	if(!confirm("Üretim emri tamamlanacaktır. Üretilenler stoğa eklenecektir. Onaylıyor musunuz?")) return;
+      	if(!confirm("Üretim emri tamamlanacaktır. Üretilenler stoğa eklenecektir. Onaylıyor musunuz?"))
+      		return
       	$.ajax({
-      		url:'/dbapi/production-orders/complete/' + doc._id + '?db=' + q.db + '&sid=' + q.sid,
+      		url:`/dbapi/production-orders/complete/${doc._id}?sid=${q.sid}`,
       		data:{},
       		type:'POST',
       		success:function(result){
@@ -1428,7 +1431,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
       	$('#production-item-name').autocomplete({
       		source:function(request,response){
       			$.ajax({
-      				url:'/dbapi/items?itemType=product&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+      				url:`/dbapi/items?sid=${q.sid}&itemType=product&name=${encodeURIComponent2(request.term)}`,
       				type:'GET',
       				dataType: 'json',
       				success: function(result) {

@@ -5,10 +5,6 @@ module.exports = function(req,res,callback){
         filter:{}
     }
     
-    if(!req.query.db){
-        return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
-    }
-
     var apiPath=req.query.path || '';
 
     var designId=req.query.designId || '';

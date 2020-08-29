@@ -31,9 +31,6 @@ module.exports = function(req,res,callback){
 		activeTab:1
 	}
 
-	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'})
-	}
 	switch(req.params.func || ''){
 		case 'code':
 		code(req,res,data,callback)
@@ -59,7 +56,7 @@ function load(req,res,data,callback){
 	
 	
 
-	api.get(`/${req.query.db}/local-connectors/${req.params.id}` ,req,{fileId:data.form.fileId},(err,resp)=>{
+	api.get(`/{db}/local-connectors/${req.params.id}` ,req,{fileId:data.form.fileId},(err,resp)=>{
 		if(!err){
 			data.form=Object.assign(data.form,resp.data)
 			eventLog('startFile=',data.form.startFile)
@@ -120,9 +117,9 @@ function code(req,res,data,callback){
 			}
 			
 			eventLog('fileInfo.type:', fileInfo.type)
-			api.post(`/${req.query.db}/local-connectors/${_id}/file`,req,fileInfo,(err,resp)=>{
+			api.post(`/{db}/local-connectors/${_id}/file`,req,fileInfo,(err,resp)=>{
 				if(!err){
-					res.redirect(`/settings/local-connectors/code/${_id}?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+					res.redirect(`/settings/local-connectors/code/${_id}?sid=${req.query.sid}&mid=${req.query.mid}`)
 					//load(req,res,data,callback)
 				}else{
 					if(req.method=='POST' || req.method=='PUT'){
@@ -140,9 +137,9 @@ function code(req,res,data,callback){
 
 		if(req.query.deleteFile=='true' && req.query.fileId!=undefined){
 			
-			api.delete(`/${req.query.db}/local-connectors/${_id}/file?fileId=${req.query.fileId}`,req,(err,resp)=>{
+			api.delete(`/{db}/local-connectors/${_id}/file?fileId=${req.query.fileId}`,req,(err,resp)=>{
 				if(!err){
-					res.redirect(`/settings/local-connectors/code/${_id}?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+					res.redirect(`/settings/local-connectors/code/${_id}?sid=${req.query.sid}&mid=${req.query.mid}`)
 					//load(req,res,data,callback)
 				}else{
 					
@@ -151,9 +148,9 @@ function code(req,res,data,callback){
 				}
 			})
 		}else if(req.query.setStart=='true' && req.query.fileId!=undefined){
-			api.put(`/${req.query.db}/local-connectors/${_id}/setStart?fileId=${req.query.fileId}`,req,{},(err,resp)=>{
+			api.put(`/{db}/local-connectors/${_id}/setStart?fileId=${req.query.fileId}`,req,{},(err,resp)=>{
 				if(!err){
-					res.redirect(`/settings/local-connectors/code/${_id}?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+					res.redirect(`/settings/local-connectors/code/${_id}?sid=${req.query.sid}&mid=${req.query.mid}`)
 					//load(req,res,data,callback)
 				}else{
 					
@@ -175,7 +172,7 @@ function test(req,res,data,callback){
 		
 		load(req,res,data,(err,data)=>{
 			if(!err){
-				api.post(`/${req.query.db}/local-connectors/test`,req,data.form,(err,resp)=>{
+				api.post(`/{db}/local-connectors/test`,req,data.form,(err,resp)=>{
 					if(!err){
 						data['testResult']=resp
 						callback(null,data)
@@ -197,7 +194,7 @@ function runCode(req,res,data,callback){
 	var _id=req.params.id || ''
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form=Object.assign(data.form,req.body)
-		api.post(`/${req.query.db}/local-connectors/${_id}/run`,req,data.form,(err,resp)=>{
+		api.post(`/{db}/local-connectors/${_id}/run`,req,data.form,(err,resp)=>{
 			if(!err){
 				data.form['resultConsole']=JSON.stringify(resp,null,2)
 				load(req,res,data,callback)

@@ -145,7 +145,7 @@
 		
 
 		$.ajax({
-			url:`/dbapi/programs/render?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/programs/render?sid=${q.sid}`,
 			data:doc,
 			type:'POST',
 			success:function(result){
@@ -190,7 +190,7 @@
 		doc.crontab=$('input[name="crontab"]').val()
 
 		$.ajax({
-			url:`/dbapi/programs/run?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/programs/run?sid=${q.sid}`,
 			data:doc,
 			type:'POST',
 			dataType: "json",
@@ -255,7 +255,7 @@
 		console.log(`collection:`,$('#dataCollCollection').val())
 		console.log(`collection filter:`,$('#dataCollFilter').val())
 		$.ajax({
-			url:`/dbapi/collections/${$('#dataCollCollection').val()}?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/collections/${$('#dataCollCollection').val()}?sid=${q.sid}`,
 			type:'GET',
 			success:function(result){
 				if(result.success){

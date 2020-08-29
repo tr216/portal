@@ -15,11 +15,11 @@
 	<div class="row">
 		<ul class="nav flex-column col-md-2">
 		  <li class="nav-item">
-		    	<a class="nav-link <% if(form.fileId=='yenidosya'){%>active<%}%>" href="<%=urlPath%>?newFile=true&db=<%=db%>&sid=<%=sid%>"><i class="fa fa-plus"></i> Yeni dosya</a>
+		    	<a class="nav-link <% if(form.fileId=='yenidosya'){%>active<%}%>" href="<%=urlPath%>?newFile=true&sid=<%=sid%>"><i class="fa fa-plus"></i> Yeni dosya</a>
 		  </li>
 		  <% form.files.forEach((f,index)=>{ %>
 			<li class="nav-item">
-				<a class="nav-link <% if(form.fileId==f._id){%>active<%}%>" href="<%=urlPath%>?fileId=<%=f._id%>&db=<%=db%>&sid=<%=sid%>"><% if(f.isStart){%><b><i class="fa fa-check"></i> <%}%><i class="fa fa-<%- (typeof f.icon!='undefined')?f.icon:'file'%>"></i> <%=f.fileName%><% if(f.isStart){%></b><%}%></a>
+				<a class="nav-link <% if(form.fileId==f._id){%>active<%}%>" href="<%=urlPath%>?fileId=<%=f._id%>&sid=<%=sid%>"><% if(f.isStart){%><b><i class="fa fa-check"></i> <%}%><i class="fa fa-<%- (typeof f.icon!='undefined')?f.icon:'file'%>"></i> <%=f.fileName%><% if(f.isStart){%></b><%}%></a>
 			</li>
 			<%});%>
 		</ul>
@@ -53,7 +53,7 @@
 				<div class="row mt-2">
 					<div class="col-md-6">
 						<button type="submit" form="<%=formName%>" class="btn btn-primary" title="Kaydet" name="btnSaveFile" value="true"><i class="fa fa-save"></i> Kaydet</button>	
-						<a href="<%=urlPath%>?db=<%=db%>&sid=<%=sid%>" class="btn btn-dark"><i class="fa fa-reply"></i> Vazgeç</a>
+						<a href="<%=urlPath%>?sid=<%=sid%>" class="btn btn-dark"><i class="fa fa-reply"></i> Vazgeç</a>
 					</div>
 					<div class="col-md-6 text-right">
 						<input type="hidden" name="fileDataBase64" id="fileDataBase64" value="<%=form.fileDataBase64%>">
@@ -63,7 +63,7 @@
 			    		<input type="file" name="fileToUpload" id="fileToUpload" style="visibility:hidden;" accept="<%=fileUploadAcceptList%>" >
 			    		<% } else{  %>
 			    		
-			    		<a href="<%=urlPath%>?setStart=true&fileId=<%=form.fileId%>&db=<%=db%>&sid=<%=sid%>" class="btn btn-primary" title="Baslangic olarak ayarla" onclick="return confirmSetStart();"><i class="fa fa-check"></i> Baslangic dosyasi olarak ayarla</a>
+			    		<a href="<%=urlPath%>?setStart=true&fileId=<%=form.fileId%>&sid=<%=sid%>" class="btn btn-primary" title="Baslangic olarak ayarla" onclick="return confirmSetStart();"><i class="fa fa-check"></i> Baslangic dosyasi olarak ayarla</a>
 			    		<% } %>
 					</div>
 					
@@ -77,7 +77,7 @@
 				</div>
 				<% if(!newFile){ %>
 				<div class="form-group text-right">
-					<a href="<%=urlPath%>?deleteFile=true&fileId=<%=form.fileId%>&db=<%=db%>&sid=<%=sid%>" class="btn btn-danger" title="Dosyayi sil" onclick="return confirmDelete();"><i class="fa fa-trash"></i></a>
+					<a href="<%=urlPath%>?deleteFile=true&fileId=<%=form.fileId%>&sid=<%=sid%>" class="btn btn-danger" title="Dosyayi sil" onclick="return confirmDelete();"><i class="fa fa-trash"></i></a>
 				</div>
 				<% } %>
 			</div>

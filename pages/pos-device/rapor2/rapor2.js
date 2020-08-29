@@ -10,9 +10,7 @@ module.exports = function(req,res,callback){
 
 	}
 
-	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
-	}
+
 	
 
 	switch(req.params.func || ''){
@@ -29,7 +27,7 @@ module.exports = function(req,res,callback){
 
 function getList(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		api.get(`/${req.query.db}/pos-device-zreports/rapor2`,req,data.filter,(err,resp)=>{
+		api.get(`/{db}/pos-device-zreports/rapor2`,req,data.filter,(err,resp)=>{
 			if(!err){
 				data=mrutil.setGridData(data,resp);
 			}
@@ -40,7 +38,7 @@ function getList(req,res,data,callback){
 
 function initLookUpLists(req,res,data,cb){
 	data.locationList=[];
-	api.get(`/${req.query.db}/locations`,req,{},(err,resp)=>{
+	api.get(`/{db}/locations`,req,{},(err,resp)=>{
 		if(!err){
 			data.locationList=resp.data.docs;
 			data.locationList.unshift({_id:'',locationName:'Tümü'});

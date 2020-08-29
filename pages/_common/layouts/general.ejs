@@ -1,210 +1,248 @@
 <% layout('plain') %>
-        <nav class="sb-topnav navbar navbar-expand navbar-light bg-white border-bottom">
-            <a href="/general/dashboard?db=<%- db %>&sid=<%- sid %>" class="navbar-brand"><img src="<%- assetVersion('/img/logo.png') %>" style="max-width: 100%; max-height: 40px"></a>
-            <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
-            <!-- Navbar Search-->
-            <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="ara..." aria-label="Search" aria-describedby="basic-addon2" />
-                    <div class="input-group-append">
-                        <button class="btn btn-primary btn-sm" type="button"><i class="fas fa-search"></i></button>
-                    </div>
-                </div>
-            </form>
-            <!-- Navbar-->
-            <ul class="navbar-nav ml-auto ml-md-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="databasesDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<% if(db==''){ %>Veri ambari secilmemis<%}%>">
-                        <i class="fas fa-database fa-fw"></i>
-                    </a>
-                        
-                    
-                    <div id="dbList" class="dropdown-menu dropdown-menu-right" aria-labelledby="databasesDropdown">
-                        <div class="dropdown-header">Veri Ambarlari</div>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Kullanıcı işlemleri"><i class="fas fa-user fa-fw"></i></a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="/general/me?db=<%- db %>&sid=<%- sid %>">Profilim</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="javascript:logout();">Çıkış</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-        <div id="layoutSidenav">
-            <div id="layoutSidenav_nav" class=" border-right">
-                <%- partial('side-menu') %>
-            </div>
-            <div id="layoutSidenav_content">
-                <main id="main-container" style="display: none;">
-                	<div class="mt-2 mb-1 px-3" style="height: 36px">
-                    	<h1 class="float-left m-0 page-title text-secondary" style="font-size:16pt">
-                    		<% if(breadCrumbs.length>0){ %>
-                    			<!-- <i class="<%- breadCrumbs[breadCrumbs.length-1].icon %> text-primary"></i>  -->
-                    			<i class="<%- breadCrumbs[breadCrumbs.length-1].icon %>"></i> 
-                    			<% breadCrumbs.forEach((e,index)=>{ %>
-                    				<% if(index<breadCrumbs.length-1){ %>
-                    					<%- e.text %> \
-                    				<% } else { %>
-                    					<% if(funcTitle!=''){ %>
-                    						<%- e.text %>
-                    					<% } else { %>
-                    					<span class="font-weight-bold text-primary"><%- e.text %></span>
-                    					<% } %>
-                    				<% } %>
-                    			<% }) %>
-                    		<% }else{ %>
-	                    		<% if(typeof icon!='undefined'){%><i class="<%=icon%>"></i> 
-	                    		<%}%><%=title%>
-                    		<% } %>
-                    		<% if(funcTitle!=''){%> - <span class="font-weight-bold text-primary"><%=funcTitle%></span><% } %>
-                    	</h1>
-                    	<div id="headerButtons" class="float-right" style="min-height: 26px;"></div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="container-fluid mb-3">
-                        <%- formError(message) %>
-                        <%- formSuccess(successMessage) %>
-                        <%- body %>
-                        
-                    </div>
-                </main>
-                    
-                <%- partial('footer') %>
-            </div>
+<nav class="sb-topnav navbar navbar-expand navbar-light bg-white border-bottom">
+	<a href="/general/dashboard?db=<%- db %>&sid=<%- sid %>" class="navbar-brand"><img src="<%- assetVersion('/img/logo.png') %>" style="max-width: 100%; max-height: 40px"></a>
+	<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+	<!-- Navbar Search-->
+	<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+		<div class="input-group">
+			<input class="form-control" type="text" placeholder="ara..." aria-label="Search" aria-describedby="basic-addon2" />
+			<div class="input-group-append">
+				<button class="btn btn-primary btn-sm" type="button"><i class="fas fa-search"></i></button>
+			</div>
+		</div>
+	</form>
+	<!-- Navbar-->
+	<ul class="navbar-nav ml-auto ml-md-0">
+		<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" id="databasesDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="<% if(db==''){ %>Veri ambari secilmemis<%}%>">
+				<i class="fas fa-database fa-fw"></i>
+			</a>
 
-            
-        </div>
-        <div id="spinner" class="spinner-border text-primary" role="status" style="display: initial;position:absolute;top:50%;left:50%">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded" href="#page-top">
-            <i class="fas fa-angle-up"></i>
-        </a>
+
+			<div id="dbList" class="dropdown-menu dropdown-menu-right" aria-labelledby="databasesDropdown">
+				<div class="dropdown-header">Veri Ambarlari</div>
+				<% if(typeof session!='undefined'){ %>
+				<% if(typeof session.databases!='undefined'){ %>
+					<% session.databases.forEach((e)=>{%>
+					<% if(e._id.toString()== session.dbId.toString()){%>
+					<div class="dropdown-item active"><%- e.dbName %></div>
+					<% }else{ %>
+					<a class="dropdown-item" href="/changedb?<%- `sid=${sid}&db=${e._id}` %>"><%- e.dbName %></a>
+					<% } %>
+					<% }) %>
+				<% } %>
+				<% } %>
+			</div>
+		</li>
+		<li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Kullanıcı işlemleri"><i class="fas fa-user fa-fw"></i></a>
+			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+				<a class="dropdown-item" href="/general/me?sid=<%- sid %>">Profilim</a>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="javascript:logout();">Çıkış</a>
+			</div>
+		</li>
+	</ul>
+</nav>
+<div id="layoutSidenav">
+	<div id="layoutSidenav_nav" class=" border-right">
+		<%- partial('side-menu') %>
+	</div>
+	<div id="layoutSidenav_content">
+		<main id="main-container" style="display: none;">
+			<div class="mt-2 mb-1 px-3" style="height: 36px">
+				<h1 class="float-left m-0 page-title text-secondary" style="font-size:16pt">
+					<% if(breadCrumbs.length>0){ %>
+					<!-- <i class="<%- breadCrumbs[breadCrumbs.length-1].icon %> text-primary"></i>  -->
+					<i class="<%- breadCrumbs[breadCrumbs.length-1].icon %>"></i> 
+					<% breadCrumbs.forEach((e,index)=>{ %>
+					<% if(index<breadCrumbs.length-1){ %>
+					<%- e.text %> \
+					<% } else { %>
+					<% if(funcTitle!=''){ %>
+					<%- e.text %>
+					<% } else { %>
+					<span class="font-weight-bold text-primary"><%- e.text %></span>
+					<% } %>
+					<% } %>
+					<% }) %>
+					<% }else{ %>
+					<% if(typeof icon!='undefined'){%><i class="<%=icon%>"></i> 
+					<%}%><%=title%>
+					<% } %>
+					<% if(funcTitle!=''){%> - <span class="font-weight-bold text-primary"><%=funcTitle%></span><% } %>
+				</h1>
+				<div id="headerButtons" class="float-right" style="min-height: 26px;"></div>
+				
+			</div>
+			<div class="clearfix"></div>
+			<div class="container-fluid mb-3">
+				<%- formError(message) %>
+				<%- formSuccess(successMessage) %>
+				<%- body %>
+
+			</div>
+		</main>
+
+		<%- partial('footer') %>
+	</div>
+</div>
+<div id="spinner" class="spinner-border text-primary" role="status" style="display: initial;position:absolute;top:50%;left:50%">
+	<span class="sr-only">Loading...</span>
+</div>
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+	<i class="fas fa-angle-up"></i>
+</a>
+
+<div class="modal" id="modalFormOptions" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalFormOptionsLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header p-2 ">
+				<label class="modal-title" id="modalFormOptionsLabel"><i class="fas fa-cogs"></i> Form Options: <b><%- urlPath %></b></label>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body p-2" style="overflow: auto;">
+				<table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+					<thead>
+						<tr class="text-nowrap">
+							<th width="30" class="">#</th>
+							<th class="">Program Adı</th>
+							<th class="">Türü</th>
+						</tr>
+					</thead>
+					<tbody id="gridPrograms">
+
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<div class="float-right">
+					<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
+					<a class="btn btn-primary" href="javascript:modalFormOptions_OK()" title="Kaydet"><i class="fas fa-ok"></i> Tamam</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <script type="text/javascript">
-    var dbLabel=document.getElementById('dbLabel');
-    var databasesDropdown=document.getElementById('databasesDropdown');
-    if(databasesDropdown && dbLabel && localStorage.getItem('activeDbName')){
-        databasesDropdown.title=localStorage.getItem('activeDbName');
-        dbLabel.innerHTML='<i class="fas fa-database"></i> ' + localStorage.getItem('activeDbName');
-    }
-    loadDatabases();
+	
+	function modalFormOptions(){
+		$("#gridPrograms tr").remove()
 
-    function loadDatabases(){
-        var databases=[];
+		$.ajax({
+			url:`/dbapi/programs?sid=${q.sid}&passive=false`,
+			type:'GET',
+			dataType: 'json',
+			success: function(result) {
+				if(result.success){
+					$.ajax({
+						url:`/dbapi/settings?sid=${q.sid}`,
+						type:'GET',
+						dataType: 'json',
+						success: function(result2) {
+							var secilmisOlanlar=[]
+							
+							
+							if(result2.success){
+								if(result2.data.settings){
+									if(result2.data.settings.page){
+										if(result2.data.settings.page[windowPathToFieldName()]){
+											if(result2.data.settings.page[windowPathToFieldName()].programs){
+												secilmisOlanlar=result2.data.settings.page[windowPathToFieldName()].programs
+											}
+										}
+									}
+								}
+							}
+							
+							var lineGrid=document.getElementById('gridPrograms')
+							result.data.docs.forEach((prg,index)=>{
 
-        if(localStorage.getItem('databases')!=null){
-            databases=JSON.parse(localStorage.getItem('databases'));
-        }
+								var newRow=lineGrid.insertRow(lineGrid.rows.length)
+								var bChecked=false
 
-        if(localStorage.getItem('activeDb')==null){
-            if(databases.length>0){
-                localStorage.setItem('activeDb',databases[0]._id);
-                localStorage.setItem('activeDbName',databases[0].dbName);
-                localStorage.setItem('activeDbModules','{}');
-                if(databases[0].owner!=undefined)
-                    if(databases[0].owner.modules!=undefined){
-                      localStorage.setItem('activeDbModules',JSON.stringify(databases[0].owner.modules));
-                    }
-                changeActiveDb(localStorage.getItem('activeDb'),localStorage.getItem('activeDbName'));
-                return;  
-            }
-        }else{
-            if(databases.some(value=>{return value._id==localStorage.getItem('activeDb')})){
-                if(getUrlParameter('db')!=localStorage.getItem('activeDb')){
-                    databases.forEach((d)=>{
-                        if(d._id==getUrlParameter('db')){
-                            localStorage.setItem('activeDb',d._id);
-                            localStorage.setItem('activeDbName',d.dbName);
-                            localStorage.setItem('activeDbModules','{}');
+								secilmisOlanlar.forEach((e)=>{
+									if(e._id.toString()==prg._id.toString()){
+										bChecked=true
+										return
+									}
+								})
+								
+								if(bChecked){
+									newRow.insertCell(0).innerHTML=`<input type="checkbox" class="programRow" name="programRow[${index}]" checked="true" value="${encodeURIComponent2(JSON.stringify(prg))}">`
+								}else{
+									newRow.insertCell(0).innerHTML=`<input type="checkbox" class="programRow" name="programRow[${index}]" value="${encodeURIComponent2(JSON.stringify(prg))}">`
+								}
+								
+								
+								newRow.insertCell(1).innerHTML=prg.name
+								newRow.insertCell(2).innerHTML=prg.type
+							})
+							$('#modalFormOptions').modal('show')
+						}
+					})
+				}
+			},
+			error:function(err){
+				console.log('err:',err)
+			}
+		})
+	}
+	function modalFormOptions_OK(){
+		var data={page:{}}
+		data.page[windowPathToFieldName()]={programs:[null]}
+		$(".programRow").each(function() {
+			if(this.checked){
+				var prg=JSON.parse(decodeURIComponent(this.value))
 
-                            if(d.owner!=undefined)
-                                if(d.owner.modules!=undefined){
-                                  localStorage.setItem('activeDbModules',JSON.stringify(d.owner.modules));
-                                }
-                            return;
-                        }
-                    });
-                }
-            }else{
-                if(databases.length>0){
-                    localStorage.setItem('activeDb',databases[0]._id);
-                    localStorage.setItem('activeDbName',databases[0].dbName);
-                    localStorage.setItem('activeDbModules','{}');
-                    if(databases[0].owner!=undefined)
-                        if(databases[0].owner.modules!=undefined){
-                          localStorage.setItem('activeDbModules',JSON.stringify(databases[0].owner.modules));
-                        }
-                    changeActiveDb(localStorage.getItem('activeDb'),localStorage.getItem('activeDbName'));
+				data.page[windowPathToFieldName()].programs.push({_id:prg._id,type:prg.type,name:prg.name})
+			}
+		})
+		
+		
+		$.ajax({
+			url:`/dbapi/settings?sid=${q.sid}`,
+			data:data,
+			type:'POST',
+			dataType: 'json',
+			success: function(result) {
+				
+				if(result.success){
+					console.log(`result.data:`,result.data)
+					window.location.href=`/changedb?sid=${q.sid}`
+					//$('#modalFormOptions').modal('hide')
+				}
+			},
+			error:function(err){
+				console.log('err:',err)
+			}
+		})
+		
+	}
 
-                }else{
-                    localStorage.removeItem('activeDb');
-                    localStorage.removeItem('activeDbName');
-                    localStorage.removeItem('activeDbModules');
-                }
-            }
-        }
+	function logout(){
+		if(!confirm('Programdan çıkmak istiyor musunuz?'))
+			return
+		window.location.href=window.location.origin + '/'
+	}
 
-        
-        $.each(databases, function(i, db) 
-        { 
-            var modules='{}';
-            if(db.owner!=undefined)
-                if(db.owner.modules!=undefined){
-                    modules=JSON.stringify(db.owner.modules);
-                }
-            var url=window.location.origin + window.location.pathname + '?db=' + db._id + '&sid=<%=sid%>';
-            if(localStorage.getItem('activeDb')==db._id){
-                
-                $("#dbList").append('<span class="dropdown-item bg-primary text-white">' + db.dbName + '</span>');
-            }else{
-                $("#dbList").append('<a class="dropdown-item" href="javascript:changeActiveDb(\'' + db._id + '\',\'' + db.dbName + '\')">' + db.dbName + '</a>');
-                
-            }
-        });
-    }
+	$(document).ready(function(){
+		var a=document.getElementById('main-container')
+		var spinner=document.getElementById('spinner')
+		a.style.display='initial'
+		spinner.style.display='none'
+	})
 
-    function changeActiveDb(dbId,dbName){
-        localStorage.setItem('activeDb',dbId);
-        localStorage.setItem('activeDbName',dbName);
-        var databases=[];
-
-        if(localStorage.getItem('databases')!=null){
-            databases=JSON.parse(localStorage.getItem('databases'));
-            databases.forEach(function(e){
-                if(e._id==dbId){
-                    if(e.owner!=undefined)
-                        if(e.owner.modules!=undefined){
-                            localStorage.setItem('activeDbModules',JSON.stringify(e.owner.modules));
-                            return;
-                        }
-                }
-            })
-        }
-        var url=window.location.origin + '/general/dashboard?db=' + dbId + '&sid=<%=sid%>';
-        window.location.href=url;
-    }
-
-    function logout(){
-        if(!confirm('Programdan çıkmak istiyor musunuz?')) return;
-        window.location.href=window.location.origin + '/';
-    }
-    $(document).ready(function(){
-        var a=document.getElementById('main-container');
-        var spinner=document.getElementById('spinner');
-        a.style.display='initial';
-        spinner.style.display='none';
-    })
-
-    $('input').keypress(function(e) {
+	$('input').keypress(function(e) {
 		if(e.keyCode == 13){
-		    $(this).next('input').focus()
-		    e.preventDefault()
+			$(this).next('input').focus()
+			e.preventDefault()
 		}
 	})
 
 </script>
+

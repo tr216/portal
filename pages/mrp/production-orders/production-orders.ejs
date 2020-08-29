@@ -53,8 +53,8 @@
         printDesignList:printDesignList,
     },
     customButtons:[
-        //{href:'/mrp/production-orders/approvement/{_id}?db='+db+'&sid=' + sid, text:'Onay/Ret',icon:'fas fa-check-square'}
+        //{href:'/mrp/production-orders/approvement/{_id}?sid=${sid}`, text:'Onay/Ret',icon:'fas fa-check-square'}
     ],
-    deleteUrl:'/dbapi/production-orders/{_id}?db='+db+'&sid=' + sid
+    deleteUrl:`/dbapi/production-orders/{_id}?sid=${sid}`
     }) 
 %>

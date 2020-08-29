@@ -27,22 +27,13 @@
 	</div>
 </form>
 
-<div class="btn-toolbar mt-2 border p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<button type="button" class="btn btn-primary" id="btnSendToGib">Gönder</button>
-	</div>
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<button type="button" class="btn btn-info" id="btnSendToArchive">Arşive Kaldır</button>
-	</div>
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<button type="button" class="btn btn-info" id="btnImportFromLocal" title="Local Connector ile iceri al"><i class="fas fa-plug"></i> İçeri Al</button>
-	</div>
-	<div class="btn-group mr-2" role="group" aria-label="">
-		<button type="button" class="btn btn-info" id="btnImportFromFile" title="File Importar kullanarak iceri al"><i class="fas fa-file-import"></i> Dosyadan İçeri Al</button>
-		<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.csv,*.txt" multiple>
-	</div>
-	
-</div>
+<%
+	panelButtons=`
+		<button type="button" class="btn btn-primary mr-2" id="btnSendToGib">Gönder</button>
+		<button type="button" class="btn btn-info mr-2" id="btnSendToArchive">Arşive Kaldır</button>
+	`
+%>
+
 
 <%- partial('../../_common/components/grid2',{
 	fields:[
@@ -61,10 +52,10 @@
 	deleteButton:true,
 	selection:true,
 	customButtons:[
-		{href:'javascript:popupCenter("/e-invoice/outbox/view/{_id}?db=' + db + '&sid=' + sid + '","Ön izleme","900","600");', text:'Goruntule',icon:'fas fa-search-plus'},
-		{href:'/e-invoice/outbox/pdf/{_id}?db=' + db + '&sid=' + sid, text:'Pdf',icon:'fas fa-file-pdf'}
+		{href:`javascript:popupCenter('/e-invoice/outbox/view/{_id}?sid=${sid}','Ön izleme','900','600');`, text:'Goruntule',icon:'fas fa-search-plus'},
+		{href:`/e-invoice/outbox/pdf/{_id}?sid=${sid}`, text:'Pdf',icon:'fas fa-file-pdf'}
 	],
-	deleteUrl:'/dbapi/invoice/invoice/{_id}?db='+db+'&sid=' + sid
+	deleteUrl:`/dbapi/invoice/invoice/{_id}?sid=${sid}`
 }) 
 %>
 
@@ -106,7 +97,7 @@
 		function sendFileImport(files){
 			if(!confirm(files.length + ' adet dosya iceri alinacaktir. Onayliyor musunuz?')) return;
 			$.ajax({
-				url:'/dbapi/invoice/importOutboxInvoice?db=<%=db%>&sid=<%=sid%>',
+				url:`/dbapi/invoice/importOutboxInvoice?sid=${q.sid}`,
 				data:{fileImporter:'', files:files},
 				type:'POST',
 				success:function(result){
@@ -122,7 +113,7 @@
 
 		$('#btnImportFromLocal').click(function(){
 			$.ajax({
-				url:'/dbapi/invoice/transfer/import?db=<%=db%>&sid=<%=sid%>',
+				url:`/dbapi/invoice/transfer/import?sid=${q.sid}`,
 				data:{},
 				type:'POST',
 				success:function(result){
@@ -153,7 +144,7 @@
 			if(data.list.length==0)  return alert('Kayit secilmemis!\nDurum: Taslak + Hata');
 			if(!confirm(data.list.length + ' adet fatura GIB e gonderilecektir. Onayliyor musunuz?')) return;
 			$.ajax({
-				url:'/dbapi/invoice/sendToGib?db=<%=db%>&sid=<%=sid%>',
+				url:`/dbapi/invoice/sendToGib?sid=${q.sid}`,
 				data:data,
 				type:'POST',
 				success:function(result){
@@ -170,7 +161,7 @@
 	});
 
 	function showErrors(_id){
-		var url='<%=urlPath%>/errors/'+ _id + '?db=<%=db%>&sid=<%=sid%>';
+		var url='<%=urlPath%>/errors/'+ _id + '?sid=<%=sid%>';
 		popupCenter(url,'Goster','900','600');
 	}
 	

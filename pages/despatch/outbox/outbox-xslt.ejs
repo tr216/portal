@@ -31,8 +31,8 @@
 
 		function displayResult()
 		{
-			xml = loadXMLDoc(window.location.origin + "/downloadFile/despatch/xml/<%- form._id %>?db=<%- db %>&sid=<%- sid %>");
-			xslt = loadXMLDoc(window.location.origin + "/downloadFile/despatch/xslt/<%- form._id %>?db=<%- db %>&sid=<%- sid %>");
+			xml = loadXMLDoc(window.location.origin + "/dbapi/downloadFile/despatch/xml/<%- form._id %>?sid=<%- sid %>");
+			xslt = loadXMLDoc(window.location.origin + "/dbapi/downloadFile/despatch/xslt/<%- form._id %>?sid=<%- sid %>");
 
 			if (window.ActiveXObject || xhttp.responseType == "msxml-document")
 			{

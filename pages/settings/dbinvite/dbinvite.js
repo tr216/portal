@@ -65,7 +65,7 @@ function addnew(req,res,data,callback){
 			data.form=Object.assign(data.form,req.body);
 			api.post(`/dbinvite/${req.query.db}`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/settings/dbinvite?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+					res.redirect(`/settings/dbinvite?sid=${req.query.sid}&mid=${req.query.mid}`)
 				}else{
 					data['message']=err.message;
 					callback(null,data);
@@ -102,7 +102,7 @@ function edit(req,res,data,callback){
 			if(req.method=='POST'){
 				api.put(`/dbinvite/${req.query.db}/${data.form.memberId}` ,req,data.form,(err,resp)=>{
 					if(!err){
-						res.redirect(`/dbinvite?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+						res.redirect(`/dbinvite?sid=${req.query.sid}&mid=${req.query.mid}`)
 					}else{
 						data['message']=err.message;
 						callback(null,data);
@@ -149,7 +149,7 @@ function view(req,res,data,callback){
 function deleteItem(req,res,data,callback){
 	api.delete(`/dbinvite/${req.query.db}/${req.params.id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect(`/settings/dbinvite?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+			res.redirect(`/settings/dbinvite?sid=${req.query.sid}&mid=${req.query.mid}`)
 			
 		}else{
 			data['message']=err.message;

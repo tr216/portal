@@ -20,7 +20,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 				<label for="" class="m-0">Program adı:</label>
 				<input type="text" class="form-control"  name="name" placeholder="program adı" autocomplete="off" value="<%- form.name %>">
 			</div>
-			<div class="form-group col-md-2">
+			<div class="form-group col-md-3">
 				<label for="" class="m-0">Türü</label>
 				<select name="type" class="form-control" onchange="programTypeChange()">
 					<option value="">-- Seç --</option>
@@ -29,6 +29,13 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 					
 					<% }) %>
 				</select>
+			</div>
+			<div class="form-group col-md-2">
+				<br>
+				<label class="m-0">
+					<input type="checkbox" class="" name="showButtonText" value="true" <%- (form.showButtonText?'checked':'')%> />
+					Show Text?
+				</label>
 			</div>
 			<div class="form-group col-md-2">
 				<label for="" class="m-0">Collection Name:</label>
@@ -41,7 +48,15 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 			</div>
 			<div class="form-group col-md-3">
 				<label for="" class="m-0">Collection Filter:</label>
-				<input type="text" class="form-control"  name="collections[0][filter]" placeholder="" autocomplete="off" value="<%- form.collections[0].filter %>">
+				<input type="text" class="form-control"  name="collections[0][filter]" placeholder="" autocomplete="off" value="">
+			</div>
+			<div class="form-group col-md-3">
+				<label for="" class="m-0">Collection Update Exp.:</label>
+				<input type="text" class="form-control"  name="collections[0][updateExpression]" placeholder="" autocomplete="off" value="">
+			</div>
+			<div class="form-group col-md-3">
+				<label for="" class="m-0">Collection Update Error Exp.:</label>
+				<input type="text" class="form-control"  name="collections[0][updateErrorExpression]" placeholder="" autocomplete="off" value="">
 			</div>
 			<div class="form-group col-md-2">
 				<br>
@@ -55,7 +70,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 				<input type="text" class="form-control"  name="crontab" placeholder="" autocomplete="off" value="<%- form.crontab %>">
 			</div>
 		</div>
-		<div class="card">
+		<div id="connector" class="card" style="display: none;">
 			<div class="card-header collapsed">
 				<i class="fas fa-plug"></i> Connector
 			</div>
@@ -108,6 +123,69 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 				<div class="mt-3 mb-1" style="display: flow-root;">
 					<a href="javascript:connectorTest()" class="btn btn-info float-left" title="Local connector test"><i class="fas fa-plug"></i> Connector Test</a>
 					<div class="float-left ml-md-3 mt-1 bold" id="connectorTestResult"></div>					
+				</div>
+			</div>
+		</div>
+
+		<div id="fileImporter" class="card" style="display: none;">
+			<div class="card-header collapsible">
+				<i class="fas fa-file-import"></i> File Importer
+			</div>
+			<div class="card-body p-2">
+				<div class="row m-0 p-0  ">
+					<div class="form-group col-md-6">
+						<label for="" class="m-0">Kabul edilen dosya uzantilari:</label>
+						<input type="text" class="form-control"  name="fileImporter[accept]" placeholder="kabul edilen dosya uzantilari" autocomplete="off" value="<%- form.fileImporter.accept %>">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="fileExporter" class="card" style="display: none;">
+			<div class="card-header collapsible">
+				<i class="fas fa-file-import"></i> File Exporter
+			</div>
+			<div class="card-body p-2">
+				<div class="row m-0 p-0  ">
+					<div class="form-group col-md-6">
+						<label for="" class="m-0">Dışarı alınacak dosya ismi:</label>
+						<input type="text" class="form-control"  name="fileExporter[fileName]" placeholder="dosya ismi" autocomplete="off" value="<%- form.fileExporter.fileName %>">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="emailSender" class="card" style="display: none;">
+			<div class="card-header collapsible">
+				<i class="fas fa-at"></i> Email Sender
+			</div>
+			<div class="card-body p-2">
+				<div class="row m-0 p-0  ">
+					<div class="form-group col-md-6">
+						<label for="" class="m-0">Host</label>
+						<input type="text" class="form-control"  name="emailSender[host]" placeholder="email host" autocomplete="off" value="<%- form.emailSender.host %>">
+					</div>
+					<div class="form-group col-md-3">
+						<label for="" class="m-0">SMTP Port</label>
+						<input type="number" class="form-control"  name="emailSender[port]" placeholder="port" autocomplete="off" value="<%- form.emailSender.port %>">
+					</div>
+					<div class="form-group col-md-3">
+						<br>
+						<label class="mt-1">
+							<input type="checkbox" class="" name="emailSender[secure]" value="true" <%- (form.emailSender.secure?'checked':'')%> />
+							Secure
+						</label>
+					</div>
+					<div class="form-group col-md-3">
+						<label for="" class="m-0">Mail login user</label>
+						<input type="email" class="form-control"  name="emailSender[auth][user]" placeholder="mail login user" autocomplete="off" value="<%- form.emailSender.auth.user %>">
+					</div>
+					<div class="form-group col-md-3">
+						<label for="" class="m-0">Mail login password</label>
+						<input type="text" class="form-control"  name="emailSender[auth][pass]" placeholder="mail login password" autocomplete="off" value="<%- form.emailSender.auth.pass %>">
+					</div>
+					<div class="form-group col-md-3">
+						<label for="" class="m-0">Mail from</label>
+						<input type="text" class="form-control"  name="emailSender[from]" placeholder="mail from" autocomplete="off" value="<%- form.emailSender.from %>">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -175,9 +253,12 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 	if(headerButtons){
 		headerButtons.innerHTML='<%- headerButtons %>'
 	}
-	var doc=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form)) %>'))
+	var doc=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(form)) %>'))
 	var activeIndex=-1
 
+	$('input[name="collections[0][filter]"]').val(doc.collections[0].filter)
+	$('input[name="collections[0][updateExpression]"]').val(doc.collections[0].updateExpression)
+	$('input[name="collections[0][updateErrorExpression]"]').val(doc.collections[0].updateErrorExpression)
 
 	function addNewFile(obj,show=true){
 
@@ -299,7 +380,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		$('#connectorTestResult').html(`connector test ediliyor...`)
 
 		$.ajax({
-			url:`/dbapi/local-connectors/test?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/local-connectors/test?sid=${q.sid}`,
 			data:data,
 			type:'POST',
 			dataType: "json",
@@ -323,15 +404,34 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 	}
 
 	function programTypeChange(){
+		$('input[name="crontab"]').attr('readonly', true)
+		$('#connector').hide()
+		$('#fileImporter').hide()
+		$('#fileExporter').hide()
+		$('#emailSender').hide()
+		
 		switch($('select[name="type"]').val()){
-			case 'connector-importer':
-			case 'connector-exporter':
-			case 'email':
-			case 'sms':
-			$('input[name="crontab"]').attr('readonly', false);
+			case 'file-importer':
+			$('#fileImporter').show()
 			break
+			case 'file-exporter':
+			$('#fileExporter').show()
+			break
+			case 'connector-importer':
+			$('#connector').show()
+			break
+			case 'connector-exporter':
+			$('#connector').show()
+			break
+			case 'email':
+			$('#emailSender').show()
+			break
+			case 'sms':
+
+			break
+			
 			default:
-			$('input[name="crontab"]').attr('readonly', true);
+			
 			break
 		}
 	}
@@ -343,7 +443,10 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		doc.type=$('select[name="type"]').val()
 		doc.collections[0].name=$('select[name="collections[0][name]"]').val()
 		doc.collections[0].filter=$('input[name="collections[0][filter]"]').val()
+		doc.collections[0].updateExpression=$('input[name="collections[0][updateExpression]"]').val()
+		doc.collections[0].updateErrorExpression=$('input[name="collections[0][updateErrorExpression]"]').val()
 		doc.passive=$('input[name="passive"]').prop('checked')
+		doc.showButtonText=$('input[name="showButtonText"]').prop('checked')
 		doc.connector.connectorId=$('input[name="connector[connectorId]"]').val()
 		doc.connector.connectorPass=$('input[name="connector[connectorPass]"]').val()
 		doc.connector.connectionType=$('select[name="connector[connectionType]"]').val()
@@ -352,6 +455,16 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		doc.connector.connection.database=$('input[name="connector[connection][database]"]').val()
 		doc.connector.connection.username=$('input[name="connector[connection][username]"]').val()
 		doc.connector.connection.password=$('input[name="connector[connection][password]"]').val()
+
+		doc.fileImporter.accept=$('input[name="fileImporter[accept]"]').val()
+		doc.fileExporter.fileName=$('input[name="fileExporter[fileName]"]').val()
+		doc.emailSender.host=$('input[name="emailSender[host]"]').val()
+		doc.emailSender.port=Number($('input[name="emailSender[port]"]').val())
+		doc.emailSender.from=$('input[name="emailSender[from]"]').val().replaceAll('"','\'')
+		doc.emailSender.secure=$('input[name="emailSender[secure]"]').prop('checked')
+		doc.emailSender.auth.user=$('input[name="emailSender[auth][user]"]').val()
+		doc.emailSender.auth.pass=$('input[name="emailSender[auth][pass]"]').val()
+
 		doc.crontab=$('input[name="crontab"]').val()
 		if(doc.name==''){
 			alert('isim bos olamaz!')
@@ -359,10 +472,10 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		}
 		var type='POST';
 		var url='';
-		url=`/dbapi/programs?db=${q.db}&sid=${q.sid}`
+		url=`/dbapi/programs?sid=${q.sid}`
 		if(doc._id!=undefined){
 			type='PUT';
-			url=`/dbapi/programs/${doc._id}?db=${q.db}&sid=${q.sid}`
+			url=`/dbapi/programs/${doc._id}?sid=${q.sid}`
 		}
 
 		$.ajax({

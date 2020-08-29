@@ -1,11 +1,7 @@
-  module.exports = function(req,res,callback){
- 	var data={username:'merhaba'};
- 	eventLog('dashboard.js calisti');
- 	// api.get(`/mydbdefines`,req,null,(err,resp)=>{
- 	// 	if(!err){
- 	// 		data['databases']=resp.data;
- 	// 	}
- 	// 	callback(null,data);
- 	// });
- 	callback(null,data);
- }
+module.exports = function(req,res,callback){
+	var data={
+		filter:{}
+	}
+	data.filter=getFilter(data.filter,req,res)
+	callback(null,data)
+}

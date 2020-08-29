@@ -205,7 +205,7 @@
 
 
 		$.ajax({
-			url:`/dbapi/local-connectors/test?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/local-connectors/test?sid=${q.sid}`,
 			data:data,
 			type:'POST',
 			success:function(result){
@@ -250,7 +250,7 @@
 		
 
 		$.ajax({
-			url:`/dbapi/programs/render?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/programs/render?sid=${q.sid}`,
 			data:doc,
 			type:'POST',
 			success:function(result){

@@ -6,9 +6,7 @@ module.exports = function(req,res,callback){
 		filter:{}
 	}
 	
-	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
-	}
+
 	switch(req.params.func || ''){
 		
 		
@@ -27,7 +25,7 @@ function getList(req,res,data,callback){
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		
-		api.get(`/${req.query.db}/production-orders`,req,data.filter,(err,resp)=>{
+		api.get(`/{db}/production-orders`,req,data.filter,(err,resp)=>{
 			if(!err){
 				resp.data.docs.forEach((e)=>{
 					e['musteri']='';

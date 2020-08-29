@@ -16,13 +16,13 @@
     editButton:true,
     deleteButton:true,
     viewButton:true,
-    addNewUrl:urlPath + '/addnew?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
-    editUrl:urlPath + '/edit/{_id}?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
-    viewUrl:urlPath + '/view/{_id}?itemType=' + form.itemType + '&db=' + db + '&sid=' + sid,
+    addNewUrl:`${urlPath}/addnew?itemType=${form.itemType}&sid=${sid}&mid=${mid}`,
+    editUrl:`${urlPath}/edit/{_id}?itemType=${form.itemType}&sid=${sid}&mid=${mid}`,
+    viewUrl:`${urlPath}/view/{_id}?itemType=${form.itemType}&sid=${sid}&mid=${mid}`,
     customButtons:[
-        {inline:true, href:`javascript:itemCopyConfirm('{_id}','{name}')`, title:'Kopyala',icon:'far fa-copy'}
+        {inline:true, href:`javascript:itemCopyConfirm('{_id}','{name.value}')`, title:'Kopyala',icon:'far fa-copy'}
     ],
-    deleteUrl:'/dbapi/items/{_id}?db=' + db + '&sid=' + sid
+    deleteUrl:`/dbapi/items/{_id}?sid=${sid}`
     }) 
 %>
 
@@ -56,7 +56,7 @@
 
         var data={id:temp_id, newName:$('#newName').val()}
         $.ajax({
-            url:'/dbapi/items/copy?db=<%=db%>&sid=<%=sid%>',
+            url:`/dbapi/items/copy?sid=${q.sid}`,
             data:data,
             type:'POST',
             success:function(result){

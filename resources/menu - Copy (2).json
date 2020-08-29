@@ -1,0 +1,250 @@
+{	
+	"dashboard":{"text":"Ana Sayfa",				"path":"/general/dashboard",		"icon":"fas fa-tachometer-alt"},
+	"invoice":{
+		"outbox":{"text":"Giden Faturalar",		"path":"/invoice/outbox",		"icon":"fas fa-table"},
+		"inbox":{"text":"Gelen Faturalar",	 	"path":"/invoice/inbox",		"icon":"fas fa-table"},
+		"gibUsers":{"text":"E-Fatura Mükellefleri",		"path":"/invoice/gib-users",	"icon":"fas fa-users"},
+		"customers":{"text":"Müşteriler",			"path":"/finance/customers",		"icon":"fas fa-users"},
+		"vendors":{"text":"Tedarikçiler",			"path":"/finance/vendors",		"icon":"fas fa-parachute-box"}
+	},
+	"despatch":{
+		"outbox":{"text":"Giden İrsaliyeler",	"path":"/despatch/outbox", 	"icon":"fas fa-table"},
+		"inbox":{"text":"Giden İrsaliyeler",	"path":"/despatch/outbox", 	"icon":"fas fa-table"},
+		"gibUsers":{"text":"E-Fatura Mükellefleri",		"path":"/invoice/gib-users",	"icon":"fas fa-users"},
+		"customers":{"text":"Müşteriler",			"path":"/finance/customers",		"icon":"fas fa-users"},
+		"vendors":{"text":"Tedarikçiler",			"path":"/finance/vendors",		"icon":"fas fa-parachute-box"}
+	},
+	"orders":{
+		"outbox":{"text":"Siparişler",			"path":"/order/outbox", "icon":"fas fa-file-alt"},
+		"inbox":{"text":"Alım Siparişleri",		"path":"/order/inbox", 	"icon":"fas fa-file-alt"},
+		"waitingSaleOrders":{"text":"Bekleyen Siparişler",	"path":"/order/outbox-waiting-orders", "icon":"fas fa-business-time"},
+		"customers":{"text":"Müşteriler",			"path":"/finance/customers",		"icon":"fas fa-users"},
+		"vendors":{"text":"Tedarikçiler",			"path":"/finance/vendors",		"icon":"fas fa-parachute-box"}
+	},
+	"mrp":{
+		"$":{"text":"Üretim", "icon":"fas fa-industry"},
+		"productionOrders":{"text":"Üretim Emirleri",		"path":"/mrp/production-orders","icon":"fas fa-fill-drip"},
+		"productionOrdersPlan":{"text":"Üretim Cizelge",		"path":"/mrp/production-orders-plan","icon":"fas fa-calendar-alt"},
+		"waitingSaleOrders":{"text":"Bekleyen Siparişler",	"path":"/order/outbox-waiting-orders", "icon":"fas fa-business-time"},
+		"products":{"text":"Mamul/Yarı Mamul", "path":"/mrp/products",	"icon":"fas fa-cubes"},
+		"materialPlanning":{"text":"Malzeme Planlama",		"path":"/general/closed-module","icon":"fas fa-file-alt"},
+		"raports":{
+			"productionAnalize":{"text":"Üretim analizi",		 	"path":"/general/closed-module",				"icon":"fas fa-table"},
+			"costAnalize":{"text":"Maliyet analizi",		 	"path":"/general/closed-module",				"icon":"fas fa-table"}
+		},
+		"defines":{
+			"$":{"text":"Tanimlamalar", "icon":"fas fa-sliders-h"},
+			"rawMaterials":{"text":"Hammaddeler",		 		"path":"/inventory/items?itemType=raw-material",		"icon":"fas fa-atom"},
+			"helperMaterials":{"text":"Yardımcı Malzemeler",		"path":"/inventory/items?itemType=helper-material",		"icon":"fas fa-thermometer-half"},
+			"stations":{"text":"Üretim İstasyonları",	 	"path":"/mrp/stations", "icon":"fas fa-bezier-curve"},
+			"machineGroups":{"text":"Makina Grupları",	 			"path":"/mrp/machine-groups", "icon":"fas fa-layer-group"},
+			"machines":{"text":"Makinalar",	 			"path":"/mrp/machines", "icon":"fas fa-cogs"},
+			"moldGroups":{"text":"Kalıp Grupları",	 			"path":"/mrp/mold-groups", "icon":"fas fa-layer-group"},
+			"molds":{"text":"Kalıplar",	 			"path":"/mrp/molds", "icon":"fas fa-swatchbook"},
+			"processSteps":{"text":"Üretim İşlem Adımları",	 			"path":"/mrp/process-steps", "icon":"fas fa-shoe-prints"},
+			"breakReasons":{"text":"Üretim Duruş Sebepleri",	 			"path":"/mrp/break-reasons", "icon":"fas fa-hand-paper"}
+		}
+	},
+	"inventory":{
+		"$":{"text":"Stok", "icon":"fas fa-box-open"},
+		"items":{"text":"Stok Kartlari", "path":"/inventory/items?itemType=item",	"icon":"fas fa-dolly-flatbed"},
+		"inventory":{"text":"Envanter durumu",		"path":"/inventory/inventory", 		"icon":"fas fa-boxes"},
+		"inventoryFiches":{"text":"Stok fişleri",		"path":"/inventory/inventory-fiches",		"icon":"fas fa-truck-loading"},
+		"defines":{
+			"$":{"text":"Tanimlamalar", "icon":"fas fa-sliders-h"},
+			"palletTypes":{"text":"Palet Tipleri",	 			"path":"/inventory/pallet-types", "icon":"fas fa-cogs"},
+			"pallets":{"text":"Paletler",	 			"path":"/inventory/pallets", "icon":"fas fa-pallet"},
+			"packingTypes":{"text":"Ambalaj Tipleri",	 			"path":"/inventory/packing-types", "icon":"fas fa-boxes"}
+		}
+	},
+	"finance":{
+		"$":{"text":"Finans", "icon":"fas fa-money-bill-wave"},
+		"customers":{"text":"Müşteriler",			"path":"/finance/customers",		"icon":"fas fa-users"},
+		"vendors":{"text":"Tedarikçiler",			"path":"/finance/vendors",		"icon":"fas fa-parachute-box"},
+		"casing":{"text":"Kasalar",		"path":"/general/closed-module","icon":"fas fa-file-alt"},
+		"bank":{"text":"Bankalar",		"path":"/general/closed-module","icon":"fas fa-file-alt"}
+	},
+	"accounting":{
+		"$":{"text":"Muhasebe", "icon":"fas fa-book"},
+		"accounts":{"text":"Hesap planı",		"path":"/accounting/account-codes",		"icon":"fas fa-cube"},
+		"accountGroups":{"text":"Hesap grupları",		"path":"/accounting/account-groups",		"icon":"fas fa-hands"},
+		"entry":{"text":"Muhasebe fişleri",		"path":"/general/closed-module",		"icon":"fas fa-parachute-box"},
+		"flow":{"text":"Hesap hareketleri",		"path":"/general/closed-module",		"icon":"fas fa-table"},
+		"ledger":{"text":"Defter",		"path":"/general/closed-module",		"icon":"fas fa-table"}
+	},
+	{"text":"YazarKasa Pos",	"module":"posDevice",	"path":"",				"icon":"fas fa-cash-register", "visible":true,
+		"nodes":[
+			{"text":"Aktarim",					"path":"/pos-device/transfer",	"icon":"fas fa-cloud-upload-alt", "visible":true, "nodes":[]},
+			{"text":"Raporlar",					"path":"",	"icon":"fas fa-chart-bar", "visible":true, "nodes":[
+				{"text":"Cihaz Toplamlari",					"path":"/pos-device/rapor1",	"icon":"fas fa-chart-bar", "visible":true, "nodes":[]},
+				{"text":"Lokasyon Toplamlari",					"path":"/pos-device/rapor2",	"icon":"fas fa-chart-bar", "visible":true, "nodes":[]}
+			]},
+			{"text":"Tanimlamalar",				"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
+				{"text":"Servis Tanimlari",		"path":"/pos-device/services-defines",	"icon":"fas fa-cogs", 		"visible":true, "nodes":[]},
+				{"text":"Cihaz listesi",		"path":"/pos-device/list",				"icon":"fas fa-cash-register", 		"visible":true, "nodes":[]},
+				{"text":"Lokasyonlar",			"path":"/settings/locations",			"icon":"fas fa-map-marker", "visible":true, "nodes":[]},
+				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"fas fa-plug", "visible":true, "nodes":[]},
+				{"text":"File Importer",		"path":"/settings/file-importers",		"icon":"fas fa-file-import", "visible":true, "nodes":[]}
+			]}
+		]
+	},
+	"posDevice":{
+		"$":{"text":"YazarKasa Pos", "icon":"fas fa-cash-register"},
+		"transfer":{"text":"Aktarim",					"path":"/pos-device/transfer",	"icon":"fas fa-cloud-upload-alt"},
+		"reports":{
+			"$":{"text":"Raporlar", "icon":"fas fa-chart-bar"},
+			"rapor1":{"text":"Cihaz Toplamlari",					"path":"/pos-device/rapor1",	"icon":"fas fa-chart-bar"},
+			"rapor2":{"text":"Lokasyon Toplamlari",					"path":"/pos-device/rapor2",	"icon":"fas fa-chart-bar"}
+		},
+		"defines":{
+			"$":{"text":"Tanimlamalar", "icon":"fas fa-sliders-h"},
+			"serviceDefines":false,
+			"devices":false
+		}
+	},
+	"settings":{
+		"locations":false,
+		"subLocations":false,
+		"shifts":false,
+		"persons":false,
+		"persons":false,
+		"printDesigns":false,
+		"programs":false,
+		"programs":false,
+		"workingParams":{
+			"general":false,
+			"private":false
+		}
+	},
+	"system":{
+		"dbdefines":false,
+		"tasks":false
+	}
+}
+[
+	{, "visible":true, "nodes":[]},
+	{"text":"Satış",	"path":"",					"icon":"fas fa-shopping-cart", "visible":true, "nodes":[
+		{"text":"Siparişler",			"path":"/order/outbox", "icon":"fas fa-file-alt", "visible":true, "nodes":[]},
+		{"text":"Bekleyen Siparişler",	"path":"/order/outbox-waiting-orders", "icon":"fas fa-business-time", "visible":true, "nodes":[]},
+		{"text":"Giden İrsaliyeler",	"path":"/despatch/outbox", 	"icon":"fas fa-table", "visible":true, "nodes":[]},
+		{"text":"Giden Faturalar",		"path":"/invoice/outbox",		"icon":"fas fa-table", "visible":true, "nodes":[]},
+		{"text":"Müşteriler",			"path":"/finance/customers",		"icon":"fas fa-users", "visible":true, "nodes":[]}
+	]},
+	{"text":"Satın alma",	"module":"purchase",			"path":"",					"icon":"fas fa-shopping-bag", "visible":true, "nodes":[
+		{"text":"Alım Siparişleri",		"path":"/order/inbox", 	"icon":"fas fa-file-alt", "visible":true, "nodes":[]},
+		{"text":"Gelen İrsaliyeler",	"path":"/despatch/inbox", 	"icon":"fas fa-table", "visible":true, "nodes":[]},
+		{"text":"Gelen Faturalar",	 	"path":"/invoice/inbox",		"icon":"fas fa-table", "visible":true , "nodes":[]},
+		{"text":"Tedarikçiler",			"path":"/finance/vendors",		"icon":"fas fa-parachute-box", "visible":true, "nodes":[]}
+	]},
+	{"text":"Üretim",	"module":"mrp",	"path":"",	"icon":"fas fa-industry", "visible":true, "nodes":[
+		{"text":"Üretim Emirleri",		"path":"/mrp/production-orders","icon":"fas fa-fill-drip", "visible":true, "nodes":[]},
+		{"text":"Üretim Cizelge",		"path":"/mrp/production-orders-plan","icon":"fas fa-calendar-alt", "visible":true, "nodes":[]},
+		{"text":"Mamul/Yarı Mamul",		"path":"/mrp/products",				"icon":"fas fa-cubes", "visible":true, "nodes":[]},
+		{"text":"Malzeme Planlama",		"path":"/general/closed-module","icon":"fas fa-file-alt", "visible":true, "nodes":[]},	
+		{"text":"Raporlar",				"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
+			{"text":"Üretim analizi",		 	"path":"/general/closed-module",				"icon":"fas fa-table", "visible":true, "nodes":[]},
+			{"text":"Maliyet analizi",		 	"path":"/general/closed-module",				"icon":"fas fa-table", "visible":true, "nodes":[]}
+		]},
+		{"text":"Tanimlamalar",			"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
+			{"text":"Hammaddeler",		 		"path":"/inventory/items?itemType=raw-material",		"icon":"fas fa-atom", 			"visible":true, "nodes":[]},
+			{"text":"Yardımcı Malzemeler",		"path":"/inventory/items?itemType=helper-material",		"icon":"fas fa-thermometer-half", "visible":true, "nodes":[]},
+			{"text":"Üretim İstasyonları",	 	"path":"/mrp/stations", "icon":"fas fa-bezier-curve", "visible":true, "nodes":[]},
+			{"text":"Makina Grupları",	 			"path":"/mrp/machine-groups", "icon":"fas fa-layer-group", "visible":true, "nodes":[]},
+			{"text":"Makinalar",	 			"path":"/mrp/machines", "icon":"fas fa-cogs", "visible":true, "nodes":[]},
+			{"text":"Kalıp Grupları",	 			"path":"/mrp/mold-groups", "icon":"fas fa-layer-group", "visible":true, "nodes":[]},
+			{"text":"Kalıplar",	 			"path":"/mrp/molds", "icon":"fas fa-swatchbook", "visible":true, "nodes":[]},
+			{"text":"Üretim İşlem Adımları",	 			"path":"/mrp/process-steps", "icon":"fas fa-shoe-prints", "visible":true, "nodes":[]},
+			{"text":"Üretim Duruş Sebepleri",	 			"path":"/mrp/break-reasons", "icon":"fas fa-hand-paper", "visible":true, "nodes":[]}
+			
+		]}
+	]},
+	{"text":"Stok",	"module":"inventory",			"path":"",					"icon":"fas fa-box-open", "visible":true, "nodes":[
+		{"text":"Stok Kartlari",		"path":"/inventory/items?itemType=item",		"icon":"fas fa-dolly-flatbed", "visible":true, "nodes":[]},
+		{"text":"Envanter durumu",		"path":"/inventory/inventory", 		"icon":"fas fa-boxes", "visible":true, "nodes":[]},
+		{"text":"Stok fişleri",		"path":"/inventory/inventory-fiches",		"icon":"fas fa-truck-loading", "visible":true, "nodes":[]},
+		{"text":"Tanimlamalar",			"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
+			{"text":"Palet Tipleri",	 			"path":"/inventory/pallet-types", "icon":"fas fa-cogs", "visible":true, "nodes":[]},
+			{"text":"Paletler",	 			"path":"/inventory/pallets", "icon":"fas fa-pallet", "visible":true, "nodes":[]},
+			{"text":"Ambalaj Tipleri",	 			"path":"/inventory/packing-types", "icon":"fas fa-boxes", "visible":true, "nodes":[]}
+		]}
+	]},
+	{"text":"Finans",	"module":"finance",	 "path":"",	"icon":"fas fa-money-bill-wave", "visible":true, "nodes":[
+		{"text":"Müşteriler",		"path":"/finance/customers",		"icon":"fas fa-users", "visible":true, "nodes":[]},
+		{"text":"Tedarikçiler",		"path":"/finance/vendors",		"icon":"fas fa-parachute-box", "visible":true, "nodes":[]},
+		{"text":"Cari hareketler",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]},
+		{"text":"Cari bakiyeler",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]},
+		{"text":"Kasa ve bankalar",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]}
+	]},
+	{"text":"Muhasebe",	"module":"accounting",	 "path":"",	"icon":"fas fa-book", "visible":true, "nodes":[
+		{"text":"Hesap planı",		"path":"/accounting/account-codes",		"icon":"fas fa-cube", "visible":true, "nodes":[]},
+		{"text":"Hesap grupları",		"path":"/accounting/account-groups",		"icon":"fas fa-hands", "visible":true, "nodes":[]},
+		{"text":"Muhasebe fişleri",		"path":"/general/closed-module",		"icon":"fas fa-parachute-box", "visible":true, "nodes":[]},
+		{"text":"Hesap hareketleri",		"path":"/general/closed-module",		"icon":"fas fa-table", "visible":true, "nodes":[]}
+	]},
+	{"text":"E-Fatura",	"module":"eInvoice",				"path":"",		"icon":"fas fa-file-invoice", "visible":true, 
+		"nodes":[
+			{"text":"Gelen Kutusu",					"path":"/invoice/inbox",		"icon":"fas fa-envelope-open-text", "visible":true , "nodes":[]},
+			{"text":"Giden Kutusu",					"path":"/invoice/outbox",		"icon":"fas fa-paper-plane", "visible":true, "nodes":[]},
+			{"text":"E-Fatura Mükellefleri",		"path":"/invoice/gib-users",	"icon":"fas fa-users", "visible":true, "nodes":[]}
+		]
+	},
+	{"text":"E-Irsaliye",	"module":"eDespatch",				"path":"",		"icon":"fas fa-file-invoice", "visible":true, 
+		"nodes":[
+			{"text":"Gelen Kutusu",					"path":"/despatch/inbox",		"icon":"fas fa-envelope-open-text", "visible":true , "nodes":[]},
+			{"text":"Giden Kutusu",					"path":"/despatch/outbox",		"icon":"fas fa-paper-plane", "visible":true, "nodes":[]},
+			{"text":"E-Irsaliye Mükellefleri",		"path":"/invoice/gib-users",	"icon":"fas fa-users", "visible":true, "nodes":[]},
+			{"text":"Tedarikçiler",		"path":"/finance/vendors",		"icon":"fas fa-parachute-box", "visible":true, "nodes":[]},
+			{"text":"Müşteriler",		"path":"/finance/customers",		"icon":"fas fa-users", "visible":true, "nodes":[]}
+		]
+	},
+	{"text":"E-Defter",	"module":"eLedger",				"path":"/general/closed-module", "icon":"fas fa-table", 	"visible":true, "nodes":[]},
+	{"text":"YazarKasa Pos",	"module":"posDevice",	"path":"",				"icon":"fas fa-cash-register", "visible":true,
+		"nodes":[
+			{"text":"Aktarim",					"path":"/pos-device/transfer",	"icon":"fas fa-cloud-upload-alt", "visible":true, "nodes":[]},
+			{"text":"Raporlar",					"path":"",	"icon":"fas fa-chart-bar", "visible":true, "nodes":[
+				{"text":"Cihaz Toplamlari",					"path":"/pos-device/rapor1",	"icon":"fas fa-chart-bar", "visible":true, "nodes":[]},
+				{"text":"Lokasyon Toplamlari",					"path":"/pos-device/rapor2",	"icon":"fas fa-chart-bar", "visible":true, "nodes":[]}
+			]},
+			{"text":"Tanimlamalar",				"path":"",	"icon":"fas fa-sliders-h", 		"visible":true, "nodes":[
+				{"text":"Servis Tanimlari",		"path":"/pos-device/services-defines",	"icon":"fas fa-cogs", 		"visible":true, "nodes":[]},
+				{"text":"Cihaz listesi",		"path":"/pos-device/list",				"icon":"fas fa-cash-register", 		"visible":true, "nodes":[]},
+				{"text":"Lokasyonlar",			"path":"/settings/locations",			"icon":"fas fa-map-marker", "visible":true, "nodes":[]},
+				{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"fas fa-plug", "visible":true, "nodes":[]},
+				{"text":"File Importer",		"path":"/settings/file-importers",		"icon":"fas fa-file-import", "visible":true, "nodes":[]}
+			]}
+		]
+	},
+	{"text":"Ayarlar",		"path":"",					"icon":"fas fa-wrench", "visible":true,
+		"nodes":[
+			{"text":"Lokasyonlar",			"path":"/settings/locations",			"icon":"fas fa-map-marker", "visible":true, "nodes":[]},
+			{"text":"Alt Lokasyonlar",			"path":"/settings/sub-locations",			"icon":"fas fa-th-large", "visible":true, "nodes":[]},
+			{"text":"Vardiya Tanımları",	"path":"/settings/shifts",				"icon":"far fa-clock", "visible":true, "nodes":[]},
+			{"text":"Personel",				"path":"/settings/persons", 			"icon":"fas fa-users", "visible":true, "nodes":[]},
+			{"text":"Lokal Connectorler",	"path":"/settings/local-connectors",	"icon":"fas fa-plug", "visible":true, "nodes":[]},
+			{"text":"Yazdırma Tasarımları",	"path":"/settings/print-designs",		"icon":"fas fa-print", "visible":true, "nodes":[]},
+			{"text":"Evrak Seri ve Entegrator",		"path":"/settings/integrators",	"icon":"fas fa-cogs", "visible":true, "nodes":[]},
+			{"text":"File Importer",	"path":"/settings/file-importers",	"icon":"fas fa-file-import", "visible":true, "nodes":[]},
+			{"text":"Özel programlar",	"path":"/settings/programs",	"icon":"fas fa-code", "visible":true, "nodes":[]},
+			{"text":"Çalışma Parametreleri",		"path":"",					"icon":"fas fa-sliders-h", "visible":true,
+				"nodes":[
+					{"text":"Genel",					"path":"/settings/params-general",		"icon":"fas fa-sliders-h", "visible":true, "nodes":[]},
+					{"text":"Size Özel",			"path":"/general/closed-module",		"icon":"fas fa-user-cog", "visible":true, "nodes":[]}
+				]}
+			]
+	},
+	{"text":"System",		"path":"",					"icon":"fas fa-shield-alt", "visible":true,
+		"nodes":[
+			{"text":"Veri Ambarları",					"path":"/settings/dbdefine",		"icon":"fas fa-database", "visible":true, "nodes":[]},
+			{"text":"Görev Yöneticisi",					"path":"/system/tasks",		"icon":"fas fa-tasks", "visible":true, "nodes":[]},
+			{"text":"Developer console",	"module":"",				"path":"",		"icon":"fas fa-code", "visible":true, 
+				"nodes":[]
+			}
+		]
+	},
+	{"text":"",		"path":"",					"icon":"fas fa-", "visible":false,
+		"nodes":[
+			{"text":"Profil ve Şifre",					"path":"/general/me",		"icon":"fas fa-user", "visible":false, "nodes":[]},
+			{"text":"Veri Ambari Kullanicilari",		"path":"/settings/dbinvite",	"icon":"fas fa-user-plus", "visible":false, "nodes":[]}
+		]
+	}
+]

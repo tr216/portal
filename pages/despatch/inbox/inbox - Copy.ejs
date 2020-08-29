@@ -53,10 +53,10 @@
 	deleteButton:true,
 	selection:true,
 	customButtons:[
-	{inline:true, class:'btn-secondary', href:`javascript:popupCenter('/despatch/inbox/view/{_id}?db=${db}&sid=${sid}','Yazdir','900','600');`, title:'Yazdir',icon:'fas fa-print'},
+	{inline:true, class:'btn-secondary', href:`javascript:popupCenter('/despatch/inbox/view/{_id}?sid=${sid}','Yazdir','900','600');`, title:'Yazdir',icon:'fas fa-print'},
 	{inline:true, class:'btn-info', href:`javascript:approve('{_id}','{doc.despatchStatus}');`, title:'Onayla',icon:'fas fa-check'}
 	],
-	deleteUrl:'/dbapi/despatch/{_id}?db='+db+'&sid=' + sid
+	deleteUrl:`/dbapi/despatch/{_id}?sid=${sid}`
 }) 
 %>
 
@@ -78,7 +78,7 @@
 			return
 
 		$.ajax({
-			url:'/dbapi/despatch-receipt-advice/send?db=<%=db%>&sid=<%=sid%>',
+			url:`/dbapi/despatch-receipt-advice/send?sid=${q.sid}`,
 			data:data,
 			type:'POST',
 			success:function(result){
@@ -100,7 +100,7 @@
 	var receiptAdvice
 
 	function showErrors(_id){
-		var url=`${window.location.origin}/despatch/outbox/errors/${_id}?db=${q.db}&sid=${q.sid}`
+		var url=`${window.location.origin}/despatch/outbox/errors/${_id}?sid=${q.sid}`
 		popupCenter(url,"Hatalar","900","600")
 	}
 
@@ -108,14 +108,14 @@
 		despatchDoc=null
 		receiptAdvice=null
 		$.ajax({
-			url:`/dbapi/despatch/${_id}?db=${q.db}&sid=${q.sid}`,
+			url:`/dbapi/despatch/${_id}?sid=${q.sid}`,
 			type:'GET',
 			dataType: 'json',
 			success:function(result){
 				if(result.success){
 					despatchDoc=result.data
 					$.ajax({
-						url:`/dbapi/despatch-receipt-advice/${_id}?db=${q.db}&sid=${q.sid}`,
+						url:`/dbapi/despatch-receipt-advice/${_id}?sid=${q.sid}`,
 						type:'GET',
 						dataType: 'json',
 						success:function(result){
@@ -266,11 +266,11 @@
 			receiptAdvice.receiptAdviceLineInfos.push(line)
 		})
 
-		var url=`/dbapi/despatch-receipt-advice?db=${q.db}&sid=${q.sid}`
+		var url=`/dbapi/despatch-receipt-advice?sid=${q.sid}`
 		var method='POST'
 		if((receiptAdvice._id || '')!=''){
 			method='PUT'
-			url=`/dbapi/despatch-receipt-advice/${receiptAdvice._id}?db=${q.db}&sid=${q.sid}`
+			url=`/dbapi/despatch-receipt-advice/${receiptAdvice._id}?sid=${q.sid}`
 		}
 		$.ajax({
 			url:url,

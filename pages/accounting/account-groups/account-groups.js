@@ -16,9 +16,7 @@ module.exports = function(req,res,callback){
 		list:[]
 	}
 
-	if(!req.query.db){
-		return callback({code:'ACTIVE DB ERROR',message:'Aktif secili bir veri ambari yok.'});
-	}
+
 	switch(req.params.func || ''){
 		case 'addnew':
 		
@@ -44,7 +42,7 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
-	api.get(`/${req.query.db}/account-groups`,req,data.filter,(err,resp)=>{
+	api.get(`/{db}/account-groups`,req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp);
 		}
@@ -61,9 +59,9 @@ function addnew(req,res,data,callback){
 			return callback(null,data);
 		}
 		
-		api.post(`/${req.query.db}/account-groups`,req,data.form,(err,resp)=>{
+		api.post(`/{db}/account-groups`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect(`/accounting/account-groups?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+				res.redirect(`/accounting/account-groups?sid=${req.query.sid}&mid=${req.query.mid}`)
 			}else{
 				data['message']=err.message;
 				callback(null,data);
@@ -88,9 +86,9 @@ function edit(req,res,data,callback){
 			return callback(null,data);
 		}
 
-		api.put(`/${req.query.db}/account-groups/${_id}`,req,data.form,(err,resp)=>{
+		api.put(`/{db}/account-groups/${_id}`,req,data.form,(err,resp)=>{
 			if(!err){
-				res.redirect(`/accounting/account-groups?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+				res.redirect(`/accounting/account-groups?sid=${req.query.sid}&mid=${req.query.mid}`)
 
 			}else{
 				data['message']=err.message;
@@ -98,7 +96,7 @@ function edit(req,res,data,callback){
 			}
 		});
 	}else{
-		api.get(`/${req.query.db}/account-groups/${_id}`,req,null,(err,resp)=>{
+		api.get(`/{db}/account-groups/${_id}`,req,null,(err,resp)=>{
 			if(!err){
 				data.form=Object.assign(data.form,resp.data);
 				callback(null,data);
@@ -112,9 +110,9 @@ function edit(req,res,data,callback){
 
 function deleteItem(req,res,data,callback){
 	var _id=req.params.id || '';
-	api.delete(`/${req.query.db}/account-groups/${_id}`,req,(err,resp)=>{
+	api.delete(`/{db}/account-groups/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect(`/accounting/account-groups?mid=${req.query.mid}&db=${req.query.db}&sid=${req.query.sid}`)
+			res.redirect(`/accounting/account-groups?sid=${req.query.sid}&mid=${req.query.mid}`)
 			
 		}else{
 			

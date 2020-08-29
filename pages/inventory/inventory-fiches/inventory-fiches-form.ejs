@@ -659,7 +659,7 @@
                 $("#docLine-item-unitCode").val(''); 
                 
                 $.ajax({
-                    url:'/dbapi/items?itemType=all&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                    url:`/dbapi/items?itemType=all&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
                     type:'GET',
                     dataType: 'json',
                     success: function(result) {
@@ -743,7 +743,7 @@
         
         docInventoryFiche.productionOrderId=_id;
         $.ajax({
-            url:'/dbapi/production-orders/' + _id + '?db=' + q.db + '&sid=' + q.sid,
+            url:`/dbapi/production-orders/' + _id + '?db=' + q.db + '&sid=' + q.sid,
             type:'GET',
             dataType: 'json',
             success: function(result) {
@@ -751,7 +751,7 @@
                     var obj=result.data;
 
                     $.ajax({
-                        url:'/dbapi/items/' + result.data.item + '?&db=' + q.db + '&sid=' + q.sid,
+                        url:`/dbapi/items/' + result.data.item + '?&db=' + q.db + '&sid=' + q.sid,
                         type:'GET',
                         dataType: 'json',
                         success: function(itemResult) {
@@ -820,9 +820,9 @@
         var type='PUT';
         if((docInventoryFiche._id || '')==''){
             type='POST';
-            url='/dbapi/inventory-fiches?db=' + db + '&sid=' + sid;
+            url='/dbapi/inventory-fiches?sid=${sid}`;
         }else{
-            url='/dbapi/inventory-fiches/' + docInventoryFiche._id + '?db=' + db + '&sid=' + sid;
+            url='/dbapi/inventory-fiches/' + docInventoryFiche._id + '?sid=${sid}`;
         }
 
         $.ajax({

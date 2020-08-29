@@ -174,7 +174,7 @@
         $('#packingTypeName').autocomplete({
             source:function(request,response){
                     $.ajax({
-                    url:'/dbapi/packing-types?&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
+                    url:`/dbapi/packing-types?&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
                     type:'GET',
                     dataType: 'json',
                     success: function(result) {

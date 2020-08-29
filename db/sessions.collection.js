@@ -1,6 +1,6 @@
 var schema = mongoose.Schema({
     token: {type:String, required: true},
-    username: {type:String, default:''},
+    username: {type:String, default:'', index:true},
     isSysUser: {type:Boolean, default:false},
     isMember: {type:Boolean, default:true},
     role: {type :String, default: "user"},
@@ -8,8 +8,14 @@ var schema = mongoose.Schema({
     userAgent: {type :String, default: ""},
     sysLogin:  {type:Boolean, default:false},
     sysUsername: {type :String, default: ""},
+    dbId: {type :String, default: "", index:true},
+    dbName: {type :String, default: "", index:true},
+    mId: {type :String, default: "", index:true},
+    menu:[],
+    databases:[],
+    settings:{},
     createdDate: { type: Date,default: Date.now},
-    lastOnline:{ type: Date,default: Date.now}
+    lastOnline:{ type: Date,default: Date.now, index:true}
 });
 
 schema.pre('save',function(next){
