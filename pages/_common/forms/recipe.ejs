@@ -4,301 +4,331 @@
 %>
 <% if(recipeFormType=='products'){ %>
 <div class="card m-0">
-    <div class="card-header p-1 text-primary">Recete Basligi</div>
-    <div class="card-body p-1">
-        
-        <div class="row">
-            <div class="form-group col-md-5">
-                <label for="" class="m-0">Ürüne ait reçeteler</label>
-                <select class="form-control" name="productRecipes" id="productRecipes" onchange="productRecipesChange()">
-                </select>
-            </div>
-            <div class="form-group col-md-3 form-inline">
-                <label for="recipeIsDefault" class="m-0 mt-3">Varsayılan?</label>
-                <input type="checkbox" class="ml-3 mt-3" name="recipeIsDefault" id="recipeIsDefault" checked="false">
-            </div>
-            <div class="form-group col-md-4 text-right">
-                <a href="javascript:yazdir();" class="btn btn-info mt-3" title="Yazdir"><i class="fas fa-print"></i></a>
-                <a href="javascript:receteKaydet();" class="btn btn-primary mt-3"  title="Recete kaydet"><i class="fas fa-save"></i></a>
-                <a href="javascript:receteSil();" class="btn btn-danger mt-3 ml-2"  title="Recete sil"><i class="fas fa-trash-alt"></i></a>
-            </div>
-        </div>
-       
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label for="" class="m-0">Recete Adı</label>
-                <input type="text" class="form-control" name="recipeName" id="recipeName" placeholder="Recete Adı" autocomplete="off"  value="" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
-            </div>
-            <div class="form-group col-md-2">
-                <label for="" class="m-0">Revizyon</label>
-                <input type="number" class="form-control" name="recipeRevision" id="recipeRevision"  value="1" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
-            </div>
-            <div class="form-group col-md-3">
-                <label for="" class="m-0">Reçete Miktarı</label>
-                <input type="number" class="form-control" name="recipeTotalQuantity" id="recipeTotalQuantity"  value="100" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
-            </div>
-            <div class="form-group col-md-3">
-                <label for="" class="m-0">Birim Ağırlık</label>
-                <input type="text" class="form-control" name="birimAgirlik" id="birimAgirlik"  value="<% if(form.unitPacks.length>0){ if(form.unitPacks[0]!=null){%><%- getUnitCodeText(form.unitPacks[0].unitCode)%> <%=form.unitPacks[0].netWeight.value%><%- getUnitCodeText(form.unitPacks[0].netWeight.attr.unitCode)%><%}}%>" readonly="true">
-            </div>
-            <div class="form-group col-md-6">
-                <label for="" class="m-0">Açıklama</label>
-                <input type="text" class="form-control" name="recipeDescription" id="recipeDescription" autocomplete="off" placeholder="Açıklama" value="">
-            </div>
-            <div class="form-group col-md-2">
-                <label for="" class="m-0"><i class="fas fa-user-friends"></i> Gerekli İnsan</label>
-                <select class="form-control" name="staffCount" id="staffCount">
-                    <option value="0">-- Sıfır --</option>
-                    <option value="0.20">%20</option>
-                    <option value="0.25">%25</option>
-                    <option value="0.50">%50</option>
-                    <option value="1">%100</option>
-                    <option value="1.5">%150</option>
-                    <option value="2">%200</option>
-                    <option disabled="disabled">---</option>
-                    <option value="3">3 Kişi</option>
-                    <option value="4">4 Kişi</option>
-                    <option value="5">5 Kişi</option>
-                    <option value="10">10 Kişi</option>
-                    <option value="20">20 Kişi</option>
-                </select>
-            </div>
-            <div class="form-group col-md-3  text-right">
-                <a href="javascript:yeniProcess();" id="yeniProcessButton" class="btn btn-primary mt-md-4" style="width: 120px;"><i class="fas fa-plus-square"></i> Yeni Adim</a>
-            </div>
-        </div>
-        
-        
-    </div>
+	<div class="card-header collapsible">Recete Basligi</div>
+	<div class="card-body p-1">
+
+		<div class="row">
+			<div class="form-group col-md-5">
+				<label for="" class="m-0">Ürüne ait reçeteler</label>
+				<select class="form-control" name="productRecipes" id="productRecipes" onchange="productRecipesChange()">
+				</select>
+			</div>
+			<div class="form-group col-md-3 form-inline">
+				<label for="recipeIsDefault" class="m-0 mt-3">Varsayılan?</label>
+				<input type="checkbox" class="ml-3 mt-3" name="recipeIsDefault" id="recipeIsDefault" checked="false">
+			</div>
+			<div class="form-group col-md-4 text-right">
+				<a href="javascript:yazdir();" class="btn btn-info mt-3" title="Yazdir"><i class="fas fa-print"></i></a>
+				<a href="javascript:receteKaydet();" class="btn btn-primary mt-3"  title="Recete kaydet"><i class="fas fa-save"></i></a>
+				<a href="javascript:receteSil();" class="btn btn-danger mt-3 ml-2"  title="Recete sil"><i class="fas fa-trash-alt"></i></a>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="form-group col-md-4">
+				<label for="" class="m-0">Recete Adı</label>
+				<input type="text" class="form-control" name="recipeName" id="recipeName" placeholder="Recete Adı" autocomplete="off"  value="" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
+			</div>
+			<div class="form-group col-md-2">
+				<label for="" class="m-0">Revizyon</label>
+				<input type="number" class="form-control" name="recipeRevision" id="recipeRevision"  value="1" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
+			</div>
+			<div class="form-group col-md-3">
+				<label for="" class="m-0">Reçete Miktarı</label>
+				<input type="number" class="form-control" name="recipeTotalQuantity" id="recipeTotalQuantity"  value="100" <% if(recipeFormType=='production-orders'){%>readonly="true"<%}%> >
+			</div>
+			<div class="form-group col-md-3">
+				<label for="" class="m-0">Birim Ağırlık</label>
+				<input type="text" class="form-control" name="birimAgirlik" id="birimAgirlik"  value="<% if(form.unitPacks.length>0){ if(form.unitPacks[0]!=null){%><%- getUnitCodeText(form.unitPacks[0].unitCode)%> <%=form.unitPacks[0].netWeight.value%><%- getUnitCodeText(form.unitPacks[0].netWeight.attr.unitCode)%><%}}%>" readonly="true">
+			</div>
+			<div class="form-group col-md-6">
+				<label for="" class="m-0">Açıklama</label>
+				<input type="text" class="form-control" name="recipeDescription" id="recipeDescription" autocomplete="off" placeholder="Açıklama" value="">
+			</div>
+			<div class="form-group col-md-2">
+				<label for="" class="m-0"><i class="fas fa-user-friends"></i> Gerekli İnsan</label>
+				<select class="form-control" name="staffCount" id="staffCount">
+					<option value="0">-- Sıfır --</option>
+					<option value="0.20">%20</option>
+					<option value="0.25">%25</option>
+					<option value="0.50">%50</option>
+					<option value="1">%100</option>
+					<option value="1.5">%150</option>
+					<option value="2">%200</option>
+					<option disabled="disabled">---</option>
+					<option value="3">3 Kişi</option>
+					<option value="4">4 Kişi</option>
+					<option value="5">5 Kişi</option>
+					<option value="10">10 Kişi</option>
+					<option value="20">20 Kişi</option>
+				</select>
+			</div>
+			<div class="form-group col-md-3  text-right">
+				<a href="javascript:yeniProcess();" id="yeniProcessButton" class="skip-enter-next btn btn-primary mt-md-4" style="width: 120px;"><i class="fas fa-plus-square"></i> Yeni Adim</a>
+			</div>
+		</div>
+
+
+	</div>
 </div>
 <% } else if(recipeFormType=='production-orders'){ %>
 
 <% } %>
 <div id="sablonAdim" class="card mt-2" style="display: none;">
-    <div class="card-header p-1 text-primary">
-    <!-- <div class="card-header p-1 card-header-primary"> -->
-        <div class="row m-0 p-0">
-            <div class="col-6 m-0 p-0 mt-1">
-                <div id="baslik"></div>
-            </div>
-            <div class="col-6 m-0 p-0 text-right">
-                <a href="javascript:silProcess();" id="silProcessButton" class="btn btn-danger" style="height: 24px;font-size: 14px;"><i class="fas fa-trash-alt"></i> Adım Sil</a>
-            </div>
-        </div>
-    </div>
-    <div class="card-body p-1">
-        <div class="row m-0 p-0">
-            <div class="col-md-4 m-0 p-0 ">
-                <label class="p-0 m-0">Istasyon</label>
-                <select class="form-control" name="station" id="station" <% if(recipeFormType=='production-orders'){%>disabled<%}%> >
-                    <% stationList.forEach((e)=>{ %>
-                    <option value="<%=e._id%>"><% if(e._id==''){%>---<%}else{%><%=e.name%><%}%></option>
-                    <% }); %>
-                </select>
-            </div>
-            <div class="col-md-3 m-0 p-0 pl-md-4">
-                <label for="" class="m-0">İşlem/Adım</label>
-                <select class="form-control" name="processStep" id="processStep" <% if(recipeFormType=='production-orders'){%>disabled<%}%> >
-                    <% stepList.forEach((e)=>{ %>
-                    <option value="<%=e._id%>"><% if(e._id==''){%>---<%}else{%><%=e.name%><%}%></option>
-                    <% }); %>
-                </select>
-            </div>
-        </div>
-        <div id="useMaterialInput" class="row m-0 p-0 mt-2">
-            <div class="col-md-12 m-0 p-0">
-                <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
-                    <thead>
-                        <tr class="text-nowrap">
-                            <th width="55%" class="">Malzeme</th>
-                            <th width="15%" class=""><div class="float-left">Oran(%)</div><div class="float-right" id="totalPercentInput"></div></th>
-                            <th width="30%" class="text-right">Miktar</th>
-                            <th style="min-width: 60px;" class="text-center">#</th>
-                        </tr>
-                    </thead>
-                    <tbody id="malzemeGrid">
-                        <tr id="addProcessInputMaterialRow" class="text-nowrap" >
-                            <td class="">
-                                <div class="row p-0 m-0">
-                                    <div class="col-4 m-0 p-0">
-                                        <select class="form-control" name="itemTypeInput" id="itemTypeInput">
-                                            <option value="raw-material">Hammadde</option>
-                                            <option value="helper-material">Yardimci Malzeme</option>
-                                            <option value="product">Mamul/Yari mamul</option>
-                                            <option value="item">Stok Envanter</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-8 m-0 p-0 pl-1">
-                                        <input type="text" form="form-general" name="itemName" id="itemName" placeholder="ara"  class="form-control itemName" autocomplete="off" value="">
-                                        <input type="text" form="form-general" name="itemDoc" id="itemDoc"  class="itemId" hidden="true" value="">
-                                        <input type="text" form="form-general" name="itemId" id="itemId"  class="itemId" hidden="true" value="">
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-right">
-                                <div class="form-inline">
-                                    <input type="number" class="form-control" name="percent" id="percent" placeholder="" value="0">
-                                </div>
-                            </td>
-                            <td class="text-right">
-                                <div class="form-inline">
-                                    <input type="number" class="form-control" name="quantity" id="quantity" placeholder="" value="0" style="width: 50%;">
-                                    <select class="form-control" name="quantity-unitCode" id="quantity-unitCode" style="width: 50%;">
-                                        <option value="GRM">gr</option>
-                                        <option value="NIU">Adet</option>
-                                        <option value="KGM">kg</option>
-                                        <option value="LTR">lt</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="text-center"><a href="javascript:addProcessInputMaterial();" id="addProcessInputMaterialButton" class="btn btn-primary far fa-plus-square"  title="Malzeme ekle"></a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div id="useMachineOrMold" class="row m-0 p-0 mt-2">
-            <div class="col-md-12 m-0 p-0">
-                <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
-                    <thead>
-                        <tr class="text-nowrap">
-                            <th width="30%" class="">Makine ve Kalıplar</th>
-                            <th width="25%" class="">Kalip</th>
-                            <th width="15%" class="text-right">Kavite</th>
-                            <th width="15%" class="text-right">Cycle</th>
-                            <th width="15%" class="text-right">Per hour</th>
-                            <th style="min-width: 60px;" class="text-center">#</th>
-                        </tr>
-                    </thead>
-                    <tbody id="machineGrid">
-                        <tr id="addProcessMachineRow" class="text-nowrap" <% if(mode=='view'){%>style="display:none;"<%}%>>
-                            <td class="">
-                                <select class="form-control" id="select-machine">
-                                </select>
-                            </td>
-                            <td class="">
-                                <select class="form-control"  id="select-mold">
-                                </select>
-                            </td>
-                            <td class=""><input type="number" class="form-control" name="cavity" id="cavity" placeholder="" value="0"></td>
-                            <td class="text-right">
-                                <div class="form-inline">
-                                    <input type="number" class="form-control" name="cycle" id="cycle" placeholder="" value="0" style="width: 50%;">
-                                    <select class="form-control" name="cycle-unitCode" id="cycle-unitCode" style="width: 50%;">
-                                        <option value="D62">sn</option>
-                                        <option value="D61">dk</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="text-center">.</td>
-                            <td class="text-center"><a href="javascript:addProcessMachine();" id="addProcessMachineButton" class="btn btn-primary far fa-plus-square"  title="Makine/Kalip ekle"></a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div id="useMaterialOutput" class="row m-0 p-0 mt-2">
-            <div class="col-md-12 m-0 p-0">
-                <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
-                    <thead>
-                        <tr class="text-nowrap">
-                            <th width="60%" class="">Yan ürünler</th>
-                            <th width="40%" class="text-right">Miktar</th>
-                            <th style="min-width: 60px;" class="text-center">#</th>
-                        </tr>
-                    </thead>
-                    <tbody id="malzemeGridOutput">
-                        
-                        <tr id="addProcessOutputMaterialRow" class="text-nowrap">
-                            <td class="">
-                                <div class="row p-0 m-0">
-                                    <div class="col-4 m-0 p-0">
-                                        <select class="form-control" name="itemTypeOutput" id="itemTypeOutput">
-                                            <option value="raw-material">Hammadde</option>
-                                            <option value="helper-material">Yardimci Malzeme</option>
-                                            <option value="product">Mamul/Yari mamul</option>
-                                            <option value="item">Stok Envanter</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-8 m-0 p-0 pl-1">
-                                        <input type="text" form="form-general" name="itemNameOutput" id="itemNameOutput" placeholder="ara"  class="form-control" autocomplete="off" value="">
-                                        <input type="text" form="form-general" name="itemDocOutput" id="itemDocOutput"  hidden="true" value="">
-                                        <input type="text" form="form-general" name="itemIdOutput" id="itemIdOutput"  hidden="true" value="">
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-right">
-                                <div class="form-inline">
-                                    <input type="number" class="form-control" name="percentOutput" id="percentOutput" placeholder="" value="0">
-                                </div>
-                            </td>
-                            <td class="text-right">
-                                <div class="form-inline">
-                                    <input type="number" class="form-control" name="quantityOutput" id="quantityOutput" placeholder="" value="0" style="width: 50%;">
-                                    <select class="form-control" name="quantity-unitCodeOutput" id="quantity-unitCodeOutput" style="width: 50%;">
-                                        <option value="NIU">Adet</option>
-                                        <option value="GRM">gr</option>
-                                        <option value="KGM">kg</option>
-                                        <option value="LTR">lt</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="text-center"><a href="javascript:addProcessOutputMaterial();" id="addProcessOutputMaterialButton" class="btn btn-primary far fa-plus-square"  title="Yan ürün ekle"></a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div id="useParameters" class="mt-2">
-            <textarea class="form-control" id="processNotlar" rows="3" placeholder="Notlar/parametreler"></textarea>
-        </div>
-    </div>
+	<div class="card-header collapsible">
+		<span id="baslik"></span>
+		<div class="float-right">
+			<a href="javascript:silProcess();" id="silProcessButton" class="btn btn-danger" style="height: 24px;font-size: 14px;"><i class="fas fa-trash-alt"></i> Adım Sil</a>
+		</div>
+	</div>
+	<div class="card-body p-1">
+		<div class="row m-0 p-0">
+			<div class="col-md-4 m-0 p-0 ">
+				<label class="p-0 m-0">Istasyon</label>
+				<select class="form-control" name="station" id="station" <% if(recipeFormType=='production-orders'){%>disabled<%}%> >
+					<% stationList.forEach((e)=>{ %>
+					<option value="<%=e._id%>"><% if(e._id==''){%>---<%}else{%><%=e.name%><%}%></option>
+					<% }); %>
+				</select>
+			</div>
+			<div class="col-md-3 m-0 p-0 pl-md-4">
+				<label for="" class="m-0">İşlem/Adım</label>
+				<select class="form-control" name="processStep" id="processStep" <% if(recipeFormType=='production-orders'){%>disabled<%}%> >
+					<% stepList.forEach((e)=>{ %>
+					<option value="<%=e._id%>"><% if(e._id==''){%>---<%}else{%><%=e.name%><%}%></option>
+					<% }); %>
+				</select>
+			</div>
+		</div>
+		<div id="useMaterialInput" class="row m-0 p-0 mt-2">
+			<div class="col-md-12 m-0 p-0">
+				<table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
+					<thead>
+						<tr class="text-nowrap">
+							<th width="55%" class="">Malzeme</th>
+							<th width="15%" class=""><div class="float-left">Oran(%)</div><div class="float-right" id="totalPercentInput"></div></th>
+							<th width="30%" class="text-right">Miktar</th>
+							<th style="min-width: 60px;" class="text-center">#</th>
+						</tr>
+					</thead>
+					<tbody id="malzemeGrid">
+						
+					</tbody>
+					<tfoot>
+						<tr id="addProcessInputMaterialRow" class="text-nowrap table-input-row" >
+							<td class="">
+								<div class="row p-0 m-0">
+									<div class="col-4 m-0 p-0">
+										<select class="form-control" name="itemTypeInput" id="itemTypeInput">
+											<option value="raw-material">Hammadde</option>
+											<option value="helper-material">Yardimci Malzeme</option>
+											<option value="product">Mamul/Yari mamul</option>
+											<option value="item">Stok Envanter</option>
+										</select>
+									</div>
+									<div class="col-8 m-0 p-0 pl-1">
+										<input type="text" form="form-general" name="itemName" id="itemName" placeholder="ara"  class="form-control itemName" autocomplete="off" value="">
+										<input type="text" form="form-general" name="itemDoc" id="itemDoc"  class="itemId" hidden="true" value="">
+										<input type="text" form="form-general" name="itemId" id="itemId"  class="itemId" hidden="true" value="">
+									</div>
+								</div>
+							</td>
+							<td class="text-right">
+								<div class="form-inline">
+									<input type="number" class="form-control" name="percent" id="percent" placeholder="" value="0">
+								</div>
+							</td>
+							<td class="text-right">
+								<div class="form-inline">
+									<input type="number" class="form-control" name="quantity" id="quantity" placeholder="" value="0" style="width: 50%;">
+									<select class="form-control" name="quantity-unitCode" id="quantity-unitCode" style="width: 50%;">
+										<option value="GRM">gr</option>
+										<option value="NIU">Adet</option>
+										<option value="KGM">kg</option>
+										<option value="LTR">lt</option>
+									</select>
+								</div>
+							</td>
+							<td class="text-center"><a href="javascript:addProcessInputMaterial();" id="addProcessInputMaterialButton" class="btn btn-primary far fa-plus-square"  title="Malzeme ekle"></a></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+		<div id="useMachineOrMold" class="row m-0 p-0 mt-2">
+			<div class="col-md-12 m-0 p-0">
+				<table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
+					<thead>
+						<tr class="text-nowrap">
+							<th width="30%" class="">Makine ve Kalıplar</th>
+							<th width="25%" class="">Kalip</th>
+							<th width="15%" class="text-right">Kavite</th>
+							<th width="15%" class="text-right">Cycle</th>
+							<th width="15%" class="text-right">Per hour</th>
+							<th style="min-width: 60px;" class="text-center">#</th>
+						</tr>
+					</thead>
+					<tbody id="machineGrid">
+						
+					</tbody>
+					<tfoot>
+						<tr id="addProcessMachineRow" class="text-nowrap table-input-row" <% if(mode=='view'){%>style="display:none;"<%}%>>
+							<td class="">
+								<select class="form-control" id="select-machine">
+								</select>
+							</td>
+							<td class="">
+								<select class="form-control"  id="select-mold">
+								</select>
+							</td>
+							<td class=""><input type="number" class="form-control" name="cavity" id="cavity" placeholder="" value="0"></td>
+							<td class="text-right">
+								<div class="form-inline">
+									<input type="number" class="form-control" name="cycle" id="cycle" placeholder="" value="0" style="width: 50%;">
+									<select class="form-control" name="cycle-unitCode" id="cycle-unitCode" style="width: 50%;">
+										<option value="D62">sn</option>
+										<option value="D61">dk</option>
+									</select>
+								</div>
+							</td>
+							<td class="text-center"><a href="javascript:addProcessMachine();" id="addProcessMachineButton" class="btn btn-primary far fa-plus-square"  title="Makine/Kalip ekle"></a></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+		<div id="useMaterialOutput" class="row m-0 p-0 mt-2">
+			<div class="col-md-12 m-0 p-0">
+				<table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
+					<thead>
+						<tr class="text-nowrap">
+							<th width="60%" class="">Yan ürünler</th>
+							<th width="40%" class="text-right">Miktar</th>
+							<th style="min-width: 60px;" class="text-center">#</th>
+						</tr>
+					</thead>
+					<tbody id="malzemeGridOutput">
+						<tr id="addProcessOutputMaterialRow" class="text-nowrap table-input-row">
+							<td class="">
+								<div class="row p-0 m-0">
+									<div class="col-4 m-0 p-0">
+										<select class="form-control" name="itemTypeOutput" id="itemTypeOutput">
+											<option value="raw-material">Hammadde</option>
+											<option value="helper-material">Yardimci Malzeme</option>
+											<option value="product">Mamul/Yari mamul</option>
+											<option value="item">Stok Envanter</option>
+										</select>
+									</div>
+									<div class="col-8 m-0 p-0 pl-1">
+										<input type="text" form="form-general" name="itemNameOutput" id="itemNameOutput" placeholder="ara"  class="form-control" autocomplete="off" value="">
+										<input type="text" form="form-general" name="itemDocOutput" id="itemDocOutput"  hidden="true" value="">
+										<input type="text" form="form-general" name="itemIdOutput" id="itemIdOutput"  hidden="true" value="">
+									</div>
+								</div>
+							</td>
+							<td class="text-right">
+								<div class="form-inline">
+									<input type="number" class="form-control" name="percentOutput" id="percentOutput" placeholder="" value="0">
+								</div>
+							</td>
+							<td class="text-right">
+								<div class="form-inline">
+									<input type="number" class="form-control" name="quantityOutput" id="quantityOutput" placeholder="" value="0" style="width: 50%;">
+									<select class="form-control" name="quantity-unitCodeOutput" id="quantity-unitCodeOutput" style="width: 50%;">
+										<option value="NIU">Adet</option>
+										<option value="GRM">gr</option>
+										<option value="KGM">kg</option>
+										<option value="LTR">lt</option>
+									</select>
+								</div>
+							</td>
+							<td class="text-center"><a href="javascript:addProcessOutputMaterial();" id="addProcessOutputMaterialButton" class="btn btn-primary far fa-plus-square"  title="Yan ürün ekle"></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div id="useParameters" class="mt-2">
+			<textarea class="form-control" id="processNotlar" rows="3" placeholder="Notlar/parametreler"></textarea>
+		</div>
+	</div>
 </div>
 
 <div id="processGrid"></div>
 
 
+
+<div class="modal" id="modalMachineParameters" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalMachineParametersLabel" aria-hidden="true">
+	<div class="modal-dialog  modal-lg  modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div id="modalMachineParametersHeader" class="modal-header p-2 ">
+				<label class="modal-title" id="modalMachineParametersLabel">Makine Parametreleri</label>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body p-2" style="overflow: auto;">
+				<div class="row" id="divModalMachineParameters"></div>
+			</div>
+			<div class="modal-footer">
+				<a class="btn btn-primary" href="javascript:machineParametersOK()">Tamam</a>
+				<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <script type="text/javascript">
-    var q=getAllUrlParams();
-    var recipeFormType='<%- recipeFormType%>';
-    var mode='<%=mode%>';
-    <% if(recipeFormType=='products'){ %>
-    var form_item_id='<%=form._id%>';
-    var doc=clone(dbType.recipeType);
-    doc.item=form_item_id;
-    <% } %>
-    var aktifReceteAdim=-1;
-    var lineMaterialInputs=[];
-    var lineMaterialOutputs=[];
-    var lineMachines=[];
-    var recipeList=[];
-    var defaultUnit={
-    	unitCode:'NIU',
-    	netWeight:{
-    		value:1,
-    		attr:{
-    			unitCode:'NIU'
-    		}
-    	}
-    }
-    var birimler=[];
-    <% if(recipeFormType=='products'){ %>
-        birimler=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.unitPacks)) %>'));
-    <% } %>
-    var stepList=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(stepList)) %>'));
-    
-    if(stepList.length>0) stepList[0].name='---';
-    if(birimler){
-        if(birimler.length>0){
-            if(birimler[0].unitCode){
-                defaultUnit.unitCode=birimler[0].unitCode;
-                defaultUnit.netWeight.value=birimler[0].netWeight.value;
-                defaultUnit.netWeight.attr.unitCode=birimler[0].netWeight.attr.unitCode;
-                
-            }
-            
-        }
-    }
+	var recipeFormType='<%- recipeFormType%>';
+	var mode='<%=mode%>';
+	<%
+	if(recipeFormType=='products'){ 
+		%>
+		var form_item_id='<%=form._id%>';
+		var doc=clone(dbType.recipeType);
+		doc.item=form_item_id;
+		<% 
+	} 
+	%>
+	var aktifReceteAdim=-1;
+	var lineMaterialInputs=[];
+	var lineMaterialOutputs=[];
+	var lineMachines=[];
+	var recipeList=[];
+	var defaultUnit={
+		unitCode:'NIU',
+		netWeight:{
+			value:1,
+			attr:{
+				unitCode:'NIU'
+			}
+		}
+	}
+	var birimler=[];
+	<% 
+	if(recipeFormType=='products'){
+		%>
+		birimler=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(form.unitPacks)) %>'));
+		<% 
+	} 
+	%>
+	var stepList=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(stepList)) %>'));
+
+	if(stepList.length>0) stepList[0].name='---';
+	if(birimler){
+		if(birimler.length>0){
+			if(birimler[0].unitCode){
+				defaultUnit.unitCode=birimler[0].unitCode;
+				defaultUnit.netWeight.value=birimler[0].netWeight.value;
+				defaultUnit.netWeight.attr.unitCode=birimler[0].netWeight.attr.unitCode;
+
+			}
+
+		}
+	}
+
+
 </script>
 
 <script type="text/javascript" src="<%- assetVersion('/js/ui/recipe.js') %>"></script>

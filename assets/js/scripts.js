@@ -67,19 +67,33 @@ $(document).ready(function(){
 });
 
 function enterNext(bu){
+	
+	if(bu==undefined)
+		bu=this
 	var self = $(bu), form = self.parents('form:eq(0)'), focusable, next;
-	focusable = form.find('input,a,select,button,textarea').filter(':visible');
+	focusable = form.find('input,a,select,button,textarea').filter(':visible')
 	next = focusable.eq(focusable.index(bu)+1);
 	if (next.length) {
-		var readonly=next.prop('readonly') || false;
-		var disabled=next.prop('disabled') || false;
-		if(readonly || disabled) return enterNext(next);
-		next.focus();
-		if(typeof next.select === 'function') next.select();
+		
+		var readonly=next.prop('readonly') || false
+		var disabled=next.prop('disabled') || false
+		var cl=next.prop('class') || ''
+
+		if(cl.indexOf('btn-collapse')>-1 || cl.indexOf('skip-enter-next')>-1 || cl.indexOf('no-enter-next')>-1)
+			return enterNext(next)
+
+		if(readonly || disabled )
+			return enterNext(next)
+		
+
+		
+		next.focus()
+		if(typeof next.select === 'function')
+			next.select()
 	} else {
-		form.submit();
+		//form.submit();
 	}
-	return false;
+	return false
 }
 
 function openUrl(url,_id,target,popup){
@@ -148,19 +162,16 @@ function load_form_settings(){
 load_form_settings()
 
 $('.card-collapse').on('show.bs.collapse',(e)=>{
-	console.log(`show.bs.collapse e1:`,e)
+	
 	save_form_settings(e)	
 })
 $('.card-collapse').on('hide.bs.collapse',(e)=>{
-	console.log(`hide.bs.collapse e1:`,e)
 	save_form_settings(e)
 })
 
 $('.modal .card-collapse').on('show.bs.collapse',(e)=>{
-	console.log(`modal show.bs.collapse e1:`,e)
 	save_form_settings(e)	
 })
 $('.modal .card-collapse').on('hide.bs.collapse',(e)=>{
-	console.log(`modal hide.bs.collapse e1:`,e)
 	save_form_settings(e)
 })

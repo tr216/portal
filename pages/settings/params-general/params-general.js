@@ -2,7 +2,7 @@ module.exports = function(req,res,callback){
 	var data={
 		form:{
 			default:'{}', // varsayilan parametreler JSON format
-			user:'{}' // kullanici ozelindeki degistirmeler
+			settings:'{}' // kullanici ozelindeki degistirmeler
 		},
 		filter:{
 
@@ -31,10 +31,10 @@ function getSettings(req,res,data,callback){
 	api.get(`/{db}/settings`,req,data.filter,(err,resp)=>{
 		if(!err){
 			data.form.default=resp.data.default
-			if(JSON.stringify(data.form.user)!='{}'){
-				data.form.user=JSON.stringify(resp.data.user,null,4)
+			if(JSON.stringify(data.form.settings)!='{}'){
+				data.form.settings=JSON.stringify(resp.data.settings,null,4)
 			}else{
-				data.form.user=bosVeri
+				data.form.settings=bosVeri
 			}
 		}else{
 			errorLog('hata:',err)
@@ -48,14 +48,14 @@ function saveSettings(req,res,data,callback){
 	data.form=Object.assign(data.form,req.body)
 	var obj={}
 	try{
-		obj=JSON.parse(data.form.user)
+		obj=JSON.parse(data.form.settings)
 		api.post(`/{db}/settings`,req,obj,(err,resp)=>{
 			if(!err){
 				data.form.default=resp.data.default
-				if(JSON.stringify(data.form.user)!='{}'){
-					data.form.user=JSON.stringify(resp.data.user,null,4)
+				if(JSON.stringify(data.form.settings)!='{}'){
+					data.form.settings=JSON.stringify(resp.data.settings,null,4)
 				}else{
-					data.form.user=bosVeri
+					data.form.settings=bosVeri
 				}
 				
 			}else{

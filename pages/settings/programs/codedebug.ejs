@@ -180,9 +180,9 @@
 			},
 			error:function(err){
 
-				alert(err)
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
 				if(cb)
-					cb({code:err.name || 'Error',message:err.message || 'Hata olustu'})
+					cb({code:err.name || 'Error',message:err.message || 'Hata oluştu'})
 				console.log(err)
 			}
 		})
@@ -241,7 +241,7 @@
 			},
 			error:function(err){
 				console.log(err)
-				alert(err)
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
 			}
 		})
 	}
@@ -286,7 +286,7 @@
 				}
 			},
 			error:function(err){
-				alert(err)
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
 				console.log(err)
 			}
 		})

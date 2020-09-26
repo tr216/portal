@@ -290,7 +290,7 @@ exports.delete=(endpoint,req, callback)=>{
 
 function sessionId2Token(req,cb){
 	if(req.query.sid==undefined) return cb(null,'')
-	db.sessions.findOne({_id:req.query.sid},(err,doc)=>{
+	db.sessions.findOne({_id:req.query.sid.toLongId(),passive:false},(err,doc)=>{
 		if(!err){
 			if(doc!=null){
 				var userAgent=req.headers['user-agent'] || ''
@@ -306,7 +306,7 @@ function sessionId2Token(req,cb){
 				})
 				
 			}else{
-				cb({code:'RECORD_NOT_FOUND',message:'sessionId bulunamadi!'})
+				cb({code:'SESSION_NOT_FOUND',message:'Oturum sonlandırılmış. Tekrar giriş yapınız.'})
 			}
 		}else{
 			cb({code:err.name,message:err.message})

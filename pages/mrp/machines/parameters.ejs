@@ -1,68 +1,80 @@
 <div class="row">
-    <div class="col-md-12">
-        <table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
-            <thead>
-                <tr class="text-nowrap">
-                    <th width="55%" class="">Parametre</th>
-                    <th width="35%" class="">Değer</th>
-                    <th width="80" class="text-center">
-                        <a href="javascript:addNewParameter();" class="btn btn-primary far fa-plus-square"  title="Yeni satir"></a>
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="parametersGrid">
-                
-            </tbody>
-        </table>
-    </div>
+	<div class="col-md-12">
+		<table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
+			<thead>
+				<tr class="text-nowrap">
+					<th width="55%" class="">Parametre</th>
+					<th width="35%" class="">Değer</th>
+					<th width="80" class="text-center">
+						<a href="javascript:addNewParameter();" class="btn btn-primary far fa-plus-square"  title="Yeni satir"></a>
+					</th>
+				</tr>
+			</thead>
+			<tbody id="parametersGrid">
+
+			</tbody>
+		</table>
+	</div>
 </div>
 
 <script type="text/javascript">
-    var machineParameters=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.machineParameters)) %>'));
+	var machineParameters=JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(form.machineParameters)) %>'))
 
-    function loadMachineParameters(){
-        $('#parametersGrid tr').remove();
-        var parametersGrid=document.getElementById('parametersGrid');
-        machineParameters.forEach(function(e,index){
-            var newRow=parametersGrid.insertRow(parametersGrid.rows.length);
-            newRow.insertCell(0).innerHTML='<input type="text" class="form-control" name="machineParameters[' + index + '][name]" placeholder="Parametre ' + (index+1).toString() + '" value="' + e.name +'" <% if(mode=="view"){%> readonly="true" <%}%>>';
-            newRow.insertCell(1).innerHTML='<input type="text" class="form-control" name="machineParameters[' + index + '][value]" placeholder="değer" value="' + e.value +'" <% if(mode=="view"){%> readonly="true" <%}%>>';
-            var cell2=newRow.insertCell(2);
-            cell2.classList.add('text-center');
-            cell2.innerHTML='<a href="javascript:removeParameter(' + index + ');" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>';
-        });
-    }
+	function loadMachineParameters(){
+		$('#parametersGrid tr').remove()
+		var parametersGrid=document.getElementById('parametersGrid')
+		machineParameters.forEach(function(e,index){
+			var newRow=parametersGrid.insertRow(parametersGrid.rows.length);
+			newRow.insertCell(0).innerHTML='<input type="text" class="form-control" name="machineParameters[' + index + '][name]" placeholder="Parametre ' + (index+1).toString() + '" value="' + e.name +'" <% if(mode=="view"){%> readonly="true" <%}%>>';
+			newRow.insertCell(1).innerHTML='<input type="text" class="form-control" name="machineParameters[' + index + '][value]" placeholder="değer" value="' + e.value +'" <% if(mode=="view"){%> readonly="true" <%}%>>';
+			var cell2=newRow.insertCell(2);
+			cell2.classList.add('text-center');
+			cell2.innerHTML='<a href="javascript:removeParameter(' + index + ');" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>';
+		})
+	}
 
-    function addNewParameter(){
-        <% if(mode=="view"){%> 
-            return;
-        <%}%>
-        machineParameters.push({name:'Yeni parametre ' + (machineParameters.length + 1).toString(),value:''});
-        var parametersGrid=document.getElementById('parametersGrid');
-        var index=machineParameters.length-1;
-        var newRow=parametersGrid.insertRow(index);
-        newRow.insertCell(0).innerHTML='<input type="text" class="form-control" name="machineParameters[' + index + '][name]" placeholder="Parametre ' + (index+1).toString() + '" value="' + machineParameters[index].name +'">';
-        newRow.insertCell(1).innerHTML='<input type="text" class="form-control" name="machineParameters[' + index + '][value]" placeholder="değer" value="' + machineParameters[index].value +'">';
-        var cell2=newRow.insertCell(2);
-        cell2.classList.add('text-center');
-        cell2.innerHTML='<a href="javascript:removeParameter(' + index + ');" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>';
-    }
+	function addNewParameter(){
+		<% 
+		if(mode=="view"){
+			%> 
+			return;
+			<%
+		}
+		%>
+		machineParameters.push({name:'Yeni parametre ' + (machineParameters.length + 1).toString(),value:''});
+		var parametersGrid=document.getElementById('parametersGrid');
+		var index=machineParameters.length-1;
+		var newRow=parametersGrid.insertRow(index);
+		newRow.insertCell(0).innerHTML='<input type="text" class="form-control" name="machineParameters[' + index + '][name]" placeholder="Parametre ' + (index+1).toString() + '" value="' + machineParameters[index].name +'">';
+		newRow.insertCell(1).innerHTML='<input type="text" class="form-control" name="machineParameters[' + index + '][value]" placeholder="değer" value="' + machineParameters[index].value +'">';
+		var cell2=newRow.insertCell(2);
+		cell2.classList.add('text-center');
+		cell2.innerHTML='<a href="javascript:removeParameter(' + index + ');" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>';
+	}
 
-    function removeParameter(removeIndex){
-        <% if(mode=="view"){%> 
-            return;
-        <%}%>
-        if(confirm('Makina parametresini silmek istediginizden emin misiniz?')==false) return;
-        machineParameters.forEach(function(e,index){
-            e.name=$('input[name="machineParameters[' + index + '][name]"]').val();
-            e.value=$('input[name="machineParameters[' + index + '][value]"]').val();
-        });
-        machineParameters.splice(removeIndex,1);
-        loadMachineParameters();
-    }
+	function removeParameter(removeIndex){
+		<% 
+		if(mode=="view"){
+			%> 
+			return
+			<%
+		}
+		%>
+		confirmX(`Makina parametresini silmek istediğinizden emin misiniz?`,(resp)=>{
+			if(resp){
+				machineParameters.forEach(function(e,index){
+					e.name=$('input[name="machineParameters[' + index + '][name]"]').val();
+					e.value=$('input[name="machineParameters[' + index + '][value]"]').val();
+				});
+				machineParameters.splice(removeIndex,1);
+				loadMachineParameters();
+			}
+		})
 
-    $(document).ready(function(){
+	}
 
-        loadMachineParameters();
-    })
+	$(document).ready(function(){
+
+		loadMachineParameters();
+	})
 </script>

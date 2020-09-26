@@ -11,6 +11,7 @@ var schema = mongoose.Schema({
     dbId: {type :String, default: "", index:true},
     dbName: {type :String, default: "", index:true},
     mId: {type :String, default: "", index:true},
+    passive: {type:Boolean, default:false, index:true},
     menu:[],
     databases:[],
     settings:{},

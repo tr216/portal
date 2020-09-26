@@ -66,3 +66,12 @@ recipeFormType='products';
     }) 
 %>
 
+<script type="text/javascript">
+	document.getElementById('headerButtons').innerHTML=`
+	<a href="javascript:formKaydet();" class="btn btn-primary btn-form-header" title="Kaydet"><i class="fas fa-save"></i></a>
+	<a href="javascript:goBack();" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>
+	`
+	function formKaydet(){
+		alertX('Form kaydet','Uyari','warning')
+	}
+</script>

@@ -19,14 +19,17 @@ headerButtons +='<a href="javascript:cancelForm();" class="btn btn-dark  btn-for
 			</div>
 		</div>
 		<div class="col-md-6 m-0 p-1">
-			<div id="user" class="card">
+			<div id="settings" class="card">
 				<div class="card-header p-1 text-primary">Özelleştirilen Parametreler</div>
 				<div class="card-body p-0">
-					<pre class="prism-live language-js fill" style="min-height: 33rem;max-height: 33rem;"><code><%- form.user%></code></pre>
-					<input type="hidden" name="user" value="<%- form.user%>">
+					<pre class="prism-live language-js fill" style="min-height: 33rem;max-height: 33rem;"><code><%- form.settings%></code></pre>
+					<input type="hidden" name="settings" value="<%- form.settings%>">
 				</div>
 			</div>
 			<div class="float-left"><a href="javascript:hataDenetimi()" class="btn btn-primary btn-sm" title="JSON format icin hata denetimi yap"><i class="fas fa-check"></i> Hata denetimi yap</a></div>
+			<div class="float-left"><a href="javascript:deneme('danger')" class="btn btn-primary btn-sm ml-2" title="qwerty"> danger</a></div>
+			<div class="float-left"><a href="javascript:deneme('warning')" class="btn btn-primary btn-sm ml-2" title="qwerty"> warning</a></div>
+			<div class="float-left"><a href="javascript:deneme('info')" class="btn btn-primary btn-sm ml-2" title="qwerty"> info</a></div>
 		</div>
 	</div>
 </form>
@@ -39,43 +42,50 @@ headerButtons +='<a href="javascript:cancelForm();" class="btn btn-dark  btn-for
 <script type="text/javascript" src="<%- assetVersion('/vendor/js/prism-live-javascript.js') %>"></script>
 
 <script type="text/javascript">
+	function deneme(type){
+		var msj=`Merhaba dunya
+nasilsin? iyisin mi?`
+		confirmX(msj,type,(e)=>{
+			console.log(`confirmX e:`,e)
+		})
+	}
+
 	var headerButtons=document.getElementById('headerButtons');
 	if(headerButtons){
 		headerButtons.innerHTML='<%- headerButtons %>';
 	}
 
 	function cancelForm(){
-		// if(!confirm('Degisiklikleriniz eski haline donecektir. Emin misiniz?'))
-		// 	return
+	
 		window.location.reload()
 	}
 
 	function save(){
 		if(!jsonControl())
 			return
-		var s=document.getElementById('user').getElementsByTagName('textarea')[0]
-		$('input[name="user"]').val(s.value)
-		// if(!confirm('Ayarlari saklamak istediginizden emin misiniz?'))
-		// 	return
+		var s=document.getElementById('settings').getElementsByTagName('textarea')[0]
+		$('input[name="settings"]').val(s.value)
+	
 		document.getElementById("form1").submit()
 	}
 
 	function hataDenetimi(){
 		if(jsonControl()){
-
-			alert(`Hata denetimi basarili :-)`)
+			alertX(`Hata denetimi basarili :-)`,'Başarılı')
 		}
 	}
 
 	function jsonControl(){
-		var s=document.getElementById('user').getElementsByTagName('textarea')[0].value
+		var s=document.getElementById('settings').getElementsByTagName('textarea')[0].value
 		try{
 			var obj=JSON.parse(s)
 			
 			return true
 		}catch(e){
-			alert('Hata:' + (e))
-			return false
+			alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger',()=>{
+				return false
+			})
+			
 		}
 
 	}

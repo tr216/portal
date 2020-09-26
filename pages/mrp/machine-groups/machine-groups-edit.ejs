@@ -1,10 +1,12 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/forms/form',{
     formControls:{
-        name     :{caption:'Adı',                type:'textbox' ,required:true}
+        name     :{caption:'Adı',                type:'textbox' ,required:true , col:'col-md-3'},
+        parameters:{caption:'Parametreler(JSON format)', type:'json', col:'col-md-9'}
     },
     action:'',
     mode:'edit'
     }) 
-%>
+%> 
+
 

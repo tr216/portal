@@ -12,22 +12,26 @@ body, input, button, select, label, textarea {
 	font-size: 10pt;
 }
 .table {
-	color: #555;
+	/*color: #555;*/
 	/*font-size: 10pt;*/
-	font-size: 10pt;
+	/*font-size: 10pt;*/
 }
 
 .table thead th {
 	padding: 0.25rem;
 	vertical-align: middle;
-	border-bottom: 2px solid #e3e6f0;
-	font-size: 11pt;
+	/*border-bottom: 2px solid #e3e6f0;*/
+	/*font-size: 11pt;*/
 }
 
 .table th, .table td {
 	padding: 0.25rem;
 	vertical-align: middle;
-	/*border-top: 1px solid #e3e6f0;*/
+	border-top: none;
+}
+
+.table-striped tbody tr:hover {
+	background-color: #d2d2d2;
 }
 
 .form-table thead th {
@@ -435,9 +439,6 @@ footer.footer {
 	margin: 0;
 }
 
-.modal-footer {
-	display: block;
-}
 
 .button-bar {
 	background-color: #f8f9fa;
@@ -477,4 +478,8 @@ footer.footer {
 .sb-sidenav .sb-sidenav-menu .nav .nav-link {
 	padding-top: 0.25rem; 
 	padding-bottom: 0.25rem; 
+}
+
+.table-input-row {
+	border: #607d8b96 2px dotted!important;
 }

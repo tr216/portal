@@ -52,7 +52,21 @@ module.exports = function(app){
 		res.redirect('/general/login')
 	})
 	app.all('/logout', function(req, res) {
-		res.redirect('/general/login')
+		if((req.query.sid || '')==''){
+			res.redirect('/general/login')
+		}else{
+			sessionHelper.logout(req,res,(err,data)=>{
+				res.redirect('/general/login')
+			})
+		}
+	})
+
+	app.all('/generate/form', function(req, res) {
+		if(req.method=='POST'){
+
+		}else{
+			
+		}
 	})
 
 	app.all('/api/:func', function(req, res) {
@@ -338,8 +352,8 @@ function setGeneralParams(req, res, data, cb){
 	if(req.params.module=='general' && (req.params.page=='login' || req.params.page=='error')){
 		return cb(null,data)
 	}
-	
-	db.sessions.findOne({_id:req.query.sid},(err,doc)=>{
+	console.log(`req.query.sid.toLongId()1:`,req.query.sid.toLongId())
+	db.sessions.findOne({_id:req.query.sid.toLongId(), passive:false},(err,doc)=>{
 		if(!err){
 			if(doc!=null){
 				data['db']=doc.dbId
@@ -348,12 +362,14 @@ function setGeneralParams(req, res, data, cb){
 				data['leftMenu']=doc.menu
 				data['databases']=doc.databases
 				data['session']=doc.toJSON()
+				console.log(`doc.dbId:`,doc.dbId)
 				cb(null, data)
 			}else{
-				cb({code:'NOT_FOUND',message:'Oturum süresi bitmiş. Yeniden giriş yapınız.'})
+				cb({code:'SESSION_NOT_FOUND',message:'Oturum süresi bitmiş. Yeniden giriş yapınız.'})
 			}
 			
 		}else{
+			console.log(`setGeneralParams err:`,err)
 			cb(err)
 		}
 	})
@@ -365,7 +381,7 @@ var userInfo = function (req, res, next) {
 	req.params.role='user'
 	req.params.username=''
 	if(req.query.sid){
-		db.sessions.findOne({_id:req.query.sid},(err,doc)=>{
+		db.sessions.findOne({_id:req.query.sid.toLongId()},(err,doc)=>{
 			if(!err){
 				if(doc!=null){
 					req.params.username=doc.username

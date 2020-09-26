@@ -82,26 +82,28 @@
 		}
 		
 		if(data.list.length==0)
-			return alert('Kayit secilmemis! Teslim durumu: "Taslak" veya "Hata" olanlar gonderilebilir')
-		if(!confirm(data.list.length + ' adet irsaliye teslim bilgisi gönderilecektir. Onayliyor musunuz?'))
-			return
-
-		$.ajax({
-			url:`/dbapi/despatch-receipt-advice/send?sid=${q.sid}`,
-			data:data,
-			type:'POST',
-			success:function(result){
-				if(result.success){
-					alert(result.data)
-					window.location.reload()
-				}else{
-					alert(result.error.code + '\n' + result.error.message)
-				}
-			},
-			error:function(err){
-				alert(err)
+			return alertX('Kayit secilmemis! Teslim durumu: "Taslak" veya "Hata" olanlar gonderilebilir','Uyarı')
+		confirmX(`${data.list.length} adet irsaliye teslim bilgisi gönderilecektir. Onaylıyor musunuz?`,(resp)=>{
+			if(resp){
+				$.ajax({
+					url:`/dbapi/despatch-receipt-advice/send?sid=${q.sid}`,
+					data:data,
+					type:'POST',
+					success:function(result){
+						if(result.success){
+							alert(result.data)
+							window.location.reload()
+						}else{
+							alert(result.error.code + '\n' + result.error.message)
+						}
+					},
+					error:function(err){
+						alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+					}
+				})
 			}
 		})
+
 	}
 	var despatchDoc
 	var receiptAdvice
@@ -133,8 +135,8 @@
 								showModal()
 							},
 							error:function(err){
-								console.log(`err:`,err)
-								alert('hata2:' + err)
+								alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+
 							}
 						});
 					}else{
@@ -143,12 +145,11 @@
 					
 					
 				}else{
-					alert(result.error.code + ' - ' + result.error.message);
+					alertX(result.error.message,'HATA','warning')
 				}
 			},
 			error:function(err){
-				console.log(`err:`,err)
-				alert('hata1:' + err)
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
 			}
 		});
 	}
@@ -186,30 +187,30 @@
 					if(receiptAdvice.receiptLine[index])
 						if(receiptAdvice.receiptLine[index].lineId)
 							lineId=receiptAdvice.receiptLine[index].lineId.value
+					}
 				}
-			}
-			var newRow=approveGrid.insertRow(approveGrid.rows.length);
-			var cell0=newRow.insertCell(0)
-			cell0.classList.add('text-right')
-			cell0.innerHTML=lineId
+				var newRow=approveGrid.insertRow(approveGrid.rows.length);
+				var cell0=newRow.insertCell(0)
+				cell0.classList.add('text-right')
+				cell0.innerHTML=lineId
 
-			newRow.insertCell(1).innerHTML=`${e.item.name.value} ${e.item.description?e.item.description.value:''}`
-			var cell2=newRow.insertCell(2)
-			cell2.classList.add('text-right')
-			cell2.innerHTML=`${e.deliveredQuantity?e.deliveredQuantity.value:0}`
+				newRow.insertCell(1).innerHTML=`${e.item.name.value} ${e.item.description?e.item.description.value:''}`
+				var cell2=newRow.insertCell(2)
+				cell2.classList.add('text-right')
+				cell2.innerHTML=`${e.deliveredQuantity?e.deliveredQuantity.value:0}`
 
-			var cell3=newRow.insertCell(3)
-			cell3.classList.add('text-right')
-			cell3.innerHTML=`${e.oversupplyQuantity?e.oversupplyQuantity.value:0}`
+				var cell3=newRow.insertCell(3)
+				cell3.classList.add('text-right')
+				cell3.innerHTML=`${e.oversupplyQuantity?e.oversupplyQuantity.value:0}`
 
-			var cell4=newRow.insertCell(4)
-			cell4.classList.add('text-right')
-			cell4.innerHTML=`${e.outstandingQuantity?e.outstandingQuantity.value:0}`
+				var cell4=newRow.insertCell(4)
+				cell4.classList.add('text-right')
+				cell4.innerHTML=`${e.outstandingQuantity?e.outstandingQuantity.value:0}`
 
-			newRow.insertCell(5).innerHTML=`<input type="number" class="form-control text-right" name="receiptLine[${index}][receivedQuantity]" value="${receivedQuantity}" min="0" onchange="receivedQuantityChange(${index})" />`
-			newRow.insertCell(6).innerHTML=`<input type="number" class="form-control text-right" name="receiptLine[${index}][rejectedQuantity]" value="${rejectedQuantity}" min="0" onchange="rejectedQuantityChange(${index})" />`
-			newRow.insertCell(7).innerHTML=`<input type="text" class="form-control" name="receiptLine[${index}][timingComplaint]" value="${timingComplaint}" />`
-		})
+				newRow.insertCell(5).innerHTML=`<input type="number" class="form-control text-right" name="receiptLine[${index}][receivedQuantity]" value="${receivedQuantity}" min="0" onchange="receivedQuantityChange(${index})" />`
+				newRow.insertCell(6).innerHTML=`<input type="number" class="form-control text-right" name="receiptLine[${index}][rejectedQuantity]" value="${rejectedQuantity}" min="0" onchange="rejectedQuantityChange(${index})" />`
+				newRow.insertCell(7).innerHTML=`<input type="text" class="form-control" name="receiptLine[${index}][timingComplaint]" value="${timingComplaint}" />`
+			})
 
 		$('#approveModal').modal('show')
 	}
@@ -262,11 +263,11 @@
 			line.timingComplaint.value=$(`input[name="receiptLine[${index}][timingComplaint]"]`).val()
 			line.shipment=e.shipment
 
-				line.receivedQuantity.value=Number($(`input[name="receiptLine[${index}][receivedQuantity]"]`).val())
-				line.rejectedQuantity.value=Number($(`input[name="receiptLine[${index}][rejectedQuantity]"]`).val())
-				if(line.receivedQuantity.value==0 && line.rejectedQuantity.value==0){
-					alert(`Satir:${line.ID.value} Kabul ve Red miktarlari ikisi birden sifir olamaz`)
-				}
+			line.receivedQuantity.value=Number($(`input[name="receiptLine[${index}][receivedQuantity]"]`).val())
+			line.rejectedQuantity.value=Number($(`input[name="receiptLine[${index}][rejectedQuantity]"]`).val())
+			if(line.receivedQuantity.value==0 && line.rejectedQuantity.value==0){
+				alert(`Satir:${line.ID.value} Kabul ve Red miktarlari ikisi birden sifir olamaz`)
+			}
 			receiptAdvice.receiptLine.push(line)
 		})
 		
@@ -282,7 +283,6 @@
 			type:method,
 			success:function(result){
 				if(result.success){
-					//$('#approveModal').modal('hide')
 					if(action=='Send'){
 						sendReceiptAdvice(result.data._id)
 					}else{
@@ -290,7 +290,7 @@
 					}
 					
 				}else{
-					alert(result.error.message)
+					alertX(result.error.message,'HATA','warning')
 				}
 			}
 		})

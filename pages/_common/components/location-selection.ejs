@@ -77,7 +77,7 @@
         } 
 
         $.ajax({
-            url:`/dbapi/sub-locations?location=' + $('select[name="<%=name%>"]').val().split(';')[0] + '&sid=<%=sid%>',
+            url:`/dbapi/sub-locations?location=${$('select[name="<%=name%>"]').val().split(';')[0]}&sid=${q.sid}`,
             type:'GET',
             dataType: 'json',
             success: function(result) {

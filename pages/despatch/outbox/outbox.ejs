@@ -31,9 +31,9 @@
 </form>
 
 <%
-	panelButtons=`<a class="btn btn-primary mr-2" href="javascript:sendToGib()" >Gönder</a>
-	<a class="btn btn-info mr-2" href="javascript:sendToArchive()" >Arşive Kaldır</a>
-	`
+panelButtons=`<a class="btn btn-primary mr-2" href="javascript:sendToGib()" >Gönder</a>
+<a class="btn btn-info mr-2" href="javascript:sendToArchive()" >Arşive Kaldır</a>
+`
 %>
 
 <%- partial('../../_common/components/grid2',{
@@ -86,84 +86,62 @@
 			}
 		})
 		if(data.list.length==0)
-			return alert('Kayit secilmemis!\nDurum: Taslak + Hata')
-		if(!confirm(data.list.length + ' adet irsaliye GIB e gonderilecektir. Onayliyor musunuz?'))
-			return
-		$.ajax({
-			url:`/dbapi/despatch/send?sid=${q.sid}`,
-			data:data,
-			type:'POST',
-			success:function(result){
+			return alertX('Kayit secilmemis!\nDurum: Taslak + Hata','Uyarı')
 
-				if(result.success){
-					alert(result.data)
-					window.location.reload()
-				}else{
-					alert(result.error.code + '\n' + result.error.message)
-				}
-			},
-			error:function(err){
-				console.log(err)
-				alert(err)
+		confirmX(`${data.list.length} adet irsaliye GIB e gonderilecektir. Onaylıyor musunuz?`,(resp)=>{
+			if(resp){
+				$.ajax({
+					url:`/dbapi/despatch/send?sid=${q.sid}`,
+					data:data,
+					type:'POST',
+					success:function(result){
+						if(result.success){
+							alertX(result.data,()=>{
+								window.location.reload()
+							})
+						}else{
+							alertX(result.error.message,'HATA','warning')
+						}
+					},
+					error:function(err){
+						alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+					}
+				})
 			}
 		})
-
 	}
 
 	$(document).ready(function(){
-		// $("#fileUpload").change(function() {
 
-		// 	var reader  = new FileReader()
-		// 	var fileIndex=0
-		// 	var files=this.files
-		// 	var willBeSentFiles=[]
-		// 	reader.addEventListener("load", function(){
-
-		// 		if(reader.result){
-		// 			willBeSentFiles[willBeSentFiles.length-1].base64Data=reader.result.split('base64,')[1]
-		// 		}
-		// 		fileIndex++
-		// 		runReader()
-		// 	})
-
-		// 	function runReader(){
-		// 		if(fileIndex>=files.length){
-		// 			sendFileImport(willBeSentFiles)
-		// 			return
-		// 		}
-		// 		var file=files[fileIndex]
-		// 		willBeSentFiles.push({name:file.name,modifiedDate:file.lastModifiedDate,size:file.size,base64Data:''})
-		// 		reader.readAsDataURL(file)
-		// 	}
-
-		// 	runReader()
-		// })
 
 		function sendFileImport(files){
 			if(files.length==0) 
 				return
-
-			if(!confirm(files.length + ' adet dosya iceri alinacaktir. Onayliyor musunuz?')) return
-				$.ajax({
-					url:`/dbapi/despatch/importOutbox?sid=${q.sid}`,
-					data:{fileImporter:'', files:files},
-					type:'POST',
-					success:function(result){
-						if(result.success==undefined){
-							alert('Hata: Dosya iceri alinamadi! Hatali dosya icerigi')
-						}else{
-							if(result.success){
-								window.location.reload()
+			
+			confirmX(`${files.length} adet dosya iceri alinacaktir. Onaylıyor musunuz?`,(resp)=>{
+				if(resp){
+					$.ajax({
+						url:`/dbapi/despatch/importOutbox?sid=${q.sid}`,
+						data:{fileImporter:'', files:files},
+						type:'POST',
+						success:function(result){
+							if(result.success==undefined){
+								alertX('Dosya iceri alinamadi! Hatali dosya icerigi','HATA','danger')
 							}else{
-								alert(result.error.message)
+								if(result.success){
+									window.location.reload()
+								}else{
+									alertX(result.error.message,'HATA','warning')
+								}
 							}
+						},
+						error:function(err){
+							alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
 						}
-					},
-					error:function(err){
-						console.log(err)
-						alert(err)
-					}
-				})
+					})
+				}
+			})
+			
 		}
 	})
 

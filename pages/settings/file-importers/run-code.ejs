@@ -43,7 +43,7 @@
 	  		var data=JSON.parse(s);
 	  		$('#sampleData').val(JSON.stringify(data,null,2));
 	  	}catch(err){
-	  		alert(err);
+	  		alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger');
 	  	}
 
 	  }, false);

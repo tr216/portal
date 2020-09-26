@@ -23,19 +23,17 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 		headerButtons.innerHTML='<%- headerButtons %>';
 	}
 
-	var db='<%=db%>';
-	var sid='<%=sid%>';
+
 	var _id='<%=(form._id || '')%>';
 	var q=getAllUrlParams();
 	var doc=clone(dbType.productionOrderType);
 
-	doc=Object.assign({},doc,JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form))%>')));
+	doc=Object.assign({},doc,JSON.parse(decodeURIComponent('<%- encodeURIComponent2(JSON.stringify(form))%>')));
 
 	if((doc._id || '')==''){
 		doc.issueDate=(new Date()).yyyymmdd();
 		doc.issueTime=(new Date()).hhmm();
 	}
-	console.log('doc.status:',doc.status);
 
 </script>
 
@@ -58,25 +56,10 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 </ul>
 <div class="tab-content" style="min-height: 70vh;overflow: auto;">
 	<div class="tab-pane show active" id="formTab1" role="tabpanel" aria-labelledby="IDformTab1">
-		<% if(typeof message!='undefined'){ if(message!=''){ %>
-		<div class="row">
-			<div class="col-lg-12 col-md-12">
-				<div class="alert alert-danger" role="alert">
-					<%=message %>
-				</div>
-			</div>
-		</div>
-		<% } } %>
-
 		<% if(func=='start' || func=='complete'){ %>
 		<div class="card">
-			<div class="card-header p-1">
-				<div class="float-left bold text-primary">Yazdırılacak evraklar</div>
-				<div class="float-right bold text-primary form-inline">
-					<label></label>
-
-				</div>
-
+			<div class="card-header collapsible">
+				Yazdırılacak evraklar
 			</div>
 			<div class="card-body p-2">
 				<% printDesignList.forEach((e)=>{ %>
@@ -88,18 +71,13 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 		</div>
 		<% } %>
 		<div class="card">
-			<div class="card-header p-1">
-				<div class="float-left bold text-primary">Genel Bilgiler</div>
-				<div class="float-right bold text-primary form-inline">
-					<label>XXX:<%=mode%> || <%=func%></label>
-
-				</div>
-
+			<div class="card-header collapsible">
+				Genel Bilgiler
 			</div>
 			<div class="card-body p-1">
 				<div class="row">
 					<div class="form-group col-md-3">
-						<label for="" class="m-0"><%=title%> No</label>
+						<label for="" class="m-0">Üretim No</label>
 						<input type="text" class="form-control" name="productionId" id="productionId" placeholder="Boş ise otomatik verilir" autocomplete="off" value="<%=form.productionId%>" <% if(mode=='view'){%>readonly="true"<%}%>>
 					</div>
 					<div class="form-group col-md-2">
@@ -108,7 +86,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 					</div>
 					<div class="form-group col-md-2">
 						<label for="" class="m-0">Saat</label>
-						<input type="text" name="issueTime" id="issueTime" class="form-control" required autocomplete="off" value="" title="Evrak saati" <% if(mode=='view'){%>readonly="true"<%}%>>
+						<input type="time" name="issueTime" id="issueTime" class="form-control" required autocomplete="off" value="" title="Evrak saati" <% if(mode=='view'){%>readonly="true"<%}%>>
 					</div>
 					<div class="form-group col-md-2">
 						<label for="" class="m-0">Türü</label>
@@ -130,10 +108,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 						<select id="main-recipe" class="form-control" <% if(mode=='view'){%>disabled<%}%>>
 						</select>
 					</div>
-					<div class="form-group col-md-2">
-						<label for="" class="m-0">Üretilecek Miktar</label>
-						<input type="number" class="form-control" id="plannedQuantity-quantity" autocomplete="off" value="0" readonly="true" onchange="calculatePlannedQuantity()">
-					</div>
+					
 					<div class="form-group col-md-2">
 						<label for="" class="m-0"><i class="fas fa-user-friends"></i> Gerekli İnsan</label>
 						<select class="form-control" name="staffCount" id="staffCount" <% if(mode=='view'){%>disabled<%}%>>
@@ -154,54 +129,55 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 					</div>
 					<% if(mode!='view'){%>
 					<div class="form-group col-md-2 text-right">
-						<a href="javascript:receteUygula()" class="btn btn-primary mt-md-4"><i class="fas fa-fill-drip" title="Reçeteyi uygula" ></i> Uygula</a>
+						<br>
+						<a href="javascript:receteUygula()" class="btn btn-primary"><i class="fas fa-fill-drip" title="Reçeteyi uygula" ></i> Uygula</a>
 					</div>
 					<%}%>
 				</div>
 				<div class="row">
-					<div class="col-md-4">
-						<div class="form-group">
-							<label for="" class="m-0">Planlama Başlangıç</label>
-							<div class="form-inline">
-								<div class="input-group <% if(mode!='view'){%>date<%}%>" style="width: 120px;">
-									<input type="text" name="plannedPeriod[startDate]" id="plannedPeriod-startDate" class="form-control" value="" title="Planlama başlangıç tarihi" <% if(mode=='view'){%>readonly="true"<%}%>>
-									<div class="input-group-addon">
-										<i class="fa fa-calendar fa-2x"></i>
-									</div>
+					<div class="card col-md-6">
+						<div class="card-header collapsible">Planlanan</div>
+						<div class="card-body p-1">
+							<div class="row">
+								<div class="form-group col-md-4 m-0">
+									<label for="" class="m-0">Başlangıç</label>
+									<input type="date" name="plannedPeriod[startDate]" id="plannedPeriod-startDate" class="form-control"  required autocomplete="off" value="" title="Planlanan tarih" <% if(mode=='view'){%>readonly="true"<%}%>>
 								</div>
-								<select class="form-control ml-3" name="plannedPeriod[startTimeHour]" id="plannedPeriod-startTimeHour" <% if(mode=='view'){%>disabled<%}%>>
-									<% for(var i=0;i<=23;i++){ %>
-									<option value="<%=i.n2()%>"><%=i.n2()%></option>
-									<% } %>
-								</select>
-								<select class="form-control" name="plannedPeriod[startTimeMinute]" id="plannedPeriod-startTimeMinute" <% if(mode=='view'){%>disabled<%}%>>
-									<% for(var i=0;i<=3;i++){ %>
-									<option value="<%=(i*15).n2()%>"><%=(i*15).n2()%></option>
-									<% } %>
-								</select>
+								<div class="form-group col-md-2 m-0">
+									<label for="" class="m-0">Saat</label>
+									<input type="time" name="plannedPeriod[startTime]" id="plannedPeriod-startTime" class="form-control"  required autocomplete="off" value="" title="Planlanan saat" <% if(mode=='view'){%>readonly="true"<%}%>>
+								</div>
+								<div class="form-group col-md-4 m-0">
+									<label for="" class="m-0">Bitiş</label>
+									<input type="date" name="plannedPeriod[endDate]" id="plannedPeriod-endDate" class="form-control"  required autocomplete="off" value="" title="Planlanan bitiş tarihi" <% if(mode=='view'){%>readonly="true"<%}%>>
+								</div>
+								<div class="form-group col-md-2 m-0">
+									<label for="" class="m-0">Saat</label>
+									<input type="time" name="plannedPeriod[endTime]" id="plannedPeriod-endTime" class="form-control"  required autocomplete="off" value="" title="Planlanan bitiş saati" <% if(mode=='view'){%>readonly="true"<%}%>>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="form-group">
-							<label for="" class="m-0">Bitiş</label>
-							<div class="form-inline">
-								<div class="input-group <% if(mode!='view'){%>date<%}%>" style="width: 120px;">
-									<input type="text" name="plannedPeriod[endDate]" id="plannedPeriod-endDate" class="form-control" value="" title="Planlama başlangıç tarihi" <% if(mode=='view'){%>readonly="true"<%}%>>
-									<div class="input-group-addon">
-										<i class="fa fa-calendar fa-2x"></i>
-									</div>
+					<div class="card col-md-6">
+						<div class="card-header collapsible">Gerçekleşen</div>
+						<div class="card-body p-1">
+							<div class="row">
+								<div class="form-group col-md-4 m-0">
+									<label for="" class="m-0">Başlangıç</label>
+									<input type="date" name="producedPeriod[startDate]" id="producedPeriod-startDate" class="form-control"  required autocomplete="off" value="" title="Gerçekleşen tarih" <% if(mode=='view'){%>readonly="true"<%}%>>
 								</div>
-								<select class="form-control ml-3" name="plannedPeriod[endTimeHour]" id="plannedPeriod-endTimeHour" <% if(mode=='view'){%>disabled<%}%>>
-									<% for(var i=0;i<=23;i++){ %>
-									<option value="<%=i.n2()%>"><%=i.n2()%></option>
-									<% } %>
-								</select>
-								<select class="form-control" name="plannedPeriod[endTimeMinute]" id="plannedPeriod-endTimeMinute" <% if(mode=='view'){%>disabled<%}%>>
-									<% for(var i=0;i<=3;i++){ %>
-									<option value="<%=(i*15).n2()%>"><%=(i*15).n2()%></option>
-									<% } %>
-								</select>
+								<div class="form-group col-md-2 m-0">
+									<label for="" class="m-0">Saat</label>
+									<input type="time" name="producedPeriod[startTime]" id="producedPeriod-startTime" class="form-control"  required autocomplete="off" value="" title="Gerçekleşen saat" <% if(mode=='view'){%>readonly="true"<%}%>>
+								</div>
+								<div class="form-group col-md-4 m-0">
+									<label for="" class="m-0">Bitiş</label>
+									<input type="date" name="producedPeriod[endDate]" id="producedPeriod-endDate" class="form-control"  required autocomplete="off" value="" title="Gerçekleşen bitiş tarihi" <% if(mode=='view'){%>readonly="true"<%}%>>
+								</div>
+								<div class="form-group col-md-2 m-0">
+									<label for="" class="m-0">Saat</label>
+									<input type="time" name="producedPeriod[endTime]" id="producedPeriod-endTime" class="form-control"  required autocomplete="off" value="" title="Gerçekleşen bitiş saati" <% if(mode=='view'){%>readonly="true"<%}%>>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -209,8 +185,8 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 			</div>
 		</div>
 		<div id="forCustomerPanel" class="card mt-2">
-			<div class="card-header p-1">
-				<div class="float-left bold text-primary">Sipariş(ler)</div>
+			<div class="card-header collapsible">
+				Sipariş(ler)
 				<% if(mode!='view'){%>
 				<div class="float-right bold text-primary">
 					<a href="javascript:modalSalesOrders()" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i> Sipariş</a>
@@ -242,7 +218,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 		<%- partial('../../_common/forms/recipe.ejs',{recipeFormType:'production-orders'}) %>
 
 		<div class="card mt-2">
-			<div class="card-header p-1">Palet/Ambalaj/Kutu/Koli</div>
+			<div class="card-header collapsible">Palet/Ambalaj/Kutu/Koli</div>
 			<div class="card-body p-1">
 				<div class="row m-0 p-0">
 
@@ -301,8 +277,8 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 		<div class="row m-0 p-0 mt-2">
 			<div class="col-md-4 m-0 p-0 pr-md-2">
 				<div class="card">
-					<div class="card-header p-1">
-						<div class="float-left bold text-primary">Üretim için gereken malzemeler</div>
+					<div class="card-header collapsible">
+						Üretim için gereken malzemeler
 					</div>
 					<div class="card-body p-1">
 						<table id="gridProOrderMaterials" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
@@ -322,8 +298,8 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 			</div>
 			<div class="col m-0 p-0">
 				<div class="card">
-					<div class="card-header p-1">
-						<div class="float-left bold text-primary">Üretime Çıkış Fişleri</div>
+					<div class="card-header collapsible">
+						Üretime Çıkış Fişleri
 						<div class="float-right bold text-primary">
 							<a class="btn btn-sm btn-primary" href="/inventory/inventory-fiches/addnew?sid=<%=sid%>&docTypeCode=URETIMECIKIS&productionOrderId=<%=form._id%>" title="Uretim recetesine gore hammadde ve malzeme cikisi"><i class="fas fa-boxes"></i> Yeni Üretime Çıkış Fişi</a>
 						</div>
@@ -354,8 +330,8 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 		<div class="row m-0 p-0 mt-2">
 			<div class="col-md-4 m-0 p-0 pr-md-2">
 				<div class="card">
-					<div class="card-header p-1">
-						<div class="float-left bold text-primary">Ürün ve Yan ürünler</div>
+					<div class="card-header collapsible">
+						Ürün ve Yan ürünler
 					</div>
 					<div class="card-body p-1">
 						<table class="table form-table table-bordered table-striped m-0"  cellspacing="0">
@@ -375,8 +351,8 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 			</div>
 			<div class="col m-0 p-0">
 				<div class="card">
-					<div class="card-header p-1">
-						<div class="float-left bold text-primary">Üretimden Giriş Fişleri</div>
+					<div class="card-header collapsible">
+						Üretimden Giriş Fişleri
 						<div class="float-right bold text-primary">
 							<a class="btn btn-sm btn-primary" href="/inventory/inventory-fiches/addnew?sid=<%=sid%>&docTypeCode=URETIMDENGIRIS&productionOrderId=<%=form._id%>" title="Üretilmiş mamul/yarı mamullerin stoğa alınması"><i class="fas fa-box"></i> Yeni Üretimden Giriş Fişi</a>
 						</div>
@@ -413,7 +389,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body p-2" style="overflow: auto;">
+			<div class="modal-body p-1" style="overflow: auto;">
 
 				<table id="gridSalesOrders" class="table form-table table-bordered table-striped m-0"  cellspacing="0">
 					<thead>
@@ -435,8 +411,8 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 			</div>
 
 			<div class="modal-footer">
-				<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
 				<a id="salesOrdersModalSaveButton" class="btn btn-primary" href="javascript:okSalesOrders()">Tamam</a>
+				<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
 			</div>
 		</div>
 	</div>
@@ -447,7 +423,6 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 	function modalSalesOrders(){
 		$("#gridSalesOrdersLineGrid tr").remove();
 
-		var q=getAllUrlParams();
 		$.ajax({
 			url:`/dbapi/production-orders/salesOrders?sid=${q.sid}`,
 			type:'GET',
@@ -457,22 +432,20 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 					var lineGrid=document.getElementById('gridSalesOrdersLineGrid');
 					result.data.docs.forEach((sip,index)=>{
 						var newRow=lineGrid.insertRow(lineGrid.rows.length);
-				        // newRow.classList.add('text-nowrap');
-				        newRow.insertCell(0).innerHTML='<input type="checkbox" class="sipRow" id="sipRow[' + index + ']" name="sipRow[' + index + ']" value="' + encodeURIComponent(JSON.stringify(sip)) + '">';
-				        newRow.insertCell(1).innerHTML=sip.ID.value;
-				        newRow.insertCell(2).innerHTML=sip.issueDate.value;
-				        newRow.insertCell(3).innerHTML=sip.buyerCustomerParty.party.partyName.name.value;
-				        newRow.insertCell(4).innerHTML=sip.orderLine.item.name.value;
-				        var cell5=newRow.insertCell(5);
-				        cell5.classList.add('text-right');
-				        cell5.innerHTML=Number(sip.producedRemaining).formatDecimal();
-				        
-				      });
+						newRow.insertCell(0).innerHTML='<input type="checkbox" class="sipRow" id="sipRow[' + index + ']" name="sipRow[' + index + ']" value="' + encodeURIComponent(JSON.stringify(sip)) + '">';
+						newRow.insertCell(1).innerHTML=sip.ID.value;
+						newRow.insertCell(2).innerHTML=sip.issueDate.value;
+						newRow.insertCell(3).innerHTML=sip.buyerCustomerParty.party.partyName.name.value;
+						newRow.insertCell(4).innerHTML=sip.orderLine.item.name.value;
+						var cell5=newRow.insertCell(5);
+						cell5.classList.add('text-right');
+						cell5.innerHTML=Number(sip.producedRemaining).formatDecimal();
+					});
 					$('#salesOrdersModal').modal('show');
 				}
 			},
 			error:function(err){
-				console.log('err:',err);
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
 			}
 		});
 	}
@@ -485,9 +458,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 			if(this.checked){
 				var sip=JSON.parse(decodeURIComponent(this.value));
 				
-				//farkli urun kontrolu item._id uzerinden yapilacak
 				list.forEach(function(e){
-					//if(e.orderLine.item._id)
 					if(e.orderLine.item._id!=sip.orderLine.item._id){
 						bFarkliUrunVar=true;
 						return;
@@ -495,12 +466,12 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 				})
 				if(bFarkliUrunVar) return;
 				list.push(sip);
-				
-				
 			}
 		});
-		if(bFarkliUrunVar) return alert('Uretim emrine ayni urunden olan siparisleri ekleyebilirsiniz.');
-		if(list.length==0)  return alert('Kayit secilmemis!');
+		if(bFarkliUrunVar) 
+			return alertX('Üretim emrine aynı ürüne sahip siparişleri ekleyebilirsiniz.','Uyarı')
+		if(list.length==0)
+			return alertX('Kayıt seçilmemiş!','Uyarı')
 
 		list.forEach(function(e){
 			
@@ -561,60 +532,60 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 		
 	}
 
-	
-
 	function loadOrderLineReference(){
 		$("#gridOrderLineReferenceTBody tr").remove();
 		var lineGrid=document.getElementById('gridOrderLineReferenceTBody');
 		doc.orderLineReference.forEach((sip,index)=>{
 			var newRow=lineGrid.insertRow(lineGrid.rows.length);
-	        // newRow.classList.add('text-nowrap');
-	        newRow.insertCell(0).innerHTML=sip.orderReference.ID.value + '.' + sip.lineId.value;
-	        newRow.insertCell(1).innerHTML=sip.orderReference.issueDate.value;
-	        newRow.insertCell(2).innerHTML=sip.orderReference.buyerCustomerParty.party.partyName.name.value;
-	        newRow.insertCell(3).innerHTML=sip.item.name.value;
-	        var cell4=newRow.insertCell(4);
-	        cell4.classList.add('text-right');
-	        cell4.innerHTML=Number(sip.orderedQuantity.value).formatDecimal();
+			newRow.insertCell(0).innerHTML=sip.orderReference.ID.value + '.' + sip.lineId.value;
+			newRow.insertCell(1).innerHTML=sip.orderReference.issueDate.value;
+			newRow.insertCell(2).innerHTML=sip.orderReference.buyerCustomerParty.party.partyName.name.value;
+			newRow.insertCell(3).innerHTML=sip.item.name.value;
+			var cell4=newRow.insertCell(4);
+			cell4.classList.add('text-right');
+			cell4.innerHTML=Number(sip.orderedQuantity.value).formatDecimal();
 
-	        var cell5=newRow.insertCell(5);
-	        cell5.classList.add('text-right');
-	        cell5.innerHTML=Number(sip.deliveredQuantity.value).formatDecimal();
+			var cell5=newRow.insertCell(5);
+			cell5.classList.add('text-right');
+			cell5.innerHTML=Number(sip.deliveredQuantity.value).formatDecimal();
 
-	        var cell6=newRow.insertCell(6);
-	        cell6.classList.add('text-right');
-	        cell6.innerHTML='<input type="number" name="order_producedQuantity[' + index + ']" class="form-control" value="' + sip.producedQuantity.value + '" onchange="calculatePlannedQuantity()" <% if(mode=='view'){%>readonly="true"<%}%> >';
+			var cell6=newRow.insertCell(6);
+			cell6.classList.add('text-right');
+			cell6.innerHTML='<input type="number" name="order_producedQuantity[' + index + ']" class="form-control" value="' + sip.producedQuantity.value + '" onchange="calculatePlannedQuantity()" <% if(mode=='view'){%>readonly="true"<%}%> >';
 
-	        var cell7=newRow.insertCell(7);
-	        cell7.classList.add('text-center');
-	        <% if(mode!='view'){ %>
-	        	cell7.innerHTML='<a href="javascript:removeOrderLineReference(' + index + ');" class="btn btn-danger btn-sm fas fa-trash-alt ml-1" title="Sil"></a>';
-	        	<% } else {%>
-	        		cell7.innerHTML='';
-	        		<%}%>
-	        	});
+			var cell7=newRow.insertCell(7);
+			cell7.classList.add('text-center');
+			<% if(mode!='view'){ %>
+				cell7.innerHTML='<a href="javascript:removeOrderLineReference(' + index + ');" class="btn btn-danger btn-sm fas fa-trash-alt ml-1" title="Sil"></a>';
+				<% } else {%>
+					cell7.innerHTML='';
+					<%}%>
+				});
 
 		if(doc.orderLineReference.length>0){
-
 			doc.item=doc.orderLineReference[0].item._id;
 		}
 	}
 
 	function removeOrderLineReference(index){
-		if(!confirm('Satir:' + (index+1).toString() + '  cikarilacaktir. Onayliyor musunuz?')) return;
-		doc.orderLineReference.splice(index,1);
-		loadOrderLineReference();
-		calculatePlannedQuantity();
+		confirmX(`Satir:${(index+1).toString()} sipariş çıkarılacaktır. Onaylıyor musunuz?`,(resp)=>{
+			if(resp){
+				doc.orderLineReference.splice(index,1);
+				loadOrderLineReference();
+				calculatePlannedQuantity();
+			}
+		})
 	}
 
 	var sourceRecipeDoc;
 	var itemDoc;
 
-	function loadMainItemAndRecipe(callback){
+	function loadMainItemAndRecipe(cb){
 		$('#production-item-name').val('');
 		$('#main-recipe option').remove();
 
-		if((doc.item || '')=='') return;
+		if((doc.item || '')=='')
+			return;
 		$.ajax({
 			url:`/dbapi/items/${doc.item}?sid=${q.sid}`,
 			type:'GET',
@@ -632,7 +603,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 							if(result.success){
 								if(result.data.docs){
 									var receteler = document.getElementById("main-recipe");
-									result.data.docs.forEach(function(e){
+									result.data.docs.forEach((e)=>{
 										var c = document.createElement("option");
 										c.text = e.name;
 										if(e.revision>1) c.text +=' [rev:' + e.revision + ']';
@@ -648,19 +619,22 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 										receteler.options.add(c, receteler.options.length);
 									});
 
-									if(callback!=undefined) callback(null)
+									if(cb)
+										cb(null)
 								}
+							}
+						},
+						error:function(err){
+							alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger',()=>{
+								if(cb)
+									cb('hata:(loadMainItemAndRecipe)')
+							})
 						}
-					},
-					error:function(err){
-						if(callback!=undefined) callback('hata:(loadMainItemAndRecipe)');
-						console.error('err recipes:',err);
-					}
-				});
+					});
 				}
 			},
 			error:function(err){
-				console.error('err items:',err);
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
 			}
 		});
 	}
@@ -689,7 +663,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 					c.text += e.packingType3.name;
 				}
 
-				c.value=encodeURIComponent(JSON.stringify(e)); 
+				c.value=encodeURIComponent2(JSON.stringify(e)); 
 				if(doc.packingOption){
 					var palletType=e.palletType?e.palletType._id.toString():'';
 					var packingType=e.packingType?e.packingType._id.toString():'';
@@ -716,8 +690,8 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 	function choosePackingOptionChanged(){
 		if($('#choosePackingOption').val()=='') return;
 		var obj=JSON.parse(decodeURIComponent($('#choosePackingOption').val()));
-		if(!obj) return;
-		console.log('choosePackingOptionChanged() obj:',obj);
+		if(!obj)
+			return;
 		if((obj.palletType || '')!='') 
 			$('#palletType').val(obj.palletType.name);
 		else
@@ -753,26 +727,25 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 		var totalPacking=0;
 		var totalPallet=0;
 
-		if(quantityInPacking>0) totalPacking=Math.ceil(plannedQuantity/quantityInPacking);
+		if(quantityInPacking>0)
+			totalPacking=Math.ceil(plannedQuantity/quantityInPacking);
 
-		if(packingCountInRow*palletRowCount>0) totalPallet=Math.ceil(totalPacking/(packingCountInRow*palletRowCount));
+		if(packingCountInRow*palletRowCount>0)
+			totalPallet=Math.ceil(totalPacking/(packingCountInRow*palletRowCount));
 
 		$('#totalPacking').val(totalPacking);
 		$('#totalPallet').val(totalPallet);
 	}
 
-
-
-
 	var calculating=false;
 
 	function calculatePlannedQuantity(){
-		if(calculating) return;
-		calculating=true;
+		if(calculating)
+			return;
+		calculating=true
 		switch(doc.productionTypeCode){
 			case 'DEPO':
 			doc.plannedQuantity=Number($('#plannedQuantity-quantity').val());
-			//$('#plannedQuantity-quantity').val(doc.plannedQuantity)
 			break;
 			case 'MUSTERI':
 			doc.plannedQuantity=0;
@@ -859,610 +832,616 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark btn-form-hea
 			});
 		}
 
-        // uretim emrinde gereken hammadde ve malzemeler
-        var uretimIcinGerekliMalzemeler=[];
-        doc.process.forEach(function(process){
-        	process.input.forEach(function(processInput){
-        		var bFound=false;
-        		uretimIcinGerekliMalzemeler.forEach(function(e){
-        			var id1=e.item!=undefined?e.item._id:'';
-        			var id2=processInput.item!=undefined?processInput.item._id:'';
-        			var color1=e.color!=undefined?e.color._id:'';
-        			var color2=processInput.color!=undefined?processInput.color._id:'';
-        			var pattern1=e.pattern!=undefined?e.pattern._id:'';
-        			var pattern2=processInput.pattern!=undefined?processInput.pattern._id:'';
-        			var size1=e.size!=undefined?e.size._id:'';
-        			var size2=processInput.size!=undefined?processInput.size._id:'';
-
-        			if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
-        				e.quantity+=processInput.quantity;
-        				bFound=true;
-        				return;
-        			}
-        		});
-        		if(!bFound){
-        			var m={
-        				item:processInput.item,
-        				color:processInput.color,
-        				pattern:processInput.pattern,
-        				size:processInput.size,
-        				quantity:processInput.quantity
-        			}
-        			uretimIcinGerekliMalzemeler.push(m);
-        		}
-        	})
-
-        })
-        var lineGridProOrder=document.getElementById('lineGridProOrder');
-        while(lineGridProOrder.rows.length>1){
-        	lineGridProOrder.deleteRow(0);
-        }
-
-        uretimIcinGerekliMalzemeler.forEach(function(e,index){
-        	var kalan=0;
-        	var toplam=0;
-        	uretimeCikmisMalzemeToplamlari.forEach(function(e2){
-        		var id1=e.item!=undefined?e.item._id:'';
-        		var id2=e2.item!=undefined?e2.item._id:'';
-        		var color1=e.color!=undefined?e.color._id:'';
-        		var color2=e2.color!=undefined?e2.color._id:'';
-        		var pattern1=e.pattern!=undefined?e.pattern._id:'';
-        		var pattern2=e2.pattern!=undefined?e2.pattern._id:'';
-        		var size1=e.size!=undefined?e.size._id:'';
-        		var size2=e2.size!=undefined?e2.size._id:'';
-
-        		if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
-        			toplam +=e2.quantity;
-        		}
-
-        	})
-        	kalan=e.quantity-toplam;
-
-        	var newRow=lineGridProOrder.insertRow(lineGridProOrder.rows.length);
-        	if(kalan<0){
-        		newRow.classList.add('text-danger');
-        		newRow.classList.add('bold');
-
-        	}
-        	newRow.insertCell(0).innerHTML=(index+1).n2();
-        	var cell1 = newRow.insertCell(1);
-        	cell1.innerHTML=e.item==undefined?'':e.item.name.value + (e.item.description.value!=''?' - ' + e.item.description.value:'');
-        	cell1.innerHTML+=e.pallet?'<br>Plt:' + e.pallet.name:'';
-        	cell1.innerHTML+=e.color?'<br>Renk:' + e.color.name:'';
-        	cell1.innerHTML+=e.pattern?'<br>Desen:' + e.pattern.name:'';
-        	cell1.innerHTML+=e.size?'<br>Beden:' + e.size.name:'';
-
-        	var cell2=newRow.insertCell(2);
-        	cell2.classList.add('text-right');
-        	cell2.innerHTML=Number(e.quantity).formatDecimal();
-        	var cell3=newRow.insertCell(3);
-        	cell3.classList.add('text-right');
-        	if(kalan>=0){
-        		cell3.innerHTML=Number(kalan).formatDecimal();
-        	}else{
-        		cell3.innerHTML='(' + Number(kalan).formatDecimal() + ')';
-        	}
-        });
-        // console.log('uretimeCikmisMalzemeToplamlari:',uretimeCikmisMalzemeToplamlari);
-        // console.log('uretimIcinGerekliMalzemeler:',uretimIcinGerekliMalzemeler);
-      }
-
-      function loadUretimdenGirenMamuller(){
-      	var lineGrid=document.getElementById('lineGridUretimdenGiris');
-      	while(lineGrid.rows.length>1){
-      		lineGrid.deleteRow(0);
-      	}
-
-      	var uretimdenStogaGirmisMamuller=[];
-
-      	if(Array.isArray(doc.inventory_fiches)){
-      		doc.inventory_fiches.forEach(function(fiche){
-      			if(fiche.docTypeCode=='URETIMDENGIRIS'){
-      				fiche.docLine.forEach(function(line){
-      					var newRow=lineGrid.insertRow(lineGrid.rows.length);
-      					var cell0=newRow.insertCell(0);
-      					cell0.innerHTML=fiche.docId;
-
-      					var cell1=newRow.insertCell(1);
-      					cell1.classList.add('text-right');
-      					cell1.innerHTML=line.sequence;
-
-      					var cell2=newRow.insertCell(2);
-      					cell2.innerHTML=line.item==undefined?'':line.item.name.value + (line.item.description.value!=''?' - ' + line.item.description.value:'');
-      					cell2.innerHTML+=line.pallet?'<br>Plt:' + line.pallet.name:'';
-      					cell2.innerHTML+=line.lotNo!=''?'<br>Lot:' + line.lotNo:'';
-      					cell2.innerHTML+=line.serialNo!=''?'<br>Sn:' + line.serialNo:'';
-      					cell2.innerHTML+=line.color?'<br>Renk:' + line.color.name:'';
-      					cell2.innerHTML+=line.pattern?'<br>Desen:' + line.pattern.name:'';
-      					cell2.innerHTML+=line.size?'<br>Beden:' + line.size.name:'';
-
-      					var cell3=newRow.insertCell(3);
-      					cell3.classList.add('text-right');
-      					cell3.innerHTML=Number(line.quantity).formatQuantity();
-
-      					var cell4=newRow.insertCell(4);
-      					cell4.innerHTML=getUnitCodeText(line.unitCode);
-
-      					var cell5=newRow.insertCell(5);
-      					cell5.innerHTML='<a class="btn btn-primary fas fa-edit" href="/inventory/inventory-fiches/edit/' + fiche._id + '?db=' + q.db + '&sid=' + q.sid + '" title="Stok Fişini değiştir/aç"></a>';
-      					cell5.classList.add('text-center');
-
-      					var bFound=false;
-      					uretimdenStogaGirmisMamuller.forEach(function(e){
-      						var id1=e.item!=undefined?e.item._id:'';
-      						var id2=line.item!=undefined?line.item._id:'';
-      						var color1=e.color!=undefined?e.color._id:'';
-      						var color2=line.color!=undefined?line.color._id:'';
-      						var pattern1=e.pattern!=undefined?e.pattern._id:'';
-      						var pattern2=line.pattern!=undefined?line.pattern._id:'';
-      						var size1=e.size!=undefined?e.size._id:'';
-      						var size2=line.size!=undefined?line.size._id:'';
-
-      						if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
-      							e.quantity+=line.quantity;
-      							bFound=true;
-      							return;
-      						}
-      					});
-      					if(!bFound){
-      						var m={
-      							item:line.item,
-      							color:line.color,
-      							pattern:line.pattern,
-      							size:line.size,
-      							quantity:line.quantity
-      						}
-      						uretimdenStogaGirmisMamuller.push(m);
-      					}
-      				})
-      			}
-      		});
-      	}
-
-        // uretim sonucu cikmasi gereken mamul ve yarimamuller
-        var uretimEmrindekiMamuller=[];
-        var m1={
-        	item:itemDoc,
-        	color:undefined,
-        	pattern:undefined,
-        	size:undefined,
-        	quantity:doc.plannedQuantity
-        }
-        uretimEmrindekiMamuller.push(m1);
-        doc.process.forEach(function(process){
-        	process.output.forEach(function(processOutput){
-        		var bFound=false;
-        		uretimEmrindekiMamuller.forEach(function(e){
-        			var id1=e.item!=undefined?e.item._id:'';
-        			var id2=processOutput.item!=undefined?processOutput.item._id:'';
-        			var color1=e.color!=undefined?e.color._id:'';
-        			var color2=processOutput.color!=undefined?processOutput.color._id:'';
-        			var pattern1=e.pattern!=undefined?e.pattern._id:'';
-        			var pattern2=processOutput.pattern!=undefined?processOutput.pattern._id:'';
-        			var size1=e.size!=undefined?e.size._id:'';
-        			var size2=processOutput.size!=undefined?processOutput.size._id:'';
-
-        			if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
-        				e.quantity+=processOutput.quantity;
-        				bFound=true;
-        				return;
-        			}
-        		});
-        		if(!bFound){
-        			var m={
-        				item:processOutput.item,
-        				color:processOutput.color,
-        				pattern:processOutput.pattern,
-        				size:processOutput.size,
-        				quantity:processOutput.quantity
-        			}
-        			uretimEmrindekiMamuller.push(m);
-        		}
-        	})
-
-        })
-        var lineGridProOrderMamul=document.getElementById('lineGridProOrderMamul');
-        while(lineGridProOrderMamul.rows.length>1){
-        	lineGridProOrderMamul.deleteRow(0);
-        }
-
-        console.log('uretimEmrindekiMamuller:',uretimEmrindekiMamuller)
-        console.log('uretimdenStogaGirmisMamuller:',uretimdenStogaGirmisMamuller)
-        uretimEmrindekiMamuller.forEach(function(e,index){
-
-        	var kalan=0;
-        	var toplam=0;
-        	uretimdenStogaGirmisMamuller.forEach(function(e2){
-        		var id1=e.item!=undefined?e.item._id:'';
-        		var id2=e2.item!=undefined?e2.item._id:'';
-        		var color1=e.color!=undefined?e.color._id:'';
-        		var color2=e2.color!=undefined?e2.color._id:'';
-        		var pattern1=e.pattern!=undefined?e.pattern._id:'';
-        		var pattern2=e2.pattern!=undefined?e2.pattern._id:'';
-        		var size1=e.size!=undefined?e.size._id:'';
-        		var size2=e2.size!=undefined?e2.size._id:'';
-
-        		if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
-        			toplam +=e2.quantity;
-        		}
-
-        	})
-        	kalan=e.quantity-toplam;
-
-        	var newRow=lineGridProOrderMamul.insertRow(lineGridProOrderMamul.rows.length);
-        	if(kalan<0){
-        		newRow.classList.add('text-danger');
-        		newRow.classList.add('bold');
-
-        	}
-        	newRow.insertCell(0).innerHTML=(index+1).n2();
-        	var cell1 = newRow.insertCell(1);
-        	cell1.innerHTML=e.item==undefined?'':e.item.name.value + (e.item.description.value!=''?' - ' + e.item.description.value:'');
-        	cell1.innerHTML+=e.pallet?'<br>Plt:' + e.pallet.name:'';
-        	cell1.innerHTML+=e.color?'<br>Renk:' + e.color.name:'';
-        	cell1.innerHTML+=e.pattern?'<br>Desen:' + e.pattern.name:'';
-        	cell1.innerHTML+=e.size?'<br>Beden:' + e.size.name:'';
-
-        	var cell2=newRow.insertCell(2);
-        	cell2.classList.add('text-right');
-        	cell2.innerHTML=Number(e.quantity).formatDecimal();
-        	var cell3=newRow.insertCell(3);
-        	cell3.classList.add('text-right');
-        	if(kalan>=0){
-        		cell3.innerHTML=Number(kalan).formatDecimal();
-        	}else{
-        		cell3.innerHTML='(' + Number(kalan).formatDecimal() + ')';
-        	}
-        });
-      }
-
-
-
-      function loadForm(){
-      	$('#issueDate').val(doc.issueDate);
-      	$('#issueTime').val(doc.issueTime);
-      	$('#plannedPeriod-startDate').val(doc.plannedPeriod.startDate);
-      	$('#plannedPeriod-startTimeHour').val(doc.plannedPeriod.startTime.substr(0,2));
-      	$('#plannedPeriod-startTimeMinute').val(doc.plannedPeriod.startTime.substr(3,2));
-
-      	$('#plannedPeriod-endDate').val(doc.plannedPeriod.endDate);
-      	$('#plannedPeriod-endTimeHour').val(doc.plannedPeriod.endTime.substr(0,2));
-      	$('#plannedPeriod-endTimeMinute').val(doc.plannedPeriod.endTime.substr(3,2));
-
-      	$('#issueTime').val(doc.issueTime);
-      	if(doc.productionTypeCode!='') $('#productionTypeCode').val(doc.productionTypeCode);
-      	$('#plannedQuantity-quantity').val(doc.plannedQuantity);
-
-
-      	switch(doc.productionTypeCode){
-      		case 'DEPO':
-      		if(mode!='view'){
-      			$('#production-item-name').removeAttr('readonly');
-      			$('#plannedQuantity-quantity').removeAttr('readonly');
-      		}
-      		$('#forCustomerPanel').hide();
-
-      		break;
-      		case 'MUSTERI':
-      		if(mode!='view'){
-      			$('#production-item-name').prop('readonly',true);
-      			$('#plannedQuantity-quantity').prop('readonly',true);
-      		}
-      		$('#forCustomerPanel').show();
-
-      		break;
-      	}
-      	loadMainItemAndRecipe(function(err){
-      		if(!err){
-      			if(doc.productionTypeCode=='MUSTERI') loadOrderLineReference();
-
-      			reloadRecipe();
-
-                // $('#palletType').val((doc.palletType || ''));
-                // $('#packingType').val((doc.packingType || ''));
-                
-                
-                if((doc._id || '')==''){
-                	calculatePlannedQuantity();
-                	paketPaletHesapla();
-                	receteUygula();
-                }else{
-                	if(doc.packingOption){
-                		$('#quantityInPacking').val(doc.packingOption.quantityInPacking);
-                		$('#palletRowCount').val(doc.packingOption.palletRowCount);
-                		$('#packingCountInRow').val(doc.packingOption.packingCountInRow);
-                	}
-                	$('#totalPallet').val((doc.totalPallet || 0));
-                	$('#totalPacking').val((doc.totalPacking || 0));
-                }
-                
-                loadUretimeCikanMalzemeler();
-                loadUretimdenGirenMamuller();
-              }
-            });
-
-
-
-      }
-
-      loadForm();
-
-      function uretimeCikisFisi(ficheId=''){
-      	if((doc._id || '')=='') return alert('Uretim emrini kaydetmeniz gerekiyor');
-      	var url='/inventory/inventory-fiches/';
-      	if(ficheId==''){
-      		url +='addnew'
-      	}else{
-      		url +='edit/' + ficheId;
-      	}
-
-      	url +='?db=' + q.db + '&sid=' + q.sid +'&productionOrderId=' + doc._id;
-      	window.location.href=url;
-        // popupCenter(url,'Uretime Cikis Fisi',900,600,true);
-      }
-
-
-      function receteUygula(){
-      	doc.sourceRecipe=$('#main-recipe').val() || ''
-
-      	if((doc.item || '')=='') return alert('Urun secilmemis.');
-      	if((doc.sourceRecipe || '')=='') return alert('Recete secilmemis.');
-      	if(doc.plannedQuantity<=0) return alert('Planlanan miktar sifir dan buyuk olmalidir.');
-      	$.ajax({
-      		url:`/dbapi/recipes/${doc.sourceRecipe}?sid=${q.sid}`,
-      		type:'GET',
-      		dataType: 'json',
-      		success: function(result) {
-      			if(result.success){
-      				var recete=result.data;
-
-      				var oran=0;
-      				if(recete.totalQuantity>0) oran=doc.plannedQuantity/recete.totalQuantity;
-      				if(oran==0) return alert('Recete orani "0" olamaz. Recete miktarlarini kontrol ediniz.');
-      				doc.recipeName=recete.name;
-      				doc.recipeRevision=recete.revision;
-      				doc.description=recete.description;
-      				doc.staffCount=recete.staffCount || 0;
-      				doc.process=[];
-      				doc.materialSummary=[];
-      				doc.outputSummary=[];
-      				doc.qualityControl=[];
-      				recete.process.forEach(function(e){
-      					var obj=JSON.parse(JSON.stringify(e));
-      					obj.input.forEach(function(e2){
-      						e2.quantity=e2.quantity*oran;
-      					})
-      					obj.output.forEach(function(e2){
-      						e2.quantity=e2.quantity*oran;
-      					})
-      					obj.machines=[];
-      					doc.process.push(obj);
-      				});
-
-      				recete.materialSummary.forEach(function(e){
-      					var obj=JSON.parse(JSON.stringify(e));
-      					obj.quantity=obj.quantity * oran;
-      					doc.materialSummary.push(obj);
-      				});
-
-      				recete.outputSummary.forEach(function(e){
-      					var obj=JSON.parse(JSON.stringify(e));
-      					obj.quantity=obj.quantity * oran;
-
-      					doc.outputSummary.push(obj);
-      				})
-
-      				doc.qualityControl=JSON.parse(JSON.stringify(recete.qualityControl));
-      				doc.totalWeight=(recete.totalWeight || 0) * oran;
-      				sourceRecipeDoc=clone(recete);
-      				reloadRecipe();
-      				paketPaletHesapla();
-      			}
-      		},
-      		error:function(err){
-      			console.error('err recipes:',err);
-      		}
-      	});
-      }
-
-
-      function formKaydet(){
-      	if((doc.item|| '')=='') return alert('Ürün seçilmemiş');
-      	if((doc.sourceRecipe|| '')=='') return alert('Ürün recetesi seçilmemiş');
-      	if(($('#issueDate').val() || '')=='') return alert('Üretim tarihi giriniz.');
-
-      	doc.productionId=$('#productionId').val();
-      	doc.issueDate=$('#issueDate').val();
-      	doc.issueTime=$('#issueTime').val();
-      	doc.plannedPeriod.startDate=$('#plannedPeriod-startDate').val();
-      	if($('#plannedPeriod-startDate').val()==''){
-      		doc.plannedPeriod.startTime='';
-      	}else{
-      		doc.plannedPeriod.startTime=$('#plannedPeriod-startTimeHour').val() + ':' + $('#plannedPeriod-startTimeMinute').val();
-      	}
-
-      	doc.plannedPeriod.endDate=$('#plannedPeriod-endDate').val();
-      	if($('#plannedPeriod-endDate').val()==''){
-      		doc.plannedPeriod.endTime='';
-      	}else{
-      		doc.plannedPeriod.endTime=$('#plannedPeriod-endTimeHour').val() + ':' + $('#plannedPeriod-endTimeMinute').val();
-      	}
-
-
-      	if(doc.productionTypeCode=='DEPO'){
-      		doc.orderLineReference.splice(0);
-      	}
-
-      	if(($('#choosePackingOption').val() || '')!=''){
-      		doc.packingOption=JSON.parse(decodeURIComponent($('#choosePackingOption').val()));
-      		doc.packingOption.quantityInPacking=Number($('#quantityInPacking').val());
-      		doc.packingOption.palletRowCount=Number($('#palletRowCount').val());
-      		doc.packingOption.packingCountInRow=Number($('#packingCountInRow').val());
-      	}
-
-
-
-      	doc.totalPallet=Number($('#totalPallet').val());
-      	doc.totalPacking=Number($('#totalPacking').val());
-
-
-      	saveRecipe((err)=>{
-      		if(!err){
-      			goBack();
-      		}else{
-      			alert(err.message);
-      		}
-      	});
-      }
-
-      function approve(){
-      	if(!confirm("Üretim emrini onaylamak istiyor musunuz?")) return;
-      	$.ajax({
-      		url:`/dbapi/production-orders/approve/${doc._id}?sid=${q.sid}`,
-      		data:{},
-      		type:'POST',
-      		success:function(result){
-      			if(result.success){
-                    //alert('Aktarim basladi.');
-                    goBack();
-                  }else{
-                  	alert(result.error);
-                  }
-                }
-              });
-      }
-
-      function decline(){
-      	if(!confirm("Üretim emri reddetmek istiyor musunuz?")) return;
-      	$.ajax({
-      		url:`/dbapi/production-orders/decline/${doc._id}?sid=${q.sid}`,
-      		data:{},
-      		type:'POST',
-      		success:function(result){
-      			if(result.success){
-                    //alert('Aktarim basladi.');
-                    goBack();
-                  }else{
-                  	alert(result.error);
-                  }
-                }
-              });
-      }
-
-      function start(){
-      	if(!confirm("Üretim emrini baslatmak istiyor musunuz?"))
-      		return
-      	$.ajax({
-      		url:`/dbapi/production-orders/start/${doc._id}?sid=${q.sid}`,
-      		data:{},
-      		type:'POST',
-      		success:function(result){
-      			if(result.success){
-                    //alert('Aktarim basladi.');
-                    goBack();
-                  }else{
-                  	alert(result.error);
-                  }
-                }
-              });
-      }
-
-      function makeDraftBack(){
-      	if(!confirm("Üretim emrinin taslak haline döndürülmesini istiyor musunuz?"))
-      		return
-      	$.ajax({
-      		url:`/dbapi/production-orders/setDraft/${doc._id}?sid=${q.sid}`,
-      		data:{},
-      		type:'POST',
-      		success:function(result){
-      			if(result.success){
-                    //alert('Aktarim basladi.');
-                    goBack();
-                  }else{
-                  	alert(result.error);
-                  }
-                }
-              });
-      }
-
-      function complete(){
-      	if(!confirm("Üretim emri tamamlanacaktır. Üretilenler stoğa eklenecektir. Onaylıyor musunuz?"))
-      		return
-      	$.ajax({
-      		url:`/dbapi/production-orders/complete/${doc._id}?sid=${q.sid}`,
-      		data:{},
-      		type:'POST',
-      		success:function(result){
-      			if(result.success){
-                    //alert('Aktarim basladi.');
-                    goBack();
-                  }else{
-                  	alert(result.error);
-                  }
-                }
-              });
-      }
-
-      $(document).ready(function(){
-
-      	$('select[name="productionTypeCode"]').change(function(){
-      		doc.productionTypeCode=$('#productionTypeCode').val();
-
-      		switch($('select[name="productionTypeCode"]').val()){
-      			case 'DEPO':
-      			$('#production-item-name').removeAttr('readonly');
-      			$('#plannedQuantity-quantity').removeAttr('readonly');
-      			$('#forCustomerPanel').hide();
-      			doc.item=$("#production-item-id").val();
-      			break;
-      			case 'MUSTERI':
-      			$('#production-item-name').prop('readonly',true);
-      			$('#plannedQuantity-quantity').prop('readonly',true);
-      			$('#forCustomerPanel').show();
-      			loadOrderLineReference();
-      			break;
-      		}
-
-      		loadMainItemAndRecipe();
-      		calculatePlannedQuantity();
-      	});
-
-
-      	$('#production-item-name').autocomplete({
-      		source:function(request,response){
-      			$.ajax({
-      				url:`/dbapi/items?sid=${q.sid}&itemType=product&name=${encodeURIComponent2(request.term)}`,
-      				type:'GET',
-      				dataType: 'json',
-      				success: function(result) {
-      					if(result.success){
-      						var dizi=[];
-      						for(var i=0;i<result.data.docs.length;i++){
-      							var item=result.data.docs[i];
-
-      							dizi.push({name:item.name.value, label:(getItemTypeName(item.itemType) + ' - ' + item.name.value),value:item._id});
-      						}
-      						if(dizi.length>0){
-      							$('#cbNewItemPanel').hide();
-      						}else{
-      							$('#cbNewItemPanel').show();
-      						}
-      						response(dizi);
-      					}
-      				},
-      				error:function(err){
-      					console.error('err:',err);
-      				}
-      			});
-      		},
-      		select: function (event, ui) {
-      			$("#production-item-name").val(ui.item.name); 
-      			$("#production-item-id").val(ui.item.value);
-      			doc.item=ui.item.value;
-
-      			loadMainItemAndRecipe();
-      			return false;
-      		}
-      	});
-      });
-    </script>
+		var uretimIcinGerekliMalzemeler=[];
+		doc.process.forEach(function(process){
+			process.input.forEach(function(processInput){
+				var bFound=false;
+				uretimIcinGerekliMalzemeler.forEach(function(e){
+					var id1=e.item!=undefined?e.item._id:'';
+					var id2=processInput.item!=undefined?processInput.item._id:'';
+					var color1=e.color!=undefined?e.color._id:'';
+					var color2=processInput.color!=undefined?processInput.color._id:'';
+					var pattern1=e.pattern!=undefined?e.pattern._id:'';
+					var pattern2=processInput.pattern!=undefined?processInput.pattern._id:'';
+					var size1=e.size!=undefined?e.size._id:'';
+					var size2=processInput.size!=undefined?processInput.size._id:'';
+
+					if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
+						e.quantity+=processInput.quantity;
+						bFound=true;
+						return;
+					}
+				});
+				if(!bFound){
+					var m={
+						item:processInput.item,
+						color:processInput.color,
+						pattern:processInput.pattern,
+						size:processInput.size,
+						quantity:processInput.quantity
+					}
+					uretimIcinGerekliMalzemeler.push(m);
+				}
+			})
+
+		})
+		var lineGridProOrder=document.getElementById('lineGridProOrder');
+		while(lineGridProOrder.rows.length>1){
+			lineGridProOrder.deleteRow(0);
+		}
+
+		uretimIcinGerekliMalzemeler.forEach(function(e,index){
+			var kalan=0;
+			var toplam=0;
+			uretimeCikmisMalzemeToplamlari.forEach(function(e2){
+				var id1=e.item!=undefined?e.item._id:'';
+				var id2=e2.item!=undefined?e2.item._id:'';
+				var color1=e.color!=undefined?e.color._id:'';
+				var color2=e2.color!=undefined?e2.color._id:'';
+				var pattern1=e.pattern!=undefined?e.pattern._id:'';
+				var pattern2=e2.pattern!=undefined?e2.pattern._id:'';
+				var size1=e.size!=undefined?e.size._id:'';
+				var size2=e2.size!=undefined?e2.size._id:'';
+
+				if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
+					toplam +=e2.quantity;
+				}
+
+			})
+			kalan=e.quantity-toplam;
+
+			var newRow=lineGridProOrder.insertRow(lineGridProOrder.rows.length);
+			if(kalan<0){
+				newRow.classList.add('text-danger');
+				newRow.classList.add('bold');
+
+			}
+			newRow.insertCell(0).innerHTML=(index+1).n2();
+			var cell1 = newRow.insertCell(1);
+			cell1.innerHTML=e.item==undefined?'':e.item.name.value + (e.item.description.value!=''?' - ' + e.item.description.value:'');
+			cell1.innerHTML+=e.pallet?'<br>Plt:' + e.pallet.name:'';
+			cell1.innerHTML+=e.color?'<br>Renk:' + e.color.name:'';
+			cell1.innerHTML+=e.pattern?'<br>Desen:' + e.pattern.name:'';
+			cell1.innerHTML+=e.size?'<br>Beden:' + e.size.name:'';
+
+			var cell2=newRow.insertCell(2);
+			cell2.classList.add('text-right');
+			cell2.innerHTML=Number(e.quantity).formatDecimal();
+			var cell3=newRow.insertCell(3);
+			cell3.classList.add('text-right');
+			if(kalan>=0){
+				cell3.innerHTML=Number(kalan).formatDecimal();
+			}else{
+				cell3.innerHTML='(' + Number(kalan).formatDecimal() + ')';
+			}
+		});
+	}
+
+	function loadUretimdenGirenMamuller(){
+		var lineGrid=document.getElementById('lineGridUretimdenGiris');
+		while(lineGrid.rows.length>1){
+			lineGrid.deleteRow(0);
+		}
+
+		var uretimdenStogaGirmisMamuller=[];
+
+		if(Array.isArray(doc.inventory_fiches)){
+			doc.inventory_fiches.forEach(function(fiche){
+				if(fiche.docTypeCode=='URETIMDENGIRIS'){
+					fiche.docLine.forEach(function(line){
+						var newRow=lineGrid.insertRow(lineGrid.rows.length);
+						var cell0=newRow.insertCell(0);
+						cell0.innerHTML=fiche.docId;
+
+						var cell1=newRow.insertCell(1);
+						cell1.classList.add('text-right');
+						cell1.innerHTML=line.sequence;
+
+						var cell2=newRow.insertCell(2);
+						cell2.innerHTML=line.item==undefined?'':line.item.name.value + (line.item.description.value!=''?' - ' + line.item.description.value:'');
+						cell2.innerHTML+=line.pallet?'<br>Plt:' + line.pallet.name:'';
+						cell2.innerHTML+=line.lotNo!=''?'<br>Lot:' + line.lotNo:'';
+						cell2.innerHTML+=line.serialNo!=''?'<br>Sn:' + line.serialNo:'';
+						cell2.innerHTML+=line.color?'<br>Renk:' + line.color.name:'';
+						cell2.innerHTML+=line.pattern?'<br>Desen:' + line.pattern.name:'';
+						cell2.innerHTML+=line.size?'<br>Beden:' + line.size.name:'';
+
+						var cell3=newRow.insertCell(3);
+						cell3.classList.add('text-right');
+						cell3.innerHTML=Number(line.quantity).formatQuantity();
+
+						var cell4=newRow.insertCell(4);
+						cell4.innerHTML=getUnitCodeText(line.unitCode);
+
+						var cell5=newRow.insertCell(5);
+						cell5.innerHTML='<a class="btn btn-primary fas fa-edit" href="/inventory/inventory-fiches/edit/' + fiche._id + '?db=' + q.db + '&sid=' + q.sid + '" title="Stok Fişini değiştir/aç"></a>';
+						cell5.classList.add('text-center');
+
+						var bFound=false;
+						uretimdenStogaGirmisMamuller.forEach(function(e){
+							var id1=e.item!=undefined?e.item._id:'';
+							var id2=line.item!=undefined?line.item._id:'';
+							var color1=e.color!=undefined?e.color._id:'';
+							var color2=line.color!=undefined?line.color._id:'';
+							var pattern1=e.pattern!=undefined?e.pattern._id:'';
+							var pattern2=line.pattern!=undefined?line.pattern._id:'';
+							var size1=e.size!=undefined?e.size._id:'';
+							var size2=line.size!=undefined?line.size._id:'';
+
+							if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
+								e.quantity+=line.quantity;
+								bFound=true;
+								return;
+							}
+						});
+						if(!bFound){
+							var m={
+								item:line.item,
+								color:line.color,
+								pattern:line.pattern,
+								size:line.size,
+								quantity:line.quantity
+							}
+							uretimdenStogaGirmisMamuller.push(m);
+						}
+					})
+				}
+			});
+		}
+
+		var uretimEmrindekiMamuller=[];
+		var m1={
+			item:itemDoc,
+			color:undefined,
+			pattern:undefined,
+			size:undefined,
+			quantity:doc.plannedQuantity
+		}
+		uretimEmrindekiMamuller.push(m1);
+		doc.process.forEach((process)=>{
+			process.output.forEach((processOutput)=>{
+				var bFound=false;
+				uretimEmrindekiMamuller.forEach((e)=>{
+					var id1=e.item!=undefined?e.item._id:'';
+					var id2=processOutput.item!=undefined?processOutput.item._id:'';
+					var color1=e.color!=undefined?e.color._id:'';
+					var color2=processOutput.color!=undefined?processOutput.color._id:'';
+					var pattern1=e.pattern!=undefined?e.pattern._id:'';
+					var pattern2=processOutput.pattern!=undefined?processOutput.pattern._id:'';
+					var size1=e.size!=undefined?e.size._id:'';
+					var size2=processOutput.size!=undefined?processOutput.size._id:'';
+
+					if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
+						e.quantity+=processOutput.quantity;
+						bFound=true;
+						return;
+					}
+				});
+				if(!bFound){
+					var m={
+						item:processOutput.item,
+						color:processOutput.color,
+						pattern:processOutput.pattern,
+						size:processOutput.size,
+						quantity:processOutput.quantity
+					}
+					uretimEmrindekiMamuller.push(m);
+				}
+			})
+
+		})
+		var lineGridProOrderMamul=document.getElementById('lineGridProOrderMamul');
+		while(lineGridProOrderMamul.rows.length>1){
+			lineGridProOrderMamul.deleteRow(0);
+		}
+
+		uretimEmrindekiMamuller.forEach((e,index)=>{
+
+			var kalan=0;
+			var toplam=0;
+			uretimdenStogaGirmisMamuller.forEach((e2)=>{
+				var id1=e.item!=undefined?e.item._id:'';
+				var id2=e2.item!=undefined?e2.item._id:'';
+				var color1=e.color!=undefined?e.color._id:'';
+				var color2=e2.color!=undefined?e2.color._id:'';
+				var pattern1=e.pattern!=undefined?e.pattern._id:'';
+				var pattern2=e2.pattern!=undefined?e2.pattern._id:'';
+				var size1=e.size!=undefined?e.size._id:'';
+				var size2=e2.size!=undefined?e2.size._id:'';
+
+				if(id1==id2 && color1==color2 && pattern1==pattern2 && size1==size2){
+					toplam +=e2.quantity
+				}
+
+			})
+			kalan=e.quantity-toplam;
+
+			var newRow=lineGridProOrderMamul.insertRow(lineGridProOrderMamul.rows.length);
+			if(kalan<0){
+				newRow.classList.add('text-danger');
+				newRow.classList.add('bold');
+
+			}
+			newRow.insertCell(0).innerHTML=(index+1).n2();
+			var cell1 = newRow.insertCell(1);
+			cell1.innerHTML=e.item==undefined?'':e.item.name.value + (e.item.description.value!=''?' - ' + e.item.description.value:'');
+			cell1.innerHTML+=e.pallet?'<br>Plt:' + e.pallet.name:'';
+			cell1.innerHTML+=e.color?'<br>Renk:' + e.color.name:'';
+			cell1.innerHTML+=e.pattern?'<br>Desen:' + e.pattern.name:'';
+			cell1.innerHTML+=e.size?'<br>Beden:' + e.size.name:'';
+
+			var cell2=newRow.insertCell(2);
+			cell2.classList.add('text-right');
+			cell2.innerHTML=Number(e.quantity).formatDecimal();
+			var cell3=newRow.insertCell(3);
+			cell3.classList.add('text-right');
+			if(kalan>=0){
+				cell3.innerHTML=Number(kalan).formatDecimal();
+			}else{
+				cell3.innerHTML='(' + Number(kalan).formatDecimal() + ')';
+			}
+		})
+	}
+
+
+
+	function loadForm(){
+		$('#issueDate').val(doc.issueDate);
+		$('#issueTime').val(doc.issueTime);
+		$('#plannedPeriod-startDate').val(doc.plannedPeriod.startDate);
+		$('#plannedPeriod-startTime').val(doc.plannedPeriod.startTime);
+
+		$('#plannedPeriod-endDate').val(doc.plannedPeriod.endDate);
+		$('#plannedPeriod-endTime').val(doc.plannedPeriod.endTime);
+
+		$('#issueTime').val(doc.issueTime);
+		if(doc.productionTypeCode!='') $('#productionTypeCode').val(doc.productionTypeCode);
+		$('#plannedQuantity-quantity').val(doc.plannedQuantity);
+
+
+		switch(doc.productionTypeCode){
+			case 'DEPO':
+			if(mode!='view'){
+				$('#production-item-name').removeAttr('readonly');
+				$('#plannedQuantity-quantity').removeAttr('readonly');
+			}
+			$('#forCustomerPanel').hide();
+
+			break;
+			case 'MUSTERI':
+			if(mode!='view'){
+				$('#production-item-name').prop('readonly',true);
+				$('#plannedQuantity-quantity').prop('readonly',true);
+			}
+			$('#forCustomerPanel').show();
+
+			break;
+		}
+		loadMainItemAndRecipe(function(err){
+			if(!err){
+				if(doc.productionTypeCode=='MUSTERI') loadOrderLineReference();
+
+				reloadRecipe();
+
+
+				if((doc._id || '')==''){
+					calculatePlannedQuantity();
+					paketPaletHesapla();
+					receteUygula();
+				}else{
+					if(doc.packingOption){
+						$('#quantityInPacking').val(doc.packingOption.quantityInPacking);
+						$('#palletRowCount').val(doc.packingOption.palletRowCount);
+						$('#packingCountInRow').val(doc.packingOption.packingCountInRow);
+					}
+					$('#totalPallet').val((doc.totalPallet || 0));
+					$('#totalPacking').val((doc.totalPacking || 0));
+				}
+
+				loadUretimeCikanMalzemeler();
+				loadUretimdenGirenMamuller();
+			}
+		})
+	}
+
+	loadForm();
+
+	function uretimeCikisFisi(ficheId=''){
+		if((doc._id || '')=='') 
+			return alertX('Uretim emrini kaydetmeniz gerekiyor','Uyarı')
+		var url='/inventory/inventory-fiches/';
+		if(ficheId==''){
+			url +='addnew'
+		}else{
+			url +='edit/' + ficheId;
+		}
+
+		url +=`?sid=${q.sid}&productionOrderId=${doc._id}`
+		window.location.href=url
+	}
+
+
+	function receteUygula(){
+		doc.sourceRecipe=$('#main-recipe').val() || ''
+
+		if((doc.item || '')=='')
+			return alertX('Ürün seçilmemiş!','Uyarı')
+		if((doc.sourceRecipe || '')=='') 
+			return alertX('Reçete seçilmemiş!','Uyarı')
+		if(doc.plannedQuantity<=0)
+			return alertX('Planlanan miktar sıfırdan büyük olmalıdır.','Uyarı')
+		$.ajax({
+			url:`/dbapi/recipes/${doc.sourceRecipe}?sid=${q.sid}`,
+			type:'GET',
+			dataType: 'json',
+			success: function(result) {
+				if(result.success){
+					var recete=result.data;
+
+					var oran=0;
+					if(recete.totalQuantity>0)
+						oran=doc.plannedQuantity/recete.totalQuantity;
+					if(oran==0)
+						return alertX('Reçete oranı "0" olamaz. Reçete miktarını kontrol ediniz','Uyarı')
+					doc.recipeName=recete.name;
+					doc.recipeRevision=recete.revision;
+					doc.description=recete.description;
+					doc.staffCount=recete.staffCount || 0;
+					doc.process=[];
+					doc.materialSummary=[];
+					doc.outputSummary=[];
+					doc.qualityControl=[];
+					recete.process.forEach(function(e){
+						var obj=JSON.parse(JSON.stringify(e));
+						obj.input.forEach(function(e2){
+							e2.quantity=e2.quantity*oran;
+						})
+						obj.output.forEach(function(e2){
+							e2.quantity=e2.quantity*oran;
+						})
+						obj.machines=[];
+						doc.process.push(obj);
+					});
+
+					recete.materialSummary.forEach(function(e){
+						var obj=JSON.parse(JSON.stringify(e));
+						obj.quantity=obj.quantity * oran;
+						doc.materialSummary.push(obj);
+					});
+
+					recete.outputSummary.forEach(function(e){
+						var obj=JSON.parse(JSON.stringify(e));
+						obj.quantity=obj.quantity * oran;
+
+						doc.outputSummary.push(obj);
+					})
+
+					doc.qualityControl=JSON.parse(JSON.stringify(recete.qualityControl));
+					doc.totalWeight=(recete.totalWeight || 0) * oran;
+					sourceRecipeDoc=clone(recete);
+					reloadRecipe();
+					paketPaletHesapla();
+				}
+			},
+			error:function(err){
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+			}
+		})
+	}
+
+
+	function formKaydet(){
+		if((doc.item|| '')=='')
+			return alertX('Ürün seçilmemiş.','Uyarı')
+		if((doc.sourceRecipe|| '')=='')
+			return alertX('Ürün reçetesi seçilmemiş.','Uyarı')
+
+		if(($('#issueDate').val() || '')=='')
+			return alertX('Üretim tarihigiriniz.','Uyarı')
+
+		doc.productionId=$('#productionId').val();
+		doc.issueDate=$('#issueDate').val();
+		doc.issueTime=$('#issueTime').val();
+		doc.plannedPeriod.startDate=$('#plannedPeriod-startDate').val();
+		if($('#plannedPeriod-startDate').val()==''){
+			doc.plannedPeriod.startTime='';
+		}else{
+			doc.plannedPeriod.startTime=$('#plannedPeriod-startTime').val()
+		}
+
+		doc.plannedPeriod.endDate=$('#plannedPeriod-endDate').val();
+		if($('#plannedPeriod-endDate').val()==''){
+			doc.plannedPeriod.endTime='';
+		}else{
+			doc.plannedPeriod.endTime=$('#plannedPeriod-endTime').val()
+		}
+
+
+		if(doc.productionTypeCode=='DEPO'){
+			doc.orderLineReference.splice(0);
+		}
+
+		if(($('#choosePackingOption').val() || '')!=''){
+			doc.packingOption=JSON.parse(decodeURIComponent($('#choosePackingOption').val()));
+			doc.packingOption.quantityInPacking=Number($('#quantityInPacking').val());
+			doc.packingOption.palletRowCount=Number($('#palletRowCount').val());
+			doc.packingOption.packingCountInRow=Number($('#packingCountInRow').val());
+		}
+
+
+
+		doc.totalPallet=Number($('#totalPallet').val());
+		doc.totalPacking=Number($('#totalPacking').val());
+
+
+		saveRecipe((err)=>{
+			if(!err){
+				goBack();
+			}else{
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+			}
+		});
+	}
+
+	function approve(){
+		confirmX(`Üretim emrini onaylamak istiyor musunuz?`,(resp)=>{
+			if(resp){
+				$.ajax({
+					url:`/dbapi/production-orders/approve/${doc._id}?sid=${q.sid}`,
+					data:{},
+					type:'POST',
+					success:function(result){
+						if(result.success){
+							goBack();
+						}else{
+							alertX(result.error.message,'HATA','warning')
+						}
+					}
+				});
+			}
+		})
+
+
+	}
+
+	function decline(){
+		confirmX(`Üretim emrini reddetmek istiyor musunuz?`,(resp)=>{
+			if(resp){
+				$.ajax({
+					url:`/dbapi/production-orders/decline/${doc._id}?sid=${q.sid}`,
+					data:{},
+					type:'POST',
+					success:function(result){
+						if(result.success){
+							goBack()
+						}else{
+							alertX(result.error.message,'HATA','warning')
+						}
+					}
+				})
+			}
+		})
+	}
+
+	function start(){
+		confirmX(`Üretim emrini başlatmak istiyor musunuz?`,(resp)=>{
+			if(resp){
+				$.ajax({
+					url:`/dbapi/production-orders/start/${doc._id}?sid=${q.sid}`,
+					data:{},
+					type:'POST',
+					success:function(result){
+						if(result.success){
+
+							goBack()
+						}else{
+							alertX(result.error.message,'HATA','warning')
+						}
+					}
+				})
+			}
+		})
+	}
+
+	function makeDraftBack(){
+
+		confirmX(`Üretim emrinin tekrar taslak haline döndürülmesini istiyor musunuz?`,(resp)=>{
+			if(resp){
+				$.ajax({
+					url:`/dbapi/production-orders/setDraft/${doc._id}?sid=${q.sid}`,
+					data:{},
+					type:'POST',
+					success:function(result){
+						if(result.success){
+							goBack();
+						}else{
+							alertX(result.error.message,'HATA','warning')
+						}
+					}
+				})
+			}
+		})
+	}
+
+	function complete(){
+
+		confirmX(`Üretim emri tamamlanacaktır. Üretilenler stoğa eklenecektir. Onaylıyor musunuz?`,(resp)=>{
+			if(resp){
+				$.ajax({
+					url:`/dbapi/production-orders/complete/${doc._id}?sid=${q.sid}`,
+					data:{},
+					type:'POST',
+					success:function(result){
+						if(result.success){
+							goBack()
+						}else{
+							alertX(result.error.message,'HATA','warning')
+						}
+					}
+				})
+			}
+		})
+	}
+
+	$(document).ready(function(){
+
+		$('select[name="productionTypeCode"]').change(function(){
+			doc.productionTypeCode=$('#productionTypeCode').val();
+
+			switch($('select[name="productionTypeCode"]').val()){
+				case 'DEPO':
+				$('#production-item-name').removeAttr('readonly');
+				$('#plannedQuantity-quantity').removeAttr('readonly');
+				$('#forCustomerPanel').hide();
+				doc.item=$("#production-item-id").val();
+				break;
+				case 'MUSTERI':
+				$('#production-item-name').prop('readonly',true);
+				$('#plannedQuantity-quantity').prop('readonly',true);
+				$('#forCustomerPanel').show()
+				loadOrderLineReference()
+				break
+			}
+
+			loadMainItemAndRecipe();
+			calculatePlannedQuantity();
+		});
+
+
+		$('#production-item-name').autocomplete({
+			source:function(request,response){
+				$.ajax({
+					url:`/dbapi/items?sid=${q.sid}&itemType=product&name=${encodeURIComponent2(request.term)}`,
+					type:'GET',
+					dataType: 'json',
+					success: function(result) {
+						if(result.success){
+							var dizi=[]
+							result.data.docs.forEach((item)=>{
+								dizi.push({name:item.name.value, label:(getItemTypeName(item.itemType) + ' - ' + item.name.value),value:item._id});
+							})
+
+							if(dizi.length>0){
+								$('#cbNewItemPanel').hide()
+							}else{
+								$('#cbNewItemPanel').show()
+							}
+							response(dizi)
+						}
+					},
+					error:function(err){
+						alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+					}
+				});
+			},
+			select: function (event, ui) {
+				$("#production-item-name").val(ui.item.name); 
+				$("#production-item-id").val(ui.item.value);
+				doc.item=ui.item.value;
+
+				loadMainItemAndRecipe();
+				return false
+			}
+		})
+	})
+</script>

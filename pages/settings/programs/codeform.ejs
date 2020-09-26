@@ -330,21 +330,27 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 	function deleteFile(){
 		if(activeIndex<0)
 			return
-		if(!confirm('Dosyayi silmek istediginizden emin misiniz?'))
-			return
-		doc.files.splice(activeIndex,1)
-		if(doc.files.length>0){
-			activeIndex=0
-		} else{
-			activeIndex=-1
-		}
 
-		reloadFiles()
+
+		confirmX(`Dosyayı silmek istediğinizden emin misiniz?`,(resp)=>{
+			if(resp){
+				doc.files.splice(activeIndex,1)
+				if(doc.files.length>0){
+					activeIndex=0
+				} else{
+					activeIndex=-1
+				}
+				reloadFiles()
+			}
+		})
+		
 	}
 	function cancelForm(){
-		if(!confirm('Yaptığınız değişiklikler kaydedilmeyecektir. Emin misiniz?'))
-			return
-		goBack()
+		confirmX(`Yaptığınız değişiklikler kaydedilmeyecektir. Emin misiniz?`,'danger',(resp)=>{
+			if(resp){
+				goBack()
+			}
+		})
 	}
 
 	function copyToClipboard(id){
@@ -374,8 +380,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 	function connectorTest(){
 		var data=getConnectorInfo()
 		if(data.connectorId=='' || data.connectorPass==''){
-			alert('Connector Id ve Pass giriniz')
-			return
+			return alertX('Connector Id ve Pass giriniz','Uyarı')
 		}
 		$('#connectorTestResult').html(`connector test ediliyor...`)
 
@@ -397,8 +402,7 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 				}
 			},
 			error:function(err){
-				console.log(err)
-				alert(err)
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
 			}
 		})
 	}
@@ -466,10 +470,9 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 		doc.emailSender.auth.pass=$('input[name="emailSender[auth][pass]"]').val()
 
 		doc.crontab=$('input[name="crontab"]').val()
-		if(doc.name==''){
-			alert('isim bos olamaz!')
-			return;
-		}
+		if(doc.name.trim()=='')
+			return alertX('isim boş olamaz!','Uyarı')
+
 		var type='POST';
 		var url='';
 		url=`/dbapi/programs?sid=${q.sid}`
@@ -486,12 +489,11 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 				if(result.success){
 					goBack()
 				}else{
-					alert(result.error.message)
+					alertX(result.error.message,'HATA','warning')
 				}
 			},
 			error:function(err){
-				alert(err)
-				console.log(err)
+				alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
 			}
 		})
 	}
@@ -504,11 +506,6 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 			$(`#list-file${activeIndex}`).html($('#fileName').val())
 		})
 
-		// $('#code textarea').on('change',function(event){
-		// 	if(activeIndex<0)
-		// 		return
-		// 	doc.files[activeIndex].data=btoa($('#code textarea').val())
-		// })
 		document.getElementById("code").getElementsByTagName('textarea')[0].addEventListener("change", function(){
 			if(activeIndex<0)
 				return
@@ -555,16 +552,20 @@ headerButtons +='<a href="javascript:cancelForm()" class="btn btn-dark  btn-form
 			if(files.length==0) 
 				return
 
-			if(!confirm(files.length + ' adet dosya iceri alinacaktir. Onayliyor musunuz?'))
-				return
-			files.forEach((e)=>{
-				var obj={
-					fileName:e.name,
-					data:e.base64Data
-				}
+			confirmX(`${files.length} adet dosya içeri alınacaktır. Onaylıyor musunuz?`,(resp)=>{
+				if(resp){
+					files.forEach((e)=>{
+						var obj={
+							fileName:e.name,
+							data:e.base64Data
+						}
 
-				addNewFile(obj,false)
+						addNewFile(obj,false)
+					})
+				}
 			})
+
+			
 		}
 	})
 

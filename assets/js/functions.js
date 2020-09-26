@@ -390,6 +390,10 @@ function getPageFilter(path,key,defaultValue=''){
 }
 
 const dbType=typeof types!='undefined'?types.types:'';
+const fbuilder=typeof formBuilder!='undefined'?formBuilder.formBuilder:'';
+const frmBuilder=typeof FormBuilder!='undefined'?FormBuilder.FormBuilder:'';
+
+
 
 function clone(obj){
 	return JSON.parse(JSON.stringify(obj));
@@ -482,7 +486,7 @@ function dateTimeFromText(dateStr) {
     d.setMinutes(d.getMinutes()+(new Date()).getTimezoneOffset()*1);
 
     return d;
-};
+}
 
 
 function pagination(c, m) {
@@ -680,4 +684,9 @@ function windowPathToFieldName(path=''){
 		path=path.substr(1)
 	path=path.replaceAll('/','_')
 	return path
+}
+
+function openInNewTab(url) {
+  var win = window.open(url, '_blank')
+  win.focus()
 }

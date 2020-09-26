@@ -23,13 +23,13 @@
 				<div class="dropdown-header">Veri Ambarlari</div>
 				<% if(typeof session!='undefined'){ %>
 				<% if(typeof session.databases!='undefined'){ %>
-					<% session.databases.forEach((e)=>{%>
-					<% if(e._id.toString()== session.dbId.toString()){%>
-					<div class="dropdown-item active"><%- e.dbName %></div>
-					<% }else{ %>
-					<a class="dropdown-item" href="/changedb?<%- `sid=${sid}&db=${e._id}` %>"><%- e.dbName %></a>
-					<% } %>
-					<% }) %>
+				<% session.databases.forEach((e)=>{%>
+				<% if(e._id.toString()== session.dbId.toString()){%>
+				<div class="dropdown-item active"><%- e.dbName %></div>
+				<% }else{ %>
+				<a class="dropdown-item" href="/changedb?<%- `sid=${sid}&db=${e._id}` %>"><%- e.dbName %></a>
+				<% } %>
+				<% }) %>
 				<% } %>
 				<% } %>
 			</div>
@@ -44,6 +44,7 @@
 		</li>
 	</ul>
 </nav>
+
 <div id="layoutSidenav">
 	<div id="layoutSidenav_nav" class=" border-right">
 		<%- partial('side-menu') %>
@@ -53,7 +54,6 @@
 			<div class="mt-2 mb-1 px-3" style="height: 36px">
 				<h1 class="float-left m-0 page-title text-secondary" style="font-size:16pt">
 					<% if(breadCrumbs.length>0){ %>
-					<!-- <i class="<%- breadCrumbs[breadCrumbs.length-1].icon %> text-primary"></i>  -->
 					<i class="<%- breadCrumbs[breadCrumbs.length-1].icon %>"></i> 
 					<% breadCrumbs.forEach((e,index)=>{ %>
 					<% if(index<breadCrumbs.length-1){ %>
@@ -68,7 +68,8 @@
 					<% }) %>
 					<% }else{ %>
 					<% if(typeof icon!='undefined'){%><i class="<%=icon%>"></i> 
-					<%}%><%=title%>
+					<%}%>
+					<% if(funcTitle==''){%><span class="font-weight-bold text-primary"><%=title%></span><% } else { %><%=title%> <%}%>
 					<% } %>
 					<% if(funcTitle!=''){%> - <span class="font-weight-bold text-primary"><%=funcTitle%></span><% } %>
 				</h1>
@@ -96,7 +97,7 @@
 </a>
 
 <div class="modal" id="modalFormOptions" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalFormOptionsLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg modal-scrollable modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header p-2 ">
 				<label class="modal-title" id="modalFormOptionsLabel"><i class="fas fa-cogs"></i> Form Options: <b><%- urlPath %></b></label>
@@ -119,17 +120,133 @@
 				</table>
 			</div>
 			<div class="modal-footer">
-				<div class="float-right">
-					<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
-					<a class="btn btn-primary" href="javascript:modalFormOptions_OK()" title="Kaydet"><i class="fas fa-ok"></i> Tamam</a>
+				<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
+				<a class="btn btn-primary" href="javascript:modalFormOptions_OK()" title="Kaydet"><i class="fas fa-ok"></i> Tamam</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal" id="modalMessage" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalMessageLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div id="modalMessageHeader" class="modal-header p-2 ">
+				<label class="modal-title" id="modalMessageLabel"></label>
+				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body p-2" style="overflow: auto;">
+				
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" type="button" data-dismiss="modal">Tamam</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	// alert types
+	// danger, warning, info
+	function alertX(message, title='', type='info',cb){
+		var icon='fas fa-exclamation-triangle'
+		if(typeof title=='function'){
+			cb=title
+			title=''
+			type='info'
+		}else if(typeof type=='function'){
+			cb=type
+			type='info'
+		}
+		$('#modalMessageHeader').removeClass('alert-warning')
+		$('#modalMessageHeader').removeClass('alert-info')
+		$('#modalMessageHeader').removeClass('alert-danger')
+
+		switch(type){
+			case 'danger':
+			icon='fas fa-skull-crossbones'
+			$('#modalMessageHeader').addClass('alert-danger')
+			break
+			case 'warning':
+			icon='fas fa-exclamation-triangle'
+			$('#modalMessageHeader').addClass('alert-warning')
+			break
+			default:
+			icon='fas fa-info-circle'
+			$('#modalMessageHeader').addClass('alert-info')
+			break
+		}
+		title=`<i class="${icon}"></i> ${title}`
+		$('#modalMessageLabel').html(title)
+
+		$('#modalMessage .modal-body').html(`${message.replaceAll('\n','<br>')}`)
+		
+		$('#modalMessage').modal('show')
+		$('#modalMessage').on('hidden.bs.modal', function (e) {
+			if(cb)
+				cb('ok')
+		})
+	}
+</script>
+<div class="modal" id="modalConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalConfirmLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-body row align-items-center p-3" style="overflow: auto;">
+				<div class="col-md-2" style="font-size:16pt;">
+					<i class="far fa-question-circle fa-2x"></i>
 				</div>
+				<div class="col message" style="font-size:12pt;">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button id="modalConfirmOk" class="btn btn-primary" type="button" data-dismiss="modal">Tamam</button>
+				<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
+	var confirmX_response=false
+	function confirmX(message, type='info',cb){
+		confirmX_response=false
+		if(typeof type=='function'){
+			cb=type
+			type='info'
+		}
+
+
+		$('#modalConfirm .modal-content').removeClass('alert-warning')
+		$('#modalConfirm .modal-content').removeClass('alert-info')
+		$('#modalConfirm .modal-content').removeClass('alert-danger')
+
+		$('#modalConfirm .modal-content').addClass(`alert-${type}`)
+
+		$('#modalConfirm .message').html(message.replaceAll('\n','<br>'))
+		
+		$('#modalConfirm').modal('show')
+		
+		$('#modalConfirm').on('hidden.bs.modal', function (e) {
+			$('#modalConfirm').unbind('hidden.bs.modal')
+			if(cb)
+				cb(confirmX_response)
+		})
+		$('#modalConfirmOk').on('click', function (e) {
+			$('#modalConfirmOk').unbind('click')
+			confirmX_response=true
+			$('#modalConfirm').modal('hide')
+		})
+	}
+
 	
+</script>
+
+
+<script type="text/javascript">
+
+	
+
 	function modalFormOptions(){
 		$("#gridPrograms tr").remove()
 
@@ -225,9 +342,11 @@
 	}
 
 	function logout(){
-		if(!confirm('Programdan çıkmak istiyor musunuz?'))
-			return
-		window.location.href=window.location.origin + '/'
+		confirmX('Programdan çıkmak istiyor musunuz?',(resp)=>{
+			console.log(`resp:`,resp)
+			if(resp)
+				window.location.href=`${window.location.origin}/logout?sid=${q.sid}`
+		})
 	}
 
 	$(document).ready(function(){

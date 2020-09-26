@@ -1,8 +1,11 @@
 <%
-	if(typeof form.files=='undefined') form.files=[];
+	if(typeof form.files=='undefined')
+		form.files=[];
 	
-	if(typeof form['fileId']=='undefined') fileId='';
-	if(typeof newFile=='undefined') newFile=false;
+	if(typeof form['fileId']=='undefined')
+		fileId='';
+	if(typeof newFile=='undefined')
+		newFile=false;
 
 
 	var fileUploadAcceptList='';
@@ -189,10 +192,10 @@
 
 
 	function confirmDelete(){
-        return confirm("Dosya silinecektir! Onayliyor musunuz?");
+        return confirm("Dosya silinecektir! Onaylıyor musunuz?");
     }
 
     function confirmSetStart(){
-        return confirm("Baslangic dosyasi olarak ayarlanacaktir! Onayliyor musunuz?");
+        return confirm("Baslangic dosyasi olarak ayarlanacaktir! Onaylıyor musunuz?");
     }
 </script>

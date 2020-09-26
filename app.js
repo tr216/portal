@@ -41,6 +41,7 @@ global.docFormHelper=require('./lib/doc_form_helper.js')
 
 
 global.dbType=require('./assets/js/dbtypes.js').types
+global.frmBuilder=require('./assets/js/ui/form-builder2.js').FormBuilder
 
 
 var app = express()

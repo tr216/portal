@@ -1,330 +1,333 @@
 <div class="row m-0 p-0">
-    <div class="col-md-12 m-0 p-1">
-        <div class="card">
-            <div class="card-header p-1">
-                <div class="float-left bold text-primary">Kullanılabilir Ambalaj/Kutu/Koliler</div>
-            </div>
-            <div class="card-body p-1">
-                <table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
-                    <thead>
-                        <tr class="text-nowrap">
-                            <th  class="">Palet</th>
-                            <th  class="">Ambalaj Tipi</th>
-                            <th  class="text-right">Koli içi miktar</th>
-                            <th  class="text-right">Palet İstif Sıra</th>
-                            <th  class="text-right">Sıradaki Koli sayısı</th>
-                            <th  class="">Ambalaj 2</th>
-                            <th  class="">Ambalaj 3</th>
-                            <th style="min-width: 60px;" class="text-center">#</th>
-                        </tr>
-                    </thead>
-                    <tbody id="packingTypeGrid">
-                        <tr id="addPackingTypeGridRow" class="text-nowrap" >
-                            <td class="">
-                                <input type="text" form="form-general" name="palletTypeName" id="palletTypeName" placeholder="palet tipi"  class="form-control" autocomplete="off" value="">
-                                <input type="hidden" form="form-general" name="palletTypeId" id="palletTypeId"  class="itemId" hidden="true" value="">
-                                <input type="hidden" form="form-general" name="palletTypeObject" id="palletTypeObject"  class="itemId" hidden="true" value="">
-                            </td>
-                            <td class="">
-                                <input type="text" form="form-general" name="packingTypeName" id="packingTypeName" placeholder="ambalaj tipi"  class="form-control" autocomplete="off" value="">
-                                <input type="hidden" form="form-general" name="packingTypeId" id="packingTypeId"  class="itemId" hidden="true" value="">
-                                <input type="hidden" form="form-general" name="packingTypeObject" id="packingTypeObject"  class="itemId" hidden="true" value="">
-                            </td>
-                            <td class="text-right">
-                                <input type="number" class="form-control" name="quantityInPacking" id="quantityInPacking" placeholder="" value="0" >
-                            </td>
-                            <td class="text-right">
-                                <input type="number" class="form-control" name="palletRowCount" id="palletRowCount" placeholder="" value="0" >
-                            </td>
-                            <td class="text-right">
-                                <input type="number" class="form-control" name="packingCountInRow" id="packingCountInRow" placeholder="" value="0" >
-                            </td>
-                            <td class="">
-                                <input type="text" form="form-general" name="packingTypeName2" id="packingTypeName2" placeholder="ara"  class="form-control" autocomplete="off" value="">
-                                <input type="hidden" form="form-general" name="packingTypeId2" id="packingTypeId2"  class="itemId" hidden="true" value="">
-                                <input type="hidden" form="form-general" name="packingTypeObject2" id="packingTypeObject2"  class="itemId" hidden="true" value="">
-                            </td>
-                            <td class="">
-                                <input type="text" form="form-general" name="packingTypeName3" id="packingTypeName3" placeholder="ara"  class="form-control" autocomplete="off" value="">
-                                <input type="hidden" form="form-general" name="packingTypeId3" id="packingTypeId3"  class="itemId" hidden="true" value="">
-                                <input type="hidden" form="form-general" name="packingTypeObject3" id="packingTypeObject3"  class="itemId" hidden="true" value="">
-                            </td>
-                            <td class="text-center"><a href="javascript:addPackingType();" id="addPackingTypeButton" class="btn btn-primary far fa-plus-square"  title="Paket turu ekle"></a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+	<div class="col-md-12 m-0 p-1">
+		<div class="card">
+			<div class="card-header collapsible">
+				Kullanılabilir Ambalaj/Kutu/Koliler
+			</div>
+			<div class="card-body p-1">
+				<table class="table form-table table-bordered table-striped m-0 rounded"  cellspacing="0">
+					<thead>
+						<tr class="text-nowrap">
+							<th  class="">Palet</th>
+							<th  class="">Ambalaj Tipi</th>
+							<th  class="text-right">Koli içi miktar</th>
+							<th  class="text-right">Palet İstif Sıra</th>
+							<th  class="text-right">Sıradaki Koli sayısı</th>
+							<th  class="">Ambalaj 2</th>
+							<th  class="">Ambalaj 3</th>
+							<th style="min-width: 60px;" class="text-center">#</th>
+						</tr>
+					</thead>
+					<tbody id="packingTypeGrid">
+						<tr id="addPackingTypeGridRow" class="text-nowrap table-input-row" >
+							<td class="">
+								<input type="text" form="form-general" name="palletTypeName" id="palletTypeName" placeholder="palet tipi"  class="form-control" autocomplete="off" value="">
+								<input type="hidden" form="form-general" name="palletTypeId" id="palletTypeId"  class="itemId" hidden="true" value="">
+								<input type="hidden" form="form-general" name="palletTypeObject" id="palletTypeObject"  class="itemId" hidden="true" value="">
+							</td>
+							<td class="">
+								<input type="text" form="form-general" name="packingTypeName" id="packingTypeName" placeholder="ambalaj tipi"  class="form-control" autocomplete="off" value="">
+								<input type="hidden" form="form-general" name="packingTypeId" id="packingTypeId"  class="itemId" hidden="true" value="">
+								<input type="hidden" form="form-general" name="packingTypeObject" id="packingTypeObject"  class="itemId" hidden="true" value="">
+							</td>
+							<td class="text-right">
+								<input type="number" class="form-control" name="quantityInPacking" id="quantityInPacking" placeholder="" value="0" >
+							</td>
+							<td class="text-right">
+								<input type="number" class="form-control" name="palletRowCount" id="palletRowCount" placeholder="" value="0" >
+							</td>
+							<td class="text-right">
+								<input type="number" class="form-control" name="packingCountInRow" id="packingCountInRow" placeholder="" value="0" >
+							</td>
+							<td class="">
+								<input type="text" form="form-general" name="packingTypeName2" id="packingTypeName2" placeholder="ara"  class="form-control" autocomplete="off" value="">
+								<input type="hidden" form="form-general" name="packingTypeId2" id="packingTypeId2"  class="itemId" hidden="true" value="">
+								<input type="hidden" form="form-general" name="packingTypeObject2" id="packingTypeObject2"  class="itemId" hidden="true" value="">
+							</td>
+							<td class="">
+								<input type="text" form="form-general" name="packingTypeName3" id="packingTypeName3" placeholder="ara"  class="form-control" autocomplete="off" value="">
+								<input type="hidden" form="form-general" name="packingTypeId3" id="packingTypeId3"  class="itemId" hidden="true" value="">
+								<input type="hidden" form="form-general" name="packingTypeObject3" id="packingTypeObject3"  class="itemId" hidden="true" value="">
+							</td>
+							<td class="text-center"><a href="javascript:addPackingType();" id="addPackingTypeButton" class="btn btn-primary far fa-plus-square"  title="Paket turu ekle"></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
-    var packingOptions=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.packingOptions)) %>'));
+	var packingOptions=JSON.parse(decodeURIComponent('<%- encodeURIComponent(JSON.stringify(form.packingOptions)) %>'));
 
-    if((packingOptions || '')=='') packingOptions=[];
+	if((packingOptions || '')=='') packingOptions=[];
 
-    function load_packingOptions(){
-        var packingTypeGrid=document.getElementById('packingTypeGrid');
-        while(packingTypeGrid.rows.length>1){
-            packingTypeGrid.deleteRow(0);
-        }
-        packingOptions.forEach(function(e,index){
-            addPackingType(e);
-        });
-    }
+	function load_packingOptions(){
+		var packingTypeGrid=document.getElementById('packingTypeGrid');
+		while(packingTypeGrid.rows.length>1){
+			packingTypeGrid.deleteRow(0);
+		}
+		packingOptions.forEach(function(e,index){
+			addPackingType(e);
+		});
+	}
 
-    function addPackingType(obj){
-        var packingTypeGrid=document.getElementById('packingTypeGrid');
-        var index=packingTypeGrid.rows.length-1;
-        var newRow=packingTypeGrid.insertRow(packingTypeGrid.rows.length-1);
-        if(obj==undefined){
-            if($('#packingTypeId').val()=='') return;
-            if(Number($('#packingType-quantity').val())<=0) return;
-            obj={}
-            if($('#palletTypeObject').val()!=''){
-                obj.palletType=JSON.parse(decodeURIComponent($('#palletTypeObject').val()));
-            }
-            if($('#packingTypeObject').val()!=''){
-                obj.packingType=JSON.parse(decodeURIComponent($('#packingTypeObject').val()));
-            }
-            if($('#packingTypeObject2').val()!=''){
-                obj.packingType2=JSON.parse(decodeURIComponent($('#packingTypeObject2').val()));
-            }
-            if($('#packingTypeObject3').val()!=''){
-                obj.packingType3=JSON.parse(decodeURIComponent($('#packingTypeObject3').val()));
-            }
-            obj.quantityInPacking=Number($('#quantityInPacking').val());
-            obj.palletRowCount=Number($('#palletRowCount').val());
-            obj.packingCountInRow=Number($('#packingCountInRow').val());
-            
-            
-            packingOptions.push(obj);
-            $('#palletTypeName').val('');
-            $('#palletTypeId').val('');
-
-            $('#packingTypeName').val('');
-            $('#packingTypeId').val('');
-            
-            $('#quantityInPacking').val(0);
-            $('#palletRowCount').val(0);
-            $('#packingCountInRow').val(0);
-            $('#packingTypeName2').val('');
-            $('#packingTypeId2').val('');
-            $('#packingTypeName3').val('');
-            $('#packingTypeId3').val('');
-           
-        }
-        
-       
-
-        var cell0=newRow.insertCell(0);
-        if(obj.palletType!=undefined)
-            cell0.innerHTML=obj.palletType.name + ' - ' + obj.palletType.description + ' [' + obj.palletType.width + 'x' + obj.palletType.length + ']<input type="hidden" name="packingOptions[' + index + '][palletType]" value="' + obj.palletType._id + '">';
-        else
-            cell0.innerHTML='';
-       
-        var cell1=newRow.insertCell(1);
-        if(obj.packingType!=undefined)
-            cell1.innerHTML=obj.packingType.name + ' - ' + obj.packingType.description + ' [' + obj.packingType.width + 'x' + obj.packingType.length + 'x' + obj.packingType.height  + ']<input type="hidden" name="packingOptions[' + index + '][packingType]" value="' + obj.packingType._id + '">';
-        else
-            cell1.innerHTML='';
-
-        var cell2=newRow.insertCell(2);
-        cell2.innerHTML=obj.quantityInPacking +  '<input type="hidden"  name="packingOptions[' + index + '][quantityInPacking]" value="' + obj.quantityInPacking + '">';
-        cell2.classList.add('text-right');
-
-        var cell3=newRow.insertCell(3);
-        cell3.innerHTML=obj.palletRowCount +  '<input type="hidden"  name="packingOptions[' + index + '][palletRowCount]" value="' + obj.palletRowCount + '">';
-        cell3.classList.add('text-right');
-
-        var cell4=newRow.insertCell(4);
-        cell4.innerHTML=obj.packingCountInRow +  '<input type="hidden"  name="packingOptions[' + index + '][packingCountInRow]" value="' + obj.packingCountInRow + '">';
-        cell4.classList.add('text-right');
-
-        var cell5=newRow.insertCell(5);
-        if(obj.packingType2!=undefined)
-            cell5.innerHTML=obj.packingType2.name + ' - ' + obj.packingType2.description + '<input type="hidden" name="packingOptions[' + index + '][packingType2]" value="' + obj.packingType2._id + '">';
-        else
-            cell5.innerHTML='';
-       
-        var cell6=newRow.insertCell(6);
-        if(obj.packingType3!=undefined)
-            cell6.innerHTML=obj.packingType3.name + ' - ' + obj.packingType3.description + '<input type="hidden" name="packingOptions[' + index + '][packingType3]" value="' + obj.packingType3._id + '">';
-        else
-            cell6.innerHTML='';
-       
-
-        var cell7=newRow.insertCell(7);
-        <% if(mode=='view'){%>
-        cell7.innerHTML='';
-        <%}else{%>
-        cell7.innerHTML='<a href="javascript:packingTypeGrid_RemoveRow(' + index + ');" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>';
-        <% } %>
-        cell7.classList.add('text-center');
-    }
-
-    function packingTypeGrid_RemoveRow(index){
-        if(confirm('Satiri silmek istiyor musunuz?')==false) return;
-        packingOptions.splice(index,1);
-        load_packingOptions();
-        // var table1=document.getElementById('packingTypeGrid');
-        // if(index<0 || index>=table1.rows.length-1) return;
-        // table1.deleteRow(index);
-        // for(var i=0;i<table1.rows.length-1;i++){
-        //     table1.rows[i].cells[0].innerHTML=(i+1).toString();
-        // }
-        //document.getElementById('docLinePackageGrid-ID').value=table1.rows.length;
-    }
-
-    load_packingOptions();
-
-    function packingTypeAutoComplete(){
-        $('#packingTypeName').autocomplete({
-            source:function(request,response){
-                    $.ajax({
-                    url:`/dbapi/packing-types?&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
-                    type:'GET',
-                    dataType: 'json',
-                    success: function(result) {
-                            if(result.success){
-                                var dizi=[];
-                                for(var i=0;i<result.data.docs.length;i++){
-                                    var item=result.data.docs[i];
-                                    
-                                    dizi.push({label:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + 'x' + item.height + ']'),value:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + 'x' + item.height + ']'),obj:item});
-                                }
-                                response(dizi);
-                            }
-                        },
-                    error:function(err){
-                        console.error('err:',err);
-                    }
-                });
-            },
-            select: function (event, ui) {
-                    $('#packingTypeName').val(ui.item.label); 
-                    $('#packingTypeId').val(ui.item.obj._id); 
-                    $('#packingTypeObject').val(encodeURIComponent(JSON.stringify(ui.item.obj))); 
-                    calcPackingCountInRow();
-                    return false;
-                }
-        });
-        $('#packingTypeName2').autocomplete({
-            source:function(request,response){
-                    $.ajax({
-                    url:`/dbapi/packing-types?&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
-                    type:'GET',
-                    dataType: 'json',
-                    success: function(result) {
-                            if(result.success){
-                                var dizi=[];
-                                for(var i=0;i<result.data.docs.length;i++){
-                                    var item=result.data.docs[i];
-                                    
-                                    dizi.push({label:(item.name + ' - ' + item.description),value:(item.name + ' - ' + item.description), obj:item});
-                                }
-                                response(dizi);
-                            }
-                        },
-                    error:function(err){
-                        console.error('err:',err);
-                    }
-                });
-            },
-            select: function (event, ui) {
-                    $('#packingTypeName2').val(ui.item.label); 
-                    $('#packingTypeId2').val(ui.item.obj._id); 
-                    $('#packingTypeObject2').val(encodeURIComponent(JSON.stringify(ui.item.obj))); 
-                    return false;
-                }
-        });
-        $('#packingTypeName3').autocomplete({
-            source:function(request,response){
-                    $.ajax({
-                    url:`/dbapi/packing-types?&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
-                    type:'GET',
-                    dataType: 'json',
-                    success: function(result) {
-                            if(result.success){
-                                var dizi=[];
-                                for(var i=0;i<result.data.docs.length;i++){
-                                    var item=result.data.docs[i];
-                                    
-                                    dizi.push({label:(item.name + ' - ' + item.description),value:(item.name + ' - ' + item.description), obj:item});
-                                }
-                                response(dizi);
-                            }
-                        },
-                    error:function(err){
-                        console.error('err:',err);
-                    }
-                });
-            },
-            select: function (event, ui) {
-                    $('#packingTypeName3').val(ui.item.label); 
-                    $('#packingTypeId3').val(ui.item.obj._id); 
-                    $('#packingTypeObject3').val(encodeURIComponent(JSON.stringify(ui.item.obj))); 
-                    return false;
-                }
-        });
-        $('#palletTypeName').autocomplete({
-            source:function(request,response){
-                    $.ajax({
-                    url:`/dbapi/pallet-types?&name=' +  encodeURIComponent(request.term) + '&db=' + q.db + '&sid=' + q.sid,
-                    type:'GET',
-                    dataType: 'json',
-                    success: function(result) {
-                            if(result.success){
-                                var dizi=[];
-                                for(var i=0;i<result.data.docs.length;i++){
-                                    var item=result.data.docs[i];
-                                    
-                                    dizi.push({label:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + ']'),value:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + ']'),obj:item});
-                                }
-                                response(dizi);
-                            }
-                        },
-                    error:function(err){
-                        console.error('err:',err);
-                    }
-                });
-            },
-            select: function (event, ui) {
-                    $('#palletTypeName').val(ui.item.label); 
-                    $('#palletTypeId').val(ui.item.obj._id); 
-                    $('#palletTypeObject').val(encodeURIComponent(JSON.stringify(ui.item.obj)));
-                    calcPackingCountInRow(); 
-                    return false;
-                }
-        });
-    }
+	function addPackingType(obj){
+		var packingTypeGrid=document.getElementById('packingTypeGrid');
+		var index=packingTypeGrid.rows.length-1;
+		var newRow=packingTypeGrid.insertRow(packingTypeGrid.rows.length-1);
+		if(obj==undefined){
+			if($('#packingTypeId').val()=='')
+				return;
+			if(Number($('#packingType-quantity').val())<=0)
+				return;
+			obj={}
+			if($('#palletTypeObject').val()!=''){
+				obj.palletType=JSON.parse(decodeURIComponent($('#palletTypeObject').val()));
+			}
+			if($('#packingTypeObject').val()!=''){
+				obj.packingType=JSON.parse(decodeURIComponent($('#packingTypeObject').val()));
+			}
+			if($('#packingTypeObject2').val()!=''){
+				obj.packingType2=JSON.parse(decodeURIComponent($('#packingTypeObject2').val()));
+			}
+			if($('#packingTypeObject3').val()!=''){
+				obj.packingType3=JSON.parse(decodeURIComponent($('#packingTypeObject3').val()));
+			}
+			obj.quantityInPacking=Number($('#quantityInPacking').val());
+			obj.palletRowCount=Number($('#palletRowCount').val());
+			obj.packingCountInRow=Number($('#packingCountInRow').val());
 
 
-    packingTypeAutoComplete();
-    
+			packingOptions.push(obj);
+			$('#palletTypeName').val('');
+			$('#palletTypeId').val('');
 
-    function calcPackingCountInRow(){
-        if($('#palletTypeObject').val()=='') return;
-        if($('#packingTypeObject').val()=='') return;
-        var palletType=JSON.parse(decodeURIComponent($('#palletTypeObject').val()));
-        var packingType=JSON.parse(decodeURIComponent($('#packingTypeObject').val()));
-        var enAdet1 =0;
-        var boyAdet1 =0;
-        var enAdet2 =0;
-        var boyAdet2 =0;
-        if(packingType.width>0){
-            enAdet1=Math.floor(palletType.width/packingType.width);
-            enAdet2=Math.floor(palletType.length/packingType.width);
-        }
-        if(packingType.length>0){
-            boyAdet1=Math.floor(palletType.length/packingType.length);
-            boyAdet2=Math.floor(palletType.width/packingType.length);
-        } 
-        if(enAdet1*boyAdet1>enAdet2*boyAdet2){
-            $('#packingCountInRow').val(enAdet1*boyAdet1);
-        }else{
-            $('#packingCountInRow').val(enAdet2*boyAdet2);
-        }
-        
-    }
+			$('#packingTypeName').val('');
+			$('#packingTypeId').val('');
+
+			$('#quantityInPacking').val(0);
+			$('#palletRowCount').val(0);
+			$('#packingCountInRow').val(0);
+			$('#packingTypeName2').val('');
+			$('#packingTypeId2').val('');
+			$('#packingTypeName3').val('');
+			$('#packingTypeId3').val('');
+
+		}
+
+
+
+		var cell0=newRow.insertCell(0);
+		if(obj.palletType!=undefined)
+			cell0.innerHTML=obj.palletType.name + ' - ' + obj.palletType.description + ' [' + obj.palletType.width + 'x' + obj.palletType.length + ']<input type="hidden" name="packingOptions[' + index + '][palletType]" value="' + obj.palletType._id + '">';
+		else
+			cell0.innerHTML='';
+
+		var cell1=newRow.insertCell(1);
+		if(obj.packingType!=undefined)
+			cell1.innerHTML=obj.packingType.name + ' - ' + obj.packingType.description + ' [' + obj.packingType.width + 'x' + obj.packingType.length + 'x' + obj.packingType.height  + ']<input type="hidden" name="packingOptions[' + index + '][packingType]" value="' + obj.packingType._id + '">';
+		else
+			cell1.innerHTML='';
+
+		var cell2=newRow.insertCell(2);
+		cell2.innerHTML=obj.quantityInPacking +  '<input type="hidden"  name="packingOptions[' + index + '][quantityInPacking]" value="' + obj.quantityInPacking + '">';
+		cell2.classList.add('text-right');
+
+		var cell3=newRow.insertCell(3);
+		cell3.innerHTML=obj.palletRowCount +  '<input type="hidden"  name="packingOptions[' + index + '][palletRowCount]" value="' + obj.palletRowCount + '">';
+		cell3.classList.add('text-right');
+
+		var cell4=newRow.insertCell(4);
+		cell4.innerHTML=obj.packingCountInRow +  '<input type="hidden"  name="packingOptions[' + index + '][packingCountInRow]" value="' + obj.packingCountInRow + '">';
+		cell4.classList.add('text-right');
+
+		var cell5=newRow.insertCell(5);
+		if(obj.packingType2!=undefined)
+			cell5.innerHTML=obj.packingType2.name + ' - ' + obj.packingType2.description + '<input type="hidden" name="packingOptions[' + index + '][packingType2]" value="' + obj.packingType2._id + '">';
+		else
+			cell5.innerHTML='';
+
+		var cell6=newRow.insertCell(6);
+		if(obj.packingType3!=undefined)
+			cell6.innerHTML=obj.packingType3.name + ' - ' + obj.packingType3.description + '<input type="hidden" name="packingOptions[' + index + '][packingType3]" value="' + obj.packingType3._id + '">';
+		else
+			cell6.innerHTML='';
+
+
+		var cell7=newRow.insertCell(7);
+		<% 
+		if(mode=='view'){
+			%>
+			cell7.innerHTML='';
+			<%
+		}else{
+			%>
+			cell7.innerHTML=`<a href="javascript:packingTypeGrid_RemoveRow(${index});" class="btn btn-danger fas fa-trash-alt"  title="Satir sil"></a>`
+			<% 
+		} 
+		%>
+		cell7.classList.add('text-center');
+	}
+
+	function packingTypeGrid_RemoveRow(index){
+		confirmX(`Satırı silmek istediğinizden emin misiniz?`,(resp)=>{
+			if(resp){
+				packingOptions.splice(index,1);
+				load_packingOptions();
+			}
+		})
+
+
+	}
+
+	load_packingOptions();
+
+	function packingTypeAutoComplete(){
+		$('#packingTypeName').autocomplete({
+			source:function(request,response){
+				$.ajax({
+					url:`/dbapi/packing-types?&name=${encodeURIComponent2(request.term)}&sid=${q.sid}`,
+					type:'GET',
+					dataType: 'json',
+					success: function(result) {
+						if(result.success){
+							var dizi=[]
+							result.data.docs.forEach((item)=>{
+								dizi.push({label:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + 'x' + item.height + ']'),value:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + 'x' + item.height + ']'),obj:item});
+							})
+
+							response(dizi);
+						}
+					},
+					error:function(err){
+						alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+					}
+				});
+			},
+			select: function (event, ui) {
+				$('#packingTypeName').val(ui.item.label); 
+				$('#packingTypeId').val(ui.item.obj._id); 
+				$('#packingTypeObject').val(encodeURIComponent2(JSON.stringify(ui.item.obj))); 
+				calcPackingCountInRow();
+				return false;
+			}
+		});
+		$('#packingTypeName2').autocomplete({
+			source:function(request,response){
+				$.ajax({
+					url:`/dbapi/packing-types?&name=${encodeURIComponent2(request.term)}&sid=${q.sid}`,
+					type:'GET',
+					dataType: 'json',
+					success: function(result) {
+						if(result.success){
+							var dizi=[]
+							result.data.docs.forEach((item)=>{
+								dizi.push({label:(item.name + ' - ' + item.description),value:(item.name + ' - ' + item.description), obj:item});
+							})
+							
+							response(dizi);
+						}
+					},
+					error:function(err){
+						alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+					}
+				});
+			},
+			select: function (event, ui) {
+				$('#packingTypeName2').val(ui.item.label); 
+				$('#packingTypeId2').val(ui.item.obj._id); 
+				$('#packingTypeObject2').val(encodeURIComponent2(JSON.stringify(ui.item.obj))); 
+				return false;
+			}
+		});
+		$('#packingTypeName3').autocomplete({
+			source:function(request,response){
+				$.ajax({
+					url:`/dbapi/packing-types?&name=${encodeURIComponent2(request.term)}&sid=${q.sid}`,
+					type:'GET',
+					dataType: 'json',
+					success: function(result) {
+						if(result.success){
+							var dizi=[]
+							result.data.docs.forEach((item)=>{
+								dizi.push({label:(item.name + ' - ' + item.description),value:(item.name + ' - ' + item.description), obj:item});
+							})
+							
+							response(dizi);
+						}
+					},
+					error:function(err){
+						alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+					}
+				});
+			},
+			select: function (event, ui) {
+				$('#packingTypeName3').val(ui.item.label); 
+				$('#packingTypeId3').val(ui.item.obj._id); 
+				$('#packingTypeObject3').val(encodeURIComponent2(JSON.stringify(ui.item.obj))); 
+				return false;
+			}
+		});
+		$('#palletTypeName').autocomplete({
+			source:function(request,response){
+				$.ajax({
+					url:`/dbapi/pallet-types?&name=${encodeURIComponent2(request.term)}&sid=${q.sid}`,
+					type:'GET',
+					dataType: 'json',
+					success: function(result) {
+						if(result.success){
+							var dizi=[]
+							result.data.docs.forEach((item)=>{
+								dizi.push({label:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + ']'),value:(item.name + ' - ' + item.description + ' [' + item.width + 'x' + item.length + ']'),obj:item});
+							})
+							response(dizi);
+						}
+					},
+					error:function(err){
+						alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+					}
+				});
+			},
+			select: function (event, ui) {
+				$('#palletTypeName').val(ui.item.label); 
+				$('#palletTypeId').val(ui.item.obj._id); 
+				$('#palletTypeObject').val(encodeURIComponent2(JSON.stringify(ui.item.obj)));
+				calcPackingCountInRow(); 
+				return false;
+			}
+		});
+	}
+
+
+	packingTypeAutoComplete();
+
+
+	function calcPackingCountInRow(){
+		if($('#palletTypeObject').val()=='')
+			return
+		if($('#packingTypeObject').val()=='')
+			return
+		var palletType=JSON.parse(decodeURIComponent($('#palletTypeObject').val()));
+		var packingType=JSON.parse(decodeURIComponent($('#packingTypeObject').val()));
+		var enAdet1 =0;
+		var boyAdet1 =0;
+		var enAdet2 =0;
+		var boyAdet2 =0;
+		if(packingType.width>0){
+			enAdet1=Math.floor(palletType.width/packingType.width);
+			enAdet2=Math.floor(palletType.length/packingType.width);
+		}
+		if(packingType.length>0){
+			boyAdet1=Math.floor(palletType.length/packingType.length);
+			boyAdet2=Math.floor(palletType.width/packingType.length);
+		} 
+		if(enAdet1*boyAdet1>enAdet2*boyAdet2){
+			$('#packingCountInRow').val(enAdet1*boyAdet1);
+		}else{
+			$('#packingCountInRow').val(enAdet2*boyAdet2);
+		}
+
+	}
 </script>

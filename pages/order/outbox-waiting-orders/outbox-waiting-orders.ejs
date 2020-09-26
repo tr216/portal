@@ -1,5 +1,5 @@
 <%
-	title='Bekleyen Şiparişler';
+title='Bekleyen Şiparişler';
 %>
 <%layout('../../_common/layouts/general')%>
 <form action="" method="POST" role="form" name="form1">
@@ -31,24 +31,24 @@
 </form>
 
 <%
-	panelButtons=`
-		<button type="button" class="btn btn-primary mr-2" id="btnProductionOrder">Üretim Emri ver</button>
-		<button type="button" class="btn btn-info mr-2" id="btnSendToCustomer">Sevk et</button>
-	`
+panelButtons=`
+<button type="button" class="btn btn-primary mr-2" id="btnProductionOrder">Üretim Emri ver</button>
+<button type="button" class="btn btn-info mr-2" id="btnSendToCustomer">Sevk et</button>
+`
 %>
 
 <%- partial('../../_common/components/grid2',{
 	fields:[
-		{name:'orderTypeCode.value',text:'Türü',type:'label', orderable:true},
-		{name:'sipNo',text:'Sip.No',type:'label', filterField:'orderNo', filter:true,orderable:true},
-		{name:'issueDate.value',text:'Sip. Tarihi',type:'label', orderable:true},
-		{name:'termin',text:'Termin',type:'label', orderable:true},
-		{name:'buyerCustomerParty.party.partyName.name.value',text:'Musteri',type:'label', filter:true, orderable:true},
-		{name:'orderLine.item.name.value',text:'Ürün',type:'label'},
-		{name:'orderLine.orderedQuantity.value',text:'Sip. Miktar',type:'label'},
-		{name:'deliveredRemaining',text:'Kalan',type:'label' },
-		{name:'producedRemaining',text:'Üretilecek',type:'label' },
-		{name:'salesOrderId.value',text:'Müşteri Sip. No',filterField:'salesOrderId',filter:true,type:'label' }
+	{name:'orderTypeCode.value',text:'Türü',type:'label', orderable:true},
+	{name:'sipNo',text:'Sip.No',type:'label', filterField:'orderNo', filter:true,orderable:true},
+	{name:'issueDate.value',text:'Sip. Tarihi',type:'label', orderable:true},
+	{name:'termin',text:'Termin',type:'label', orderable:true},
+	{name:'buyerCustomerParty.party.partyName.name.value',text:'Musteri',type:'label', filter:true, orderable:true},
+	{name:'orderLine.item.name.value',text:'Ürün',type:'label'},
+	{name:'orderLine.orderedQuantity.value',text:'Sip. Miktar',type:'label'},
+	{name:'deliveredRemaining',text:'Kalan',type:'label' },
+	{name:'producedRemaining',text:'Üretilecek',type:'label' },
+	{name:'salesOrderId.value',text:'Müşteri Sip. No',filterField:'salesOrderId',filter:true,type:'label' }
 	],
 	caption:'Bekleyen Siparisler',
 	//addNewButton:true,
@@ -67,43 +67,45 @@
 <script type="text/javascript">
 	var q=getAllUrlParams();
 	$(document).ready(function(){
-		$('#btnProductionOrder').click(function(){
-            var data={list:[]};
-            var bFarkliUrunVar=false;
-            var toplamUretilecek=0;
-            var itemId='';
-            var orderLineId='';
+		$('#btnProductionOrder').click(()=>{
+			var data={list:[]};
+			var bFarkliUrunVar=false;
+			var toplamUretilecek=0;
+			var itemId='';
+			var orderLineId='';
 
-            $(".checkSingle").each(function() {
-                if(this.checked){
-                	var doc=JSON.parse(decodeURIComponent(this.value));
-                	data.list.forEach(function(e){
+			$(".checkSingle").each(function(){
+				if(this.checked){
+					var doc=JSON.parse(decodeURIComponent(this.value));
+					data.list.forEach((e)=>{
 						if(e.itemId!=doc.orderLine.item._id){
 							bFarkliUrunVar=true;
 							return;
 						}
 					})
-					if(bFarkliUrunVar) return;
+					if(bFarkliUrunVar)
+						return;
 					toplamUretilecek+=doc.producedRemaining;
-                    data.list.push({itemId:doc.orderLine.item._id, _id:doc._id,producedRemaining:doc.producedRemaining});
-                    itemId=doc.orderLine.item._id;
-                    orderLineId+=doc.orderLine._id + ',';
-                }
-            });
-            if(data.list.length==0) return alert('secili kayit yok!');
-            if(bFarkliUrunVar) return alert('Uretim emrine ayni urunden olan siparisleri ekleyebilirsiniz.');
-            
+					data.list.push({itemId:doc.orderLine.item._id, _id:doc._id,producedRemaining:doc.producedRemaining});
+					itemId=doc.orderLine.item._id;
+					orderLineId+=doc.orderLine._id + ',';
+				}
+			});
+			if(data.list.length==0)
+				return alertX('Kayıt seçilmemiş!','Uyarı')
+			if(bFarkliUrunVar) 
+				return alertX('Üretim emrine aynı ürüne sahip siparişleri ekleyebilirsiniz.','Uyarı')
 
-            if(!confirm(data.list.length + ' siparis uretilecektir. Onayliyor musunuz?')) return;
 
-            var url=window.location.origin + '/mrp/production-orders/addnew?db=' + q.db + '&sid=' + q.sid + '&itemId=' + itemId + '&orderLineId=' + orderLineId;
-   			window.location.href=url;
+			confirmX(`${data.list.length} sipariş üretilecektir. Onaylıyor musunuz?`,(resp)=>{
+				if(resp){
+					window.location.href=`${window.location.origin}/mrp/production-orders/addnew?sid=${q.sid}&itemId=${itemId}&orderLineId=${orderLineId}`
+				}
+			})
+		})
 
-            
-        });
-
-        $('#btnSendToCustomer').click(function(){
-        	alert('qwerty siparisten sevk')
-        });
+		$('#btnSendToCustomer').click(()=>{
+			alertX('qwerty siparisten sevk','qwerty')
+		});
 	});
 </script>

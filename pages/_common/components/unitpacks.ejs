@@ -13,7 +13,7 @@
 				</tr>
 			</thead>
 			<tbody id="unitPackGrid">
-				<tr <% if(mode=='view'){%>style="display:none"<%}%>>
+				<tr class="text-nowrap table-input-row" <% if(mode=='view'){%>style="display:none"<%}%>>
 					<td class="pr-1">
 						<select class="form-control" id="unitPacks-unitCode" >
 							<option value="" selected>-- Seç --</option>
@@ -143,7 +143,7 @@
 			})
 
 			if(bFound)
-				return alert(getUnitCodeText(obj.unitCode) + '  birim daha once eklenmis')
+				return alertX(getUnitCodeText(obj.unitCode) + '  birimi daha once eklenmis','Uyarı')
 
 			unitPacks.push(obj)
 			$('#unitPacks-unitCode').val('')
@@ -192,10 +192,13 @@
 	}
 
 	function unitPackGrid_RemoveRow(index){
-		if(confirm('Satiri silmek istiyor musunuz?')==false)
-			return
-		unitPacks.splice(index,1)
-		load_unitPacks()
+		confirmX('Satiri silmek istiyor musunuz?',(resp)=>{
+			if(resp){
+				unitPacks.splice(index,1)
+				load_unitPacks()
+			}
+		})
+		
 	}
 
 	load_unitPacks()
