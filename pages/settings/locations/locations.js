@@ -37,7 +37,7 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
-	data.locationTypeList.unshift({text:'-- Tümü --', value:-1})
+	// data.locationTypeList.unshift({text:'-- Tümü --', value:-1})
 	api.get(`/{db}/locations`,req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp)

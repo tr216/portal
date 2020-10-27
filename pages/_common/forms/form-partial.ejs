@@ -1,6 +1,7 @@
 <% 
 
-if(typeof level=='undefined') level=0;
+if(typeof level=='undefined')
+	level=0
 
 
 for(let key in formControls){ 
@@ -21,19 +22,23 @@ for(let key in formControls){
 	if(typeof item['name']=='undefined')item['name']=key;
 
 	
-	item['hasChildren']=false;
-	if(typeof item.formControls!='undefined') item.hasChildren=true;
+	item['hasChildren']=false
+	if(typeof item.formControls!='undefined')
+		item.hasChildren=true
 	
-	var itemValue;
+	var itemValue
 
-	itemValue=getSubObjectValue(form,item.name);
+	itemValue=getSubObjectValue(form,item.name)
 
-	if(typeof itemValue=='undefined') itemValue='';
+	if(typeof itemValue=='undefined')
+		itemValue=''
 
 
-	if(mode=='view') item['readonly']=true;
+	if(mode=='view')
+		item['readonly']=true
 
-	if(mode=='addnew' && typeof item.default!='undefined') itemValue=item.default;
+	if(mode=='addnew' && typeof item.default!='undefined')
+		itemValue=item.default
 
 	if(item.hasChildren==true){ %>
 	<div class="panel panel-info">

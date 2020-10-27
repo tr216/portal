@@ -1,17 +1,43 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/components/grid2',{
-    fields:[
-        {name:'locationName',text:'Lokasyon Ismi',type:'label' ,filter:true, orderable:true},
-        {name:'locationType',text:'Turu',type:'lookup', lookupList:locationTypeList, filter:true, orderable:true},
-        {name:'hasSubLocations',text:'Alt Lokasyonu var?',type:'checkbox',filter:true, width:'120px', orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',filter:true, width:'120px', orderable:true}
-    ],
-    caption:'Lokasyon Listesi',
-    addNewButton:true,
-    editButton:true,
-    deleteButton:true,
-    viewButton:true,
-    deleteUrl:`/dbapi/locations/{_id}?sid=${sid}`
-    }) 
-%>
+<div id="grid1"></div>
+<script type="text/javascript">
+	var orgList=<%- JSON.stringify(list) %>
+	var list=[]
+	orgList.forEach((e)=>{
+		e['tarih']='2020-06-09'
+		list.push(e)
+	})
 
+	var locationTypes=<%- JSON.stringify(staticValues.locationTypes) %>
+
+	var data=<%- JSON.stringify(ui) %>
+	data.page=1
+	data.pageSize=20
+	data.pageCount=4
+	data.recordCount=78
+
+  var columns=[
+  {title:"Adı", field:"name", type:"string"},
+  {title:"para", field:"para", type:"money"},
+  {title:"uzunluk", field:"uzunluk", type:"number",filter:false},
+  {title:"Turu", field:"type", type:"lookup", lookup:locationTypes},
+  {title:"Alt Lokasyon?", field:"hasChilderen",type:"boolean"},
+  {title:"Pasif?", field:"passive",type:"boolean"}
+  ]
+
+  var s= gridBuilder.generateGrid(columns,{
+  	editable:true,
+  	hidable:true,
+  	selection:true,
+  	filter:true,
+  	buttons:{
+  		add:true,
+  		edit:true,
+  		delete:true,
+  		view:true,
+  		print:true
+  	}
+  },data)
+
+  document.querySelector('#grid1').innerHTML=s
+</script>

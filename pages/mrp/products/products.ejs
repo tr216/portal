@@ -1,5 +1,47 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/components/grid2',{
+<div id="grid1"></div>
+<script type="text/javascript">
+	var orgList=<%- JSON.stringify(list) %>
+	var list=[]
+	orgList.forEach((e)=>{
+		e['tarih']='2020-06-09'
+		list.push(e)
+	})
+
+	
+	var data=<%- JSON.stringify(ui) %>
+	var productTypeList=<%- JSON.stringify(productTypeList) %>
+	var accountGroupList=<%- JSON.stringify(accountGroupList) %>
+
+  var columns=[
+  {title:"Turu", field:"itemType", type:"lookup", lookup:productTypeList},
+  {title:"Adı", field:"name.value", type:"string"},
+  {title:"Açıklama", field:"description.value", type:"string"},
+  {title:"Lot No?", field:"tracking.lotNo", type:"boolean"},
+  {title:"Seri No?", field:"tracking.serialNo", type:"boolean"},
+  {title:"Renk?", field:"tracking.color", type:"boolean"},
+  {title:"Desen?", field:"tracking.pattern", type:"boolean"},
+  {title:"Beden?", field:"tracking.size", type:"boolean"},
+  {title:"Muh.Grup", field:"accountGroup", type:"lookup",lookup:accountGroupList},
+  {title:"Pasif?", field:"passive",type:"boolean"}
+  ]
+
+  document.querySelector('#grid1').innerHTML= gridBuilder.generateGrid(columns,{
+  	editable:true,
+  	hidable:true,
+  	selection:true,
+  	filter:true,
+  	buttons:{
+  		add:true,
+  		edit:true,
+  		delete:true,
+  		view:true,
+  		print:true
+  	}
+  },data)
+</script>
+
+<!-- partial('../../_common/components/grid2',{
     fields:[
         {name:'itemType',text:'Turu',type:'lookup', lookupList:productTypeList , filter:true, filterField:'itemType', orderable:true},
         {name:'name.value',text:'Adı',type:'label' , filter:true, filterField:'name', orderable:true},
@@ -22,10 +64,10 @@
     ],
     deleteUrl:`/dbapi/items/{_id}?sid=${sid}`
     }) 
-%>
+  -->
 
 
-<%- partial('../../_common/forms/modal',{
+<!-- partial('../../_common/forms/modal',{
     modalId:'itemCopyModal',
     caption:'Kopya',
     formControls:{
@@ -36,7 +78,8 @@
         {isCancelButton:true},
         {href:'javascript:itemCopySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
     ]
-}) %>
+})
+ -->
 <script type="text/javascript">
     var temp_id, temp_name;
     function itemCopyConfirm(_id, name){

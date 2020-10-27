@@ -48,7 +48,7 @@
 	{name:'doc.despatchStatus',text:'despatchStatus',type:'label', visible:false},
 	{name:'receiptStatusHtml',text:'Teslim Durumu', width:'150px',type:'lookup',filter:true, lookupList:receiptStatusTypes, orderable:false , dontUseLookup:true},
 	{name:'receiptStatus',text:'receiptStatus',type:'label', visible:false},
-	{name:'despatchStatusHtml',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, orderable:false , dontUseLookup:true}
+	{name:'despatchStatusHtml',text:'Durumu', width:'100px',type:'lookup',filter:true,filterField:'despatchStatus', lookupList:docStatusTypes, orderable:false , dontUseLookup:true}
 	],
 	caption:'İrsaliyeler',
 	addNewButton:true,

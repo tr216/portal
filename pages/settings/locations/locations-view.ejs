@@ -1,15 +1,10 @@
 <%layout('../../_common/layouts/plain')%>
 
-<%- partial('../../_common/forms/form', {
-   
-    formControls:{
+<%- formBuilder.generateForm({
+		controls:{
         locationName:{caption:'Lokasyon ismi', type:'textbox'    ,required:true},
-        locationType:{caption:'Lokasyon Turu', type:'lookup' , lookup:locationTypeList   ,required:true},
+        locationType:{caption:'Lokasyon Turu', type:'lookup' , lookup:staticValues.locationTypes   ,required:true},
         hasSubLocations:{caption:'Alt Lokasyonu var mi?', type:'checkbox'    },
         passive:{caption:'Pasif?', type:'checkbox'    }
-    },
-    action:'',
-    mode:'view'
-    }) 
+    }},form,'view') 
 %>
-

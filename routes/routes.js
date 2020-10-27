@@ -185,7 +185,6 @@ function pageRander(req,res){
 		errorPage(req,res,null)
 	} else {
 		pages[req.params.module][req.params.page].code(req, res, (err,data,view)=>{
-			
 			if(err)
 				return errorPage(req,res,err)
 
@@ -213,8 +212,6 @@ function pageRander(req,res){
 					}
 				}
 			})
-
-
 			
 		})
 	}
@@ -305,17 +302,19 @@ function setGeneralParams(req, res, data, cb){
 
 	data['page']=1
 	if(req.query.pageSize!=undefined)
-		data['pageSize']=req.query.pageSize
+		data['pageSize']=Number(req.query.pageSize)
 	
 	if(req.query.page!=undefined)
-		data['page']=req.query.page
+		data['page']=Number(req.query.page)
 	if(data.pageSize==undefined)
-		data['pageSize']=config.pagination.pageSize
+		data['pageSize']=Number(config.pagination.pageSize)
 	if(data.pageCount==undefined)
-		data['pageCount']=1
+		data['pageCount']=0
 	if(data.recordCount==undefined)
 		data['recordCount']=0
 
+	
+	
 	data['icon']=getMenuIcon(menu, req, current2)
 	data['pageTitle']=getMenuText(menu, req, current2)
 	data['breadCrumbs']=getBreadCrumbs(menu, req, current2)
@@ -352,7 +351,18 @@ function setGeneralParams(req, res, data, cb){
 	if(req.params.module=='general' && (req.params.page=='login' || req.params.page=='error')){
 		return cb(null,data)
 	}
-	console.log(`req.query.sid.toLongId()1:`,req.query.sid.toLongId())
+	data['ui']={
+		page:data.page,
+		pageSize:data.pageSize,
+		pageCount:data.pageCount,
+		recordCount:data.recordCount,
+		list:data.list || [],
+		form:data.form || { controls:{}},
+		sid:data.sid,
+		mid:data.mid,
+		filterString:data.filterString,
+		urlPath:data.urlPath
+	}
 	db.sessions.findOne({_id:req.query.sid.toLongId(), passive:false},(err,doc)=>{
 		if(!err){
 			if(doc!=null){
@@ -362,14 +372,13 @@ function setGeneralParams(req, res, data, cb){
 				data['leftMenu']=doc.menu
 				data['databases']=doc.databases
 				data['session']=doc.toJSON()
-				console.log(`doc.dbId:`,doc.dbId)
 				cb(null, data)
 			}else{
 				cb({code:'SESSION_NOT_FOUND',message:'Oturum süresi bitmiş. Yeniden giriş yapınız.'})
 			}
 			
 		}else{
-			console.log(`setGeneralParams err:`,err)
+			console.error(`setGeneralParams err:`,err)
 			cb(err)
 		}
 	})

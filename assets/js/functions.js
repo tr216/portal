@@ -390,8 +390,10 @@ function getPageFilter(path,key,defaultValue=''){
 }
 
 const dbType=typeof types!='undefined'?types.types:'';
-const fbuilder=typeof formBuilder!='undefined'?formBuilder.formBuilder:'';
-const frmBuilder=typeof FormBuilder!='undefined'?FormBuilder.FormBuilder:'';
+// const fbuilder=typeof formBuilder!='undefined'?formBuilder.formBuilder:'';
+// const frmBuilder=typeof FormBuilder!='undefined'?FormBuilder.FormBuilder:'';
+const formBuilder=typeof FormBuilder!='undefined'?FormBuilder.FormBuilder:'';
+const gridBuilder=typeof GridBuilder!='undefined'?GridBuilder.GridBuilder:'';
 
 
 
@@ -689,4 +691,99 @@ function windowPathToFieldName(path=''){
 function openInNewTab(url) {
   var win = window.open(url, '_blank')
   win.focus()
+}
+
+var gridLangs={
+  "en-gb":{
+      "columns":{
+          "name":"Name", //replace the title of column name with the value "Name"
+      },
+      "ajax":{
+          "loading":"Loading", //ajax loader text
+          "error":"Error", //ajax error text
+      },
+      "groups":{ //copy for the auto generated item count in group header
+          "item":"item", //the singular  for item
+          "items":"items", //the plural for items
+      },
+      "pagination":{
+      	"page_size":"Page Size", //label for the page size select element
+          "page_title":"Show Page",//tooltip text for the numeric page button, appears in front of the page number (eg. "Show Page" will result in a tool tip of "Show Page 1" on the page 1 button)
+          "first":"|<", //text for the first page button
+          "first_title":"First Page", //tooltip text for the first page button
+          "last":">|",
+          "last_title":"Last Page",
+          "prev":"<",
+          "prev_title":"Prev Page",
+          "next":">",
+          "next_title":"Next Page",
+          "all":"All",
+      },
+      "headerFilters":{
+          "default":"filter column...", //default header filter placeholder text
+          "columns":{
+              "name":"filter name...", //replace default header filter text for column name
+          }
+      }
+  },
+  "default":{
+      "columns":{
+          "name":"Adı", //replace the title of column name with the value "Name"
+      },
+      "ajax":{
+          "loading":"Yükleniyor", //ajax loader text
+          "error":"Hata", //ajax error text
+      },
+      "groups":{ //copy for the auto generated item count in group header
+          "item":"item", //the singular  for item
+          "items":"items", //the plural for items
+      },
+      "pagination":{
+      	"page_size":"Sayfa", //label for the page size select element
+          "page_title":"Sayfayı Göster",//tooltip text for the numeric page button, appears in front of the page number (eg. "Show Page" will result in a tool tip of "Show Page 1" on the page 1 button)
+          "first":"|<", //text for the first page button
+          "first_title":"İlk Sayfa", //tooltip text for the first page button
+          "last":">|",
+          "last_title":"Son Sayfa",
+          "prev":"<",
+          "prev_title":"Önceki Sayfa",
+          "next":">",
+          "next_title":"Sonraki Sayfa",
+          "all":"Tümü",
+      },
+      "headerFilters":{
+          "default":"ara ...", //default header filter placeholder text
+          "columns":{
+              "name":"ara ...", //replace default header filter text for column name
+          }
+      }
+  }
+
+}
+
+var pageSettings={
+	setItem:function(param,value){
+		try{
+			var obj=JSON.parse(localStorage.getItem(`page_${window.location.pathname.replaceAll('/','_')}`) || '{}')
+			obj[param]=value
+			localStorage.setItem(`page_${window.location.pathname.replaceAll('/','_')}`,JSON.stringify(obj))
+		}catch(err){
+			console.error(err)
+		}
+		
+
+	},
+	getItem:function(param){
+		try{
+			var obj=JSON.parse(localStorage.getItem(`page_${window.location.pathname.replaceAll('/','_')}`) || '{}')
+			if(obj[param]==undefined)
+				obj[param]=null
+
+			return obj[param]
+		}catch(err){
+			console.error(err)
+			return null
+		}
+		
+	}
 }

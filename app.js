@@ -41,7 +41,8 @@ global.docFormHelper=require('./lib/doc_form_helper.js')
 
 
 global.dbType=require('./assets/js/dbtypes.js').types
-global.frmBuilder=require('./assets/js/ui/form-builder2.js').FormBuilder
+global.formBuilder=require('./assets/js/ui/form-builder.js').FormBuilder
+global.gridBuilder=require('./assets/js/ui/grid-builder.js').GridBuilder
 
 
 var app = express()
@@ -183,4 +184,19 @@ process.on('uncaughtException', function (err) {
 	errorLog('Caught exception: ', err)
 })
 
+function gecici(){
+	var stValues={}
+	Object.keys(staticValues).forEach((typeName)=>{
+		stValues[typeName]={}
+		if(Array.isArray(staticValues[typeName])){
+			staticValues[typeName].forEach((e)=>{
+				if(e.value!=undefined && e.text!=undefined){
+					stValues[typeName][e.value]=e.text
+				}
+			})
+		}
+	})
+	fs.writeFileSync(path.join('../temp','newStaticValues.json'),JSON.stringify(stValues,null,2),'utf8')
+}
 
+gecici()

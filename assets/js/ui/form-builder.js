@@ -1,15 +1,78 @@
-(function(exports) { 
+(function(exports) {
+	var frontEnd=true
+	if(typeof config!='undefined'){
+		if(typeof config.mongodb!='undefined'){
+			frontEnd=false
+		}
+	}
+	
+	exports.FormBuilder = Object.freeze({
+		generateForm:generateForm,
+		getData:getData,
+		generateControls:generateControls,
+		createHeaderButtons:createHeaderButtons
+	})
 
-	function build(formControls,data,mode,level=0){
-		if(formControls==undefined)
+
+	function createHeaderButtons(headerBtns){
+		var s=``
+		if(frontEnd){
+			var headerButtons=document.getElementById('headerButtons')
+			if(headerButtons){
+				headerButtons.innerHTML=headerBtns
+			}
+		}else{
+			s+=`<script type="text/javascript">
+			var headerButtons=document.getElementById('headerButtons');
+			if(headerButtons){
+				headerButtons.innerHTML='${headerBtns}'
+			}
+			</script>
+			`
+		}
+		return s
+	}
+
+	function generateForm(form,data,mode, headerBtns){
+		try{
+			if(typeof form.name=='undefined'){
+				form.name='form-general'
+			}
+			var headerButtons=''
+
+			if(typeof headerBtns=='undefined'){
+				if(mode!='view'){
+					headerButtons +=`<button type="submit" form="${form.name}" class="btn btn-primary btn-form-header" title="Kaydet"><i class="fas fa-save"></i></button>`
+				}
+				headerButtons +=`<a href="javascript:goBack();" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>`
+			}else{
+				headerButtons=headerBtns
+			}
+			
+			var s=``
+			s+=createHeaderButtons(headerButtons)
+			s+=`<form method="POST" name="${form.name}" id="${form.name}" autocomplete="off">`
+			s+=generateControls(form.children || form.controls || form.formControls || {},data,mode)
+			s+=`</form>`
+			
+			return s
+		}catch(tryErr){
+			return tryErr
+		}
+	}
+
+	function generateControls(controls,data,mode,level=0){
+		if(controls==undefined)
 			return ''
 		var s=''
 
-		Object.keys(formControls).forEach((key,index)=>{
-			var item=formControls[key]
+		Object.keys(controls).forEach((key)=>{
+			
+			var item=clone(controls[key])
 			
 			item['caption']=ifNull(item['caption'],'')
-			item['col']=ifNull(item['col'],'col-12');
+			item['col']=ifNull(item['col'],'col-12')
+
 			if(!isNaN(item.col)){
 				item.col='col-' + item.col
 			}
@@ -27,13 +90,17 @@
 
 
 			item['hasChildren']=false
-			if(typeof item.formControls!='undefined')
+			var children={}
+
+			if(typeof item.children!='undefined' || typeof item.controls!='undefined' || typeof item.formControls!='undefined'){
+				children=item.children || item.controls || item.formControls || {}
 				item.hasChildren=true
+			}
 
 			var itemValue
 
 			if(!item.hasChildren)
-				itemValue=getSubObjectValue(item.formControls,item.name)
+				itemValue=getSubObjectValue(data,item.name)
 
 			if(typeof itemValue=='undefined')
 				itemValue=''
@@ -44,21 +111,21 @@
 
 			if(mode=='addnew' && typeof item.default!='undefined')
 				itemValue=item.default
-			if(itemValue)
+
 			if(item.hasChildren){
 				s+=`<div class="card ${item.col} p-0 m-0">
 				<div class="card-header collapsible">
-					<a class="btn btn-collapse" data-toggle="collapse" data-target="#cardCollapse${generateFormId(item.name)}" aria-expanded="true" aria-controls="cardCollapse${generateFormId(item.name)}" href="#"><i class="far fa-caret-square-up"></i></a>
-					${item.caption}
+				<a class="btn btn-collapse" data-toggle="collapse" data-target="#cardCollapse${generateFormId(item.name)}" aria-expanded="true" aria-controls="cardCollapse${generateFormId(item.name)}" href="#"><i class="far fa-caret-square-up"></i></a>
+				${item.caption}
 				</div>
 				<div id="cardCollapse${generateFormId(item.name)}" class="card-collapse collapse show">
-					<div class="card-body p-1">
-						<div class="row">
+				<div class="card-body p-1">
+				<div class="row">
 				`
-				s+=build(item.formControls,item.formControls,mode,level)
+				s+=generateControls(children,data,mode,level+1)
 				s+=`
-						</div>
-					</div>
+				</div>
+				</div>
 				</div>`
 				itemValue=''
 			}else{
@@ -107,83 +174,7 @@
 		return s            
 	}
 
-	
 	function getData(divId, formControls){
-		var obj={}
-		
-		Object.keys(formControls).forEach((key)=>{
-			var item=formControls[key]
-			item['type']=ifNull(item['type'],'textbox')
-			if(typeof item['name']=='undefined')
-				item['name']=key
-			item['caption']=ifNull(item['caption'],'')
-			item['required']=ifNull(item['required'],false)
-
-			var itemValue=item.default || ''
-			var itemId=generateFormId(item.name)
-
-
-			if(typeof item.formControls=='undefined'){
-				switch(item.type.toLowerCase()) {
-					case 'textbox' : 
-					case 'textarea' :
-					case 'json':
-					obj[key]=$(`#${divId} #${itemId}`).val()
-					break
-					
-					case 'number' :
-					case 'numberbox' :
-					obj[key]=Number($(`#${divId} #${itemId}`).val())
-					break
-					case 'checkbox':
-					obj[key]=$(`#${divId} #${itemId}`).is(":checked")?true:false
-					break
-					case 'lookup': 
-					case 'combobox': 
-					obj[key]=$(`#${divId} #${itemId}`).val()
-					break
-					case 'label': 
-					case 'div': 
-					obj[key]=$(`#${divId} #${itemId}`).html()
-					break
-
-					case 'fileBase64' : 
-					case 'fileBase64Image' :
-					obj[key]={ 
-						data: $(`#${divId} #fileDataBase64_${item.name.replaceAll('.','_')}`).val(),
-						type:  $(`#${divId} #fileDataBase64_${item.name.replaceAll('.','_')}_type`).val(),
-						fileName:  $(`#${divId} #fileDataBase64_${item.name.replaceAll('.','_')}_fileName`).val()
-					}
-					if(item.required && (obj[key].data || '')==''){
-						obj=''
-						return
-					}
-					break
-
-					default :
-					obj[key]=$(`#${divId} #${itemId}`).val()
-					break
-				}
-			}else{
-				obj[key]=getData(divId, item.formControls)
-				if(obj[key]==={}){
-					obj=''
-					return
-				}
-			}
-
-
-			if(item.required && (obj[key] || '')==''){
-				console.log(`required key:`,key)
-				obj=''
-				return
-			}
-
-		})
-		return obj
-	}
-
-	function getDataWithParameters(divId, formControls){
 		var obj=clone(formControls)
 		
 		Object.keys(obj).forEach((key)=>{
@@ -198,7 +189,7 @@
 			var itemId=generateFormId(item.name)
 
 
-			if(typeof item.formControls=='undefined'){
+			if(typeof item.formControls=='undefined' && typeof item.children=='undefined'){
 				switch(item.type.toLowerCase()) {
 					case 'textbox' : 
 					case 'textarea' :
@@ -240,9 +231,16 @@
 					break
 				}
 			}else{
-				obj[key]['formControls']=getDataWithParameters(divId, item.formControls)
-				if(JSON.stringify(obj[key]['formControls'])=='{}'){
-					obj[key]['formControls']=undefined
+				var children={}
+				if(typeof item.formControls!='undefined')
+					children=item.formControls
+
+				if(typeof item.children!='undefined')
+					children=item.children
+				
+				obj[key]['children']=getDataWithParameters(divId, children)
+				if(JSON.stringify(obj[key]['children'])=='{}'){
+					obj[key]['children']=undefined
 				}
 			}
 
@@ -255,9 +253,10 @@
 
 		return obj
 	}
+
 	
 	function textBox(item,itemValue,level){
-		var s= `<div class="form-group ${item.col}" ${level>0?'style="margin-left:' + level*20 + 'px;"':''}>
+		var s= `<div class="form-group ${item.col}" >
 		<label class="m-0 p-0">${item.caption}${item.required?' *':''}</label>
 		<input type="text" class="form-control ${item.class}" id="${generateFormId(item.name)}" name="${generateFormName(item.name)}" placeholder="${item.readonly==true?'':item.caption}" autocomplete="off" onkeydown="" value="${itemValue}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''}>
 		</div>`
@@ -265,21 +264,21 @@
 	}
 
 	function numberBox(item,itemValue,level){
-		return `<div class="form-group ${item.col}" ${level>0?'style="margin-left:' + level*20 + 'px;"':''}>
+		return `<div class="form-group ${item.col}" >
 		<label class="m-0 p-0">${item.caption}${item.required?' *':''}</label>
 		<input type="number" class="form-control ${item.class}" id="${generateFormId(item.name)}" name="${generateFormName(item.name)}" placeholder="${item.readonly==true?'':item.caption}" autocomplete="off" onkeydown="" value="${itemValue}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''}>
 		</div>`
 	}
 
 	function textArea(item,itemValue,level){
-		return `<div class="form-group ${item.col}" ${level>0?'style="margin-left:' + level*20 + 'px;"':''}>
+		return `<div class="form-group ${item.col}" >
 		<label class="m-0 p-0">${item.caption}${item.required?' *':''}</label>
 		<textarea class="form-control ${item.class}" id="${generateFormId(item.name)}" name="${generateFormName(item.name)}"  rows="${(typeof item.rows!='undefined')?item.rows:4}"  placeholder="${item.readonly==true?'':item.caption}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''}>${itemValue}</textarea>
 		</div>`
 	}
 
 	function label(item,itemValue,level){
-		var s=`<div class="form-group ${item.col}" ${level>0?'style="margin-left:' + level*20 + 'px;"':''}>`
+		var s=`<div class="form-group ${item.col}" >`
 
 		if(item.type=='label'){
 			s+=`<div class="${item.class}" id="${generateFormId(item.name)}"><b>${item.caption}:</b> ${itemValue}</div>`
@@ -291,7 +290,7 @@
 	}
 
 	function checkBox(item,itemValue,level){
-		return `<div class="form-group ${item.col}" ${level>0?'style="margin-left:' + level*20 + 'px;"':''}>
+		return `<div class="form-group ${item.col}">
 		<label>
 		<input type="checkbox" class="" id="${generateFormId(item.name)}" name="${generateFormName(item.name)}" onkeydown="" value="true" ${(itemValue?'checked':'')} ${item.readonly==true?'disabled':''} />
 		${item.caption}
@@ -300,7 +299,7 @@
 	}
 
 	function lookUp(item,itemValue,level){
-		var s=`<div class="form-group ${item.col}" ${level>0?'style="margin-left:' + level*20 + 'px;"':''}>
+		var s=`<div class="form-group ${item.col}">
 		<label class="m-0 p-0">${item.caption}${item.required?' *':''}</label>
 		<select id="${generateFormId(item.name)}" name="${generateFormName(item.name)}" class="form-control" onkeydown="" ${item.required?'required="required"':''} ${item.readonly==true?'disabled':''}>`
 		item.lookup.forEach(function(e){
@@ -313,7 +312,7 @@
 
 
 	function jsonData(item,itemValue,level){
-		return `<div class="form-group<% if(typeof item.class!='undefined'){ ${item.class}<%}}" ${level>0?'style="margin-left:' + level*20 + 'px;"':''}>
+		return `<div class="form-group  ${item.col}">
 		<label class="m-0">${item.caption}${item.required?' *':''}</label>
 		<textarea id="${generateFormId(item.name)}" name="${generateFormName(item.name)}" class="form-control" rows="10"  style="height: auto;font-family: monospace;" ${item.readonly==true?'readonly':''}>${(typeof itemValue=='object')?JSON.stringify(itemValue,null,2):itemValue}</textarea>
 		</div>`
@@ -321,7 +320,7 @@
 	}
 
 	function fileBase64(item,itemValue,level){
-		return `<div class="form-group ${item.col}" ${level>0?'style="margin-left:' + level*20 + 'px;"':''}>
+		return `<div class="form-group ${item.col}">
 		<label class="m-0 p-0">${item.caption}${item.required?' *':''}</label><br>
 
 		<label for="fileToUpload_${item.name.replaceAll('.','_')}" class="btn btn-primary"><i class="fa fa-file"></i> Dosya seçiniz</label>
@@ -330,7 +329,7 @@
 		<input type="hidden" name="${generateFormName(item.name)}[type]" id="fileToUpload_${item.name.replaceAll('.','_')}_type" value="${(typeof itemValue.type!='undefined')?itemValue.type:''}">
 		<input type="hidden" name="${generateFormName(item.name)}[fileName]" id="fileToUpload_${item.name.replaceAll('.','_')}_fileName" value="${(typeof itemValue.fileName!='undefined')?itemValue.fileName:''}">
 
-		<a id="fileToUpload_download_${item.name.replaceAll('.','_')}" href="<% if(typeof itemValue.data!='undefined'){${itemValue.data}<%}}" download="${(typeof itemValue.fileName!='undefined')?itemValue.fileName:''}">${(typeof itemValue.fileName!='undefined')?'<i class="fa fa-file"></i>' + itemValue.fileName:''}</a>
+		<a id="fileToUpload_download_${item.name.replaceAll('.','_')}" href="${(typeof itemValue.data!='undefined')?itemValue.data:'#'}" download="${(typeof itemValue.fileName!='undefined')?itemValue.fileName:''}">${(typeof itemValue.fileName!='undefined')?'<i class="fa fa-file"></i>' + itemValue.fileName:''}</a>
 		<script type="text/javascript">
 		$(document).ready(function(){
 			$("#fileToUpload_${item.name.replaceAll('.','_')}").change(function() {
@@ -355,7 +354,7 @@
 	}
 
 	function fileBase64Image(item,itemValue,level){
-		return `<div class="form-group ${item.col}" ${level>0?'style="margin-left:' + level*20 + 'px;"':''}>
+		return `<div class="form-group ${item.col}">
 		<label for="fileToUpload_${item.name.replaceAll('.','_')}" class="btn btn-primary"><i class="fas fa-images"></i> ${item.caption}${item.required?' *':''}</label>
 		<br>
 		<img id="fileToUpload_download_${item.name.replaceAll('.','_')}" src="${(typeof itemValue.data!='undefined')?itemValue.data:'/img/placehold-place.jpg'}" download="${(typeof itemValue.fileName!='undefined')?itemValue.fileName:''}" style="width: 300px;height: 300px;">
@@ -452,21 +451,10 @@
 		}
 	}
 
-	exports.formBuilder = Object.freeze({
-		build:build,
-		getData:getData,
-		getDataWithParameters:getDataWithParameters,
-		textBox:textBox,
-		numberBox:numberBox,
-		textArea:textArea,
-		label:label,
-		checkBox:checkBox,
-		lookUp:lookUp,
-		jsonData:jsonData,
-		fileBase64:fileBase64,
-		fileBase64Image:fileBase64Image
-	})
+
+	
 
 
 })(typeof exports === 'undefined'?  
-this['formBuilder']={}: exports)
+this['FormBuilder']={}: exports)
+

@@ -43,25 +43,11 @@
         </div>
     </div>
 </div>
-<br>
-<a href="javascript:calistir()" class="btn btn-primary">Calistir</a>
-<br>
-
-<form>
-<div id="sonuc"></div>
-</form>
-
 <script type="text/javascript">
-	
-
-	function calistir(){
-		var data1={
-        locationName:{caption:'Lokasyon ismi', type:'textbox'    ,required:true},
-        locationType:{caption:'Lokasyon Turu', type:'lookup' , lookup:[{text:'Depo',value:1},{text:'Magaza',value:2}]   ,required:true},
-        hasSubLocations:{caption:'Alt Lokasyonu var mi?', type:'checkbox'    },
-        passive:{caption:'Pasif?', type:'checkbox'    }
-    }
-		var s=frmBuilder.build(data1,data1,'edit')
-		$('#sonuc').html(s)
+	if(localStorage.getItem('version')!='2020-10-27'){
+		localStorage.clear()
+		localStorage.setItem('version','2020-10-27')
 	}
 </script>
+
+

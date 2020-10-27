@@ -145,8 +145,8 @@ if(typeof panelButtons=='undefined')
 				<div class="float-right">
 					<ul class="pagination mb-1">
 						<% if(page>1){ %>
-						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=1${filterString!=''?filterString:''}` %>">|&lt;</a></li>
-						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${(page-1)}${filterString!=''?filterString:''}` %>">&lt;</a></li>
+						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=1&${filterString!=''?filterString:''}` %>">|&lt;</a></li>
+						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${(page-1)}&${filterString!=''?filterString:''}` %>">&lt;</a></li>
 						<% } %>
 						<%
 						var sayfalar=pagination(page,pageCount)
@@ -157,13 +157,13 @@ if(typeof panelButtons=='undefined')
 						<% } else if(e=='...') { %>
 						<li class="page-item"><span class="page-link">...</span></li>
 						<% } else { %>
-						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${e}${filterString!=''?filterString:''}` %>"><%- e%></a></li>
+						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${e}&${filterString!=''?filterString:''}` %>"><%- e%></a></li>
 						<% } %>
 						<% }) %>
 
 						<% if(page<pageCount) { %>
-						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${page+1}${filterString!=''?filterString:''}` %>">&gt;</a></li>
-						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${pageCount}${filterString!=''?filterString:''}` %>">&gt;|</a></li>
+						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${page+1}&${filterString!=''?filterString:''}` %>">&gt;</a></li>
+						<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${pageCount}&${filterString!=''?filterString:''}` %>">&gt;|</a></li>
 						<% } %>
 
 					</ul>
@@ -379,8 +379,8 @@ if(typeof panelButtons=='undefined')
 											<div class="float-right">
 												<ul class="pagination mb-1">
 													<% if(page>1){ %>
-													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=1${filterString!=''?filterString:''}` %>">|&lt;</a></li>
-													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${(page-1)}${filterString!=''?filterString:''}` %>">&lt;</a></li>
+													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=1&${filterString!=''?filterString:''}` %>">|&lt;</a></li>
+													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${(page-1)}&${filterString!=''?filterString:''}` %>">&lt;</a></li>
 													<% } %>
 													<%
 													var sayfalar=pagination(page,pageCount)
@@ -391,13 +391,13 @@ if(typeof panelButtons=='undefined')
 													<% } else if(e=='...') { %>
 													<li class="page-item"><span class="page-link">...</span></li>
 													<% } else { %>
-													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${e}${filterString!=''?filterString:''}` %>"><%- e%></a></li>
+													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${e}&${filterString!=''?filterString:''}` %>"><%- e%></a></li>
 													<% } %>
 													<% }) %>
 
 													<% if(page<pageCount) { %>
-													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${page+1}${filterString!=''?filterString:''}` %>">&gt;</a></li>
-													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${pageCount}${filterString!=''?filterString:''}` %>">&gt;|</a></li>
+													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${page+1}&${filterString!=''?filterString:''}` %>">&gt;</a></li>
+													<li class="page-item"><a class="page-link" href="<%- `${urlPath}?sid=${sid}&mid=${mid}&page=${pageCount}&${filterString!=''?filterString:''}` %>">&gt;|</a></li>
 													<% } %>
 
 												</ul>
@@ -494,7 +494,7 @@ if(typeof panelButtons=='undefined')
 														queryString +=key + '=' + encodeURIComponent2(params[key]);
 													}
 													window.location.search=queryString;
-      //window.location.reload();
+      
     }
   }
   if(localStorage.getItem('grid-filterBtn<%- urlPath %>')=='true'){
