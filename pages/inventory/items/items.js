@@ -1,7 +1,7 @@
 module.exports = function(req,res,callback){
 
 	var data={
-		accountGroupList:[],
+		accountGroupList:{},
 		form:{
 			_id:'',
 			itemType:(req.query.itemType || 'item'),
@@ -54,67 +54,68 @@ module.exports = function(req,res,callback){
 	switch(req.params.func || ''){
 		case 'addnew':
 		
-		addnew(req,res,data,callback);
-		break;
+		addnew(req,res,data,callback)
+		break
 		case 'edit':
-		edit(req,res,data,callback);
-		break;
+		edit(req,res,data,callback)
+		break
 		case 'view':
-		edit(req,res,data,callback);
-		break;
+		edit(req,res,data,callback)
+		break
 		case 'delete':
 		
-		deleteItem(req,res,data,callback);
-		break;
+		deleteItem(req,res,data,callback)
+		break
 		default:
 		data.filter=getFilter(data.filter,req,res)
 		if(req.method!='POST') 
 			getList(req,res,data,callback)
-		break;
+		break
 	}
 	
 }
 
 function getList(req,res,data,callback){
-	data.filter['itemType']=data.form.itemType;
+	data.filter['itemType']=data.form.itemType
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.accountGroupList.unshift({name:'',_id:''});
+		
 		api.get(`/{db}/items`,req,data.filter,(err,resp)=>{
 			if(!err){
-				data=mrutil.setGridData(data,resp);
+				data=mrutil.setGridData(data,resp)
 			}
-			callback(null,data);
-		});
-	});
+			callback(null,data)
+		})
+	})
 }
 
 
 function initLookUpLists(req,res,data,cb){
-	data.accountGroupList=[];
+	data.accountGroupList={}
 	
 	api.get(`/{db}/account-groups`,req,{},(err,resp)=>{
 		if(!err){
-			data.accountGroupList=resp.data.docs;
-			
+			resp.data.docs.forEach((e)=>{
+				data.accountGroupList[e._id.toString()]=e.name
+			})
 		}
-		cb(null,data);
-	});
+		cb(null,data)
+	})
 }
 
 function addnew(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.accountGroupList.unshift({name:'-- Seçiniz --',_id:''});
+		
 		if(req.method=='POST'){
-			data.form=Object.assign(data.form,req.body);
-			var barkodList=data.form.barkodlar.split('\n');
+			data.form=Object.assign(data.form,req.body)
+			var barkodList=data.form.barkodlar.split('\n')
 			
-			var dizi=[];
+			var dizi=[]
 
-			data.form.additionalItemIdentification=[];
+			data.form.additionalItemIdentification=[]
 			if(barkodList.length>0)
 				barkodList.forEach((e)=>{
-					data.form.additionalItemIdentification.push({ID:{value:e,attr:{schemeID:'BARCODE'}}});
-				});
+					data.form.additionalItemIdentification.push({ID:{value:e,attr:{schemeID:'BARCODE'}}})
+				})
 			
 			
 			
@@ -122,81 +123,81 @@ function addnew(req,res,data,callback){
 				if(!err){
 					res.redirect(`/inventory/items?itemType=${data.form.itemType}&sid=${req.query.sid}&mid=${req.query.mid}`)
 				}else{
-					data['message']=err.message;
-					callback(null,data);
+					data['message']=err.message
+					callback(null,data)
 				}
-			});
+			})
 		}else{
-			callback(null,data);
+			callback(null,data)
 		}
-	});
+	})
 }
 
 function edit(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.accountGroupList.unshift({name:'-- Seçiniz --',_id:''});
-		var _id=req.params.id || '';
+		
+		var _id=req.params.id || ''
 		if(req.method=='POST' || req.method=='PUT'){
-			data.form=Object.assign(data.form,req.body);
+			data.form=Object.assign(data.form,req.body)
 			if(_id.trim()==''){
-				data['message']='ID bos olamaz';
-				callback(null,data);
-				return;
+				data['message']='ID bos olamaz'
+				callback(null,data)
+				return
 			}
 			
-			var barkodList=data.form.barkodlar.split('\n');
-			data.form.additionalItemIdentification=[];
+			var barkodList=data.form.barkodlar.split('\n')
+			data.form.additionalItemIdentification=[]
 
 			if(barkodList.length>0)
 				barkodList.forEach((e)=>{
-					data.form.additionalItemIdentification.push({ID:{value:e}});
-				});
+					data.form.additionalItemIdentification.push({ID:{value:e}})
+				})
 			
 			
 
 			api.put(`/{db}/items/${_id}`,req,data.form,(err,resp)=>{
 				if(!err){
-					res.redirect(`/inventory/items?itemType=${data.form.itemType}&sid=${req.query.sid}`);
+					res.redirect(`/inventory/items?itemType=${data.form.itemType}&sid=${req.query.sid}`)
 
 				}else{
-					data['message']=err.message;
-					callback(null,data);
+					data['message']=err.message
+					callback(null,data)
 				}
-			});
+			})
 		}else{
 
 			api.get(`/{db}/items/${_id}`,req,null,(err,resp)=>{
 				if(!err){
-					data.form=Object.assign(data.form,resp.data);
-					data.form.barkodlar='';
+					data.form=Object.assign(data.form,resp.data)
+					data.form.barkodlar=''
 					if(data.form.additionalItemIdentification.length>0)
 						data.form.additionalItemIdentification.forEach((e)=>{
-							data.form.barkodlar +=e.ID.value + '\n';
+							data.form.barkodlar +=e.ID.value + '\n'
 						})
 					
 
-					callback(null,data);
+					callback(null,data)
 				}else{
-					data['message']=err.message;
-					callback(null,data);
+					data['message']=err.message
+					callback(null,data)
 				}
-			});
+			})
 		}
-	});
+	})
 }
 
 
 
 function deleteItem(req,res,data,callback){
-	var _id=req.params.id || '';
+	var _id=req.params.id || ''
 	api.delete(`/{db}/items/${_id}`,req,(err,resp)=>{
 		if(!err){
-			res.redirect(`/inventory/items?itemType=${data.form.itemType}&sid=${req.query.sid}`);
+			res.redirect(`/inventory/items?itemType=${data.form.itemType}&sid=${req.query.sid}`)
 			
 		}else{
 			
-			//data['message']=err.message;
-			callback(err,data);
+			//data['message']=err.message
+			callback(err,data)
 		}
-	});
+	})
 }

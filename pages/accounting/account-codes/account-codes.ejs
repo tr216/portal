@@ -1,68 +1,17 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/components/grid2',{
-    fields:[
-        {name:'accountCode',text:'Hesap Kodu',type:'label' , filter:true, orderable:true , align:'left', width:'35%'},
-        {name:'name',text:'Hesap Ismi',type:'label' , filter:true, orderable:true}
-    ],
-    caption:'',
-    addNewButton:true,
-    editButton:true,
-    deleteButton:true,
-    customButtons:[
-        {inline:true, href:`javascript:copyConfirm('{_id}','{name}')`, title:'Kopyala' ,icon:'far fa-copy'}
-    ],
-    deleteUrl:`/dbapi/accounts/{_id}?sid=${sid}`
-    }) 
+<%- gridBuilder.generateGrid({
+  	accountCode:{title:"Hesap Kodu", type:"string"},
+  	name:{title:"Hesap Ismi", type:"string"}
+  },{
+  	selection:true,
+  	filter:true,
+  	buttons:{
+  		add:true,
+  		edit:true,
+  		delete:true,
+  		view:false,
+  		print:false,
+  		copy:true
+  	}
+  },ui)
 %>
-
-
-<%- partial('../../_common/forms/modal',{
-    modalId:'copyModal',
-    caption:'Kopya',
-    formControls:{
-        newName:{caption:'Yeni isim', type:'textbox', default:''}
-    },
-    mode:'addnew',
-    buttons:[
-        {isCancelButton:true},
-        {href:'javascript:copySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
-    ]
-}) %>
-
-<script type="text/javascript">
-    var temp_id, temp_name;
-    function copyConfirm(id, name){
-        temp_id=id;
-        temp_name=name;
-        $('#newName').val(name + ' kopya');
-        $('#copyModal').modal('show');
-    }
-
-    function copySave(){
-        if($('#newName').val().trim()==''){
-            alert('Isim bos olamaz');
-            return;
-        }
-        $('#copyModal').modal('hide');
-
-        var data={id:temp_id, newName:$('#newName').val()}
-        console.log('temp_id:',temp_id);
-        console.log('data:',data);
-        $.ajax({
-            url:`/dbapi/accounts/copy?sid=${q.sid}`,
-            data:data,
-            type:'POST',
-            success:function(result){
-                console.log('result:',result);
-                if(result.success){
-                    window.location.reload();
-                }else{
-                    $('#copyModal').modal('show');
-
-                    alert(result.error.code + ' - ' + result.error.message);
-                }
-            }
-        });
-       
-    }
-</script>

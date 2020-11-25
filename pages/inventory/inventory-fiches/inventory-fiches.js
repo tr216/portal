@@ -50,9 +50,9 @@ module.exports = function(req,res,callback){
 function getList(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.locationList.unshift({locationName:'-- Tümü --',_id:''});
-		data.subLocationList.unshift({name:'-- Tümü --',_id:''});
-		data.palletList.unshift({name:'-- Tümü --',_id:''});
-		data.inventoryFicheTypeCodeList.unshift({text:'-- Tümü --',value:''});
+		data.subLocationList.unshift({field:'-- Tümü --',_id:''});
+		data.palletList.unshift({field:'-- Tümü --',_id:''});
+		data.inventoryFicheTypeCodeList.unshift({title:'-- Tümü --',value:''});
 		api.get(`/{db}/inventory-fiches`,req,data.filter,(err,resp)=>{
 			if(!err){
 				
@@ -90,8 +90,8 @@ function initLookUpLists(req,res,data,cb){
 
 function addnew(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.inventoryFicheTypeCodeList.unshift({text:'-- Seç --',value:''});
-		data.palletList.unshift({name:'-- Seç --',_id:''});
+		data.inventoryFicheTypeCodeList.unshift({title:'-- Seç --',value:''});
+		data.palletList.unshift({field:'-- Seç --',_id:''});
 		if(req.method=='POST'){
 			data.form=Object.assign(data.form,req.body);
 			
@@ -117,8 +117,8 @@ function edit(req,res,data,callback){
 		return;
 	}
 	initLookUpLists(req,res,data,(err,data)=>{
-		data.inventoryFicheTypeCodeList.unshift({text:'-- Seç --',value:''});
-		data.palletList.unshift({name:'-- Seç --',_id:''});
+		data.inventoryFicheTypeCodeList.unshift({title:'-- Seç --',value:''});
+		data.palletList.unshift({field:'-- Seç --',_id:''});
 		if(req.method=='POST' || req.method=='PUT'){
 			data.form=Object.assign(data.form,req.body);
 			

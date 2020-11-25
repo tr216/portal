@@ -1,0 +1,166 @@
+{
+	"index":
+	[
+		{
+			"type": "grid",
+			"fields": {
+				"name.value"				:{"title":"Adı",  "type":"string"},
+				"description.value"	:{"title":"Açıklama",  "type":"string"},
+				"tracking.lotNo"		:{"title":"Lot No?", "type":"boolean"},
+				"tracking.serialNo"	:{"title":"Seri No?", "type":"boolean"},
+				"tracking.color" 		:{"title":"Renk?", "type":"boolean"},
+				"tracking.pattern"	:{"title":"Desen?", "type":"boolean"},
+				"tracking.size"			:{"title":"Beden?", "type":"boolean"},
+				"accountGroup"			:{"title":"Muh.Grup", "type":"remoteLookup",
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/account-groups",
+						"label":"{name}"
+					}
+				},
+				"passive" 						:{"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": false
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/items?itemType=raw-material"
+				}
+			},
+			"data": {
+				"docs":[],
+				"page":1,
+				"pageSize":10,
+				"pageCount":0,
+				"recordCount":0
+			}
+
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields":{
+				"tabs":[
+					{
+						"title":"Bilgiler",
+						"controls":{
+							"name.value":{"title":"Adı", "type":"string", "col":4   , "required":true},
+							"description.value":{"title":"Açıklama", "type":"string", "col":8 },
+							"tags":{"title":"Etiketler (virgulle ayrılmış)", "type":"string"},
+
+							"grup1":{
+								"title":"Diger",
+								"collapsed":true,
+								"controls":{
+									"brandName.value":{"title":"Marka", "type":"string", "col":4 },
+									"modelName.value":{"title":"Model", "type":"string", "col":4 },
+									"commodityClassification.0.itemClassificationCode.value":{"title":"Sınıf kodu (GTIPNO)", "type":"string", "col":4 },
+									"buyersItemIdentification.ID.value":{"title":"Alıcı kodu", "type":"string", "col":4 },
+									"sellersItemIdentification.ID.value":{"title":"Satıcı kodu", "type":"string" , "col":4},
+									"manufacturersItemIdentification.ID.value":{"title":"Üretici kodu", "type":"string" , "col":4},
+									"originCountry.name.value":{"title":"Menşei", "type":"string", "col":4 },
+									"keyword.value":{"title":"Anahtar kelime", "type":"string", "col":4 },
+									"accountGroup":{
+										"title":"Muhasebe Grubu", "type":"remoteLookup", 
+										"dataSource":{
+											"url":"/dbapi/account-groups",
+											"label":"{name}"
+										}, 
+										"col":4
+									}
+								}
+							},
+							"tracking1" :{
+								"title":"Stok Takibi",  "type":"string",   
+								"controls":{
+									"tracking.lotNo":{"title":"Lot No?", "type":"boolean", "col":"col-4 col-md-2"  },
+									"tracking.serialNo":{"title":"Seri No?", "type":"boolean","col":"col-4 col-md-2"    },
+									"tracking.color":{"title":"Renk?", "type":"boolean","col":"col-4 col-md-2"     },
+									"tracking.pattern":{"title":"Desen?", "type":"boolean" ,"col":"col-4 col-md-2"    },
+									"tracking.size":{"title":"Beden?", "type":"boolean","col":"col-4 col-md-2"    }
+								},
+								"collapsed":true
+							},
+							"passive":{"title":"Pasif?", "type":"boolean"    }
+						}
+					},
+					{
+						"title":"Birimler/Barkodlar",
+						"controls":{
+							"unitPacks":{"title":"Birimler", 
+								"type":"grid",
+								"fields": {
+									"unitCode":{"title":"Birim", "type":"lookup", "staticValues":"unitCodeList", "required":true},
+									"netWeight.value":{"title":"Net ağırlık", "type":"number", "value":0},
+									"dimension.width.value":{"title":"En", "type":"number", "value":0},
+									"dimension.length.value":{"title":"Boy", "type":"number", "value":0},
+									"dimension.height.value":{"title":"Yükseklik", "type":"number", "value":0},
+									"volume":{"title":"Yükseklik", "type":"number", "value":0, "readonly":true, "calc":"{dimension.width.value}*{netWeight.value}/7"},
+									"barcode":{"title":"Barkod", "type":"string"}
+								},
+								"options": {
+									"selection": false,
+									"filter": false,
+									"confirmBeforeRemove":false,
+									"buttons": {
+										"add": true,
+										"edit": true,
+										"delete": true,
+										"view": false,
+										"print": false,
+										"copy": false
+									},
+									"dataSource": {
+										"type":"local"
+									}
+								},
+								"data":{
+									"list":[]
+								}
+
+							},
+							"barkodlar":{"title":"Barkodlar (Carpanlari ';' ile barkod sonuna ekleyiniz)", "type":"strings" , "rows":5}
+						}
+					},
+					{
+						"title":"Resimler/dosyalar",
+						"controls":{
+							"images.0"  :{"title":"Resim 1",     "type":"fileBase64Image"   },
+							"images.1"  :{"title":"Resim 2",     "type":"fileBase64Image"   },
+							"images.2"  :{"title":"Resim 3",     "type":"fileBase64Image"   },
+							"files.0"  :{"title":"Dosya/dokuman 1",     "type":"fileBase64"   },
+							"files.1"  :{"title":"Dosya/dokuman 2",     "type":"fileBase64"   },
+							"files.2"  :{"title":"Dosya/dokuman 3",     "type":"fileBase64"   }
+						}
+					},
+					{
+						"title":"Palet/Paketleme Tanımları",
+						"controls":{
+							"ambalajTanimlari":{"title":"Paketleme", "type":"partial"}
+						}
+					}
+				]
+},
+"options": {
+	"mode": "general",
+	"isForm":true,
+	"dataSource": {
+		"method":"GET",
+		"url":"/dbapi/items?itemType=raw-material"
+	}
+}
+}
+]
+}

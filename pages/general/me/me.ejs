@@ -1,27 +1,27 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form',{
+<%- formBuilder.generateForm({
     tabs:[
         {
-            caption:'Profilim',
-            formControls:{
-                username        :{caption:'Kullanici Adi',             type:'textbox', readonly:true},
-                name        :{caption:'Isim',             type:'textbox', required:true},
-                lastName         :{caption:'Soyad',           type:'textbox', required:true},
-                gender  :{caption:'Cinsiyet', type:'lookup' , lookup:genderList, textField:'text', valueField:'value' },
-                email         :{caption:'Iletisim email',           type:'textbox'}
+            title:'Profilim',
+            controls:{
+                username        :{title:'Kullanici Adi',             type:'string', readonly:true},
+                name        :{title:'Isim',             type:'string', required:true},
+                lastName         :{title:'Soyad',           type:'string', required:true},
+                gender  :{title:'Cinsiyet', type:'lookup' , lookup:genderList, textField:'text', valueField:'value' },
+                email         :{title:'Iletisim email',           type:'string'}
             }
         },
         {
-            caption:'Sifre',
-            formControls:{
-                username        :{caption:'Kullanici Adi',             type:'textbox', readonly:true},
-                oldPassword     :{caption:'Eski Parola',                type:'password' },
-                newPassword     :{caption:'Yeni Parola',                type:'password' },
-                rePassword     :{caption:'Yeni Parola Tekrar',       type:'password' }
+            title:'Sifre',
+            controls:{
+                username        :{title:'Kullanici Adi',             type:'string', readonly:true},
+                oldPassword     :{title:'Eski Parola',                type:'password' },
+                newPassword     :{title:'Yeni Parola',                type:'password' },
+                rePassword     :{title:'Yeni Parola Tekrar',       type:'password' }
             }
         }
     ],
-    action:'',
+    
     mode:'edit'
     }) 
 %>

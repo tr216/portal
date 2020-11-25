@@ -43,6 +43,8 @@ global.docFormHelper=require('./lib/doc_form_helper.js')
 global.dbType=require('./assets/js/dbtypes.js').types
 global.formBuilder=require('./assets/js/ui/form-builder.js').FormBuilder
 global.gridBuilder=require('./assets/js/ui/grid-builder.js').GridBuilder
+global.filterBuilder=require('./assets/js/ui/filter-builder.js').FilterBuilder
+global.pageBuilder=require('./assets/js/ui/page-builder.js').PageBuilder
 
 
 var app = express()
@@ -67,6 +69,7 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'assets'), { maxAge: (60 * 1000 * 60 * 24 * 30) })) 
 app.use(flash())
+
 
 require('./lib/loader_db.js')((err)=>{
 	if(!err){
@@ -101,7 +104,6 @@ app.use(function(err, req, res, next) {
 	res.render('error/error',{title:'Sistem hatasi',code:err.status || 500,message:err.message})
 
 })
-
 
 global.menu=require('./resources/menu.json')
 global.mobileMenu=require('./resources/mobile-menu.json')
@@ -183,20 +185,3 @@ function onListening() {
 process.on('uncaughtException', function (err) {
 	errorLog('Caught exception: ', err)
 })
-
-function gecici(){
-	var stValues={}
-	Object.keys(staticValues).forEach((typeName)=>{
-		stValues[typeName]={}
-		if(Array.isArray(staticValues[typeName])){
-			staticValues[typeName].forEach((e)=>{
-				if(e.value!=undefined && e.text!=undefined){
-					stValues[typeName][e.value]=e.text
-				}
-			})
-		}
-	})
-	fs.writeFileSync(path.join('../temp','newStaticValues.json'),JSON.stringify(stValues,null,2),'utf8')
-}
-
-gecici()

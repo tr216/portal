@@ -6,7 +6,7 @@ if(typeof level=='undefined')
 
 for(let key in formControls){ 
 	var item=formControls[key];
-	item['caption']=ifNull(item['caption'],'');
+	item['title']=ifNull(item['title'],'');
 	item['col']=ifNull(item['col'],'col-12');
 	if(!isNaN(item.col)){
 		item.col='col-' + item.col
@@ -98,31 +98,31 @@ for(let key in formControls){
 
 	<% function textbox(item,itemValue,level){ %>
 	<div class="form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-		<label class="m-0 p-0"><%=item.caption%></label>
-		<input type="text" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%- item.readonly==true?'':item.caption %>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
+		<label class="m-0 p-0"><%=item.title%></label>
+		<input type="text" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%- item.readonly==true?'':item.title %>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
 	</div>
 	<% } %>
 
 	<% function numberbox(item,itemValue,level){ %>
 	<div class="form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-		<label class="m-0 p-0"><%=item.caption%></label>
-		<input type="number" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%- item.readonly==true?'':item.caption %>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
+		<label class="m-0 p-0"><%=item.title%></label>
+		<input type="number" class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" placeholder="<%- item.readonly==true?'':item.title %>" autocomplete="off"  value="<%=itemValue%>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>>
 	</div>
 	<% } %>
 
 	<% function textarea(item,itemValue,level){ %>
 	<div class="form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-		<label class="m-0 p-0"><%=item.caption%></label>
-		<textarea class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>"  rows="<% if(typeof item.rows!='undefined'){%><%=item.rows%><%}else{%>4<%}%>"  placeholder="<%- item.readonly==true?'':item.caption %>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>><%=itemValue%></textarea>
+		<label class="m-0 p-0"><%=item.title%></label>
+		<textarea class="form-control <%=item.class %>" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>"  rows="<% if(typeof item.rows!='undefined'){%><%=item.rows%><%}else{%>4<%}%>"  placeholder="<%- item.readonly==true?'':item.title %>" <%- item.required?'required="required"':'' %> <%- item.readonly?'readonly':'' %>><%=itemValue%></textarea>
 	</div>
 	<% } %>
 
 	<% function label(item,itemValue,level){ %>
 	<div class= "form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 		<% if(item.type=='label'){%>
-		<div class="<%=item.class %>" id="<%- generateFormId(item.name) %>"><b><%=item.caption%>:</b> <%=itemValue%></div>
+		<div class="<%=item.class %>" id="<%- generateFormId(item.name) %>"><b><%=item.title%>:</b> <%=itemValue%></div>
 		<%} else { %>
-		<div class="<%=item.class %>" id="<%- generateFormId(item.name) %>"><%=item.caption%></div>
+		<div class="<%=item.class %>" id="<%- generateFormId(item.name) %>"><%=item.title%></div>
 		<% } %>
 	</div>
 	<% } %>
@@ -131,14 +131,14 @@ for(let key in formControls){
 	<div class= "form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 		<label>
 			<input type="checkbox" class="" id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" value="true" <%=(itemValue?'checked':'')%> <%- item.readonly?'disabled':'' %> />
-			<%=item.caption%>
+			<%=item.title%>
 		</label>
 	</div>
 	<% } %>
 
 	<% function lookup(item,itemValue,level){ %>
 	<div class= "form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-		<label for=""><%=item.caption%></label>
+		<label for=""><%=item.title%></label>
 		<select id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" class="form-control" <%- item.required?'required="required"':'' %> <%- item.readonly?'disabled':'' %>>
 			<% item.lookup.forEach(function(e){ %>
 			<option value="<%=e[item.valueField]%>" <% if(e[item.valueField]==itemValue){%>selected<%} %> ><%=e[item.textField]%></option>
@@ -150,9 +150,9 @@ for(let key in formControls){
 	<% function partialItem(item,itemValue,level){ %>
 	<div class= "form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
 		<div class="panel panel-info">
-			<% if(item.caption!=''){ %>
+			<% if(item.title!=''){ %>
 			<div class="panel-heading">
-				<b><%=item.caption%></b>
+				<b><%=item.title%></b>
 			</div>
 			<% } %>
 			<div class="panel-body">
@@ -172,7 +172,7 @@ for(let key in formControls){
 
 	<% function jsonData(item,itemValue,level){ %>
 	<div class="form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-		<label class="m-0"><%=item.caption%></label>
+		<label class="m-0"><%=item.title%></label>
 		<textarea id="<%- generateFormId(item.name) %>" name="<%- generateFormName(item.name) %>" class="form-control" rows="10"  style="height: auto;font-family: monospace;" <%- item.readonly?'readonly':'' %>><%- typeof itemValue=='object'?JSON.stringify(itemValue,null,2):itemValue %></textarea>
 
 	</div>
@@ -181,7 +181,7 @@ for(let key in formControls){
 
 	<% function fileBase64(item,itemValue,level){ %>
 	<div class= "form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-		<label class="m-0 p-0"><%=item.caption%></label><br>
+		<label class="m-0 p-0"><%=item.title%></label><br>
 
 		<label for="fileToUpload_<%=item.name.replaceAll('.','_')%>" class="btn btn-primary"><i class="fa fa-file"></i> Dosya seçiniz</label>
 		<input type="file" name="fileToUpload_<%=item.name%>" id="fileToUpload_<%=item.name.replaceAll('.','_')%>" style="visibility:hidden;" accept="" >
@@ -220,7 +220,7 @@ for(let key in formControls){
 
 	<% function fileBase64Image(item,itemValue,level){ %>
 	<div class= "form-group <%- item.col %>" <% if(level>0){%>style="margin-left:<%=level*20%>px;"<%}%>>
-		<label for="fileToUpload_<%=item.name.replaceAll('.','_')%>" class="btn btn-primary"><i class="fas fa-images"></i> <%=item.caption%></label>
+		<label for="fileToUpload_<%=item.name.replaceAll('.','_')%>" class="btn btn-primary"><i class="fas fa-images"></i> <%=item.title%></label>
 		<br>
 		<img id="fileToUpload_download_<%=item.name.replaceAll('.','_')%>" src="<% if(typeof itemValue.data!='undefined'){%><%=itemValue.data%><%}else{%><%- assetVersion('/img/placehold-place.jpg') %><%}%>" download="<% if(typeof itemValue.fileName!='undefined'){%><%=itemValue.fileName%><%}%>" style="width: 300px;height: 300px;">
 

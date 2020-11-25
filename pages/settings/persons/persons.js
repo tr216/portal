@@ -55,7 +55,7 @@ function getList(req,res,data,callback){
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.stationList.unshift({_id:'',name:'-Tümü-'});
 		data.shiftList.unshift({_id:'',name:'-Tümü-'})
-		data.bloodGroups.unshift({value:'',text:'-Tümü-'})
+		data.bloodGroups.unshift({value:'',title:'-Tümü-'})
 		api.get(`/{db}/persons`,req,data.filter,(err,resp)=>{
 			if(!err){
 				data=mrutil.setGridData(data,resp);

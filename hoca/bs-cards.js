@@ -53,7 +53,7 @@ module.exports=(html)=>{
 }
 
 function collapseBtn(id,bCollapsed){
-	return `<a class="btn btn-collapse" data-toggle="collapse" data-target="#cardCollapse${id}" aria-expanded="${bCollapsed?'false':'true'}" aria-controls="cardCollapse${id}" href="#"><i class="far fa-caret-square-up"></i></a>`
+	return `<a class="btn btn-collapse" data-toggle="collapse" data-target="#cardCollapse${id}" aria-expanded="${bCollapsed?'false':'true'}" aria-controls="cardCollapse${id}" href="#"><i class="far fa-caret-square-up fa-2x"></i></a>`
 }
 
 function collapseDiv(id,bCollapsed){

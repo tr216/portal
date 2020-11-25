@@ -1,14 +1,14 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'_id',text:'Giriş',type:'button' , icon:'unlock', buttonTarget:'_blank', path:'/admin/members/login',width:'50px'},
-        {name:'username',text:'Kullanici adı',type:'label'},
-        {name:'name',text:'Isim',type:'label'},
-        {name:'lastName',text:'Soyadı',type:'label'},
-        {name:'verified',text:'Verified',type:'checkbox',width:1},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+        {field:'_id',title:'Giriş',type:'button' , icon:'unlock', buttonTarget:'_blank', path:'/admin/members/login',width:'50px'},
+        {field:'username',title:'Kullanici adı',type:'string'},
+        {field:'name',title:'Isim',type:'string'},
+        {field:'lastName',title:'Soyadı',type:'string'},
+        {field:'verified',title:'Verified',type:'boolean',width:1},
+        {field:'passive',title:'Pasif',type:'boolean',width:1}
     ],
-    caption:'Member List',
+    title:'Member List',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

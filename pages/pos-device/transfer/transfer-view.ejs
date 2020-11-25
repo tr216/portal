@@ -1,18 +1,18 @@
 <%layout('../../_common/layouts/plain')%>
-<%- partial('../../_common/forms/form',{
+<%- formBuilder.generateForm({
    
-    formControls:{
-        locationName:{name:'posDevice.location.locationName',    caption:'Lokasyon',    type:'label'}, 
-        deviceSerialNo:{name:'posDevice.deviceSerialNo',           caption:'Seri No',     type:'label'}, 
-        serviceName:{name:'posDevice.service.name',             caption:'Servis adı',  type:'label'}, 
-        localConnectorName:{name:'posDevice.localConnector.name',      caption:'Local Connector',  type:'label'}, 
-        status:{name:'status',                            caption:'Durum',     type:'label'},
-        errCode:{name:'error.code',                            caption:'Son Hata Kodu',     type:'label'},
-        errMsg:{name:'error.message',  caption:'Son Hata',     type:'label'},
-        data:{name:'data',                               caption:'ZRapor Data',    type:'json'}
+    controls:{
+        locationName:{field:'posDevice.location.locationName',    title:'Lokasyon',    type:'string'}, 
+        deviceSerialNo:{field:'posDevice.deviceSerialNo',           title:'Seri No',     type:'string'}, 
+        serviceName:{field:'posDevice.service.name',             title:'Servis adı',  type:'string'}, 
+        localConnectorName:{field:'posDevice.localConnector.name',      title:'Local Connector',  type:'string'}, 
+        status:{field:'status',                            title:'Durum',     type:'string'},
+        errCode:{field:'error.code',                            title:'Son Hata Kodu',     type:'string'},
+        errMsg:{field:'error.message',  title:'Son Hata',     type:'string'},
+        data:{field:'data',                               title:'ZRapor Data',    type:'json'}
         
     },
-    action:'',
+    
     mode:'view'
     }) 
 %>

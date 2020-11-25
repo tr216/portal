@@ -5,27 +5,27 @@
 
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'location.locationName',    text:'Lokasyon',    type:'lookup' ,orderable:false, filter:true, filterField:'location', lookupList:locationList, textField:'locationName', valueField:'_id'}, 
-        {name:'count',           text:'ZRap Adet',     type:'label',orderable:true, filter:false}, 
-        {name:'GunlukToplamTutar',                       text:'Toplam Tutar',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'MaliFisAdedi',                       text:'MaliFisAdedi',    type:'label' , className: 'text-right',  orderable:true,filter:false},
-        {name:'NakitTutari',                       text:'NakitTutari',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'KrediTutari',                       text:'KrediTutari',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'FoodSaleCnt',                       text:'Yemek Cek A.',    type:'label' , className: 'text-right', format:'n0', orderable:true,filter:false},
-        {name:'FoodRcptTotalAmount',               text:'Yemek Ceki T.',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'InvoiceTotal',                       text:'Fatura',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'EInvoiceTotal',                       text:'E-Fatura',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'EArchiveInvoiceTotal',                       text:'E-Arsiv',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'BankaTransferTutari',                       text:'Banka Transfer',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'TaxRate0Amount',                       text:'Kdv0',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'TaxRate1Amount',                       text:'Kdv1',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'TaxRate8Amount',                       text:'Kdv8',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false},
-        {name:'TaxRate18Amount',                       text:'Kdv18',    type:'label' , className: 'text-right', format:'n2', orderable:true,filter:false}
+        {field:'location.locationName',    title:'Lokasyon',    type:'lookup' ,orderable:false, filter:true, filterField:'location', lookup:locationList, textField:'locationName', valueField:'_id'}, 
+        {field:'count',           title:'ZRap Adet',     type:'string',orderable:true, filter:false}, 
+        {field:'GunlukToplamTutar',                       title:'Toplam Tutar',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'MaliFisAdedi',                       title:'MaliFisAdedi',    type:'string' , className: 'text-right',  orderable:true,filter:false},
+        {field:'NakitTutari',                       title:'NakitTutari',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'KrediTutari',                       title:'KrediTutari',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'FoodSaleCnt',                       title:'Yemek Cek A.',    type:'string' , className: 'text-right', format:'n0', orderable:true,filter:false},
+        {field:'FoodRcptTotalAmount',               title:'Yemek Ceki T.',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'InvoiceTotal',                       title:'Fatura',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'EInvoiceTotal',                       title:'E-Fatura',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'EArchiveInvoiceTotal',                       title:'E-Arsiv',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'BankaTransferTutari',                       title:'Banka Transfer',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'TaxRate0Amount',                       title:'Kdv0',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'TaxRate1Amount',                       title:'Kdv1',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'TaxRate8Amount',                       title:'Kdv8',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false},
+        {field:'TaxRate18Amount',                       title:'Kdv18',    type:'string' , className: 'text-right', format:'n2', orderable:true,filter:false}
         
         
         
     ],
-    caption:'Toplam Raporu',
+    title:'Toplam Raporu',
     addNewButton:false,
     editButton:false,
     deleteButton:false,

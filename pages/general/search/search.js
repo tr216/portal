@@ -1,7 +1,7 @@
 module.exports = function(req,res,callback){
     var data={
         form:{
-            text:''
+            title:''
         },
         list:[],
         filter:{}

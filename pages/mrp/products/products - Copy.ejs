@@ -1,18 +1,18 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'itemType',text:'Turu',type:'lookup', lookupList:productTypeList , filter:true, filterField:'itemType', orderable:true},
-        {name:'name.value',text:'Adı',type:'label' , filter:true, filterField:'name', orderable:true},
-        {name:'description.value',text:'Açıklama',type:'label' , filter:true, filterField:'description', orderable:true},
-        {name:'accountGroup',text:'Muh.Grup',type:'lookup' ,lookupList:accountGroupList, filter:true, textField:'name',valueField:'_id', orderable:true},
-        {name:'tracking.lotNo',text:'Lot No?',type:'checkbox',width:'100px', filter:true, orderable:true},
-        {name:'tracking.serialNo',text:'Seri No?',type:'checkbox',width:'100px', filter:true, orderable:true},
-        {name:'tracking.color',text:'Renk?',type:'checkbox',width:'100px', filter:true, orderable:true},
-        {name:'tracking.pattern',text:'Desen?',type:'checkbox',width:'100px', filter:true, orderable:true},
-        {name:'tracking.size',text:'Beden?',type:'checkbox',width:'100px', filter:true, orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1, filter:true, orderable:true}
+        {field:'itemType',title:'Turu',type:'lookup', lookup:productTypeList , filter:true, filterField:'itemType', orderable:true},
+        {field:'name.value',title:'Adı',type:'string' , filter:true, filterField:'name', orderable:true},
+        {field:'description.value',title:'Açıklama',type:'string' , filter:true, filterField:'description', orderable:true},
+        {field:'accountGroup',title:'Muh.Grup',type:'lookup' ,lookup:accountGroupList, filter:true, textField:'name',valueField:'_id', orderable:true},
+        {field:'tracking.lotNo',title:'Lot No?',type:'boolean',width:'100px', filter:true, orderable:true},
+        {field:'tracking.serialNo',title:'Seri No?',type:'boolean',width:'100px', filter:true, orderable:true},
+        {field:'tracking.color',title:'Renk?',type:'boolean',width:'100px', filter:true, orderable:true},
+        {field:'tracking.pattern',title:'Desen?',type:'boolean',width:'100px', filter:true, orderable:true},
+        {field:'tracking.size',title:'Beden?',type:'boolean',width:'100px', filter:true, orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean',width:1, filter:true, orderable:true}
     ],
-    caption:'',
+    title:'',
     addNewButton:true,
     editButton:true,
     deleteButton:true,
@@ -27,14 +27,14 @@
 
 <%- partial('../../_common/forms/modal',{
     modalId:'itemCopyModal',
-    caption:'Kopya',
-    formControls:{
-        newName:{caption:'Yeni isim', type:'textbox', default:''}
+    title:'Kopya',
+    controls:{
+        newName:{title:'Yeni isim', type:'string', default:''}
     },
     mode:'addnew',
     buttons:[
         {isCancelButton:true},
-        {href:'javascript:itemCopySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+        {href:'javascript:itemCopySave()', title:'Kopyala',  title:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
     ]
 }) %>
 <script type="text/javascript">

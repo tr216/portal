@@ -1,0 +1,89 @@
+{
+	"index":[
+		{
+			"type": "grid",
+			"fields":{
+				"partyName.name.value": {"title":"Müşteri adı", "type":"string", "filterField":"partyName"},
+				"postalAddress.cityName.value": {"title":"Şehir", "type":"string", "filterField":"cityName"},
+				"postalAddress.district.value": {"title":"İlçe", "type":"string", "filterField":"district"},
+				"passive": {"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": true,
+					"print": false,
+					"copy": false
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/customers"
+				}
+			},
+			"data": {
+				"docs":[],
+				"page":1,
+				"pageSize":10,
+				"pageCount":0,
+				"recordCount":0
+			}
+
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields": {
+				"partyName.name.value":{"title":"Müşteri Adı", "type":"string", "col":6 ,"required":true},
+				"person.firstName.value":{"title":"Kişi Adı", "type":"string", "col":3},
+				"person.familyName.value":{"title":"Kişi Soyadı", "type":"string", "col":3},
+				"partyIdentification.0.ID.attr.schemeID":{"title":"Tür", "type":"lookup", "lookup":{"VKN":"VKN","TCKN":"TCKN"} , "col":4},
+
+				"partyIdentification.0.ID.value":{"title":"Vergi No/Tckn", "type":"string", "col":3},
+				"partyTaxScheme.taxScheme.name.value":{"title":"Vergi Dairesi", "type":"string", "col":4},
+				"tags":{"title":"Etiketler (virgulle ayrılmış)", "type":"string", "col":8},
+				"iletisim":{
+					"collapsed":true,
+					"title":"İletişim",
+					"controls":{
+						"contact.telephone.value"			:{"title":"Telefon", "type":"string"},
+						"contact.telefax.value"				:{"title":"Fax", "type":"string"},
+						"contact.electronicMail.value":{"title":"E-Mail", "type":"string"}
+					}
+				},
+				"adres":{
+					"title":"Adres",
+					"collapsed":true,
+					"controls":{
+						"postalAddress.streetName.value"				:{"title":"Cadde/Sokak", "type":"string", 	"col":6},
+						"postalAddress.buildingNumber.value"		:{"title":"Cadde Sokak Kapı No", "type":"string", 	"col":3},
+						"postalAddress.buildingName.value"			:{"title":"Bina/Site adı", "type":"string", 	"col":3},
+						"postalAddress.blockName.value"					:{"title":"Blok adı", "type":"string", 	"col":3},
+						"postalAddress.room.value"							:{"title":"Daire", "type":"string", 	"col":3},
+						"postalAddress.citySubdivisionName.value":{"title":"Mahalle/Semt", "type":"string", 	"col":3},
+						"postalAddress.district.value"					:{"title":"İlçe", "type":"string", 	"col":3},
+						"postalAddress.cityName.value"					:{"title":"Şehir", "type":"string", 	"col":3},
+						"postalAddress.region.value"						:{"title":"Bölge", "type":"string", 	"col":3},
+						"postalAddress.country.name.value"			:{"title":"Ülke", "type":"string", 	"col":3},
+						"postalAddress.postbox.value"						:{"title":"Posta Kutusu", "type":"string", 	"col":3},
+						"websiteURI.value"											:{"title":"Web sitesi", "type":"string", 	"col":3}
+					}
+				},
+				"passive":{"title":"Pasif?", "type":"boolean", "col":4    }
+			},
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/customers"
+				}
+			}
+		}
+	]
+}

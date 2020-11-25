@@ -193,7 +193,7 @@ headerButtons +='<a href="javascript:goBack();" class="btn btn-dark  btn-form-he
 
 				<% if(docFormType=='despatch' || docFormType=='invoice'){ %>
 				<div class="col-md-4">
-					<%- partial('../components/location-selection.ejs',{name:'location',subLocationName:'subLocation'}) %>
+					<%- partial('../components/location-selection.ejs',{field:'location',subLocationName:'subLocation'}) %>
 				</div>
 				<% } %>
 			</div>

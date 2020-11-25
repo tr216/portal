@@ -47,13 +47,13 @@
 	}
 
 	if(times.length==0){
-		addTimesGridRow({name:'Sabah',startHour:8,startMinute:0,endHour:12,endMinute:30})
+		addTimesGridRow({field:'Sabah',startHour:8,startMinute:0,endHour:12,endMinute:30})
 	}else{
 		loadTimesGrid();
 	}
 	
 
-	function addTimesGridRow(obj={name:'',startHour:0,startMinute:0,endHour:0,endMinute:0}){
+	function addTimesGridRow(obj={field:'',startHour:0,startMinute:0,endHour:0,endMinute:0}){
 		
 		var timesGrid=document.getElementById('timesGrid');
 		var index=timesGrid.rows.length;

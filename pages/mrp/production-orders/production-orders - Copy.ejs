@@ -1,0 +1,60 @@
+<%layout('../../_common/layouts/general')%>
+<form action="" method="POST" role="form" name="form1">
+    <div class="row m-0 mt-2">
+        <div class="col-12 p-0">
+<%- partial('../../_common/components/date-filter',{includeForm:false,includeFilterButton:false}) %>
+            <div class="float-left form-inline ml-md-4">
+                <label class="text-primary">Türü:</label>
+                <select class="form-control input-inline input-sm" name="productionTypeCode" id="productionTypeCode">
+                    <% productionTypeCodeList.forEach(function(e){ %>
+                    <option value="<%=e.value%>"<% if(typeof filter.productionTypeCode!='undefined') if(filter.productionTypeCode==e.value){%>selected<% } %>><%=e.text%></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="float-md-right">
+                <button type="submit" name="btnFilter" class="btn btn-primary" value="true"><i class="fa fa-filter"></i> Filtrele</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<% if(typeof message!='undefined') { %>
+    <% if(message!='') { %>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert">
+            <%=message %>
+        </div>
+    </div>
+</div>
+    <% } %>
+<% } %>
+
+<%- partial('../../_common/components/grid2',{
+    fields:[
+        {field:'productionId',title:'Üretim No',type:'string', filter:true,orderable:true, width:'80px'},
+        {field:'issueDate',title:'E.Tarih',type:'string', orderable:true, width:'80px'},
+        {field:'itemName',title:'Mamül',type:'string', filter:true,orderable:true},
+        {field:'plannedPeriod',title:'Planlama',type:'string', orderable:true},
+        {field:'quantity',title:'Miktar',type:'string', filter:true, orderable:true},
+        {field:'musteri',title:'Müşteri',type:'string', filter:true,orderable:true},
+        {field:'ambalaj',title:'Paketleme',type:'string', filter:true, orderable:true},
+        {field:'status',title:'Durumu', width:'100px',type:'lookup',filter:true, lookup:productionStatusTypes, orderable:false, dontUseLookup:true},
+        {field:'islemButonlari',title:'İşlem',type:'string', width:'110px'}
+    ],
+    title:'Uretim Emirleri',
+    addNewButton:true,
+    viewButton:false,
+    editButton:true,
+    deleteButton:true,
+    selection:false,
+    printButton:{
+        path:'/production-orders/{_id}',
+        printDesignList:printDesignList,
+    },
+    customButtons:[
+        //{href:'/mrp/production-orders/approvement/{_id}?sid=${sid}`, title:'Onay/Ret',icon:'fas fa-check-square'}
+    ],
+    deleteUrl:`/dbapi/production-orders/{_id}?sid=${sid}`
+    }) 
+%>

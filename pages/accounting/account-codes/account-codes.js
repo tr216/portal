@@ -1,11 +1,7 @@
 module.exports = function(req,res,callback){
 	var data={
 		form:{
-			parentAccount:{
-				_id:'',
-				accountCode:'',
-				name:''
-			},
+			parentAccount:'',
 			code:'',
 			name:''
 			
@@ -74,7 +70,7 @@ function edit(req,res,data,callback){
 	//data['title']='Lokasyon Duzelt';
 	var _id=req.params.id || '';
 	if(req.method=='POST' || req.method=='PUT'){
-		data.form=Object.assign(data.form,req.body);
+		data.form=Object.assign(data.form,req.body)
 		if(data.form.code.trim()==''){
 			data['message']='Hesap kodu boş olamaz!';
 			return callback(null,data);
@@ -88,6 +84,7 @@ function edit(req,res,data,callback){
 			return callback(null,data);
 		}
 
+		console.log(`data.form:`,data.form)
 		api.put(`/{db}/accounts/${_id}`,req,data.form,(err,resp)=>{
 			if(!err){
 				res.redirect(`/accounting/account-codes?sid=${req.query.sid}&mid=${req.query.mid}`)

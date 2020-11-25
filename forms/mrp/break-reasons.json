@@ -1,0 +1,57 @@
+{
+	"index":[
+		{
+			"type": "grid",
+			"fields": {
+				"name":{"title":"Adı", "type":"string"},
+				"description":{"title":"Açıklama", "type":"string"},
+				"level":{"title":"Level", "type":"number"},
+				"passive":{"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": false
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/production-break-reasons"
+				}
+			},
+			"data": {
+				"docs":[],
+				"page":1,
+				"pageSize":10,
+				"pageCount":0,
+				"recordCount":0
+			}
+
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields": {
+				"name":{"title":"Adı", "type":"string"},
+				"description":{"title":"Açıklama", "type":"string"},
+				"level":{"title":"Level", "type":"number", "value":1},
+				"passive":{"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/production-break-reasons"
+				}
+			}
+		}
+	]
+}

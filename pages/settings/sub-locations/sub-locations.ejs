@@ -1,11 +1,11 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'location',text:'Lokasyon',type:'lookup', lookupList:locationList,filter:true, valueField:'_id', textField:'locationName', orderable:true},
-        {name:'name',text:'Alt Lokasyon Ismi',type:'label' , filter:true, orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox', filter:true, width:'120px', orderable:true}
+        {field:'location',title:'Lokasyon',type:'lookup', lookup:locationList,filter:true, valueField:'_id', textField:'locationName', orderable:true},
+        {field:'name',title:'Alt Lokasyon Ismi',type:'string' , filter:true, orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean', filter:true, width:'120px', orderable:true}
     ],
-    caption:'Alt Lokasyon Listesi',
+    title:'Alt Lokasyon Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

@@ -25,9 +25,7 @@ module.exports = function(req,res,callback){
 		case 'edit':
 			edit(req,res,data,callback);
 		break;
-		case 'view':
-			edit(req,res,data,callback);
-		break;
+	
 		case 'delete':
 		
 		deleteItem(req,res,data,callback);

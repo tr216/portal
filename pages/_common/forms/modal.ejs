@@ -9,7 +9,7 @@
         modalId='modalId' + modalNo;
     }
 
-    if(typeof caption=='undefined') caption='Form';
+    if(typeof title=='undefined') title='Form';
     if(typeof buttons=='undefined') buttons=[];
 
 %>
@@ -17,7 +17,7 @@
     <div class="modal-dialog modal-lg modal-scrollable modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header p-2 ">
-                <label class="modal-title" id="<%=modalId%>Label"><%=caption%></label>
+                <label class="modal-title" id="<%=modalId%>Label"><%=title%></label>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

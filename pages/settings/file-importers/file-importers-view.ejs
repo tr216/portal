@@ -1,12 +1,12 @@
 <%layout('../../_common/layouts/plain')%>
-<%- partial('../../_common/forms/form',{
-    formControls:{
-        name            :{caption:'Adı',                   type:'textbox'    ,required:true},
-        importerType :{caption:'Türü', type:'lookup', lookup:staticValues.fileImporterTypes },
-        importFileExtensions :{caption:'Dosya uzantıları', type:'textbox' },
-        passive         :{caption:'Pasif',                 type:'checkbox'}
+<%- formBuilder.generateForm({
+    controls:{
+        name            :{title:'Adı',                   type:'string'    ,required:true},
+        importerType :{title:'Türü', type:'lookup', lookup:staticValues.fileImporterTypes },
+        importFileExtensions :{title:'Dosya uzantıları', type:'string' },
+        passive         :{title:'Pasif',                 type:'boolean'}
     },
-    action:'',
+    
     mode:'view'
     }) 
 %>

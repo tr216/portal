@@ -1,15 +1,15 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form',{
-    formControls:{
-        name     :{caption:'Adı',                type:'textbox' ,required:true},
-        useMaterialInput  :{caption:'Malzeme Kullaniyor Mu?',        type:'checkbox'   },
-        useMaterialOutput  :{caption:'Yan ürün çıkıyor mu?',        type:'checkbox'   },
-        useMachine  :{caption:'Makine Kullanıyor mu?',        type:'checkbox'   },
-        useMold :{caption:'Kalıp Kullanıyor mu?',        type:'checkbox'   },
-        useParameters :{caption:'Not/Parametre Kullanıyor mu?',        type:'checkbox'   },
-        passive         :{caption:'Pasif',                 type:'checkbox'}
+<%- formBuilder.generateForm({
+    controls:{
+        name     :{title:'Adı',                type:'string' ,required:true},
+        useMaterialInput  :{title:'Malzeme Kullaniyor Mu?',        type:'boolean'   },
+        useMaterialOutput  :{title:'Yan ürün çıkıyor mu?',        type:'boolean'   },
+        useMachine  :{title:'Makine Kullanıyor mu?',        type:'boolean'   },
+        useMold :{title:'Kalıp Kullanıyor mu?',        type:'boolean'   },
+        useParameters :{title:'Not/Parametre Kullanıyor mu?',        type:'boolean'   },
+        passive         :{title:'Pasif',                 type:'boolean'}
     },
-    action:'',
+    
     mode:'addnew'
     }) 
 %>

@@ -40,7 +40,7 @@ module.exports = function(req,res,callback){
 }
 
 function getList(req,res,data,callback){
-	data.printDesignModuleList.unshift({text:'-- Tümü --',value:''});
+	data.printDesignModuleList.unshift({title:'-- Tümü --',value:''});
 	api.get(`/{db}/print-designs`,req,data.filter,(err,resp)=>{
 		if(!err){
 			data=mrutil.setGridData(data,resp);
@@ -55,7 +55,7 @@ function getList(req,res,data,callback){
 
 
 function addnew(req,res,data,callback){
-	data.printDesignModuleList.unshift({text:'-- Seç --',value:''});
+	data.printDesignModuleList.unshift({title:'-- Seç --',value:''});
 	if(req.method=='POST'){
 		data.form=Object.assign(data.form,req.body);
 		api.post(`/{db}/print-designs`,req,data.form,(err,resp)=>{

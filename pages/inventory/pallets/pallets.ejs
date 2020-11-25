@@ -1,11 +1,11 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'name',text:'Palet',type:'label' , filter:true, orderable:true},
-        {name:'palletType',text:'Palet Tip',type:'lookup' , lookupList:palletTypeList,valueField:'_id',textField:'name', filter:true, orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox', filter:true, width:'120px', orderable:true}
+        {field:'name',title:'Palet',type:'string' , filter:true, orderable:true},
+        {field:'palletType',title:'Palet Tip',type:'lookup' , lookup:palletTypeList,valueField:'_id',textField:'name', filter:true, orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean', filter:true, width:'120px', orderable:true}
     ],
-    caption:'Palet Listesi',
+    title:'Palet Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,
@@ -19,14 +19,14 @@
 
 <%- partial('../../_common/forms/modal',{
     modalId:'itemCopyModal',
-    caption:'Kopya',
-    formControls:{
-        newName:{caption:'Yeni Palet isim/kod/numara', type:'textbox', default:''}
+    title:'Kopya',
+    controls:{
+        newName:{title:'Yeni Palet isim/kod/numara', type:'string', default:''}
     },
     mode:'addnew',
     buttons:[
         {isCancelButton:true},
-        {href:'javascript:itemCopySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+        {href:'javascript:itemCopySave()', title:'Kopyala',  title:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
     ]
 }) %>
 

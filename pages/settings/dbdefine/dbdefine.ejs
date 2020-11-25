@@ -2,16 +2,16 @@
             
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'dbName',text:'Veri Ambari Ismi',type:'label',orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+        {field:'dbName',title:'Veri Ambari Ismi',type:'string',orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean',width:1}
     ],
-    caption:'Veri Ambar Listesi',
+    title:'Veri Ambar Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,
     deleteButton:true,
     customButtons:[
-    	{inline:true, text:'davet', icon:'fas fa-user-plus', href:'/settings/dbinvite?db={_id}&sid=' + sid}
+    	{inline:true, title:'davet', icon:'fas fa-user-plus', href:'/settings/dbinvite?db={_id}&sid=' + sid}
     ],
     
     deleteUrl:'/api/dbdefine/{_id}?sid=' + sid

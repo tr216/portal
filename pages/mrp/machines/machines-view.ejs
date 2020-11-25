@@ -1,26 +1,26 @@
 <%layout('../../_common/layouts/plain')%>
-<%- partial('../../_common/forms/form',{
+<%- formBuilder.generateForm({
     tabs:[
        {
-            caption:'Bilgiler',
-            formControls:{
-                machineGroup :{caption:'Grubu',             type:'lookup', lookup:machineGroupList, textField:'name', valueField:'_id'    ,required:true},
-                station        :{caption:'Istasyon',             type:'lookup', lookup:stationList, textField:'name', valueField:'_id'    ,required:true},
-                name     :{caption:'Adı',                type:'textbox' ,required:true},
-                description  :{caption:'Açıklama',        type:'textbox'    },
-                minCapacity  :{caption:'Min. Kapasite',        type:'textbox'    },
-                maxCapacity  :{caption:'Max. Kapasite',        type:'textbox'    },
-                power  :{caption:'Güç(watt)',        type:'textbox'    },
-                account:{caption:'Muhasebe Hesap Kodu', type:'partial', partial:'../components/account-selection.ejs' },
-                passive         :{caption:'Pasif',                 type:'checkbox'}
+            title:'Bilgiler',
+            controls:{
+                machineGroup :{title:'Grubu',             type:'lookup', lookup:machineGroupList, textField:'name', valueField:'_id'    ,required:true},
+                station        :{title:'Istasyon',             type:'lookup', lookup:stationList, textField:'name', valueField:'_id'    ,required:true},
+                name     :{title:'Adı',                type:'string' ,required:true},
+                description  :{title:'Açıklama',        type:'string'    },
+                minCapacity  :{title:'Min. Kapasite',        type:'string'    },
+                maxCapacity  :{title:'Max. Kapasite',        type:'string'    },
+                power  :{title:'Güç(watt)',        type:'string'    },
+                account:{title:'Muhasebe Hesap Kodu', type:'partial', partial:'../components/account-selection.ejs' },
+                passive         :{title:'Pasif',                 type:'boolean'}
             }
         },
         {
-            caption:'Makinanın üretim parametreleri',
+            title:'Makinanın üretim parametreleri',
             partial:'../../mrp/machines/parameters.ejs'
         }
     ],
-    action:'',
+    
     mode:'view'
     }) 
 %>

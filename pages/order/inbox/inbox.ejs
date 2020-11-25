@@ -2,10 +2,10 @@
     title='Alım Şiparişleri';
 %>
 <%layout('../../_common/layouts/general')%>
-<form action="" method="POST" role="form" name="form1">
+<!-- <form action="" method="POST" role="form" name="form1">
     <div class="row m-0 mt-2">
         <div class="col-12 p-0">
-            <%- partial('../../_common/components/date-filter',{includeForm:false,includeFilterButton:false}) %>
+            <% partial('../../_common/components/date-filter',{includeForm:false,includeFilterButton:false}) %>
             
             <div class="float-left form-inline ml-md-4">
                 <label class="text-primary">Senaryo:</label>
@@ -29,24 +29,55 @@
         </div>
     </div>
 </form>
+ -->
+
+<%-	filterBuilder.generateFilter({
+})
+%>
 
 
-<%- partial('../../_common/components/grid2',{
-    fields:[
-        {name:'orderNo',text:'Sip.No',type:'label', filterField:'orderNo', filter:true,orderable:true},
-        {name:'issueDate',text:'Sip. Tarihi',type:'label', orderable:true},
-        {name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
-        {name:'amount',text:'Tutar',type:'label'},
-        {name:'tax',text:'Vergi',type:'label' },
-        {name:'currency',text:'Döviz',type:'lookup',filter:true, filterField:'documentCurrencyCode', lookupList:currencyList,textField:'text', valueField:'value', dontUseLookup:true },
-        {name:'orderStatus',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
-    ],
-    caption:'Siparisler',
-    addNewButton:true,
-    viewButton:false,
-    editButton:true,
-    deleteButton:true,
-    selection:true,
-    deleteUrl:`/dbapi/order/order/{_id}?sid=${sid}`
-}) 
+<%-	gridBuilder.generateGrid([
+  {title:"Sip.No", field:"orderNo", type:"string"},
+  {title:"Sip. Tarihi", field:"issueDate", type:"string"},
+  {title:"Ünvan", field:"partyName", type:"string"},
+  {title:"Tutar", field:"amount", type:"money"},
+  {title:"Vergi", field:"tax", type:"money"},
+  {title:"Döviz", field:"currency", type:"lookup",lookup:staticValues.currencyList},
+  {title:"Durumu", field:"orderStatus", type:"lookup",lookup:staticValues.orderStatusTypes},
+  
+  ],{
+  	selection:true,
+  	filter:true,
+  	buttons:{
+  		add:true,
+  		edit:true,
+  		delete:true,
+  		view:false,
+  		print:true,
+  		copy:false
+  	}
+  },ui)
+%>
+
+
+<%
+
+// partial('../../_common/components/grid2',{
+//     fields:[
+//         {field:'orderNo',title:'Sip.No',type:'string', filterField:'orderNo', filter:true,orderable:true},
+//         {field:'issueDate',title:'Sip. Tarihi',type:'string', orderable:true},
+//         {field:'partyName',title:'Unvan',type:'string', filter:true, orderable:true},
+//         {field:'amount',title:'Tutar',type:'string'},
+//         {field:'tax',title:'Vergi',type:'string' },
+//         {field:'currency',title:'Döviz',type:'lookup',filter:true, filterField:'documentCurrencyCode', lookup:currencyList,textField:'text', valueField:'value', dontUseLookup:true },
+//         {field:'orderStatus',title:'Durumu', width:'100px',type:'lookup',filter:true, lookup:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
+//     ],
+//     title:'Siparisler',
+//     addNewButton:true,
+//     viewButton:false,
+//     editButton:true,
+//     deleteButton:true,
+//     selection:true,
+//     deleteUrl:`/dbapi/order/order/{_id}?sid=${sid}`
+// }) 
 %>

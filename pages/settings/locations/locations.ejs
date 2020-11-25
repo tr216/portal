@@ -1,43 +1,25 @@
 <%layout('../../_common/layouts/general')%>
 <div id="grid1"></div>
 <script type="text/javascript">
-	var orgList=<%- JSON.stringify(list) %>
-	var list=[]
-	orgList.forEach((e)=>{
-		e['tarih']='2020-06-09'
-		list.push(e)
-	})
-
 	var locationTypes=<%- JSON.stringify(staticValues.locationTypes) %>
 
-	var data=<%- JSON.stringify(ui) %>
-	data.page=1
-	data.pageSize=20
-	data.pageCount=4
-	data.recordCount=78
-
-  var columns=[
-  {title:"Adı", field:"name", type:"string"},
-  {title:"para", field:"para", type:"money"},
-  {title:"uzunluk", field:"uzunluk", type:"number",filter:false},
-  {title:"Turu", field:"type", type:"lookup", lookup:locationTypes},
-  {title:"Alt Lokasyon?", field:"hasChilderen",type:"boolean"},
-  {title:"Pasif?", field:"passive",type:"boolean"}
-  ]
-
-  var s= gridBuilder.generateGrid(columns,{
-  	editable:true,
-  	hidable:true,
+  document.querySelector('#grid1').innerHTML= gridBuilder.generateGrid({
+  	name:{title:"Adı", type:"string"},
+	  type:{title:"Turu", type:"lookup", lookup:<%- JSON.stringify(staticValues.locationTypes) %>},
+	  hasChilderen:{title:"Alt Lokasyon?", type:"boolean"},
+  	passive:{title:"Pasif?", field:"passive",type:"boolean"}
+  },{
   	selection:true,
   	filter:true,
   	buttons:{
   		add:true,
   		edit:true,
   		delete:true,
-  		view:true,
-  		print:true
+  		view:false,
+  		print:false,
+  		copy:true
   	}
-  },data)
+  },ui)
 
-  document.querySelector('#grid1').innerHTML=s
+  
 </script>

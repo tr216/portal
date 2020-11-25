@@ -1,74 +1,23 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/components/grid2',{
-    fields:[
-        {name:'name',text:'Grup adı',type:'label' , filter:true, orderable:true},
-        {name:'account.accountCode', text:'Muh. Kodu', type:'label' , filter:false },
-        {name:'salesAccount.accountCode', text:'Satış', type:'label' , filter:false },
-        {name:'returnAccount.accountCode', text:'Iade', type:'label' , filter:false },
-        {name:'exportSalesAccount.accountCode', text:'İhracat', type:'label' , filter:false },
-        {name:'salesDiscountAccount.accountCode', text:'Şatış indirim', type:'label' , filter:false },
-        {name:'buyingDiscountAccount.accountCode', text:'Alım indirim', type:'label' , filter:false },
-        {name:'costOfGoodsSoldAccount.accountCode', text:'S.M.Maliyeti', type:'label' , filter:false }
-    ],
-    caption:'',
-    addNewButton:true,
-    editButton:true,
-    deleteButton:true,
-    viewButton:true,
-    customButtons:[
-        {inline:true, href:`javascript:copyConfirm('{_id}','{name}')`, title:'Kopyala',icon:'far fa-copy'}
-    ],
-    deleteUrl:`/dbapi/account-groups/{_id}?sid=${sid}`
-    }) 
+<%- gridBuilder.generateGrid({
+  	name:{title:"Grup Ismi", type:"string"},
+  	'account.accountCode':{title:"Muh. Kodu", type:"string"},
+  	'salesAccount.accountCode':{title:"Satış", type:"string"},
+  	'returnAccount.accountCode':{title:"Iade", type:"string"},
+  	'exportSalesAccount.accountCode':{title:"İhracat", type:"string"},
+  	'salesDiscountAccount.accountCode':{title:"Şatış indirim", type:"string"},
+  	'buyingDiscountAccount.accountCode':{title:"Alım indirim", type:"string"},
+  	'costOfGoodsSoldAccount.accountCode':{title:"S.M.Maliyeti", type:"string"}
+  },{
+  	selection:true,
+  	filter:true,
+  	buttons:{
+  		add:true,
+  		edit:true,
+  		delete:true,
+  		view:false,
+  		print:false,
+  		copy:true
+  	}
+  },ui)
 %>
-
-
-<%- partial('../../_common/forms/modal',{
-    modalId:'copyModal',
-    caption:'Kopya',
-    formControls:{
-        newName:{caption:'Yeni isim', type:'textbox', default:''}
-    },
-    mode:'addnew',
-    buttons:[
-        {isCancelButton:true},
-        {href:'javascript:copySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
-    ]
-}) %>
-
-<script type="text/javascript">
-    var temp_id, temp_name;
-    function copyConfirm(id, name){
-        temp_id=id;
-        temp_name=name;
-        $('#newName').val(name + ' kopya');
-        $('#copyModal').modal('show');
-    }
-
-    function copySave(){
-        if($('#newName').val().trim()==''){
-            alert('Isim bos olamaz');
-            return;
-        }
-        $('#copyModal').modal('hide');
-
-        var data={id:temp_id, newName:$('#newName').val()}
-        
-        $.ajax({
-            url:`/dbapi/account-groups/copy?sid=${q.sid}`,
-            data:data,
-            type:'POST',
-            success:function(result){
-                
-                if(result.success){
-                    window.location.reload();
-                }else{
-                    $('#copyModal').modal('show');
-
-                    alert(result.error.code + ' - ' + result.error.message);
-                }
-            }
-        });
-       
-    }
-</script>

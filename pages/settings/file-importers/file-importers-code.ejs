@@ -1,28 +1,28 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form',{
+<%- formBuilder.generateForm({
     tabs:[
         {
             active:(activeTab==0),
-            caption:'File Importer',
-            formControls:{
-                name            :{caption:'Adı',                   type:'label'    ,required:true},
-                importerType :{caption:'Türü', type:'lookup', lookup:staticValues.fileImporterTypes },
-                importFileExtensions :{caption:'Dosya uzantıları', type:'textbox' },
-                passive         :{caption:'Pasif',                 type:'label'}
+            title:'File Importer',
+            controls:{
+                name            :{title:'Adı',                   type:'string'    ,required:true},
+                importerType :{title:'Türü', type:'lookup', lookup:staticValues.fileImporterTypes },
+                importFileExtensions :{title:'Dosya uzantıları', type:'string' },
+                passive         :{title:'Pasif',                 type:'string'}
             }
         },
         {
             active:(activeTab==1),
-            caption:'Kodlar ve Gorevler'
+            title:'Kodlar ve Gorevler'
             ,partial:'../../settings/file-importers/importer-form'
         },
         {
             active:(activeTab==2),
-            caption:'Calistir'
+            title:'Calistir'
             ,partial:'run-code'
         }
     ],
-    action:'',
+    
     mode:'view'
     , backUrl:'/settings/file-importers'
     }) 

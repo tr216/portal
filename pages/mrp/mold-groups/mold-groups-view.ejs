@@ -1,9 +1,9 @@
 <%layout('../../_common/layouts/plain')%>
-<%- partial('../../_common/forms/form',{
-    formControls:{
-        name     :{caption:'Adı',                type:'textbox' ,required:true}
+<%- formBuilder.generateForm({
+    controls:{
+        name     :{title:'Adı',                type:'string' ,required:true}
     },
-    action:'',
+    
     mode:'view'
     }) 
 %>

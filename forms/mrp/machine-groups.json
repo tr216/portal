@@ -1,0 +1,53 @@
+{
+	"index":[
+		{
+			"type": "grid",
+			"fields": {
+				"name":{"title":"Adı", "type":"string"},
+				"parameters":{"title":"Parametreler(JSON format)", "type":"json"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": false
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/mrp-machine-groups"
+				}
+			},
+			"data": {
+				"docs":[],
+				"page":1,
+				"pageSize":10,
+				"pageCount":0,
+				"recordCount":0
+			}
+
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields": {
+				"name":{"title":"Adı", "type":"string"},
+				"parameters":{"title":"Parametreler(JSON format)", "type":"json"}
+			},
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/mrp-machine-groups"
+				}
+			}
+		}
+	]
+}

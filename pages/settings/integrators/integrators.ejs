@@ -1,12 +1,12 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'eIntegrator',text:'Entegrator',type:'lookup',lookup:eIntegrators, orderable:true},
-        {name:'name',text:'Adı',type:'label', orderable:true},
-        {name:'isDefault',text:'Varsayılan',type:'checkbox',width:1, orderable:false},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1, orderable:false}
+        {field:'eIntegrator',title:'Entegrator',type:'lookup',lookup:eIntegrators, orderable:true},
+        {field:'name',title:'Adı',type:'string', orderable:true},
+        {field:'isDefault',title:'Varsayılan',type:'boolean',width:1, orderable:false},
+        {field:'passive',title:'Pasif',type:'boolean',width:1, orderable:false}
     ],
-    caption:'Entegrator Tanimlari',
+    title:'Entegrator Tanimlari',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

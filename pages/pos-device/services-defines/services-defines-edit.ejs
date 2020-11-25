@@ -1,15 +1,15 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form',{
+<%- formBuilder.generateForm({
    
-    formControls:{
-        serviceType:{caption:'Servis Turu', type:'lookup' , lookup:serviceTypes   ,required:true},
-        name:{caption:'Adı(nick name)', type:'textbox'    ,required:true},
-        url:{caption:'Web service url', type:'textbox'    },
-        username:{caption:'Username', type:'textbox'    },
-        password:{caption:'Password', type:'textbox'    },
-        passive:{caption:'Pasif?', type:'checkbox'    }
+    controls:{
+        serviceType:{title:'Servis Turu', type:'lookup' , lookup:serviceTypes   ,required:true},
+        name:{title:'Adı(nick name)', type:'string'    ,required:true},
+        url:{title:'Web service url', type:'string'    },
+        username:{title:'Username', type:'string'    },
+        password:{title:'Password', type:'string'    },
+        passive:{title:'Pasif?', type:'boolean'    }
     },
-    action:'',
+    
     mode:'edit'
     }) 
 %>

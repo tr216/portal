@@ -131,47 +131,50 @@ function popupCenter(url, title, w, h,isDialog=false) {
 }
 
 
-function save_form_settings(e){
-	if(q){
-		if(q.mid && e.target.id){
-			var sbuf=localStorage.getItem(`collapse_settings_${q.mid}`)
-			var collapse_settings={}
-			if(sbuf){
-				collapse_settings=JSON.parse(sbuf)
-			}
-			collapse_settings[`${e.target.id}`]=e.type
-			localStorage.setItem(`collapse_settings_${q.mid}`,JSON.stringify(collapse_settings))
-		}
+function load_card_collapses(){
+
+	var kartlar=document.getElementsByClassName('card-collapse')
+	var i=0
+	while(i<kartlar.length){
+		$(`#${kartlar[i].id}`).collapse(pageSettings.getItem(`collapse_${kartlar[i].id}`))
+		i++
 	}
 }
+load_card_collapses()
 
-function load_form_settings(){
-	var q=getAllUrlParams();
-	if(q.mid){
-		var sbuf=localStorage.getItem(`collapse_settings_${q.mid}`)
-		var collapse_settings={}
-		if(sbuf){
-			collapse_settings=JSON.parse(sbuf)
-		}
-		Object.keys(collapse_settings).forEach((e)=>{
-			$(`#${e}`).collapse(collapse_settings[e])
-		})
-	}
-}
-
-load_form_settings()
 
 $('.card-collapse').on('show.bs.collapse',(e)=>{
-	
-	save_form_settings(e)	
+	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+	// save_form_settings(e)	
 })
 $('.card-collapse').on('hide.bs.collapse',(e)=>{
-	save_form_settings(e)
+	// save_form_settings(e)
+	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
 })
 
 $('.modal .card-collapse').on('show.bs.collapse',(e)=>{
-	save_form_settings(e)	
+	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
 })
 $('.modal .card-collapse').on('hide.bs.collapse',(e)=>{
-	save_form_settings(e)
+	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+})
+
+
+
+// jQuery('document').ready(function(){
+	/* For disabling Chrome Autocomplete */
+	//setTimeout(()=>{
+		//jQuery( ":text" ).attr('autocomplete','pre'+Math.random(0,100000000))
+		//jQuery( ":text" ).attr('autocomplete','chrome-off')
+	//},200)
+	
+	
+// })
+
+$(document).ready(function(){
+	$(':text').attr('autocomplete','off')
+})
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
 })

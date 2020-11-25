@@ -2,9 +2,9 @@
 
 <%- formBuilder.generateForm({
 		controls:{
-        locationName:{caption:'Lokasyon ismi', type:'textbox'    ,required:true},
-        locationType:{caption:'Lokasyon Turu', type:'lookup' , lookup:staticValues.locationTypes   ,required:true},
-        hasSubLocations:{caption:'Alt Lokasyonu var mi?', type:'checkbox'    },
-        passive:{caption:'Pasif?', type:'checkbox'    }
+        locationName:{title:'Lokasyon ismi', type:'string'    ,required:true},
+        locationType:{title:'Lokasyon Turu', type:'lookup' , lookup:staticValues.locationTypes   ,required:true},
+        hasSubLocations:{title:'Alt Lokasyonu var mi?', type:'boolean'    },
+        passive:{title:'Pasif?', type:'boolean'    }
     }},form,'addnew') 
 %>

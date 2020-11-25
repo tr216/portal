@@ -1,10 +1,10 @@
 <%layout('../../_common/layouts/plain')%>
-<%- partial('../../_common/forms/form',{
+<%- formBuilder.generateForm({
    
-    formControls:{
-        taskDoc:{caption:'Görev', type:'json' }
+    controls:{
+        taskDoc:{title:'Görev', type:'json' }
     },
-    action:'',
+    
     mode:'view'
     }) 
 %>

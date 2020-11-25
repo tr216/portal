@@ -2,12 +2,12 @@
 
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'module',    text:'Modul',    type:'lookup' , filter:true, lookupList:printDesignModuleList}, 
-        {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
-        {name:'isDefault',text:'Varsayılan?',type:'checkbox',width:1},
-        {name:'passive',text:'Pasif?',type:'checkbox',width:1},
+        {field:'module',    title:'Modul',    type:'lookup' , filter:true, lookup:printDesignModuleList}, 
+        {field:'name',title:'Adı',type:'string',filter:true, orderable:true},
+        {field:'isDefault',title:'Varsayılan?',type:'boolean',width:1},
+        {field:'passive',title:'Pasif?',type:'boolean',width:1},
     ],
-    caption:'Yazdırma Tasarımları',
+    title:'Yazdırma Tasarımları',
     addNewButton:true,
     editButton:true,
     deleteButton:true,
@@ -22,14 +22,14 @@
 
 <%- partial('../../_common/forms/modal',{
     modalId:'itemCopyModal',
-    caption:'Kopya',
-    formControls:{
-        newName:{caption:'Yeni yazdirma tasarimi', type:'textbox', default:''}
+    title:'Kopya',
+    controls:{
+        newName:{title:'Yeni yazdirma tasarimi', type:'string', default:''}
     },
     mode:'addnew',
     buttons:[
         {isCancelButton:true},
-        {href:'javascript:itemCopySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+        {href:'javascript:itemCopySave()', title:'Kopyala',  title:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
     ]
 }) %>
 

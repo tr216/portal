@@ -1988,7 +1988,7 @@ pre code {
   -webkit-overflow-scrolling: touch;
 }
 .table-responsive > .table-bordered {
-  border: 0;
+  /*border: 0;*/
 }
 
 .form-control {
@@ -6173,7 +6173,7 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-  background-color: #343a40 !important;
+  background-color: #242424 !important;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
@@ -9844,6 +9844,16 @@ a.text-success:hover, a.text-success:focus {
   color: #19692c !important;
 }
 
+
+.text-orange {
+  color: #fd7e14 !important;
+}
+
+a.text-orange:hover, a.text-orange:focus {
+  color: #3d6e04 !important;
+}
+
+
 .text-info {
   color: #17a2b8 !important;
 }
@@ -10054,11 +10064,13 @@ body {
   display: flex;
 }
 #layoutSidenav #layoutSidenav_nav {
-  flex-basis: 225px;
+	min-width: 240px;
+	max-width: 240px;
+ /* flex-basis: 225px;
   flex-shrink: 0;
   transition: transform 0.15s ease-in-out;
   z-index: 1038;
-  transform: translateX(-225px);
+  transform: translateX(-225px);*/
 }
 #layoutSidenav #layoutSidenav_content {
   position: relative;
@@ -10068,7 +10080,7 @@ body {
   min-width: 0;
   flex-grow: 1;
   min-height: calc(100vh - 56px);
-  margin-left: -225px;
+  /*margin-left: -225px;*/
 }
 
 .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
@@ -10242,32 +10254,39 @@ body {
 }
 
 .sb-sidenav-light {
-  background-color: #f8f9fa;
-  color: #212529;
+  background-color: #333333;
+  color: #ffffff;
 }
 .sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: #adb5bd;
+  color: #ffffff;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link {
-  color: #212529;
+  color: #ffffff;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: #adb5bd;
+  color: #ffffff;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link .sb-sidenav-collapse-arrow {
-  color: #adb5bd;
+  color: #ffffff;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link:hover {
-  color: #007bff;
+	background-color: #fd7e14;
+  color: #ffffff;
 }
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active {
-  color: #007bff;
+	background-color: #242424;
+  color: #ffffff;
 }
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active:hover {
+	background-color: #fd7e14;
+  color: #ffffff;
+}
+
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
-  color: #007bff;
+  color: #ffffff;
 }
 .sb-sidenav-light .sb-sidenav-footer {
-  background-color: #e9ecef;
+  background-color: #333333;
 }
 
 .scroll-to-top {
@@ -10279,6 +10298,7 @@ body {
     height: 2.75rem;
     text-align: center;
     color: #fff;
-    background: rgba(90, 92, 105, 0.5);
+    /*background: rgba(90, 92, 105, 0.5);*/
+    background: rgba(220, 115, 27, 0.5);
     line-height: 46px;
 }

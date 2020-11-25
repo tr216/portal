@@ -1,0 +1,151 @@
+<nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
+	<div class="sb-sidenav-menu">
+		<div class="nav">
+			<% leftMenu.forEach((item,index)=>{ %>
+			<%- generateMenu(item) %>
+			<% }) %>
+			<hr class="w-100 mt-3" style="border-top: 1px solid #9C27B0;">
+			<a id="tawkto" class="nav-link" href="javascript:openInNewTab('https://tawk.to/chat/5f4bbf07cc6a6a5947b01c77/default');">
+				<div class="sb-nav-link-icon"><i class="fas fa-comment-dots"></i></div>
+				Destek216
+			</a>
+		</div>
+	</div>
+
+</nav>
+
+<%
+function generateMenu(menu,parent){
+	var s=``
+	var bActive=false
+
+
+	
+	if(typeof menu.nodes!='undefined'){
+		if(menu.nodes.length>0){
+			bActive=false
+			menu.nodes.forEach((e)=>{
+				if(mid==e.mId){
+					bActive=true
+					return
+				}
+				if(typeof e.nodes!='undefined'){
+					e.nodes.forEach((e2)=>{
+						if(mid==e2.mId){
+							bActive=true
+							return
+						}
+					})
+				}
+			})
+			s=`\n`
+			if(bActive==false){
+				s+=`<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapse${menu.mId.replaceAll('.','-')}" aria-expanded="false" aria-controls="pagesCollapse${menu.mId.replaceAll('.','-')}">\n`
+			}else{
+				s+=`<a class="nav-link" href="#" data-toggle="collapse" data-target="#pagesCollapse${menu.mId.replaceAll('.','-')}" aria-expanded="false" aria-controls="pagesCollapse${menu.mId.replaceAll('.','-')}">\n`
+			}
+			
+			s+=`<div class="sb-nav-link-icon"><i class="${menu.icon || 'fas fa-table'}"></i></div>
+			${menu.text}
+			<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+			</a>`
+
+			if(bActive==false){
+				s+=`<div class="collapse" `
+			}else{
+				s+=`<div class="collapse show" `
+			}
+			if(parent){
+				s+=`id="pagesCollapse${menu.mId.replaceAll('.','-')}" data-parent="#pagesCollapse${parent.mId.replaceAll('.','-')}">`
+			}else{
+				s+=`id="pagesCollapse${menu.mId.replaceAll('.','-')}" data-parent="#sidenavAccordion">`
+			}
+			
+			s+=`<nav class="sb-sidenav-menu-nested nav accordion" id="navId${menu.mId.replaceAll('.','-')}">
+			`
+			menu.nodes.forEach((e)=>{
+				s+=generateMenu(e,menu)
+			})
+			s+=`
+			</nav>
+			</div>`
+		}
+		return s
+	}else{
+		if(mid==menu.mId){
+			bActive=true
+		}
+		s=`\n`
+		if(bActive==false){
+			s+=`<a id="${menu.mId.replaceAll('.','-')}" class="nav-link" href="${menuPath(menu)}">`
+		}else{
+			s+=`<a id="${menu.mId.replaceAll('.','-')}" class="nav-link active" href="${menuPath(menu)}">`
+		}
+		s+=`<div class="sb-nav-link-icon"><i class="${menu.icon || 'fas fa-table'}"></i></div>
+		${menu.text}
+		</a>
+		`
+		return s
+
+	}
+}
+
+function menuPath(menu){
+	if((menu.path || '')=='')
+		return ''
+	var yol=menu.path
+	if(yol.indexOf('?')>-1)
+			yol+=`&`
+		else
+			yol+=`?`
+	if(yol.indexOf('sid=')<0){
+		yol+=`sid=${sid}`
+	}
+
+	if(yol.indexOf('mid=')<0){
+		yol+=`&mid=${menu.mId}`
+	}
+	return yol
+}
+%>
+<script type="text/javascript">
+	
+	function cboEasyDateUrlParams(value){
+		var date1=new Date();
+		var date2=new Date();
+		switch(value){
+			case 'today':break;
+			case 'thisWeek':
+			date1=date1.addDays(-1 * (date1.getDay()-1));
+			date2=date2.addDays(7- date2.getDay());
+			break;
+			case 'thisMonth': 
+			date1=date1.addDays(-1 * (date1.getDate()-1));
+			date2=date2.lastThisMonth();
+			break;
+			case 'last1Week':
+			date1=date1.addDays(-7);
+			break;
+
+			case 'last1Month':
+			date1=new Date(date1.setMonth(date1.getMonth()-1))
+			break;
+			case 'last3Months':
+			date1=new Date(date1.setMonth(date1.getMonth()-3))
+			break;
+			case 'last6Months':
+			date1=new Date(date1.setMonth(date1.getMonth()-6))
+			break;
+			case 'thisYear':
+			date1=new Date(date1.getFullYear(),0,1);
+			date2=new Date(date2.getFullYear(),11,31);
+			break;
+			case 'last1Year':
+			date1=new Date(date1.setMonth(date1.getMonth()-12))
+			break;
+			default:
+			break;
+		}
+		return '&date1=' + date1.yyyymmdd() + '&date2=' + date2.yyyymmdd();
+	}
+</script>

@@ -1,14 +1,14 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'serviceType',text:'Türü',type:'lookup',lookup:serviceTypes, orderable:true},
-        {name:'name',text:'Adı',type:'label', orderable:true},
-        {name:'url',text:'url',type:'label', orderable:true},
-        {name:'username',text:'username',type:'label', orderable:true},
-        {name:'password',text:'password',type:'label', orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1, orderable:true}
+        {field:'serviceType',title:'Türü',type:'lookup',lookup:serviceTypes, orderable:true},
+        {field:'name',title:'Adı',type:'string', orderable:true},
+        {field:'url',title:'url',type:'string', orderable:true},
+        {field:'username',title:'username',type:'string', orderable:true},
+        {field:'password',title:'password',type:'string', orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean',width:1, orderable:true}
     ],
-    caption:'Yazarkasa Servis Tanimlari',
+    title:'Yazarkasa Servis Tanimlari',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

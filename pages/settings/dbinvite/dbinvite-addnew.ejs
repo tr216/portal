@@ -9,13 +9,13 @@
     <input type="text" form="form-general" name="memberId"  id="memberId" hidden="true" value="<% if(typeof form.memberId!='undefined'){%><%=form.memberId%><%}%>">
 </div>
 
-<%- partial('../../_common/forms/form',{
-    formControls:{
-        canRead         :{caption:'Okuyabilir?',                 type:'checkbox'},
-        canWrite         :{caption:'Yazabilir?',                 type:'checkbox'},
-        canDelete         :{caption:'Silebilir?',                 type:'checkbox'}
+<%- formBuilder.generateForm({
+    controls:{
+        canRead         :{title:'Okuyabilir?',                 type:'boolean'},
+        canWrite         :{title:'Yazabilir?',                 type:'boolean'},
+        canDelete         :{title:'Silebilir?',                 type:'boolean'}
     },
-    action:'',
+    
     mode:'addnew',
     backUrl:'/settings/dbinvite'
     }) 

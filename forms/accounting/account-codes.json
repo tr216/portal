@@ -1,0 +1,61 @@
+{
+	"index":[
+		{
+			"type": "grid",
+			"fields": {
+				"accountCode" : {"title":"Hesap Kodu", "type":"string"},
+  			"name" 				: {"title":"Hesap Ismi", "type":"string"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": true
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/accounts"
+				}
+			},
+			"data": {
+				"docs":[],
+				"page":1,
+				"pageSize":10,
+				"pageCount":0,
+				"recordCount":0
+			}
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields": {
+				"parentAccount":{"title":"Bağlı hesap", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/accounts",
+						"label":"{accountCode} - {name}"
+					},
+					"col":6
+				},
+				"code":{"title":"Alst Hesap Kodu", "type":"string","col":6 , "required":true},
+				"name":{"title":"Hesap Ismi", "type":"string", "required":true}
+			},
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/accounts"
+				}
+			}
+		}
+	]
+}

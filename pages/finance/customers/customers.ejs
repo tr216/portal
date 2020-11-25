@@ -1,17 +1,36 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/components/grid2',{
-    fields:[
-        {name:'partyName.name.value',text:'Müşteri adı',type:'label' , filter:true, filterField:'partyName', orderable:true, width:'60%'},
-        {name:'postalAddress.cityName.value',text:'Şehir',type:'label' , filter:true, filterField:'cityName', orderable:true},
-        {name:'postalAddress.district.value',text:'İlçe',type:'label' , filter:true, filterField:'district', orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1, filter:true, orderable:true}
-    ],
-    caption:'',
-    addNewButton:true,
-    editButton:true,
-    deleteButton:true,
-    viewButton:true,
-    deleteUrl:`/dbapi/customers/{_id}?sid=${sid}`
-    }) 
+<%- gridBuilder.generateGrid({
+  	'partyName.name.value':{title:"Müşteri adı", type:"string",filterField:'partyName'},
+  	'postalAddress.cityName.value':{title:"Şehir", type:"string",filterField:'cityName'},
+  	'postalAddress.district.value':{title:"İlçe", type:"string",filterField:'district'},
+  	passive:{title:"Pasif?", field:"passive",type:"boolean"}
+  },{
+  	selection:true,
+  	filter:true,
+  	buttons:{
+  		add:true,
+  		edit:true,
+  		delete:true,
+  		view:true,
+  		print:false,
+  		copy:true
+  	}
+  },ui)
+%>
+<%
+// partial('../../_common/components/grid2',{
+//     fields:[
+//         {field:'partyName.name.value',title:'Müşteri adı',type:'string' , filter:true, filterField:'partyName', orderable:true, width:'60%'},
+//         {field:'postalAddress.cityName.value',title:'Şehir',type:'string' , filter:true, filterField:'cityName', orderable:true},
+//         {field:'postalAddress.district.value',title:'İlçe',type:'string' , filter:true, filterField:'district', orderable:true},
+//         {field:'passive',title:'Pasif',type:'boolean',width:1, filter:true, orderable:true}
+//     ],
+//     title:'',
+//     addNewButton:true,
+//     editButton:true,
+//     deleteButton:true,
+//     viewButton:true,
+//     deleteUrl:`/dbapi/customers/{_id}?sid=${sid}`
+//     }) 
 %>
 

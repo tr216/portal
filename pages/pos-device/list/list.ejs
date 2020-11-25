@@ -2,14 +2,14 @@
 
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'location.locationName',    text:'Lokasyon',    type:'lookup' , filter:true, filterField:'location', lookupList:locationList, textField:'locationName', valueField:'_id'}, 
-        {name:'service.name',             text:'Servis adı',    type:'lookup' , filter:true, filterField:'service', lookupList:serviceList, textField:'name', valueField:'_id'}, 
-        {name:'localConnector.name',   text:'Local Connector',    type:'lookup' , filter:true, filterField:'localConnector', lookupList:localConnectorList, textField:'name', valueField:'_id'}, 
-        {name:'deviceModel',text:'Model',type:'label',filter:true, orderable:true},
-        {name:'deviceSerialNo',text:'Seri No',type:'label', filter:true, orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+        {field:'location.locationName',    title:'Lokasyon',    type:'lookup' , filter:true, filterField:'location', lookup:locationList, textField:'locationName', valueField:'_id'}, 
+        {field:'service.name',             title:'Servis adı',    type:'lookup' , filter:true, filterField:'service', lookup:serviceList, textField:'name', valueField:'_id'}, 
+        {field:'localConnector.name',   title:'Local Connector',    type:'lookup' , filter:true, filterField:'localConnector', lookup:localConnectorList, textField:'name', valueField:'_id'}, 
+        {field:'deviceModel',title:'Model',type:'string',filter:true, orderable:true},
+        {field:'deviceSerialNo',title:'Seri No',type:'string', filter:true, orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean',width:1}
     ],
-    caption:'Cihaz Listesi',
+    title:'Cihaz Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

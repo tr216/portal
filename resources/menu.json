@@ -23,7 +23,8 @@
 		"nodes":[
 			{"module":"mrp.productionOrders", "text":"Üretim Emirleri", "path":"/mrp/production-orders","icon":"fas fa-fill-drip"},
 			{"module":"mrp.productionOrdersPlan", "text":"Üretim Cizelge", "path":"/mrp/production-orders-plan","icon":"fas fa-calendar-alt"},
-			{"module":"mrp.waitingSaleOrders", "text":"Mamul/Yarı Mamul", "path":"/mrp/products",  "icon":"fas fa-cubes"},
+			{"module":"mrp.products", "text":"Ürünler", "path":"/mrp/products",  "icon":"fas fa-cubes"},
+			{"module":"mrp.semiProducts", "text":"Yarı Mamul", "path":"/mrp/semi-products",  "icon":"fas fa-cubes"},
 			{"module":"mrp.materialPlanning", "text":"Malzeme Planlama", "path":"/general/closed-module","icon":"fas fa-file-alt"},	
 			{"text":"Raporlar", "icon":"fas fa-sliders-h", 
 				"nodes":[
@@ -33,8 +34,8 @@
 			},
 			{"text":"Tanimlamalar", "icon":"fas fa-sliders-h", 
 				"nodes":[
-					{"module":"mrp.defines.rawMaterials", "text":"Hammaddeler",   "path":"/inventory/items?itemType=raw-material", "icon":"fas fa-atom"},
-					{"module":"mrp.defines.helperMaterials", "text":"Yardımcı Malzemeler", "path":"/inventory/items?itemType=helper-material", "icon":"fas fa-thermometer-half"},
+					{"module":"mrp.defines.rawMaterials", "text":"Hammaddeler",   "path":"/mrp/raw-materials", "icon":"fas fa-atom"},
+					{"module":"mrp.defines.helperMaterials", "text":"Yardımcı Malzemeler", "path":"/mrp/helper-materials", "icon":"fas fa-thermometer-half"},
 					{"module":"mrp.defines.stations", "text":"Üretim İstasyonları",	 "path":"/mrp/stations", "icon":"fas fa-bezier-curve"},
 					{"module":"mrp.defines.machineGroups", "text":"Makina Grupları",	  "path":"/mrp/machine-groups", "icon":"fas fa-layer-group"},
 					{"module":"mrp.defines.machines", "text":"Makinalar",	  "path":"/mrp/machines", "icon":"fas fa-cogs"},

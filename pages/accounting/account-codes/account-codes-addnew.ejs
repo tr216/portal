@@ -1,53 +1,14 @@
 <%layout('../../_common/layouts/general')%>
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-group">
-            <label class="control-label" for="">Ana Hesap</label>
-            <input type="text" form="form-general" name="parentAccountCode" placeholder="Bagli hesap kodu" id="parentAccountCode" class="form-control" autocomplete="off" value="">
-            <input type="text" form="form-general" name="parentAccount"  id="parentAccount" hidden="true" value="">
-        </div>
-    </div>
-</div>
-<%- partial('../../_common/forms/form', {
-    formControls:{
-        code:{caption:'Hesap Kodu', type:'textbox'    ,required:true},
-        name:{caption:'Hesap Ismi', type:'textbox'    ,required:true}
-    },
-    action:'',
-    mode:'addnew'
-    }) 
+<%- formBuilder.generateForm( {
+    parentAccount:{
+    	title:'Ana Hesap', type:'remoteLookup',required:true, 
+    	url:{
+    		search:`/dbapi/accounts?accountCode={input}&sid=${q.sid}`,
+    		id:`/dbapi/accounts/{_id}?&sid=${q.sid}`,
+    		label:`{accountCode} - {name}`
+    	}
+  	},
+    code:{title:'Hesap Kodu', type:'string'    ,required:true},
+    name:{title:'Hesap Ismi', type:'string'    ,required:true}
+    },{mode:'addnew',isForm:true},form) 
 %>
-
-<script type="text/javascript">
-     $(document).ready(function(){
-        $('#parentAccountCode').autocomplete({
-            source:function(request,response){
-                    $.ajax({
-                    url:`/dbapi/accounts?accountCode=' +  encodeURIComponent(request.term) + '&sid=<%=sid%>',
-                    type:'GET',
-                    dataType: 'json',
-                    success: function(result) {
-                            if(result.success){
-                                var dizi=[];
-                                for(var i=0;i<result.data.docs.length;i++){
-                                    var item=result.data.docs[i];
-                                    
-                                    dizi.push({label:(item.accountCode + ' - ' + item.name),value:(item.accountCode + ' - ' + item.name), obj:item});
-                                }
-                                response(dizi);
-                            }
-                        },
-                    error:function(err){
-                        console.error('err:',err);
-                    }
-                });
-            },
-            select: function (event, ui) {
-                    $("#parentAccountCode").val(ui.item.label); 
-                    $("#parentAccount").val(ui.item.obj._id); 
-                    return false;
-                }
-        });
-
-    });
-</script>

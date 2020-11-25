@@ -1,16 +1,16 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'name',text:'Adı/Kodu',type:'label' , filter:true, orderable:true},
-        {name:'description',text:'Açıklama',type:'label' , filter:true, orderable:true},
-        {name:'width',text:'En',type:'label' , filter:true, orderable:true},
-        {name:'length',text:'Boy',type:'label' , filter:true, orderable:true},
-        {name:'height',text:'Yukseklik',type:'label' , filter:true, orderable:true},
-        {name:'weight',text:'Gramaj/Ağırlık',type:'label' , filter:true, orderable:true},
-        {name:'maxWeight',text:'Max Kg',type:'label' , filter:true, orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox', filter:true, width:'120px', orderable:true}
+        {field:'name',title:'Adı/Kodu',type:'string' , filter:true, orderable:true},
+        {field:'description',title:'Açıklama',type:'string' , filter:true, orderable:true},
+        {field:'width',title:'En',type:'string' , filter:true, orderable:true},
+        {field:'length',title:'Boy',type:'string' , filter:true, orderable:true},
+        {field:'height',title:'Yukseklik',type:'string' , filter:true, orderable:true},
+        {field:'weight',title:'Gramaj/Ağırlık',type:'string' , filter:true, orderable:true},
+        {field:'maxWeight',title:'Max Kg',type:'string' , filter:true, orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean', filter:true, width:'120px', orderable:true}
     ],
-    caption:'Palet Listesi',
+    title:'Palet Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,
@@ -24,14 +24,14 @@
 
 <%- partial('../../_common/forms/modal',{
     modalId:'itemCopyModal',
-    caption:'Kopya',
-    formControls:{
-        newName:{caption:'Yeni Palet isim/kod/numara', type:'textbox', default:''}
+    title:'Kopya',
+    controls:{
+        newName:{title:'Yeni Palet isim/kod/numara', type:'string', default:''}
     },
     mode:'addnew',
     buttons:[
         {isCancelButton:true},
-        {href:'javascript:itemCopySave()', title:'Kopyala',  text:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
+        {href:'javascript:itemCopySave()', title:'Kopyala',  title:'Kopyala',icon:'far fa-copy', class:'btn btn-primary'}
     ]
 }) %>
 

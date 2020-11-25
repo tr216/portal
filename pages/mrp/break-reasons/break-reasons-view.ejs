@@ -1,12 +1,12 @@
 <%layout('../../_common/layouts/plain')%>
-<%- partial('../../_common/forms/form',{
-    formControls:{
-        name     :{caption:'Adı',                type:'textbox' ,required:true},
-        description  :{caption:'Açıklama',        type:'textbox'    },
-        level  :{caption:'Level',        type:'number'    },
-        passive         :{caption:'Pasif',                 type:'checkbox'}
+<%- formBuilder.generateForm({
+    controls:{
+        name     :{title:'Adı',                type:'string' ,required:true},
+        description  :{title:'Açıklama',        type:'string'    },
+        level  :{title:'Level',        type:'number'    },
+        passive         :{title:'Pasif',                 type:'boolean'}
     },
-    action:'',
+    
     mode:'view'
     }) 
 %>

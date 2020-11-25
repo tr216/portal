@@ -2,14 +2,14 @@
 
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'station',    text:'Istasyon',    type:'lookup' , filter:true, lookupList:stationList, textField:'name', valueField:'_id'}, 
-        {name:'machineGroup',    text:'Grubu',    type:'lookup' , filter:true, lookupList:machineGroupList, textField:'name', valueField:'_id'}, 
-        {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
-        {name:'description',text:'Açıklama',type:'label', filter:true, orderable:true},
-        {name:'power',text:'Güç(watt)',type:'label', filter:true, orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+        {field:'station',    title:'Istasyon',    type:'lookup' , filter:true, lookup:stationList, textField:'name', valueField:'_id'}, 
+        {field:'machineGroup',    title:'Grubu',    type:'lookup' , filter:true, lookup:machineGroupList, textField:'name', valueField:'_id'}, 
+        {field:'name',title:'Adı',type:'string',filter:true, orderable:true},
+        {field:'description',title:'Açıklama',type:'string', filter:true, orderable:true},
+        {field:'power',title:'Güç(watt)',type:'string', filter:true, orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean',width:1}
     ],
-    caption:'Makina Listesi',
+    title:'Makina Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

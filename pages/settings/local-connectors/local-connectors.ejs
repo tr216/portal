@@ -1,18 +1,18 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'name',text:'Adı',type:'label'},
-        {name:'connectorId',text:'Connector ID',type:'label'},
-        {name:'status',text:'Status',type:'label'},
-        {name:'connectionType',text:'Baglanti Turu',type:'lookup', lookup:connectionTypes},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+        {field:'name',title:'Adı',type:'string'},
+        {field:'connectorId',title:'Connector ID',type:'string'},
+        {field:'status',title:'Status',type:'string'},
+        {field:'connectionType',title:'Baglanti Turu',type:'lookup', lookup:connectionTypes},
+        {field:'passive',title:'Pasif',type:'boolean',width:1}
     ],
-    caption:'Lokal Connector Listesi',
+    title:'Lokal Connector Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,
     viewButton:true,
-    customButtons:[{inline:true, href:'/settings/local-connectors/code/{_id}?sid=${sid}`,text:'Kodlama',icon:'fas fa-code'}],
+    customButtons:[{inline:true, href:'/settings/local-connectors/code/{_id}?sid=${sid}`,title:'Kodlama',icon:'fas fa-code'}],
     deleteUrl:`/dbapi/local-connectors/{_id}?sid=${sid}`
     }) 
 %>

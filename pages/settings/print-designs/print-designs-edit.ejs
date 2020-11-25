@@ -1,13 +1,13 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form',{
-    formControls:{
-        module        :{caption:'Modül',             type:'lookup', lookup:printDesignModuleList, required:true},
-        name        :{caption:'Adı',                type:'textbox' ,required:true},
-        isDefault   :{caption:'Varsayılan',                 type:'checkbox'},
-        design  :{caption:'Tasarım(EJS/html)',      type:'textarea',  rows:30  },
-        passive         :{caption:'Pasif',                 type:'checkbox'}
+<%- formBuilder.generateForm({
+    controls:{
+        module        :{title:'Modül',             type:'lookup', lookup:printDesignModuleList, required:true},
+        name        :{title:'Adı',                type:'string' ,required:true},
+        isDefault   :{title:'Varsayılan',                 type:'boolean'},
+        design  :{title:'Tasarım(EJS/html)',      type:'textarea',  rows:30  },
+        passive         :{title:'Pasif',                 type:'boolean'}
     },
-    action:'',
+    
     mode:'edit'
     }) 
 %>

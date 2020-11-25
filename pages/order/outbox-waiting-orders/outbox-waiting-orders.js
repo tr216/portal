@@ -28,10 +28,10 @@ module.exports = function(req,res,callback){
 
 
 function getList(req,res,data,callback){
-	data.docStatusTypes.unshift({text:'-Tümü-',value:''});
-	data.currencyList.unshift({text:'-Tümü-',value:''});
-	data.docProfileIdList.unshift({text:'-Tümü-',value:''});
-	data.docTypeCodeList.unshift({text:'-Tümü-',value:''});
+	data.docStatusTypes.unshift({title:'-Tümü-',value:''});
+	data.currencyList.unshift({title:'-Tümü-',value:''});
+	data.docProfileIdList.unshift({title:'-Tümü-',value:''});
+	data.docTypeCodeList.unshift({title:'-Tümü-',value:''});
 	
 	initLookUpLists(req,res,data,(err,data)=>{
 		data.eIntegratorList.unshift({_id:'',name:'-Tümü-'})

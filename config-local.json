@@ -16,6 +16,7 @@
 		"icon" : "/img/plaset-icon-256x256.png",
 		"brand_name" : "Plaset MRP",
 		"styles" : "/css/custom.css"
-	}
-
+	},
+	"status":"development",
+	"tmpDir":"C:\\arge\\tr216\\temp"
 }

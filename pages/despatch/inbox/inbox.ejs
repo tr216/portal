@@ -41,16 +41,16 @@
 
 <%- partial('../../_common/components/grid2',{
 	fields:[
-	{name:'despatchNo',text:'İrs.No',type:'label', filterField:'despatchNo', filter:true,orderable:true},
-	{name:'issueDate',text:'İrs. Tarihi',type:'label', orderable:true},
-	{name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
-	{name:'doc.ID',text:'ID',type:'label', visible:false},
-	{name:'doc.despatchStatus',text:'despatchStatus',type:'label', visible:false},
-	{name:'receiptStatusHtml',text:'Teslim Durumu', width:'150px',type:'lookup',filter:true, lookupList:receiptStatusTypes, orderable:false , dontUseLookup:true},
-	{name:'receiptStatus',text:'receiptStatus',type:'label', visible:false},
-	{name:'despatchStatusHtml',text:'Durumu', width:'100px',type:'lookup',filter:true,filterField:'despatchStatus', lookupList:docStatusTypes, orderable:false , dontUseLookup:true}
+	{field:'despatchNo',title:'İrs.No',type:'string', filterField:'despatchNo', filter:true,orderable:true},
+	{field:'issueDate',title:'İrs. Tarihi',type:'string', orderable:true},
+	{field:'partyName',title:'Unvan',type:'string', filter:true, orderable:true},
+	{field:'doc.ID',title:'ID',type:'string', visible:false},
+	{field:'doc.despatchStatus',title:'despatchStatus',type:'string', visible:false},
+	{field:'receiptStatusHtml',title:'Teslim Durumu', width:'150px',type:'lookup',filter:true, lookup:receiptStatusTypes, orderable:false , dontUseLookup:true},
+	{field:'receiptStatus',title:'receiptStatus',type:'string', visible:false},
+	{field:'despatchStatusHtml',title:'Durumu', width:'100px',type:'lookup',filter:true,filterField:'despatchStatus', lookup:docStatusTypes, orderable:false , dontUseLookup:true}
 	],
-	caption:'İrsaliyeler',
+	title:'İrsaliyeler',
 	addNewButton:true,
 	viewButton:false,
 	editButton:true,

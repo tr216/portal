@@ -1,14 +1,14 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form',{
-    formControls:{
-        username            :{caption:'Kullanici Adı',                   type:'textbox'    ,required:true},
-        name            :{caption:'Isim',                   type:'textbox'    ,required:true},
-        lastName            :{caption:'Soyad',                   type:'textbox'    ,required:true},
-        password            :{caption:'Password',                   type:'textbox' },
-        verified         :{caption:'Verified',                 type:'checkbox'},
-        passive         :{caption:'Pasif',                 type:'checkbox'}
+<%- formBuilder.generateForm({
+    controls:{
+        username            :{title:'Kullanici Adı',                   type:'string'    ,required:true},
+        name            :{title:'Isim',                   type:'string'    ,required:true},
+        lastName            :{title:'Soyad',                   type:'string'    ,required:true},
+        password            :{title:'Password',                   type:'string' },
+        verified         :{title:'Verified',                 type:'boolean'},
+        passive         :{title:'Pasif',                 type:'boolean'}
     },
-    action:'',
+    
     mode:'edit',
     backUrl:'/sys-members'
     }) 

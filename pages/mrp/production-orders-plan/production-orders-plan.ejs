@@ -91,7 +91,7 @@ function yeniItem(obj){
 
 	schedule.id = obj._id;
 	schedule.calendarId = calendar.id;
-	schedule.title = obj.item.name.value + ' ' + Number(obj.plannedQuantity).formatQuantity();
+	schedule.title = ((obj.item || '')!=''?obj.item.name.value: '---') + ' ' + Number(obj.plannedQuantity).formatQuantity();
 	schedule.body = obj.musteri;
 	schedule.isReadOnly = false;
 	schedule.start=dateTimeFromText(obj.plannedPeriod.startDate + 'T' + obj.plannedPeriod.startTime);

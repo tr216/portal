@@ -39,13 +39,13 @@
 </form>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'docId',text:'Fiş No',type:'label' , filter:true, orderable:true, align:'left'},
-        {name:'issueDate',text:'Tarih',type:'label' ,  orderable:true },
-        {name:'description',text:'Açıklama',type:'label' , filter:true, filterField:'description', orderable:true},
-        {name:'subLocation',text:'Lokasyon',type:'label', filter:true, placeholder:'alt lokasyon', orderable:true},
-        {name:'subLocation2',text:'Lokasyon2',type:'label', filter:true, placeholder:'alt lokasyon2', orderable:true}
+        {field:'docId',title:'Fiş No',type:'string' , filter:true, orderable:true, align:'left'},
+        {field:'issueDate',title:'Tarih',type:'string' ,  orderable:true },
+        {field:'description',title:'Açıklama',type:'string' , filter:true, filterField:'description', orderable:true},
+        {field:'subLocation',title:'Lokasyon',type:'string', filter:true, placeholder:'alt lokasyon', orderable:true},
+        {field:'subLocation2',title:'Lokasyon2',type:'string', filter:true, placeholder:'alt lokasyon2', orderable:true}
     ],
-    caption:'Stok Fisleri',
+    title:'Stok Fisleri',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

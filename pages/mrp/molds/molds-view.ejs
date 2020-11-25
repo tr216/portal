@@ -1,23 +1,23 @@
 <%layout('../../_common/layouts/plain')%>
-<%- partial('../../_common/forms/form',{
+<%- formBuilder.generateForm({
     tabs:[
        {
-            caption:'Bilgiler',
-            formControls:{
-                moldGroup :{caption:'Kalıp Grubu',             type:'lookup', lookup:moldGroupList, textField:'name', valueField:'_id'    ,required:true},
-                machineGroup :{caption:'Makine Grubu',             type:'lookup', lookup:machineGroupList, textField:'name', valueField:'_id'  ,required:true  },
-                name     :{caption:'Adı',                type:'textbox' ,required:true},
-                description  :{caption:'Açıklama',        type:'textbox'    },
-                account:{caption:'Muhasebe Hesap Kodu', type:'partial', partial:'../components/account-selection.ejs' },
-                passive         :{caption:'Pasif',                 type:'checkbox'}
+            title:'Bilgiler',
+            controls:{
+                moldGroup :{title:'Kalıp Grubu',             type:'lookup', lookup:moldGroupList, textField:'name', valueField:'_id'    ,required:true},
+                machineGroup :{title:'Makine Grubu',             type:'lookup', lookup:machineGroupList, textField:'name', valueField:'_id'  ,required:true  },
+                name     :{title:'Adı',                type:'string' ,required:true},
+                description  :{title:'Açıklama',        type:'string'    },
+                account:{title:'Muhasebe Hesap Kodu', type:'partial', partial:'../components/account-selection.ejs' },
+                passive         :{title:'Pasif',                 type:'boolean'}
             }
         },
         {
-            caption:'Kalıp parametreleri',
+            title:'Kalıp parametreleri',
             partial:'../../mrp/molds/parameters.ejs'
         }
     ],
-    action:'',
+    
     mode:'view'
     }) 
 %>

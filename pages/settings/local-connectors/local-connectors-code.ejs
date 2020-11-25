@@ -1,39 +1,39 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form',{
+<%- formBuilder.generateForm({
 	tabs:[
 	{
 		active:(activeTab==0),
-		caption:'Connector',
-		formControls:{
-			name            :{caption:'Adı',                   type:'label'    ,required:true},
-			connectorId     :{caption:'Connector ID',          type:'label'    ,required:true},
-			connectorPass   :{caption:'Connector Password',    type:'label'    ,required:true},
-			connectionType  :{caption:'Baglanti Turu',         type:'label',    required:true,  lookup:connectionTypes
-			,formControls:{
-				server          :{name:'connection.server', caption:'Server',             type:'label'},
-				port            :{name:'connection.port',caption:'port',                  type:'label'},
-				database        :{name:'connection.database',caption:'Database',          type:'label'},
-				username        :{name:'connection.username',caption:'Username',          type:'label'},
-				password        :{name:'connection.password',caption:'Password',          type:'label'},
-				file            :{name:'connection.file', caption:'Dosya(lar) veya klasör',  type:'label'}
+		title:'Connector',
+		controls:{
+			name            :{title:'Adı',                   type:'string'    ,required:true},
+			connectorId     :{title:'Connector ID',          type:'string'    ,required:true},
+			connectorPass   :{title:'Connector Password',    type:'string'    ,required:true},
+			connectionType  :{title:'Baglanti Turu',         type:'string',    required:true,  lookup:connectionTypes
+			,controls:{
+				server          :{field:'connection.server', title:'Server',             type:'string'},
+				port            :{field:'connection.port',title:'port',                  type:'string'},
+				database        :{field:'connection.database',title:'Database',          type:'string'},
+				username        :{field:'connection.username',title:'Username',          type:'string'},
+				password        :{field:'connection.password',title:'Password',          type:'string'},
+				file            :{field:'connection.file', title:'Dosya(lar) veya klasör',  type:'string'}
 			}
 		},
-		passive         :{caption:'Pasif',                 type:'label'},
-		connectorTest :{caption:'Connector Test', type:'partial', partial:'../components/connector-test.ejs'}
+		passive         :{title:'Pasif',                 type:'string'},
+		connectorTest :{title:'Connector Test', type:'partial', partial:'../components/connector-test.ejs'}
 	}
 },
 {
 	active:(activeTab==1),
-	caption:'Kodlar ve Gorevler'
+	title:'Kodlar ve Gorevler'
 	,partial:'../../settings/local-connectors/entegrasyon-form'
 },
 {
 	active:(activeTab==2),
-	caption:'Calistir'
+	title:'Calistir'
 	,partial:'run-code'
 }
 ],
-action:'',
+
 mode:'view'
 }) 
 %>

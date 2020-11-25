@@ -4,25 +4,25 @@
 
 <%- partial('../../_common/components/grid2',{
 	fields:[
-	{name:'status', text:'Durum',     type:'lookup', 
-	lookupList:[
-	{text:'-- Tümü --',value:'*'},
-	{text:'Bekleyen',value:''},
-	{text:'Sadece hatalılar',value:'error'},
-	{text:'Aktarılmış',value:'transferred'}
+	{field:'status', title:'Durum',     type:'lookup', 
+	lookup:[
+	{title:'-- Tümü --',value:'*'},
+	{title:'Bekleyen',value:''},
+	{title:'Sadece hatalılar',value:'error'},
+	{title:'Aktarılmış',value:'transferred'}
 	], 
 	textField:'text', valueField:'value', filter:true},
-	{name:'posDevice.location.locationName',    text:'Lokasyon',    type:'lookup' , filter:true, filterField:'location', lookupList:locationList, textField:'locationName', valueField:'_id'}, 
-	{name:'posDevice.deviceSerialNo',           text:'Seri No',     type:'label', filter:true,  filterField:'deviceSerialNo'}, 
-	{name:'zNo',                               text:'zNo',  dataType:'num-fmt',  type:'label' , className: 'text-right' , width:'50px', orderable:true, filter:true},
-	{name:'zDate',                               text:'zDate',  width:'80px',   type:'label', orderable:true},
-	{name:'zTotal',                               text:'zTotal',   width:'80px',  type:'label' , className: 'text-right', format:'n2', orderable:true,filter:true},
-	{name:'data',                               text:'Açıklama',    type:'label'},
-	{name:'posDevice.service.name',             text:'Servis adı',  type:'label' ,icon:'cogs'}, 
-	{name:'posDevice.localConnector.name',      text:'Local Connector',  type:'label' ,icon:'plug'}, 
+	{field:'posDevice.location.locationName',    title:'Lokasyon',    type:'lookup' , filter:true, filterField:'location', lookup:locationList, textField:'locationName', valueField:'_id'}, 
+	{field:'posDevice.deviceSerialNo',           title:'Seri No',     type:'string', filter:true,  filterField:'deviceSerialNo'}, 
+	{field:'zNo',                               title:'zNo',  dataType:'num-fmt',  type:'string' , className: 'text-right' , width:'50px', orderable:true, filter:true},
+	{field:'zDate',                               title:'zDate',  width:'80px',   type:'string', orderable:true},
+	{field:'zTotal',                               title:'zTotal',   width:'80px',  type:'string' , className: 'text-right', format:'n2', orderable:true,filter:true},
+	{field:'data',                               title:'Açıklama',    type:'string'},
+	{field:'posDevice.service.name',             title:'Servis adı',  type:'string' ,icon:'cogs'}, 
+	{field:'posDevice.localConnector.name',      title:'Local Connector',  type:'string' ,icon:'plug'}, 
 
 	],
-	caption:'ZRaporları',
+	title:'ZRaporları',
 	addNewButton:false,
 	editButton:false,
 	deleteButton:true,

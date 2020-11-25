@@ -37,7 +37,7 @@
         <% if(mode=="view"){%> 
             return;
         <%}%>
-        moldParameters.push({name:'Yeni parametre ' + (moldParameters.length + 1).toString(),value:''});
+        moldParameters.push({field:'Yeni parametre ' + (moldParameters.length + 1).toString(),value:''});
         var parametersGrid=document.getElementById('parametersGrid');
         var index=moldParameters.length-1;
         var newRow=parametersGrid.insertRow(index);

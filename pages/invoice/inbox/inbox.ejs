@@ -37,22 +37,22 @@ panelButtons=`
 
 <%- partial('../../_common/components/grid2',{
 	fields:[
-	{name:'invoiceNo',text:'Fat.No',type:'label', filterField:'invoiceNo', filter:true,orderable:true},
-	{name:'issueDate',text:'Fat. Tarihi',type:'label', orderable:true},
-	{name:'partyName',text:'Unvan',type:'label', filter:true, orderable:true},
-	{name:'amount',text:'Tutar',type:'label'},
-	{name:'tax',text:'Vergi',type:'label' },
-	{name:'currency',text:'Döviz',type:'lookup',filter:true, filterField:'documentCurrencyCode', lookupList:currencyList,textField:'text', valueField:'value', dontUseLookup:true },
-	{name:'invoiceStatus',text:'Durumu', width:'100px',type:'lookup',filter:true, lookupList:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
+	{field:'invoiceNo',title:'Fat.No',type:'string', filterField:'invoiceNo', filter:true,orderable:true},
+	{field:'issueDate',title:'Fat. Tarihi',type:'string', orderable:true},
+	{field:'partyName',title:'Unvan',type:'string', filter:true, orderable:true},
+	{field:'amount',title:'Tutar',type:'string'},
+	{field:'tax',title:'Vergi',type:'string' },
+	{field:'currency',title:'Döviz',type:'lookup',filter:true, filterField:'documentCurrencyCode', lookup:currencyList,textField:'text', valueField:'value', dontUseLookup:true },
+	{field:'invoiceStatus',title:'Durumu', width:'100px',type:'lookup',filter:true, lookup:docStatusTypes, textField:'text', valueField:'value', orderable:false , dontUseLookup:true}
 	],
-	caption:'Gelen Faturalar',
+	title:'Gelen Faturalar',
 	addNewButton:true,
 	viewButton:false,
 	editButton:true,
 	deleteButton:true,
 	selection:true,
 	customButtons:[
-	{href:`javascript:popupCenter('/e-invoice/inbox/view/{_id}?sid=${sid}','Ön izleme','900','600');`, text:'Goruntule',icon:'fas fa-search-plus'},
+	{href:`javascript:popupCenter('/e-invoice/inbox/view/{_id}?sid=${sid}','Ön izleme','900','600');`, title:'Goruntule',icon:'fas fa-search-plus'},
 	]
 	,
 	deleteUrl:`/dbapi/e-invoice/invoice/{_id}?sid=${sid}`

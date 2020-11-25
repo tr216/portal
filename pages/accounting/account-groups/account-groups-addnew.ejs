@@ -1,16 +1,16 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form', {
-    formControls:{
-        name:{caption:'Grup adı', type:'textbox' ,required:true},
-        account:{caption:'Muh. Kodu', type:'partial', partial:'../components/account-selection.ejs' },
-        salesAccount:{caption:'Satış', type:'partial', partial:'../components/account-selection.ejs' },
-        returnAccount:{caption:'Iade', type:'partial', partial:'../components/account-selection.ejs' },
-        exportSalesAccount:{caption:'İhracat', type:'partial', partial:'../components/account-selection.ejs' },
-        salesDiscountAccount:{caption:'Şatış indirim', type:'partial', partial:'../components/account-selection.ejs' },
-        buyingDiscountAccount:{caption:'Alım indirim', type:'partial', partial:'../components/account-selection.ejs' },
-        costOfGoodsSoldAccount:{caption:'S.M.Maliyeti', type:'partial', partial:'../components/account-selection.ejs' }
+<%- formBuilder.generateForm( {
+    controls:{
+        name:{title:'Grup adı', type:'string' ,required:true},
+        account:{title:'Muh. Kodu', type:'partial', partial:'../components/account-selection.ejs' },
+        salesAccount:{title:'Satış', type:'partial', partial:'../components/account-selection.ejs' },
+        returnAccount:{title:'Iade', type:'partial', partial:'../components/account-selection.ejs' },
+        exportSalesAccount:{title:'İhracat', type:'partial', partial:'../components/account-selection.ejs' },
+        salesDiscountAccount:{title:'Şatış indirim', type:'partial', partial:'../components/account-selection.ejs' },
+        buyingDiscountAccount:{title:'Alım indirim', type:'partial', partial:'../components/account-selection.ejs' },
+        costOfGoodsSoldAccount:{title:'S.M.Maliyeti', type:'partial', partial:'../components/account-selection.ejs' }
     },
-    action:'',
+    
     mode:'addnew'
     }) 
 %>

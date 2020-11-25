@@ -1,15 +1,15 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'name',text:'Isim/kod',type:'label' , filter:true, orderable:true},
-        {name:'description',text:'Açıklama',type:'label' , filter:true, orderable:true},
-        {name:'width',text:'En',type:'label' , filter:true, orderable:true},
-        {name:'length',text:'Boy',type:'label' , filter:true, orderable:true},
-        {name:'height',text:'Yukseklik',type:'label' , filter:true, orderable:true},
-        {name:'maxWeight',text:'Max Kg',type:'label' , filter:true, orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox', filter:true, width:'120px', orderable:true}
+        {field:'name',title:'Isim/kod',type:'string' , filter:true, orderable:true},
+        {field:'description',title:'Açıklama',type:'string' , filter:true, orderable:true},
+        {field:'width',title:'En',type:'string' , filter:true, orderable:true},
+        {field:'length',title:'Boy',type:'string' , filter:true, orderable:true},
+        {field:'height',title:'Yukseklik',type:'string' , filter:true, orderable:true},
+        {field:'maxWeight',title:'Max Kg',type:'string' , filter:true, orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean', filter:true, width:'120px', orderable:true}
     ],
-    caption:'Palet Listesi',
+    title:'Palet Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

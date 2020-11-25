@@ -1,11 +1,11 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'item.name.value',text:'Adı',type:'label' , filter:true, orderable:true, width:'30%'},
-        {name:'item.description.value',text:'Açıklama',type:'label' , filter:true, orderable:true, width:'40%'},
-        {name:'quantity',text:'Miktar',type:'label' , filter:true, orderable:true}
+        {field:'item.name.value',title:'Adı',type:'string' , filter:true, orderable:true, width:'30%'},
+        {field:'item.description.value',title:'Açıklama',type:'string' , filter:true, orderable:true, width:'40%'},
+        {field:'quantity',title:'Miktar',type:'string' , filter:true, orderable:true}
     ],
-    caption:'',
+    title:'',
     viewButton:true
     }) 
 %>

@@ -1,54 +1,54 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form', {
+<%- formBuilder.generateForm( {
    tabs:[
     {
-        caption:'Bilgiler',
-        formControls:{
-            name:{ name:'partyName.name.value', caption:'Müşteri Adı', type:'textbox'    ,required:true},
-            firstName:{ name:'person.firstName.value', caption:'Kişi Adı', type:'textbox'},
-            familyName:{ name:'person.familyName.value', caption:'Kişi Soyadı', type:'textbox'},
-            vknTckn:{ name:'partyIdentification.0.ID.value', caption:'Vergi No/Tckn', type:'textbox'},
-            vknTcknSchemaID:{ name:'partyIdentification.0.ID.attr.schemeID', caption:'Tür', type:'lookup', lookup:[{text:'VKN',value:'VKN'},{text:'TCKN',value:'TCKN'}]},
-            vergiDairesi:{ name:'partyTaxScheme.taxScheme.name.value', caption:'Vergi Dairesi', type:'textbox'},
+        title:'Bilgiler',
+        controls:{
+            name:{ name:'partyName.name.value', title:'Müşteri Adı', type:'string'    ,required:true},
+            firstName:{ name:'person.firstName.value', title:'Kişi Adı', type:'string'},
+            familyName:{ name:'person.familyName.value', title:'Kişi Soyadı', type:'string'},
+            vknTckn:{ name:'partyIdentification.0.ID.value', title:'Vergi No/Tckn', type:'string'},
+            vknTcknSchemaID:{ name:'partyIdentification.0.ID.attr.schemeID', title:'Tür', type:'lookup', lookup:[{title:'VKN',value:'VKN'},{title:'TCKN',value:'TCKN'}]},
+            vergiDairesi:{ name:'partyTaxScheme.taxScheme.name.value', title:'Vergi Dairesi', type:'string'},
             iletisim:{
-                caption:'İletişim',
-                type:'label',
-                formControls:{
-                    telephone:{ name:'contact.telephone.value', caption:'Telefon', type:'textbox'},
-                    telefax:{ name:'contact.telefax.value', caption:'Fax', type:'textbox'},
-                    electronicMail:{ name:'contact.electronicMail.value', caption:'E-Mail', type:'textbox'}
+                title:'İletişim',
+                type:'string',
+                controls:{
+                    telephone:{ name:'contact.telephone.value', title:'Telefon', type:'string'},
+                    telefax:{ name:'contact.telefax.value', title:'Fax', type:'string'},
+                    electronicMail:{ name:'contact.electronicMail.value', title:'E-Mail', type:'string'}
                 }
             },
-            tags:{ name:'tags', caption:'Etiketler (virgulle ayrılmış)', type:'textbox'},
-            account:{ name:'account', caption:'Muhasebe Hesabı', type:'partial' , partial:'../components/account-selection.ejs'},
-            passive:{caption:'Pasif?', type:'checkbox'    }
+            tags:{ name:'tags', title:'Etiketler (virgulle ayrılmış)', type:'string'},
+            account:{ name:'account', title:'Muhasebe Hesabı', type:'partial' , partial:'../components/account-selection.ejs'},
+            passive:{title:'Pasif?', type:'boolean'    }
         }
     },
     {
-        caption:'Adres',
-        formControls:{
+        title:'Adres',
+        controls:{
             adres:{
-                caption:'Adres',
-                type:'label',
-                formControls:{
-                    streetName:{ name:'postalAddress.streetName.value', caption:'Cadde/Sokak', type:'textbox'},
-                    buildingNumber:{ name:'postalAddress.buildingNumber.value', caption:'Cadde Sokak Kapı No', type:'textbox'},
-                    buildingName:{ name:'postalAddress.buildingName.value', caption:'Bina/Site adı', type:'textbox'},
-                    blockName:{ name:'postalAddress.blockName.value', caption:'Blok adı', type:'textbox'},
-                    room:{ name:'postalAddress.room.value', caption:'Daire', type:'textbox'},
-                    citySubdivisionName:{ name:'postalAddress.citySubdivisionName.value', caption:'Mahalle/Semt', type:'textbox'},
-                    district:{ name:'postalAddress.district.value', caption:'İlçe', type:'textbox'},
-                    cityName:{ name:'postalAddress.cityName.value', caption:'Şehir', type:'textbox'},
-                    region:{ name:'postalAddress.region.value', caption:'Bölge', type:'textbox'},
-                    country:{ name:'postalAddress.country.name.value', caption:'Ülke', type:'textbox'},
-                    postbox:{ name:'postalAddress.postbox.value', caption:'Posta Kutusu', type:'textbox'}
+                title:'Adres',
+                type:'string',
+                controls:{
+                    streetName:{ name:'postalAddress.streetName.value', title:'Cadde/Sokak', type:'string'},
+                    buildingNumber:{ name:'postalAddress.buildingNumber.value', title:'Cadde Sokak Kapı No', type:'string'},
+                    buildingName:{ name:'postalAddress.buildingName.value', title:'Bina/Site adı', type:'string'},
+                    blockName:{ name:'postalAddress.blockName.value', title:'Blok adı', type:'string'},
+                    room:{ name:'postalAddress.room.value', title:'Daire', type:'string'},
+                    citySubdivisionName:{ name:'postalAddress.citySubdivisionName.value', title:'Mahalle/Semt', type:'string'},
+                    district:{ name:'postalAddress.district.value', title:'İlçe', type:'string'},
+                    cityName:{ name:'postalAddress.cityName.value', title:'Şehir', type:'string'},
+                    region:{ name:'postalAddress.region.value', title:'Bölge', type:'string'},
+                    country:{ name:'postalAddress.country.name.value', title:'Ülke', type:'string'},
+                    postbox:{ name:'postalAddress.postbox.value', title:'Posta Kutusu', type:'string'}
                 }
             },
-            websiteURI:{ name:'websiteURI.value', caption:'Web sitesi', type:'textbox'}
+            websiteURI:{ name:'websiteURI.value', title:'Web sitesi', type:'string'}
         }
     }
     ],
-    action:'',
+    
     mode:'addnew'
     }) 
 %>

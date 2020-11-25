@@ -1,63 +1,63 @@
 
 <%layout('../../_common/layouts/plain')%>
 
-<%- partial('../../_common/forms/form', {
+<%- formBuilder.generateForm( {
     tabs:[
        {
-            caption:'Bilgiler',
-            formControls:{
-                itemType:{ name:'itemType', caption:'Türü', type:'lookup' , lookup:productTypeList, required:true},
-                name:{ name:'name.value', caption:'Kod/Adı', type:'textbox'    ,required:true},
-                description:{ name:'description.value', caption:'Açıklama', type:'textbox'},
-                brandName:{ name:'brandName.value', caption:'Marka', type:'textbox'},
-                modelName:{ name:'modelName.value', caption:'Model', type:'textbox'},
-                itemClassificationCode:{ name:'commodityClassification.0.itemClassificationCode.value', caption:'Sınıf kodu (GTIPNO)', type:'textbox'},
-                buyersItemIdentification:{ name:'buyersItemIdentification.ID.value', caption:'Alıcı kodu', type:'textbox'},
-                sellersItemIdentification:{ name:'sellersItemIdentification.ID.value', caption:'Satıcı kodu', type:'textbox'},
-                manufacturersItemIdentification:{ name:'manufacturersItemIdentification.ID.value', caption:'Üretici kodu', type:'textbox'},
-                originCountry:{ name:'originCountry.name.value', caption:'Menşei', type:'textbox'},
-                keyword:{ name:'keyword.value', caption:'Anahtar kelime', type:'textbox'},
-                accountGroup:{ name:'accountGroup', caption:'Muhasebe Grubu', type:'lookup', lookup:accountGroupList, textField:'name',valueField:'_id'},
-                tags:{ name:'tags', caption:'Etiketler (virgulle ayrılmış)', type:'textbox'},
-                tracking1 :{caption:'Stok/Envanter Takibi',  type:'label',   
-                    formControls:{
-                        lotNo:{name:'tracking.lotNo', caption:'Lot No?', type:'checkbox'    },
-                        serialNo:{name:'tracking.serialNo', caption:'Seri No?', type:'checkbox'    },
-                        color:{name:'tracking.color', caption:'Renk?', type:'checkbox'    },
-                        pattern:{name:'tracking.pattern', caption:'Desen?', type:'checkbox'    },
-                        size:{name:'tracking.size', caption:'Beden?', type:'checkbox'    }
+            title:'Bilgiler',
+            controls:{
+                itemType:{ name:'itemType', title:'Türü', type:'lookup' , lookup:productTypeList, required:true},
+                name:{ name:'name.value', title:'Kod/Adı', type:'string'    ,required:true},
+                description:{ name:'description.value', title:'Açıklama', type:'string'},
+                brandName:{ name:'brandName.value', title:'Marka', type:'string'},
+                modelName:{ name:'modelName.value', title:'Model', type:'string'},
+                itemClassificationCode:{ name:'commodityClassification.0.itemClassificationCode.value', title:'Sınıf kodu (GTIPNO)', type:'string'},
+                buyersItemIdentification:{ name:'buyersItemIdentification.ID.value', title:'Alıcı kodu', type:'string'},
+                sellersItemIdentification:{ name:'sellersItemIdentification.ID.value', title:'Satıcı kodu', type:'string'},
+                manufacturersItemIdentification:{ name:'manufacturersItemIdentification.ID.value', title:'Üretici kodu', type:'string'},
+                originCountry:{ name:'originCountry.name.value', title:'Menşei', type:'string'},
+                keyword:{ name:'keyword.value', title:'Anahtar kelime', type:'string'},
+                accountGroup:{ name:'accountGroup', title:'Muhasebe Grubu', type:'lookup', lookup:accountGroupList, textField:'name',valueField:'_id'},
+                tags:{ name:'tags', title:'Etiketler (virgulle ayrılmış)', type:'string'},
+                tracking1 :{title:'Stok/Envanter Takibi',  type:'string',   
+                    controls:{
+                        lotNo:{field:'tracking.lotNo', title:'Lot No?', type:'boolean'    },
+                        serialNo:{field:'tracking.serialNo', title:'Seri No?', type:'boolean'    },
+                        color:{field:'tracking.color', title:'Renk?', type:'boolean'    },
+                        pattern:{field:'tracking.pattern', title:'Desen?', type:'boolean'    },
+                        size:{field:'tracking.size', title:'Beden?', type:'boolean'    }
                     }
                 },
-                passive:{caption:'Pasif?', type:'checkbox'    }
+                passive:{title:'Pasif?', type:'boolean'    }
             }
         },
         {
-            caption:'Birimler/Barkodlar',
-            formControls:{
-                unitPacks:{ name:'unitPacks', caption:'Birimler', type:'partial' ,partial:'../components/unitpacks.ejs'},
-                barkodlar:{ name:'barkodlar', caption:'Barkodlar (Carpanlari ";" ile barkod sonuna ekleyiniz)', type:'textarea' , rows:5}
+            title:'Birimler/Barkodlar',
+            controls:{
+                unitPacks:{ name:'unitPacks', title:'Birimler', type:'partial' ,partial:'../components/unitpacks.ejs'},
+                barkodlar:{ name:'barkodlar', title:'Barkodlar (Carpanlari ";" ile barkod sonuna ekleyiniz)', type:'textarea' , rows:5}
             }
         },
         {
-            caption:'Resimler',
-            formControls:{
-                image0  :{name:'images.0', caption:'Resim 1',     type:'fileBase64Image'   },
-                image1  :{name:'images.1', caption:'Resim 2',     type:'fileBase64Image'   },
-                image2  :{name:'images.2', caption:'Resim 3',     type:'fileBase64Image'   },
-                file0  :{name:'files.0', caption:'Dosya/dokuman 1',     type:'fileBase64'   },
-                file1  :{name:'files.1', caption:'Dosya/dokuman 2',     type:'fileBase64'   },
-                file2  :{name:'files.2', caption:'Dosya/dokuman 3',     type:'fileBase64'   }
+            title:'Resimler',
+            controls:{
+                image0  :{field:'images.0', title:'Resim 1',     type:'fileBase64Image'   },
+                image1  :{field:'images.1', title:'Resim 2',     type:'fileBase64Image'   },
+                image2  :{field:'images.2', title:'Resim 3',     type:'fileBase64Image'   },
+                file0  :{field:'files.0', title:'Dosya/dokuman 1',     type:'fileBase64'   },
+                file1  :{field:'files.1', title:'Dosya/dokuman 2',     type:'fileBase64'   },
+                file2  :{field:'files.2', title:'Dosya/dokuman 3',     type:'fileBase64'   }
             }
         },
         {
-            caption:'Palet/Paketleme Tanımları',
-            formControls:{
-                ambalajTanimlari:{ name:'ambalajTanimlari', caption:'Paketleme', type:'partial' ,partial:'../../mrp/products/packingform.ejs'}
+            title:'Palet/Paketleme Tanımları',
+            controls:{
+                ambalajTanimlari:{ name:'ambalajTanimlari', title:'Paketleme', type:'partial' ,partial:'../../mrp/products/packingform.ejs'}
             }
         }
         
     ],
-    action:'',
+    
     mode:'view',
     printUrl:'/items/{_id}'
     }) 

@@ -2,13 +2,13 @@
 
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'moldGroup',    text:'Kalıp Grubu',    type:'lookup' , filter:true, lookupList:moldGroupList, textField:'name', valueField:'_id'}, 
-        {name:'machineGroup',    text:'Makine Grubu',    type:'lookup' , filter:true, lookupList:machineGroupList, textField:'name', valueField:'_id'}, 
-        {name:'name',text:'Kalıp Adı',type:'label',filter:true, orderable:true},
-        {name:'description',text:'Açıklama',type:'label', filter:true, orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+        {field:'moldGroup',    title:'Kalıp Grubu',    type:'lookup' , filter:true, lookup:moldGroupList, textField:'name', valueField:'_id'}, 
+        {field:'machineGroup',    title:'Makine Grubu',    type:'lookup' , filter:true, lookup:machineGroupList, textField:'name', valueField:'_id'}, 
+        {field:'name',title:'Kalıp Adı',type:'string',filter:true, orderable:true},
+        {field:'description',title:'Açıklama',type:'string', filter:true, orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean',width:1}
     ],
-    caption:'Makina Listesi',
+    title:'Makina Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

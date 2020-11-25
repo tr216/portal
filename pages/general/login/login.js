@@ -54,58 +54,6 @@ function login(req,res,data, cb){
 }
 
 
-function menuModule(menu,modules){
-	if(menu.nodes==undefined){
-		if(menu.module!=undefined){
-			var dizi=menu.module.split('.')
-			var bShow=false
-			if(modules[dizi[0]]){
-				if(dizi.length>1){
-					if(modules[dizi[0]][dizi[1]]){
-						if(dizi.length>2){
-							if(modules[dizi[0]][dizi[1]][dizi[2]]){
-								if(dizi.length>3){
-									if(modules[dizi[0]][dizi[1]][dizi[2]][dizi[3]]){
-										bShow=true
-									}
-								}else{
-									bShow=true
-								}
-							}
-						}else{
-							bShow=true
-						}
-					}
-				}else{
-					bShow=true
-				}
-			}
-			if(bShow){
-				return menu
-			}else{
-				return undefined
-			}
-		}else{
-			return menu
-		}
-	}else{
-		var bNodeVar=false
-		var nodes=[]
-		menu.nodes.forEach((e)=>{
-			e=menuModule(e,modules)
-			if(e!=undefined)
-				nodes.push(clone(e))
-		})
-		if(nodes.length>0){
-			menu.nodes=nodes
-			return menu
-		}else{
-			return undefined
-		}
-
-	}
-}
-
 function signup(req,res,data,cb){
 
 	data.form=Object.assign(data.form,req.body)

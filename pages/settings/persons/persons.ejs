@@ -2,17 +2,17 @@
 
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'station',    text:'Istasyon',    type:'lookup' , filter:true, lookupList:stationList, textField:'name', valueField:'_id'}, 
-        {name:'firstName.value',text:'Adı',type:'label', filterField:'firstName', filter:true, orderable:true},
-        {name:'familyName.value',text:'Soyadı',type:'label', filterField:'familyName', filter:true, orderable:true},
-        {name:'shift',    text:'Vardiya',    type:'lookup' , filter:true, lookupList:shiftList, textField:'name', valueField:'_id'}, 
-        {name:'postalAddress.cityName.value',text:'cityName',type:'label', filterField:'cityName', filter:true, orderable:true},
-        {name:'postalAddress.district.value',text:'district',type:'label', filterField:'district', filter:true, orderable:true},
-        {name:'bloodGroup',text:'Kan Grubu',type:'lookup', filter:true,lookupList:bloodGroups, orderable:true},
-        {name:'monthlyCost',text:'Aylık Maliyeti',type:'label', filter:true, orderable:true, format:'n2'},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1}
+        {field:'station',    title:'Istasyon',    type:'lookup' , filter:true, lookup:stationList, textField:'name', valueField:'_id'}, 
+        {field:'firstName.value',title:'Adı',type:'string', filterField:'firstName', filter:true, orderable:true},
+        {field:'familyName.value',title:'Soyadı',type:'string', filterField:'familyName', filter:true, orderable:true},
+        {field:'shift',    title:'Vardiya',    type:'lookup' , filter:true, lookup:shiftList, textField:'name', valueField:'_id'}, 
+        {field:'postalAddress.cityName.value',title:'cityName',type:'string', filterField:'cityName', filter:true, orderable:true},
+        {field:'postalAddress.district.value',title:'district',type:'string', filterField:'district', filter:true, orderable:true},
+        {field:'bloodGroup',title:'Kan Grubu',type:'lookup', filter:true,lookup:bloodGroups, orderable:true},
+        {field:'monthlyCost',title:'Aylık Maliyeti',type:'string', filter:true, orderable:true, format:'n2'},
+        {field:'passive',title:'Pasif',type:'boolean',width:1}
     ],
-    caption:'Personel Listesi',
+    title:'Personel Listesi',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

@@ -1,13 +1,13 @@
 <%layout('../../_common/layouts/plain')%>
 
-<%- partial('../../_common/forms/form', {
+<%- formBuilder.generateForm( {
    
-    formControls:{
-        name:{caption:'Palet ismi/kodu/numarasi', type:'textbox'    ,required:true},
-        palletType:{caption:'Palet tipi', type:'lookup',lookup:palletTypeList, valueField:'_id', textField:'name'  ,required:true},
-        passive:{caption:'Pasif?', type:'checkbox'    }
+    controls:{
+        name:{title:'Palet ismi/kodu/numarasi', type:'string'    ,required:true},
+        palletType:{title:'Palet tipi', type:'lookup',lookup:palletTypeList, valueField:'_id', textField:'name'  ,required:true},
+        passive:{title:'Pasif?', type:'boolean'    }
     },
-    action:'',
+    
     mode:'view'
     }) 
 %>

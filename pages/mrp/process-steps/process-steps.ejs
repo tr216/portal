@@ -1,20 +1,23 @@
 <%layout('../../_common/layouts/general')%>
 
-<%- partial('../../_common/components/grid2',{
-    fields:[
-        {name:'name',text:'Adı',type:'label',filter:true, orderable:true},
-        {name:'useMaterialInput',text:'Malzeme Kullanıyor?',type:'checkbox'},
-        {name:'useMaterialOutput',text:'Yan ürün?',type:'checkbox'},
-        {name:'useMachine',text:'Makine Kullanıyor?',type:'checkbox'},
-        {name:'useMold',text:'Kalıp Kullanıyor?',type:'checkbox'},
-        {name:'useParameters',text:'Not/Parametre?',type:'checkbox'},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1}
-    ],
-    caption:'Uretim Islemler',
-    addNewButton:true,
-    editButton:true,
-    deleteButton:true,
-    viewButton:true,
-    deleteUrl:`/dbapi/mrp-process-steps/{_id}?sid=${sid}`
-    }) 
+<%-	gridBuilder.generateGrid({
+	name:{title:'Adı', type:'string'},
+	useMaterialInput:{title:'Malzeme Kullanıyor?', type:'boolean'},
+	useMaterialOutput:{title:'Yan ürün?', type:'boolean'},
+	useMachine:{title:'Makine Kullanıyor?', type:'boolean'},
+	useMold:{title:'Kalıp Kullanıyor?', type:'boolean'},
+	useParameters:{title:'Not/Parametre?', type:'boolean'},
+	passive:{title:'Pasif?', type:'boolean'}
+},{
+	selection:true,
+	filter:true,
+	buttons:{
+		add:true,
+		edit:true,
+		delete:true,
+		view:false,
+		print:true,
+		copy:false
+	}
+},ui)
 %>

@@ -1,12 +1,12 @@
 <%layout('../../_common/layouts/general')%>
 <%- partial('../../_common/components/grid2',{
     fields:[
-        {name:'partyName.name.value',text:'Tedarikçi adı',type:'label' , filter:true, filterField:'partyName', orderable:true, width:'60%'},
-        {name:'postalAddress.cityName.value',text:'Şehir',type:'label' , filter:true, filterField:'cityName', orderable:true},
-        {name:'postalAddress.district.value',text:'İlçe',type:'label' , filter:true, filterField:'district', orderable:true},
-        {name:'passive',text:'Pasif',type:'checkbox',width:1, filter:true, orderable:true}
+        {field:'partyName.name.value',title:'Tedarikçi adı',type:'string' , filter:true, filterField:'partyName', orderable:true, width:'60%'},
+        {field:'postalAddress.cityName.value',title:'Şehir',type:'string' , filter:true, filterField:'cityName', orderable:true},
+        {field:'postalAddress.district.value',title:'İlçe',type:'string' , filter:true, filterField:'district', orderable:true},
+        {field:'passive',title:'Pasif',type:'boolean',width:1, filter:true, orderable:true}
     ],
-    caption:'',
+    title:'',
     addNewButton:true,
     editButton:true,
     deleteButton:true,

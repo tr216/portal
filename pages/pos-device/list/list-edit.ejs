@@ -1,14 +1,14 @@
 <%layout('../../_common/layouts/general')%>
-<%- partial('../../_common/forms/form',{
-    formControls:{
-        location        :{caption:'Lokasyon',             type:'lookup', lookup:locationList, textField:'locationName', valueField:'_id'    ,required:true},
-        service         :{caption:'Servis adı',           type:'lookup', lookup:serviceList, textField:'name', valueField:'_id'     ,required:true},
-        deviceModel     :{caption:'Model',                type:'textbox' },
-        deviceSerialNo  :{caption:'Cihaz seri no',        type:'textbox'    ,required:true},
-        localConnector  :{caption:'Lokal Etulia Connector', type:'lookup' , lookup:localConnectorList, textField:'name', valueField:'_id' },
-        passive         :{caption:'Pasif',                 type:'checkbox'}
+<%- formBuilder.generateForm({
+    controls:{
+        location        :{title:'Lokasyon',             type:'lookup', lookup:locationList, textField:'locationName', valueField:'_id'    ,required:true},
+        service         :{title:'Servis adı',           type:'lookup', lookup:serviceList, textField:'name', valueField:'_id'     ,required:true},
+        deviceModel     :{title:'Model',                type:'string' },
+        deviceSerialNo  :{title:'Cihaz seri no',        type:'string'    ,required:true},
+        localConnector  :{title:'Lokal Etulia Connector', type:'lookup' , lookup:localConnectorList, textField:'name', valueField:'_id' },
+        passive         :{title:'Pasif',                 type:'boolean'}
     },
-    action:'',
+    
     mode:'edit'
     }) 
 %>
