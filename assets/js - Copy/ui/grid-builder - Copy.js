@@ -132,18 +132,17 @@
 		if(generateGridScript1==false){
 			script1+=`<script type="text/javascript">
 			var keyupTimer=0
-			var grid${id}data={
-				fields:` + JSON.stringify(fields) + `,
-				options:` + JSON.stringify(options) + `,
-				list:` + JSON.stringify(data.docs) + `
-			}
-			
-			Object.keys(grid${id}data.fields).forEach((key)=>{
-				if(grid${id}data.fields[key].field==undefined){
-					grid${id}data.fields[key]['field']=key
+
+			var fields=` + JSON.stringify(fields) + `
+			var options=` + JSON.stringify(options) + `
+			var list=` + JSON.stringify(data.docs) + `
+
+			Object.keys(fields).forEach((key)=>{
+				if(fields[key].field==undefined){
+					fields[key]['field']=key
 				}
-				if(grid${id}data.fields[key].visible==undefined){
-					grid${id}data.fields[key]['visible']=true
+				if(fields[key].visible==undefined){
+					fields[key]['visible']=true
 				}
 			})
 			</script>
@@ -201,7 +200,7 @@
 			s+=`</div>
 			</div>`
 		}
-		s+=`<table id="grid${id}" class="table table-striped border m-0 ${options.insideForm?'table-bordered':''}"  cellspacing="0">`
+		s+=`<table id="grid${id}" class="table table-striped m-0 ${options.insideForm?'table-bordered':''}"  cellspacing="0">`
 		if(options.show.header){
 			s+=`${gridHeader(fields,options)}`
 		}
@@ -222,11 +221,11 @@
 					var table1=document.querySelector('#gridBody${id}')
 					table1.innerHTML=''
 
-					grid${id}data.list.forEach((e,index)=>{
+					list.forEach((e,index)=>{
 						if(index==editRowIndex){
-							table1.innerHTML+=\`\${gridBuilder.updateRow(${id},grid${id}data.fields,grid${id}data.options,e,index)}\` 
+							table1.innerHTML+=\`\${gridBuilder.updateRow(${id},fields,options,e,index)}\` 
 						}else{
-							table1.innerHTML+=\`\${gridBuilder.gridRow(${id},grid${id}data.fields,grid${id}data.options,e,index)}\` 
+							table1.innerHTML+=\`\${gridBuilder.gridRow(${id},fields,options,e,index)}\` 
 						}
 					})
 					`
@@ -234,23 +233,13 @@
 					if(options.insideForm && options.buttons.add[0]){
 						script+=`
 						if(editRowIndex<0){
-							table1.innerHTML+=\`\${gridBuilder.updateRow(` + id + `,grid${id}data.fields,grid${id}data.options,null)}\`
+							table1.innerHTML+=\`\${gridBuilder.updateRow(` + id + `,fields,options,null)}\`
 						}
-						`
-					}
-
-					if(options.onchange!=undefined){
-						script+=`
-						${options.onchange.replaceAll('this.value','grid' + id + 'data')}
 						`
 					}
 					script+=`
 				}
-
-				$(document).ready(()=>{
-					refreshGrid${id}()
-				})
-				
+				refreshGrid${id}()
 				`
 			}
 		}
@@ -342,15 +331,15 @@
 				function runFilter(){
 					var params=getAllUrlParams()
 					var filtreVar=false
-					Object.keys(grid${id}data.fields).forEach((key,index)=>{
-						if(grid${id}data.options.filter){
+					Object.keys(fields).forEach((key,index)=>{
+						if(options.filter){
 							filtreVar=true;
 							if($('#filter_' + index).val()!=''){
-								params[grid${id}data.fields[key].filterField || key]=$('#filter_' + index).val()
+								params[fields[key].filterField || key]=$('#filter_' + index).val()
 							}else{
-								if(params[grid${id}data.fields[key].filterField || key]!=undefined){
-									params[grid${id}data.fields[key].filterField || key]=undefined
-									delete params[grid${id}data.fields[key].filterField || key]
+								if(params[fields[key].filterField || key]!=undefined){
+									params[fields[key].filterField || key]=undefined
+									delete params[fields[key].filterField || key]
 								}
 							}
 						}
@@ -376,17 +365,9 @@
 			})`
 
 			var deleteUrl=''
-			var dataSourceUrl=''
 			if(options.dataSource){
 				if(options.dataSource.url){
-					dataSourceUrl=options.dataSource.url
-				}
-			}
-			if(dataSourceUrl!=''){
-				if(dataSourceUrl.indexOf('?')>-1){
-					deleteUrl=`${dataSourceUrl.split('?')[0]}/{_id}?${dataSourceUrl.split('?')[1]}&sid=${qParams.sid}`
-				}else{
-					deleteUrl=`${dataSourceUrl}/{_id}?sid=${qParams.sid}`
+					deleteUrl=`${options.dataSource.url}/{_id}?sid=${qParams.sid}`
 				}
 			}
 			script +=`
@@ -411,59 +392,7 @@
 					}
 				})
 			}
-			`
-			var copyUrl=''
-			if(dataSourceUrl){
-				if(dataSourceUrl.indexOf('?')>-1){
-					copyUrl=`${dataSourceUrl.split('?')[0]}/copy/{_id}?${dataSourceUrl.split('?')[1]}&sid=${qParams.sid}`
-				}else{
-					copyUrl=`${dataSourceUrl}/copy/{_id}?sid=${qParams.sid}`
-				}
-			}
-			script+=`
-			function gridCopyItem(name,_id){
-				copyX({
-					newName:{title:'Yeni isim',type:'string',value:name+ ' kopya'}
-				},'Kopya oluştur',(answer,formData)=>{
-					if(answer,formData){
-						
-						var url='${copyUrl}'
-						$.ajax({
-							url:url.replaceAll('{_id}',_id),
-							data:formData,
-							type:'POST',
-							success:function(result){
-								if(result.success){
-									window.location.reload()
-								}else{
-									alertX('Hata:' + result.error.message)
-								}
-							},
-							error:function(err){
-								alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
-							}
-						})
-					}
-				})
-			}
 
-			function autoIncrement(item,itemValue,rowIndex){
-				if(grid${id}data.list!=undefined && rowIndex<0){
-					var maxID=0
-					grid${id}data.list.forEach((e)=>{
-						var sayi=getPropertyByKeyPath(e,item.field)
-						if(!isNaN(sayi)){
-
-							if(Number(sayi)>maxID){
-								maxID=Number(sayi)
-							}
-						}
-					})
-					return maxID+1
-				}else{
-					return itemValue
-				}
-			}
 			</script>`
 
 		}
@@ -483,8 +412,7 @@
 
 	function updateRow(id,fields,options,row,rowIndex=-100){
 		
-		var s=`<tr id="divUpdateRow${id}">
-		`
+		var s=`<tr id="divUpdateRow${id}">`
 
 		Object.keys(fields).forEach((key,index)=>{
 			if(fields[key].field==undefined){
@@ -496,9 +424,7 @@
 					itemValue=getPropertyByKeyPath(row,fields[key].field) || ''
 				}
 
-				var item=clone(fields[key])
-				item.field=`grid${id}-${item.field}`
-				item.required=false
+				var item=fields[key]
 				if(item.type==undefined)
 					return ''
 				s+=`<td class="${fields[key].class || 'pt-2'}">`
@@ -507,19 +433,12 @@
 					case 'textbox' : 
 					s+=formBuilder.textBox(item,itemValue,true)
 					break
-
 					case 'remotelookup' : 
 					s+=formBuilder.remoteLookup(item,itemValue,true)
 					break
 					case 'money' :
 					case 'number' :
 					case 'numberbox' :
-					s+= formBuilder.numberBox(item,itemValue,true)
-					break
-					case 'autoinc' :
-					case 'identity' :
-					case 'autoincrement' :
-					itemValue=autoIncrement(item,itemValue,rowIndex)
 					s+= formBuilder.numberBox(item,itemValue,true)
 					break
 					case 'date' :
@@ -566,161 +485,58 @@
 		s+=`<td class="text-center pt-1">`
 		
 		s+=`<a href="javascript:okUpdateRow${id}(${rowIndex})" class="btn btn-grid-row btn-primary " title="Tamam"><i class="fas fa-check"></i></a>`
-		// s+=`<button class="btn btn-grid-row btn-primary" type="submit" title="Tamam"><i class="fas fa-check"></i></button>`
 		s+=`<a href="javascript:cancelUpdateRow${id}(${rowIndex})" class="btn btn-grid-row btn-secondary ml-1" title="Vazgeç"><i class="fas fa-undo"></i></a>`
 		s+=`</td>`
 
-		s+=`
-		</tr>
-		`
+
 		if(updateRowScript==false){
 			var script=`<script type="text/javascript">
-
-			$(document).ready(()=>{
-				
-				var divUpdateRow${id}_changing=false
-				$('#divUpdateRow${id} input[type="number"]').change((e)=>{
-					if(divUpdateRow${id}_changing==true)
-						return
-					divUpdateRow${id}_changing=true
-					
-
-					var obj=getupdateRowValues${id}()
-					if(!obj){
-						divUpdateRow${id}_changing=false
-						return
-					}
-					`
-					Object.keys(fields).forEach((key)=>{
-						
-						if(fields[key].calc!=undefined){
-							var keyVar='formula_' + generateFormId('grid' + id + '-' + fields[key].field).replaceAll('-','_')
-							var controlId=generateFormId(fields[key].field)
-							var formul=fields[key].calc
-							Object.keys(fields).forEach((key2)=>{
-								formul=formul.replaceAll(`{${'grid' + id + '-' + fields[key2].field}}`,`obj['${fields[key2].field}']`)
-							})
-							script+=`
-							var ${keyVar}=\`${formul}\`
-							
-							$('#${controlId}').val(eval(${keyVar}))
-							`
-						}
-					})
-
-					script+=`
-					divUpdateRow${id}_changing=false
-				})
-
-			})
-
-
 			function okUpdateRow${id}(rowIndex=-100){
-
-				
-
 				var obj=listObjectToObject(getupdateRowValues${id}())
-				if(!obj)
-					return false
+				
 				if(rowIndex<0){
-					grid${id}data.list.push(obj)
+					list.push(obj)
 				}else{
-					grid${id}data.list[rowIndex]=Object.assign(grid${id}data.list[rowIndex],obj)
+					list[rowIndex]=Object.assign(list[rowIndex],obj)
 				}
 				refreshGrid${id}()
 				$('#divUpdateRow${id} #${generateFormId(fields[Object.keys(fields)[0]].field)}').focus()
-
-				
-				return false
 			}
 
 			function getupdateRowValues${id}(){
 				var obj={}
 				`
 				Object.keys(fields).forEach((key,index)=>{
-					if(fields[key].type=='number'){
-						script+=`
-						if(!isNaN($('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[key].field)}').val())){
-							obj['${fields[key].field}']=Number($('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[key].field)}').val())
-						}else{
-							obj['${fields[key].field}']=0
-						}
-						
-						`
-					}else if(fields[key].type=='boolean'){
-						script+=`
-						obj['${fields[key].field}']=$('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[key].field)}').prop("checked")?true:false
-						`
-					}else{
-						script+=`
-						obj['${fields[key].field}']=$('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[key].field)}').val()
-						`
-					}
+					script+=`obj['${fields[key].field}']=$('#divUpdateRow${id} #${generateFormId(fields[key].field)}').val()
+					`
 				})
 				script+=`
 
-				var valid=true
-				var validMessage=''
-				Object.keys(grid${id}data.fields).forEach((key)=>{
-					var field=grid${id}data.fields[key]
-					if(field.required){
-						if($('#divUpdateRow${id} #' + generateFormId('grid' + id + '-' + field.field)).val()==''){
-							valid=false
-							validMessage+=field.field + ' gereklidir<br>'
-						}
-					}
-				})
-				if(valid==false){
-					toastAlert(validMessage,'Geçerlilik hatası')
-					return
-				}
 				return obj
 			}
 
 			function removeGridRow${id}(rowIndex){
-				if(rowIndex<0 || rowIndex>grid${id}data.list.length-1)
-					return
-
-				`
-
-				if((options.confirmBeforeRemove==undefined?true:options.confirmBeforeRemove)){
-					script+=`confirmX('Satır silinecektir! Onaylıyor musunuz?',(answer)=>{
-						if(answer){
-							grid${id}data.list.splice(rowIndex,1)
-							reorderList${id}()
-
-							refreshGrid${id}()
-						}
-					})
-					`
-				}else{
-					script+=`
-					grid${id}data.list.splice(rowIndex,1)
-					reorderList${id}()
-					refreshGrid${id}()
-					`
-				}
-				script+=`
-
-			}
-
-			function reorderList${id}(){
-				Object.keys(grid${id}data.fields).forEach((key)=>{
-					if(grid${id}data.fields[key].type=='identity' || grid${id}data.fields[key].type=='autoInc' || grid${id}data.fields[key].type=='autoIncrement'){
-						var fieldName=grid${id}data.fields[key].field
-						grid${id}data.list.forEach((e,index)=>{
-							var listObj={}
-							var obj={}
-							listObj[fieldName]=index+1
-							obj=listObjectToObject(listObj)
-							e=Object.assign(e,obj)
-						})
+			`
+			if((options.confirmBeforeRemove==undefined?true:options.confirmBeforeRemove)){
+			script+=`confirmX('Satır silinecektir! Onaylıyor musunuz?',(answer)=>{
+					if(answer){
+						list.splice(rowIndex,1)
+						refreshGrid${id}()
 					}
 				})
+			`
+			}else{
+				script+=`
+						list.splice(rowIndex,1)
+						refreshGrid${id}()
+			`
 			}
+			script+=`
+			}
+
 			function cancelUpdateRow${id}(rowIndex){
 				refreshGrid${id}()
-				$('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[Object.keys(fields)[0]].field)}').focus()
+				$('#divUpdateRow${id} #${generateFormId(fields[Object.keys(fields)[0]].field)}').focus()
 			}
 			</script>`
 
@@ -734,7 +550,7 @@
 		}else{
 			s+=script
 		}
-		
+		s+=`</tr>`
 
 		return s
 	}
@@ -756,13 +572,11 @@
 			}
 		})
 
-		var row2=clone((row || {}))
 		Object.keys(fields).forEach((key,index)=>{
 			if((fields[key].visible==undefined?true:fields[key].visible)){
 				if(fields[key].field==undefined)
 					fields[key].field=key
 				var itemValue=getPropertyByKeyPath(row,fields[key].field) || ''
-				var td=''
 
 				if(fields[key].type=='lookup' || fields[key].type=='remoteLookup'){
 					var lookupText=''
@@ -772,45 +586,21 @@
 							return
 						}
 					})
-					td=`<td class="${fields[key].class || 'ml-1'}">`
-					itemValue=lookupText
+					s+=`<td class="${fields[key].class || 'ml-1'}">${lookupText}`
 				}else if(fields[key].type=='number'){
-					td=`<td class="${fields[key].class || 'text-right mr-1'}">`
+					s+=`<td class="${fields[key].class || 'text-right mr-1'}">${itemValue}`
 				}else if(fields[key].type=='money'){
-					td=`<td class="${fields[key].class || 'text-right mr-1'}">`
-					itemValue=Number(itemValue).formatMoney()
+					s+=`<td class="${fields[key].class || 'text-right mr-1'}">${Number(itemValue).formatMoney()}`
 				}else if(fields[key].type=='boolean'){
-					td=`<td class="${fields[key].class || 'text-center'}" style="font-size:20px;">`
-					if(fields[key].html==undefined){
-						td+=itemValue?'<i class="fas fa-check-square text-primary"></i>':'<i class="far fa-square text-dark"></i>'
-					}
-					if(options.insideForm){
-					td+=`<input type="hidden" id="${generateFormId(fields[key].fullField)}" name="${generateFormName(fields[key].fullField)}" value="${itemValue}">`
-				}
+					s+=`<td class="${fields[key].class || 'text-center'}" style="font-size:20px;">${itemValue?'<i class="fas fa-check-square text-primary"></i>':'<i class="far fa-square text-dark"></i>'}`
 				}else{
-					td=`<td class="${fields[key].class || 'ml-1'}">`
+					s+=`<td class="${fields[key].class || 'ml-1'}">${itemValue}`
 				}
-				
+
 				if(options.insideForm){
 
-					itemValue=itemValue + `<input type="hidden" id="${generateFormId(fields[key].fullField)}" name="${generateFormName(fields[key].fullField)}" value="${itemValue}">`
+					s+=`<input type="hidden" id="${generateFormId(fields[key].fullField)}" name="${generateFormName(fields[key].fullField)}" value="${itemValue}">`
 				}
-
-				if(fields[key].html!=undefined){
-					var html=fields[key].html
-					row2[fields[key].field]=itemValue
-					html=replaceUrlCurlyBracket(html,row2)
-					
-					s+=`<td class="${fields[key].class || 'ml-1'}">${html}`
-				}else{
-					if(fields[key].type=='boolean'){
-						s+=td
-					}else{
-						s+=td + itemValue
-					}
-					
-				}
-				
 				s+=`</td>`
 			}
 		})
@@ -823,42 +613,18 @@
 					s+=`${options.buttons[key][0]?replaceUrlCurlyBracket(options.buttons[key][1],row):''}`
 				}
 			})
-			var field0=''
-			if(fields['name']!=undefined){
-				field0='name'
-			}else{
-				Object.keys(fields).forEach((key,index)=>{
-					if(field0!='')
-						return
-					if(fields[key].field.indexOf('name')>-1){
-						field0=fields[key].field
-						return
-					}
-					if(fields[key].type=='string'){
-
-						field0=fields[key].field
-						return
-					}
-				})
-				if(field0==''){
-					field0=fields[Object.keys(fields)[0]].field
-				}
-			}
 			var deleteButtonHtml=''
 			if(options.buttons.delete[0]){
+
 				deleteButtonHtml=options.buttons.delete[1]
-				deleteButtonHtml=deleteButtonHtml.replaceAll('{field[0]}',getPropertyByKeyPath(row,field0))
 				deleteButtonHtml=replaceUrlCurlyBracket(deleteButtonHtml,row)
+				if(fields.name!=undefined){
+					deleteButtonHtml=deleteButtonHtml.replace('{field[0]}',getPropertyByKeyPath(row,'name'))
+				}else{
+					deleteButtonHtml=deleteButtonHtml.replace('{field[0]}',getPropertyByKeyPath(row,Object.keys(fields)[0]))
+				}
 			}
-
-			var copyButtonHtml=''
-			if(options.buttons.copy[0]){
-				copyButtonHtml=options.buttons.copy[1]
-				copyButtonHtml=copyButtonHtml.replaceAll('{field[0]}',getPropertyByKeyPath(row,field0))
-				copyButtonHtml=replaceUrlCurlyBracket(copyButtonHtml,row)
-			}
-
-			s+=`${copyButtonHtml}
+			s+=`${options.buttons.copy[0]?replaceUrlCurlyBracket(options.buttons.copy[1],row):''}
 			${options.buttons.print[0]?replaceUrlCurlyBracket(options.buttons.print[1],row):''}
 			${options.buttons.view[0]?replaceUrlCurlyBracket(options.buttons.view[1],row):''}
 			${options.buttons.edit[0]?replaceUrlCurlyBracket(options.buttons.edit[1],row):''}
@@ -899,7 +665,7 @@
 					cls='text-center'
 					break
 				}
-				s+=`<th class="${cls}" style="${(typeof fields[key].width!='undefined')?'width:' + fields[key].width:''}">${(typeof fields[key].icon!='undefined')?'<i class="' + fields[key].icon + '"></i>':''} ${fields[key].title || fields[key].caption || fields[key].text || ''}</th>`
+				s+=`<th class="${cls}" style="${(typeof fields[key].width!='undefined')?'width:' + fields[key].width + 'px':''}">${(typeof fields[key].icon!='undefined')?'<i class="' + fields[key].icon + '"></i>':''} ${fields[key].title || fields[key].caption || fields[key].text || ''}</th>`
 			}
 		})
 
@@ -971,7 +737,7 @@
 		}
 
 		if(options.buttons.copy[0]==true && options.buttons.copy[1]==''){
-			options.buttons.copy[1]=`<a href="javascript:gridCopyItem('{field[0]}','{_id}')" class="btn btn-grid-row btn-success " title="Kopyala"><i class="fas fa-copy"></i></a>`
+			options.buttons.copy[1]=`<a href="javascript:alert('kopyala {_id}')" class="btn btn-grid-row btn-success " title="Kopyala"><i class="fas fa-copy"></i></a>`
 		}
 
 		if(options.buttons.print[0]==true && options.buttons.print[1]==''){

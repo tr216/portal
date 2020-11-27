@@ -30,8 +30,6 @@
 
 	}
 
-	var generateFormScript1=false
-
 	function start(fields,options,uiParams,data){
 
 		options.formName=options.formName || 'form-general'
@@ -47,12 +45,6 @@
 			headerButtons=options.headerButtons
 		}
 
-		Object.keys(fields).forEach((key)=>{
-			if(fields[key].visible==undefined)
-				fields[key].visible=true
-		})
-
-
 
 		var isTabForm=false
 		if(fields.tabs!=undefined){
@@ -62,41 +54,6 @@
 		}
 
 		var s=`${(options.form==undefined?true:options.form)?'<form method="POST" action="" name="' + options.formName + '" id="' + options.formName + '" autocomplete="off" >':''}`
-
-		var script1=`
-		<script type="text/javascript">
-		var fields=${JSON.stringify(fields)}
-		var options=${JSON.stringify(options)}
-		var data=${JSON.stringify(data || {})}
-
-		</script>
-
-		<script type="text/javascript">
-		`
-		if(options.script!=undefined){
-			script1+=`
-
-			`
-			if(Array.isArray(options.script)){
-				options.script.forEach((e)=>{
-					script1+=e + '\r\n'
-				})
-			}else{
-				script1+=options.script
-			}
-		}
-		script1+=`
-		</script>
-		`
-		
-		if(frontEnd){
-			if(generateFormScript1==false){
-				$('body').append(script1)
-				generateFormScript1=true
-			}
-		}else{
-			s+=script1
-		}
 
 		if(isTabForm){
 			var bFound=false
@@ -156,7 +113,7 @@
 		var fields=${JSON.stringify(fields)}
 		var options=${JSON.stringify(fields)}
 		var data=${JSON.stringify(data || {})}
-
+		
 		$(document).ready(()=>{
 			var headerButtons=document.getElementById('headerButtons')
 			if(headerButtons)
@@ -185,6 +142,22 @@
 
 			script+=`	})
 
+			`
+
+			if(options.script!=undefined){
+				script+=`
+					
+				`
+				if(Array.isArray(options.script)){
+					options.script.forEach((e)=>{
+						script+=e + '\r\n'
+					})
+				}else{
+					script+=options.script
+				}
+			}
+
+			script+=`
 			</script>
 			`
 
@@ -215,7 +188,6 @@
 				}
 				item['type']=ifNull(item['type'],'string')
 				item['required']=ifNull(item['required'],false)
-				item['visible']=ifNull(item['visible'],true)
 				item['collapsed']=ifNull(item['collapsed'],false)
 				item['lookup']=ifNull(item['lookup'],{})
 				if(item.staticValues!=undefined){
@@ -256,7 +228,7 @@
 
 				if(item.hasChildren){
 					if(frontEnd){
-						s+=`<div class="card cerceve1 ${item.col} p-0 m-0 mb-2 ${!item.visible?'hidden':''}">
+						s+=`<div class="card cerceve1 ${item.col} p-0 m-0 mb-2">
 						<div class="card-header  ${item.collapsed?'collapsed':'collapsible'}">
 						<a class="btn btn-collapse ${item.collapsed?'collapsed':''}" data-toggle="collapse" data-target="#cardCollapse${generateFormId(key)}" aria-expanded="${item.collapsed?'false':'true'}" aria-fields="cardCollapse${generateFormId(key)}" href="#"><i class="far fa-caret-square-up"></i></a>
 						${item.title}
@@ -270,7 +242,7 @@
 						</div>
 						</div>`
 					}else{
-						s+=`<div class="card cerceve1 ${item.col} p-0 m-0 mb-2 ${!item.visible?'hidden':''}">
+						s+=`<div class="card cerceve1 ${item.col} p-0 m-0 mb-2">
 						<div class="card-header ${item.collapsed==false?'collapsed':'collapsible'}">
 						${item.title}
 						</div>
@@ -311,7 +283,7 @@
 						break
 						case 'label': 
 						case 'div': 
-						s+= label(item,itemValue)
+						s+=  label(item,itemValue)
 						break
 						case 'w-100': 
 						case 'w100': 
@@ -458,7 +430,7 @@ function insideGrid(item,uiParams,itemValue){
 	formGridOptions=Object.assign({},formGridOptions,item.options)
 
 	if(frontEnd){
-		s+=`<div class="card cerceve1 ${item.col} p-0 m-0 mb-2 ${!item.visible?'hidden':''}">
+		s+=`<div class="card cerceve1 ${item.col} p-0 m-0 mb-2">
 		<div class="card-header  ${item.collapsed?'collapsed':'collapsible'}">
 		<a class="btn btn-collapse ${item.collapsed?'collapsed':''}" data-toggle="collapse" data-target="#cardCollapse${generateFormId(key)}" aria-expanded="${item.collapsed?'false':'true'}" aria-fields="cardCollapse${generateFormId(key)}" href="#"><i class="far fa-caret-square-up"></i></a>
 		${item.title}
@@ -472,7 +444,7 @@ function insideGrid(item,uiParams,itemValue){
 		</div>
 		</div>`
 	}else{
-		s+=`<div class="card cerceve1 ${item.col} p-0 m-0 mb-2 ${!item.visible?'hidden':''}">
+		s+=`<div class="card cerceve1 ${item.col} p-0 m-0 mb-2">
 		<div class="card-header ${item.collapsed==false?'collapsed':'collapsible'}">
 		${item.title}
 		</div>
@@ -490,10 +462,10 @@ function textBox(field,value,inline=false){
 	var s=``
 
 	if(inline==false) 
-		s+=`<div class="form-group ${field.col} ${!field.visible?'hidden':''}" >
+		s+=`<div class="form-group ${field.col}" >
 	<label class="m-0 p-0">${field.title}${field.required?' *':''}</label>`
 
-	s+=`<input type="text" class="form-control ${field.class || ''} ${!field.visible?'hidden':''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" autocomplete="chrome-off" onkeydown="" value="${value}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''} ${field.onchange?'onchange="' + field.onchange + '"':''}>`
+	s+=`<input type="text" class="form-control ${field.class || ''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" autocomplete="chrome-off" onkeydown="" value="${value}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''}>`
 	
 	if(inline==false)
 		s+=`</div>`
@@ -506,16 +478,16 @@ function remoteLookup(field,value,inline=false){
 
 	var s=``
 	if(inline==false) 
-		s+=`<div class="form-group ${field.col} ${!field.visible?'hidden':''}" >
+		s+=`<div class="form-group ${field.col}" >
 	<label class="m-0 p-0">${field.title}${field.required?' *':''}</label>`
 
-	s+=`<div class="input-group ${!field.visible?'hidden':''}">
+	s+=`<div class="input-group">
 	<input type="text" class="form-control ${field.class || ''}" id="${generateFormId(field.field)}-autocomplete-text" name="${generateFormName(field.field)}-autocomplete-text" placeholder="${field.readonly==true?'':field.title}" autocomplete="chrome-off" onkeydown="" value="" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''}>
 	<div class="input-group-prepend">
 	<div class="input-group-text"><i class="fas fa-braille"></i></div>
 	</div>
 	</div>	
-	<input type="hidden" class="form-control ${field.class || ''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" onkeydown="" value="${value}"  ${field.onchange?'onchange="' + field.onchange + '"':''}>
+	<input type="hidden" class="form-control ${field.class || ''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" onkeydown="" value="${value}">
 	`
 	if(inline==false)	
 		s+=`</div>`
@@ -645,10 +617,10 @@ function remoteLookup(field,value,inline=false){
 		var cboEasyDate='thisMonth'
 		var s=``
 		if(inline==false)
-			s+=`<div class="form-group ${field.col} ${!field.visible?'hidden':''}" >
+			s+=`<div class="form-group ${field.col}" >
 		<label class="m-0 p-0">${field.title}${field.required?' *':''}</label>`
 		
-		s+=`<div id="${generateFormId(field.field)}" class=" ${!field.visible?'hidden':''}">
+		s+=`<div id="${generateFormId(field.field)}">
 		<div class="float-left">
 		<select class="form-control input-inline input-sm ${field.class || ''}" name="cboEasyDate" id="cboEasyDate">
 		<option value="" ${(cboEasyDate || '')==''?'selected':''}>Tarih</option>
@@ -676,14 +648,13 @@ function remoteLookup(field,value,inline=false){
 		return s
 	}
 
-
 	function dateBox(field,value,inline=false){
 		var s=``
 		if(inline==false)
-			s+=`<div class="form-group ${field.col} ${!field.visible?'hidden':''}" >
+			s+=`<div class="form-group ${field.col}" >
 		<label class="m-0 p-0">${field.title}${field.required?' *':''}</label>`
 
-		s+=`<input type="date" class="form-control ${field.class || ''} ${!field.visible?'hidden':''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" autocomplete="off" onkeydown="" value="${value}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''} ${field.onchange?'onchange="' + field.onchange + '"':''}>`
+		s+=`<input type="date" class="form-control ${field.class || ''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" autocomplete="off" onkeydown="" value="${value}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''}>`
 
 		if(inline==false)
 			s+=`</div>`
@@ -693,10 +664,10 @@ function remoteLookup(field,value,inline=false){
 	function timeBox(field,value,inline=false){
 		var s=``
 		if(inline==false)
-			s+=`<div class="form-group ${field.col} ${!field.visible?'hidden':''}" >
+			s+=`<div class="form-group ${field.col}" >
 		<label class="m-0 p-0">${field.title}${field.required?' *':''}</label>`
 
-		s+=`<input type="time" class="form-control ${field.class || ''} ${!field.visible?'hidden':''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" autocomplete="off" onkeydown="" value="${value}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''} ${field.onchange?'onchange="' + field.onchange + '"':''}>`
+		s+=`<input type="time" class="form-control ${field.class || ''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" autocomplete="off" onkeydown="" value="${value}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''}>`
 		if(inline==false)
 			s+=`</div>`
 		return s
@@ -706,24 +677,23 @@ function remoteLookup(field,value,inline=false){
 	function numberBox(field,value,inline=false){
 		var s=``
 		if(inline==false)
-			s+=`<div class="form-group text-right ${field.col} ${!field.visible?'hidden':''}" >
+			s+=`<div class="form-group ${field.col}" >
 		<label class="m-0 p-0">${field.title}${field.required?' *':''}</label>`
 
-		s+=`<input type="number" class="form-control text-right ${field.class || ''} ${!field.visible?'hidden':''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" autocomplete="off" onkeydown="" value="${value}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''} ${field.onchange?'onchange="' + field.onchange + '"':''}>`
+		s+=`<input type="number" class="form-control ${field.class || ''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" placeholder="${field.readonly==true?'':field.title}" autocomplete="off" onkeydown="" value="${value}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''}>`
 
 		if(inline==false)
 			s+=`</div>`
-
 		return s
 	}
 
 	function textArea(field,value,inline=false){
 		var s=``
 		if(inline==false)
-			s+=`<div class="form-group ${field.col} ${!field.visible?'hidden':''}" >
+			s+=`<div class="form-group ${field.col}" >
 		<label class="m-0 p-0">${field.title}${field.required?' *':''}</label>`
 		
-		s+=`<textarea class="form-control ${field.class || ''} ${!field.visible?'hidden':''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}"  rows="${(typeof field.rows!='undefined')?field.rows:4}"  placeholder="${field.readonly==true?'':field.title}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''} ${field.onchange?'onchange="' + field.onchange + '"':''} value="${value}">dfdf</textarea>`
+		s+=`<textarea class="form-control ${field.class || ''}" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}"  rows="${(typeof field.rows!='undefined')?field.rows:4}"  placeholder="${field.readonly==true?'':field.title}" ${field.required?'required="required"':''} ${field.readonly==true?'readonly':''} value="${value}">dfdf</textarea>`
 
 		if(inline==false)
 
@@ -734,74 +704,45 @@ function remoteLookup(field,value,inline=false){
 	function label(field,value,inline=false){
 		var s=``
 
-		if(inline==false){
-			s+=`
-			<label class="form-group ${field.col} ${!field.visible?'hidden':''}">
-			<div class="${field.class || ''} ${!field.visible?'hidden':''}" id="${generateFormId(field.field)}">${field.title}</div>
-			</label>`
-		}else{
-			s+=`<div class="${field.class || ''} ${!field.visible?'hidden':''}" id="${generateFormId(field.field)}">${field.title}</div>`
-		}
+		if(inline==false)
+			s+=`<div class="form-group ${field.col}" >`
 
+		if(field.type=='label'){
+			s+=`<div class="${field.class || ''}" id="${generateFormId(field.field)}"><b>${field.title}:</b> ${value}</div>`
+		} else {
+			s+=`<div class="${field.class || ''}" id="${generateFormId(field.field)}">${field.title}</div>`
+		}
+		if(inline==false)
+			s+=`</div>`
 		return s
 	}
 
 	function checkBox(field,value,inline=false){
 
 		if(inline==false){
-			return `<div class="form-group ${field.col} ${!field.visible?'hidden':''}">
+			return `<div class="form-group ${field.col}">
 			<label>
 			<span class="mb-1" style="display:block;">${field.title}</span>
-			<input type="checkbox" class="form-checkbox" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" value="true" ${(value?'checked':'')} ${field.readonly==true?'disabled':''} ${field.onchange?'onchange="' + field.onchange + '"':''} />
-			<input type="hidden" id="${generateFormId(field.field)}-hidden" name="${generateFormName(field.field)}" value="false" />
-			<script type="text/javascript">
-				$(document).ready(()=>{
-					$('#${generateFormId(field.field)}').change(()=>{
-						if($('#${generateFormId(field.field)}').prop('checked')){
-							document.getElementById('${generateFormId(field.field)}-hidden').disabled=true
-						}else{
-							document.getElementById('${generateFormId(field.field)}-hidden').disabled=false
-						}
-					})
-				})
-			</script>
+			<input type="checkbox" class="form-checkbox" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" onkeydown="" value="true" ${(value?'checked':'')} ${field.readonly==true?'disabled':''} />
+
 			</label>
 			</div>`
 		}else{
-			return `
-			<div class="text-center">
-			<input type="checkbox" class="form-checkbox-inside ${!field.visible?'hidden':''}"  value="true" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" ${field.onchange?'onchange="' + field.onchange + '"':''}>
-			<input type="hidden" id="${generateFormId(field.field)}-hidden" name="${generateFormName(field.field)}" value="false" />
-			<script type="text/javascript">
-				$(document).ready(()=>{
-					$('#${generateFormId(field.field)}').change(()=>{
-						if($('#${generateFormId(field.field)}').prop('checked')){
-							document.getElementById('${generateFormId(field.field)}-hidden').disabled=true
-						}else{
-							document.getElementById('${generateFormId(field.field)}-hidden').disabled=false
-						}
-					})
-				})
-			</script>
-			</div>
+			return `<label>
+				<input type="checkbox" class="form-control" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" onkeydown="" value="true" ${(value?'checked':'')} ${field.readonly==true?'disabled':''} />
+				${field.title}
+				</label>
 			`
-			
-			// return `<div class="form-check ${!field.visible?'hidden':''}">
-			// <input class="form-check-input" type="checkbox" value="true" id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" ${field.onchange?'onchange="' + field.onchange + '"':''}>
-			// <label class="form-check-label" for="${generateFormId(field.field)}">
-			// ${field.title}
-			// </label>
-			// </div>`
 		}
 	}
 
 	function lookUp(field,value,inline=false){
 		var s=``
 		if(inline==false)
-			s+=`<div class="form-group ${field.col} ${!field.visible?'hidden':''}">
+			s+=`<div class="form-group ${field.col}">
 		<label class="m-0 p-0">${field.title}${field.required?' *':''}</label>`
 
-		s+=`<select id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" class="form-control ${field.class || ''} ${!field.visible?'hidden':''}" onkeydown="" ${field.required?'required="required"':''} ${field.readonly==true?'disabled':''} ${field.onchange?'onchange="' + field.onchange + '"':''}>`
+		s+=`<select id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" class="form-control" onkeydown="" ${field.required?'required="required"':''} ${field.readonly==true?'disabled':''}>`
 		if(field.all==true){
 			s+=`<option value="" ${value==''?'selected':''}>*</option>`
 		}else{
@@ -825,20 +766,20 @@ function remoteLookup(field,value,inline=false){
 
 
 	function jsonData(field,value,inline=false){
-		return `<div class="form-group  ${field.col} ${!field.visible?'hidden':''}">
+		return `<div class="form-group  ${field.col}">
 		<label class="m-0">${field.title}${field.required?' *':''}</label>
-		<textarea id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" class="form-control ${field.class || ''} ${!field.visible?'hidden':''}" rows="10"  style="height: auto;font-family: monospace;" ${field.readonly==true?'readonly':''} ${field.onchange?'onchange="' + field.onchange + '"':''}>${(typeof value=='object')?JSON.stringify(value,null,2):value}</textarea>
+		<textarea id="${generateFormId(field.field)}" name="${generateFormName(field.field)}" class="form-control" rows="10"  style="height: auto;font-family: monospace;" ${field.readonly==true?'readonly':''}>${(typeof value=='object')?JSON.stringify(value,null,2):value}</textarea>
 		</div>`
 
 	}
 
 	function fileBase64(field,value,inline=false){
-		return `<div class="form-group ${field.col} ${!field.visible?'hidden':''}">
+		return `<div class="form-group ${field.col}">
 		<label class="m-0 p-0">${field.title}${field.required?' *':''}</label><br>
 
 		<label for="fileToUpload_${field.field.replaceAll('.','_')}" class="btn btn-primary"><i class="fa fa-file"></i> Dosya seçiniz</label>
 		<input type="file" name="fileToUpload_${field.field}" id="fileToUpload_${field.field.replaceAll('.','_')}" style="visibility:hidden;" accept="" >
-		<input type="hidden" name="${generateFormName(field.field)}[data]" id="fileDataBase64_${field.field.replaceAll('.','_')}" value="${(typeof value.data!='undefined')?value.data:''}" ${field.onchange?'onchange="' + field.onchange + '"':''}>
+		<input type="hidden" name="${generateFormName(field.field)}[data]" id="fileDataBase64_${field.field.replaceAll('.','_')}" value="${(typeof value.data!='undefined')?value.data:''}">
 		<input type="hidden" name="${generateFormName(field.field)}[type]" id="fileToUpload_${field.field.replaceAll('.','_')}_type" value="${(typeof value.type!='undefined')?value.type:''}">
 		<input type="hidden" name="${generateFormName(field.field)}[fileName]" id="fileToUpload_${field.field.replaceAll('.','_')}_fileName" value="${(typeof value.fileName!='undefined')?value.fileName:''}">
 
@@ -868,13 +809,13 @@ function remoteLookup(field,value,inline=false){
 
 	function fileBase64Image(field,value,inline=false){
 		
-		return `<div class="form-group ${field.col} ${!field.visible?'hidden':''}">
+		return `<div class="form-group ${field.col}">
 		<label for="fileToUpload_${field.field.replaceAll('.','_')}" class="btn btn-primary"><i class="fas fa-images"></i> ${field.title}${field.required?' *':''}</label>
 		<br>
 		<img id="fileToUpload_download_${field.field.replaceAll('.','_')}" src="${(typeof value.data!='undefined')?value.data:'/img/placehold-place.jpg'}" download="${(typeof value.fileName!='undefined')?value.fileName:''}" style="width: 300px;height: 300px;">
 
 		<input type="file" name="fileToUpload_${field.field}" id="fileToUpload_${field.field.replaceAll('.','_')}" style="visibility:hidden;" accept="" >
-		<input type="hidden" name="${generateFormName(field.field)}[data]" id="fileDataBase64_${field.field.replaceAll('.','_')}" value="${(typeof value.data!='undefined')?value.data:''}" ${field.onchange?'onchange="' + field.onchange + '"':''}>
+		<input type="hidden" name="${generateFormName(field.field)}[data]" id="fileDataBase64_${field.field.replaceAll('.','_')}" value="${(typeof value.data!='undefined')?value.data:''}">
 		<input type="hidden" name="${generateFormName(field.field)}[type]" id="fileToUpload_${field.field.replaceAll('.','_')}_type" value="${(typeof value.type!='undefined')?value.type:''}">
 		<input type="hidden" name="${generateFormName(field.field)}[fileName]" id="fileToUpload_${field.field.replaceAll('.','_')}_fileName" value="${(typeof value.fileName!='undefined')?value.fileName:''}">
 

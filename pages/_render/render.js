@@ -133,6 +133,8 @@ function normalForm(req,res,item,data,cb){
 		
 		
 		if(req.method=='POST'){
+			console.log(`req.body:`,req.body)
+			console.log(`data.form:`,data.form)
 			data.form=Object.assign(data.form,req.body)
 			api.put(url,req,data.form,(err,resp)=>{
 				if(!err){

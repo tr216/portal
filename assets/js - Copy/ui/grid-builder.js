@@ -132,18 +132,17 @@
 		if(generateGridScript1==false){
 			script1+=`<script type="text/javascript">
 			var keyupTimer=0
-			var grid${id}data={
-				fields:` + JSON.stringify(fields) + `,
-				options:` + JSON.stringify(options) + `,
-				list:` + JSON.stringify(data.docs) + `
-			}
-			
-			Object.keys(grid${id}data.fields).forEach((key)=>{
-				if(grid${id}data.fields[key].field==undefined){
-					grid${id}data.fields[key]['field']=key
+
+			var fields=` + JSON.stringify(fields) + `
+			var options=` + JSON.stringify(options) + `
+			var list=` + JSON.stringify(data.docs) + `
+
+			Object.keys(fields).forEach((key)=>{
+				if(fields[key].field==undefined){
+					fields[key]['field']=key
 				}
-				if(grid${id}data.fields[key].visible==undefined){
-					grid${id}data.fields[key]['visible']=true
+				if(fields[key].visible==undefined){
+					fields[key]['visible']=true
 				}
 			})
 			</script>
@@ -222,11 +221,11 @@
 					var table1=document.querySelector('#gridBody${id}')
 					table1.innerHTML=''
 
-					grid${id}data.list.forEach((e,index)=>{
+					list.forEach((e,index)=>{
 						if(index==editRowIndex){
-							table1.innerHTML+=\`\${gridBuilder.updateRow(${id},grid${id}data.fields,grid${id}data.options,e,index)}\` 
+							table1.innerHTML+=\`\${gridBuilder.updateRow(${id},fields,options,e,index)}\` 
 						}else{
-							table1.innerHTML+=\`\${gridBuilder.gridRow(${id},grid${id}data.fields,grid${id}data.options,e,index)}\` 
+							table1.innerHTML+=\`\${gridBuilder.gridRow(${id},fields,options,e,index)}\` 
 						}
 					})
 					`
@@ -234,22 +233,14 @@
 					if(options.insideForm && options.buttons.add[0]){
 						script+=`
 						if(editRowIndex<0){
-							table1.innerHTML+=\`\${gridBuilder.updateRow(` + id + `,grid${id}data.fields,grid${id}data.options,null)}\`
+							table1.innerHTML+=\`\${gridBuilder.updateRow(` + id + `,fields,options,null)}\`
 						}
-						`
-					}
-
-					if(options.onchange!=undefined){
-						script+=`
-						${options.onchange.replaceAll('this.value','grid' + id + 'data')}
 						`
 					}
 					script+=`
 				}
+				refreshGrid${id}()
 
-				$(document).ready(()=>{
-					refreshGrid${id}()
-				})
 				
 				`
 			}
@@ -342,15 +333,15 @@
 				function runFilter(){
 					var params=getAllUrlParams()
 					var filtreVar=false
-					Object.keys(grid${id}data.fields).forEach((key,index)=>{
-						if(grid${id}data.options.filter){
+					Object.keys(fields).forEach((key,index)=>{
+						if(options.filter){
 							filtreVar=true;
 							if($('#filter_' + index).val()!=''){
-								params[grid${id}data.fields[key].filterField || key]=$('#filter_' + index).val()
+								params[fields[key].filterField || key]=$('#filter_' + index).val()
 							}else{
-								if(params[grid${id}data.fields[key].filterField || key]!=undefined){
-									params[grid${id}data.fields[key].filterField || key]=undefined
-									delete params[grid${id}data.fields[key].filterField || key]
+								if(params[fields[key].filterField || key]!=undefined){
+									params[fields[key].filterField || key]=undefined
+									delete params[fields[key].filterField || key]
 								}
 							}
 						}
@@ -446,24 +437,6 @@
 					}
 				})
 			}
-
-			function autoIncrement(item,itemValue,rowIndex){
-				if(grid${id}data.list!=undefined && rowIndex<0){
-					var maxID=0
-					grid${id}data.list.forEach((e)=>{
-						var sayi=getPropertyByKeyPath(e,item.field)
-						if(!isNaN(sayi)){
-
-							if(Number(sayi)>maxID){
-								maxID=Number(sayi)
-							}
-						}
-					})
-					return maxID+1
-				}else{
-					return itemValue
-				}
-			}
 			</script>`
 
 		}
@@ -497,7 +470,6 @@
 				}
 
 				var item=clone(fields[key])
-				item.field=`grid${id}-${item.field}`
 				item.required=false
 				if(item.type==undefined)
 					return ''
@@ -519,7 +491,19 @@
 					case 'autoinc' :
 					case 'identity' :
 					case 'autoincrement' :
-					itemValue=autoIncrement(item,itemValue,rowIndex)
+					if(list!=undefined && rowIndex<0){
+						var maxID=0
+						list.forEach((e)=>{
+							var sayi=getPropertyByKeyPath(e,item.field)
+							if(!isNaN(sayi)){
+							
+								if(Number(sayi)>maxID){
+									maxID=Number(sayi)
+								}
+							}
+						})
+						itemValue=maxID+1
+					}
 					s+= formBuilder.numberBox(item,itemValue,true)
 					break
 					case 'date' :
@@ -594,15 +578,16 @@
 					Object.keys(fields).forEach((key)=>{
 						
 						if(fields[key].calc!=undefined){
-							var keyVar='formula_' + generateFormId('grid' + id + '-' + fields[key].field).replaceAll('-','_')
+							var keyVar='formula_' + generateFormId(fields[key].field).replaceAll('-','_')
 							var controlId=generateFormId(fields[key].field)
 							var formul=fields[key].calc
 							Object.keys(fields).forEach((key2)=>{
-								formul=formul.replaceAll(`{${'grid' + id + '-' + fields[key2].field}}`,`obj['${fields[key2].field}']`)
+								formul=formul.replaceAll(`{${fields[key2].field}}`,`obj['${fields[key2].field}']`)
 							})
 							script+=`
 							var ${keyVar}=\`${formul}\`
-							
+							console.log('obj:',obj)
+							console.log(${keyVar})
 							$('#${controlId}').val(eval(${keyVar}))
 							`
 						}
@@ -616,21 +601,16 @@
 
 
 			function okUpdateRow${id}(rowIndex=-100){
-
-				
-
 				var obj=listObjectToObject(getupdateRowValues${id}())
 				if(!obj)
 					return false
 				if(rowIndex<0){
-					grid${id}data.list.push(obj)
+					list.push(obj)
 				}else{
-					grid${id}data.list[rowIndex]=Object.assign(grid${id}data.list[rowIndex],obj)
+					list[rowIndex]=Object.assign(list[rowIndex],obj)
 				}
 				refreshGrid${id}()
 				$('#divUpdateRow${id} #${generateFormId(fields[Object.keys(fields)[0]].field)}').focus()
-
-				
 				return false
 			}
 
@@ -640,20 +620,16 @@
 				Object.keys(fields).forEach((key,index)=>{
 					if(fields[key].type=='number'){
 						script+=`
-						if(!isNaN($('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[key].field)}').val())){
-							obj['${fields[key].field}']=Number($('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[key].field)}').val())
+						if(!isNaN($('#divUpdateRow${id} #${generateFormId(fields[key].field)}').val())){
+							obj['${fields[key].field}']=Number($('#divUpdateRow${id} #${generateFormId(fields[key].field)}').val())
 						}else{
 							obj['${fields[key].field}']=0
 						}
 						
 						`
-					}else if(fields[key].type=='boolean'){
-						script+=`
-						obj['${fields[key].field}']=$('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[key].field)}').prop("checked")?true:false
-						`
 					}else{
 						script+=`
-						obj['${fields[key].field}']=$('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[key].field)}').val()
+						obj['${fields[key].field}']=$('#divUpdateRow${id} #${generateFormId(fields[key].field)}').val()
 						`
 					}
 				})
@@ -661,12 +637,11 @@
 
 				var valid=true
 				var validMessage=''
-				Object.keys(grid${id}data.fields).forEach((key)=>{
-					var field=grid${id}data.fields[key]
-					if(field.required){
-						if($('#divUpdateRow${id} #' + generateFormId('grid' + id + '-' + field.field)).val()==''){
+				Object.keys(fields).forEach((key)=>{
+					if(fields[key].required){
+						if($('#divUpdateRow${id} #' + generateFormId(fields[key].field)).val()==''){
 							valid=false
-							validMessage+=field.field + ' gereklidir<br>'
+							validMessage+=fields[key].field + ' gereklidir<br>'
 						}
 					}
 				})
@@ -678,15 +653,11 @@
 			}
 
 			function removeGridRow${id}(rowIndex){
-				if(rowIndex<0 || rowIndex>grid${id}data.list.length-1)
-					return
-
 				`
-
 				if((options.confirmBeforeRemove==undefined?true:options.confirmBeforeRemove)){
 					script+=`confirmX('Satır silinecektir! Onaylıyor musunuz?',(answer)=>{
 						if(answer){
-							grid${id}data.list.splice(rowIndex,1)
+							list.splice(rowIndex,1)
 							reorderList${id}()
 
 							refreshGrid${id}()
@@ -695,32 +666,35 @@
 					`
 				}else{
 					script+=`
-					grid${id}data.list.splice(rowIndex,1)
+					list.splice(rowIndex,1)
 					reorderList${id}()
 					refreshGrid${id}()
 					`
 				}
 				script+=`
-
 			}
 
 			function reorderList${id}(){
-				Object.keys(grid${id}data.fields).forEach((key)=>{
-					if(grid${id}data.fields[key].type=='identity' || grid${id}data.fields[key].type=='autoInc' || grid${id}data.fields[key].type=='autoIncrement'){
-						var fieldName=grid${id}data.fields[key].field
-						grid${id}data.list.forEach((e,index)=>{
+				Object.keys(fields).forEach((key)=>{
+					if(fields[key].type=='identity' || fields[key].type=='autoInc' || fields[key].type=='autoIncrement'){
+						var fieldName=fields[key].field
+						list.forEach((e,index)=>{
+
+							console.log('fieldName',fieldName)
+
 							var listObj={}
 							var obj={}
 							listObj[fieldName]=index+1
 							obj=listObjectToObject(listObj)
 							e=Object.assign(e,obj)
+						
 						})
 					}
 				})
 			}
 			function cancelUpdateRow${id}(rowIndex){
 				refreshGrid${id}()
-				$('#divUpdateRow${id} #${generateFormId('grid' + id + '-' + fields[Object.keys(fields)[0]].field)}').focus()
+				$('#divUpdateRow${id} #${generateFormId(fields[Object.keys(fields)[0]].field)}').focus()
 			}
 			</script>`
 
@@ -782,11 +756,8 @@
 				}else if(fields[key].type=='boolean'){
 					td=`<td class="${fields[key].class || 'text-center'}" style="font-size:20px;">`
 					if(fields[key].html==undefined){
-						td+=itemValue?'<i class="fas fa-check-square text-primary"></i>':'<i class="far fa-square text-dark"></i>'
+						itemValue=itemValue?'<i class="fas fa-check-square text-primary"></i>':'<i class="far fa-square text-dark"></i>'
 					}
-					if(options.insideForm){
-					td+=`<input type="hidden" id="${generateFormId(fields[key].fullField)}" name="${generateFormName(fields[key].fullField)}" value="${itemValue}">`
-				}
 				}else{
 					td=`<td class="${fields[key].class || 'ml-1'}">`
 				}
@@ -803,12 +774,7 @@
 					
 					s+=`<td class="${fields[key].class || 'ml-1'}">${html}`
 				}else{
-					if(fields[key].type=='boolean'){
-						s+=td
-					}else{
-						s+=td + itemValue
-					}
-					
+					s+=td + itemValue
 				}
 				
 				s+=`</td>`

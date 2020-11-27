@@ -100,7 +100,6 @@
 	{"text":"Ayarlar",  "icon":"fas fa-wrench",
 		"nodes":[
 			{"module":"settings.locations", "text":"Lokasyonlar", "path":"/settings/locations", "icon":"fas fa-map-marker"},
-			{"module":"settings.subLocations", "text":"Alt Lokasyonlar", "path":"/settings/sub-locations", "icon":"fas fa-th-large"},
 			{"module":"settings.shifts", "text":"Vardiya Tanımları",	"path":"/settings/shifts",  "icon":"far fa-clock"},
 			{"module":"settings.persons", "text":"Personel",  "path":"/settings/persons",  "icon":"fas fa-users"},
 			{"module":"settings.printDesigns", "text":"Yazdırma Tasarımları",	"path":"/settings/print-designs", "icon":"fas fa-print"},
