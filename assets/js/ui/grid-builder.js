@@ -451,7 +451,10 @@
 				if(grid${id}data.list!=undefined && rowIndex<0){
 					var maxID=0
 					grid${id}data.list.forEach((e)=>{
-						var sayi=getPropertyByKeyPath(e,item.field)
+						var fieldName=item.field.replace('grid${id}-','')
+						var sayi=getPropertyByKeyPath(e,fieldName)
+						console.log('sayi:',sayi)
+						
 						if(!isNaN(sayi)){
 
 							if(Number(sayi)>maxID){
@@ -585,7 +588,7 @@
 					divUpdateRow${id}_changing=true
 					
 
-					var obj=getupdateRowValues${id}()
+					var obj=getUpdateRowValues${id}()
 					if(!obj){
 						divUpdateRow${id}_changing=false
 						return
@@ -619,7 +622,7 @@
 
 				
 
-				var obj=listObjectToObject(getupdateRowValues${id}())
+				var obj=listObjectToObject(getUpdateRowValues${id}())
 				if(!obj)
 					return false
 				if(rowIndex<0){
@@ -634,7 +637,7 @@
 				return false
 			}
 
-			function getupdateRowValues${id}(){
+			function getUpdateRowValues${id}(){
 				var obj={}
 				`
 				Object.keys(fields).forEach((key,index)=>{
@@ -664,7 +667,7 @@
 				Object.keys(grid${id}data.fields).forEach((key)=>{
 					var field=grid${id}data.fields[key]
 					if(field.required){
-						if($('#divUpdateRow${id} #' + generateFormId('grid' + id + '-' + field.field)).val()==''){
+						if($('#divUpdateRow${id} #' + generateFormId('grid${id}-' + field.field)).val()==''){
 							valid=false
 							validMessage+=field.field + ' gereklidir<br>'
 						}
@@ -772,29 +775,28 @@
 							return
 						}
 					})
-					td=`<td class="${fields[key].class || 'ml-1'}">`
-					itemValue=lookupText
+					td=`<td class="${fields[key].class || 'ml-1'}">${lookupText}`
+					
 				}else if(fields[key].type=='number'){
-					td=`<td class="${fields[key].class || 'text-right mr-1'}">`
+					td=`<td class="${fields[key].class || 'text-right mr-1'}">${itemValue}`
 				}else if(fields[key].type=='money'){
-					td=`<td class="${fields[key].class || 'text-right mr-1'}">`
-					itemValue=Number(itemValue).formatMoney()
+					td=`<td class="${fields[key].class || 'text-right mr-1'}">${Number(itemValue).formatMoney()}`
+					
 				}else if(fields[key].type=='boolean'){
 					td=`<td class="${fields[key].class || 'text-center'}" style="font-size:20px;">`
 					if(fields[key].html==undefined){
 						td+=itemValue?'<i class="fas fa-check-square text-primary"></i>':'<i class="far fa-square text-dark"></i>'
 					}
-					if(options.insideForm){
-					td+=`<input type="hidden" id="${generateFormId(fields[key].fullField)}" name="${generateFormName(fields[key].fullField)}" value="${itemValue}">`
-				}
+					// if(options.insideForm){
+					// 	td+=`<input type="hidden" id="${generateFormId(fields[key].fullField)}" name="${generateFormName(fields[key].fullField)}" value="${itemValue}">`
+					// }
 				}else{
-					td=`<td class="${fields[key].class || 'ml-1'}">`
+					if(fields[key].html==undefined){
+						td=`<td class="${fields[key].class || 'ml-1'}">${itemValue}`
+					}
 				}
 				
-				if(options.insideForm){
-
-					itemValue=itemValue + `<input type="hidden" id="${generateFormId(fields[key].fullField)}" name="${generateFormName(fields[key].fullField)}" value="${itemValue}">`
-				}
+				
 
 				if(fields[key].html!=undefined){
 					var html=fields[key].html
@@ -803,14 +805,16 @@
 					
 					s+=`<td class="${fields[key].class || 'ml-1'}">${html}`
 				}else{
-					if(fields[key].type=='boolean'){
-						s+=td
-					}else{
-						s+=td + itemValue
-					}
-					
+					s+=td
+					// if(fields[key].type=='boolean'){
+					// 	s+=td
+					// }else{
+					// 	s+=td + itemValue
+					// }
 				}
-				
+				if(options.insideForm){
+					s+=`<input type="hidden" id="${generateFormId(fields[key].fullField)}" name="${generateFormName(fields[key].fullField)}" value="${itemValue}">`
+				}
 				s+=`</td>`
 			}
 		})
