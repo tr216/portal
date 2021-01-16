@@ -1,0 +1,24 @@
+{
+	"index": [
+		{
+			"type":"form",
+			"fields": {
+				"username"	:{"title":"Username", "type":"string" , "readonly":true},
+				"name"	:{"title":"İsim", "type":"string" },
+				"lastName"	:{"title":"Soyad", "type":"string" },
+				"gender"	:{"title":"Cinsiyet", "type":"lookup" , "staticValues":"genderList" },
+				"oldPassword"	:{"title":"Eski parola", "type":"password" },
+				"newPassword"	:{"title":"Yeni parola", "type":"password" },
+				"rePassword"	:{"title":"Tekrar parola", "type":"password" }
+			},
+			"options": {
+				"mode": "edit",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/me"
+				}
+			}
+		}
+	]
+}

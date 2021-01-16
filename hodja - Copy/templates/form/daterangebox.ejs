@@ -1,0 +1,38 @@
+<div class="form-group <%- locals.col %> <%- locals.visible==false?'hidden':'' %>">
+	<label class="m-0 p-0"><%- locals.title || locals.label || '' %></label>
+	<div id="<%-locals.id%>" class="row m-0 p-0">
+		<select class="form-control col-sm-4 <%-field.class || ''%>" name="cboEasyDate" id="cboEasyDate">
+			<option value="">Tarih</option>
+			<option value="today">Bugün</option>
+			<option value="thisWeek">Bu Hafta</option>
+			<option value="thisMonth" selected>Bu Ay</option>
+			<option value="last1Week">Son 1 Hafta</option>
+			<option value="last1Month">Son 1 Ay</option>
+			<option value="last3Months">Son 3 Ay</option>
+			<option value="last6Months">Son 6 Ay</option>
+			<option value="thisYear">Bu yıl</option>
+			<option value="last1Year">Son 1 yıl</option>
+		</select>
+		<input type="date" name="date1" id="date1" class="form-control col-sm-4" value="<%-moment().format('YYYY-MM-DD')%>">
+		<input type="date" name="date2" id="date2" class="form-control col-sm-4" value="<%-moment().format('YYYY-MM-DD')%>">
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(()=>{
+		$('#<%-locals.id%> #cboEasyDate').on('change',cboEasyDate_onchange)
+
+		if(pageSettings.getItem('<%-locals.id%>')){
+			$('#<%-locals.id%> #cboEasyDate').val(pageSettings.getItem('<%-locals.id%>'))
+			cboEasyDate_onchange()
+		}
+
+		function cboEasyDate_onchange(){
+			var obj=cboEasyDateChange($('#<%-locals.id%> #cboEasyDate').val())
+
+			$('#<%-locals.id%> #date1').val(obj.date1)
+			$('#<%-locals.id%> #date2').val(obj.date2)
+			pageSettings.setItem('<%-locals.id%>',$('#<%-locals.id%> #cboEasyDate').val())
+		}
+	})
+</script>

@@ -1,0 +1,108 @@
+{
+	"index":[
+		{
+			"type": "grid",
+			"fields": {
+				"moldGroup":{
+					"title":"Grubu", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/mrp-mold-groups",
+						"label":"{name}"
+					}
+				},
+				"machineGroup":{
+					"title":"Makine Grubu", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/mrp-machine-groups",
+						"label":"{name}"
+					}
+				},
+				"name":{"title":"Adı", "type":"string"},
+				"description":{"title":"Açıklama", "type":"string"},
+				"cavity":{"title":"Kavite", "type":"number"},
+				"account":{"title":"Muhasebe Kodu", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/accounts",
+						"label":"{accountCode} - {name}"
+					}
+				},
+				"passive":{"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": false
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/mrp-molds"
+				}
+			},
+			"data": {
+				"docs":[],
+				"page":1,
+				"pageSize":10,
+				"pageCount":0,
+				"recordCount":0
+			}
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields": {
+				"moldGroup":{
+					"title":"Grubu", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/mrp-mold-groups",
+						"label":"{name}"
+					}
+				},
+				"machineGroup":{
+					"title":"Makine Grubu", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/mrp-machine-groups",
+						"label":"{name}"
+					}
+				},
+				"name":{"title":"Adı", "type":"string"},
+				"description":{"title":"Açıklama", "type":"string"},
+				"cavity":{"title":"Kavite", "type":"number"},
+				"account":{"title":"Muhasebe Kodu", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/accounts",
+						"label":"{accountCode} - {name}"
+					}
+				},
+				"passive":{"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/mrp-molds"
+				}
+			}
+		}
+	]
+}

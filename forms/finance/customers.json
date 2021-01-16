@@ -15,9 +15,9 @@
 					"add": true,
 					"edit": true,
 					"delete": true,
-					"view": true,
+					"view": false,
 					"print": false,
-					"copy": false
+					"copy": true
 				},
 				"dataSource": {
 					"type":"remote",
@@ -50,16 +50,16 @@
 				"iletisim":{
 					"collapsed":true,
 					"title":"İletişim",
-					"controls":{
-						"contact.telephone.value"			:{"title":"Telefon", "type":"string"},
-						"contact.telefax.value"				:{"title":"Fax", "type":"string"},
-						"contact.electronicMail.value":{"title":"E-Mail", "type":"string"}
+					"fields":{
+						"contact.telephone.value"			:{"title":"Telefon", "type":"string", "col":4},
+						"contact.telefax.value"				:{"title":"Fax", "type":"string", "col":4},
+						"contact.electronicMail.value":{"title":"E-Mail", "type":"string", "col":4}
 					}
 				},
 				"adres":{
 					"title":"Adres",
 					"collapsed":true,
-					"controls":{
+					"fields":{
 						"postalAddress.streetName.value"				:{"title":"Cadde/Sokak", "type":"string", 	"col":6},
 						"postalAddress.buildingNumber.value"		:{"title":"Cadde Sokak Kapı No", "type":"string", 	"col":3},
 						"postalAddress.buildingName.value"			:{"title":"Bina/Site adı", "type":"string", 	"col":3},

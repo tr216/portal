@@ -1,0 +1,10 @@
+<script type="text/javascript">
+
+</script>
+
+<form method="POST" action="<%- locals.action || '' %>" name="<%- locals.name || 'form-filter' %>" id="<%- locals.id || locals.name || 'form-filter' %>" autocomplete="off" >
+	<div class="row p-0 m-0">
+		<%- (locals.controls || '') %>
+		<div class="col text-right mt-1 pt-3"><button type="submit" class="btn btn-primary" name="btnFilter"><i class="fas fa-filter"></i> Süz</button></div>
+	</div>
+</form>

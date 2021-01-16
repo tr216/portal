@@ -41,8 +41,9 @@
 			"fields": {
 				"name":{"title":"Adı", "type":"string"},
 				"description":{"title":"Açıklama", "type":"string"},
-				"level":{"title":"Level", "type":"number", "value":1},
-				"passive":{"title":"Pasif?", "type":"boolean"}
+				"level":{"title":"Level", "type":"number", "value":1,"col":3},
+				"div1":{"type":"w-100"},
+				"passive":{"title":"Pasif?", "type":"boolean","col":4}
 			},
 			"options": {
 				"mode": "general",

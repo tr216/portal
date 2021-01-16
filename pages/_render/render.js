@@ -3,7 +3,7 @@ module.exports = function(req,res,data,callback){
 	//
 	data.filter=Object.assign({},data.filter,req.query)
 
-	if(!data.template)
+	if(!data.jsonPage)
 		return callback(null,data)
 	
 	if(req.method=='POST'){
@@ -14,8 +14,6 @@ module.exports = function(req,res,data,callback){
 			data.filter['btnFilter']=undefined
 			delete data.filter['btnFilter']
 			data.filter['page']=1
-
-			
 			res.redirect(`${data.urlPath}?${mrutil.encodeUrl(data.filter)}`)
 			return
 		}
@@ -31,30 +29,33 @@ module.exports = function(req,res,data,callback){
 function createPage(req,res,data,callback){
 
 	var func=req.params.func || 'index'
-	var templateForm
+	var jsonPage
 	switch(func){
 		case 'edit':
-		templateForm=data.template.edit || data.template.form
+		jsonPage=data.jsonPage.edit || data.jsonPage.form
 		break
 		case 'view':
-		templateForm=data.template.view || data.template.edit || data.template.form
+		jsonPage=data.jsonPage.view || data.jsonPage.edit || data.jsonPage.form
 		break
 		case 'addnew':
-		templateForm=data.template.addnew || data.template.form
+		jsonPage=data.jsonPage.addnew || data.jsonPage.form
 		break
 		default:
-		templateForm=data.template.index
+		jsonPage=data.jsonPage.index
 		break
 	}
-	if(templateForm==undefined){
+	if(jsonPage==undefined){
 		return callback({code:'404',message:'Sayfa bulunamadi'},data)
 	}
 
-	if(!Array.isArray(templateForm)){
-		templateForm=[templateForm]
+	if(!Array.isArray(jsonPage)){
+		jsonPage=[jsonPage]
 	}
-	iteration(templateForm,(item,cb)=>{
+	iteration(jsonPage,(item,cb)=>{
 
+		if(item.include!=undefined){
+			data.html+=includeFile(item)
+		}
 		switch(item.type){
 			case 'grid':
 			gridForm(req,res,item,data,(err,s)=>{
@@ -110,12 +111,35 @@ function createPage(req,res,data,callback){
 
 	},0,true,(err,result)=>{
 		if(!err){
-			// console.log(`iteration son:`,result)
+			
 		}else{
 			console.log(`iteration err:`,err)
 		}
 		callback(null,data)
 	})
+}
+
+function includeFile(item){
+	var s=``
+	var dizi=[]
+	if(!Array.isArray(item.include)){
+		dizi.push(item.include)
+	}else{
+		dizi=item.include
+	}
+
+	dizi.forEach((e)=>{
+		var src=e.split('?')[0]
+		if(src.substr(-3)=='.js'){
+			s+=`<script type="text/javascript" src="${e}"></script>\r\n`
+		}else if(src.substr(-4)=='.css'){
+			s+=`<link href="${e}" rel="stylesheet" />\r\n`
+		}else{
+			s+=`<link href="${e}" rel="stylesheet" />\r\n`
+		}
+	})
+
+	return s
 }
 
 function normalForm(req,res,item,data,cb){
@@ -133,8 +157,7 @@ function normalForm(req,res,item,data,cb){
 		
 		
 		if(req.method=='POST'){
-			console.log(`req.body:`,req.body)
-			console.log(`data.form:`,data.form)
+			
 			data.form=Object.assign(data.form,req.body)
 			api.put(url,req,data.form,(err,resp)=>{
 				if(!err){

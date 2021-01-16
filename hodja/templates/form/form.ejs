@@ -1,0 +1,12 @@
+<% if(locals.options.form){%>
+<form method="POST" action="<%- locals.action %>" name="<%- locals.name || 'form-general' %>" id="<%- locals.id || locals.name || 'form-general' %>" >
+	<%}%>
+<%- locals.options.row?'<div class="row">':'' %>
+<%- (locals.controls || '') %>
+
+<%- locals.options.row?'</div>':'' %>
+<% if(locals.options.form){%>
+</form>
+
+<%}%>
+

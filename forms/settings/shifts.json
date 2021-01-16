@@ -1,0 +1,69 @@
+{
+	"index":[
+		{
+			"type": "grid",
+			"fields": {
+				"name":{"title":"Adı", "type":"string"},
+				"passive":{"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": true
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/shifts"
+				}
+			}
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields": {
+				"name":{"title":"Adı", "type":"string"},
+				"passive":{"title":"Pasif?", "type":"boolean"},
+				"times" :{
+					"title":"Çalışma zamanları", 
+					"type":"grid",
+					"fields": {
+						"name" :{"title":"Adı", "type":"string"},
+						"startHour" :{"title":"Başlama Saati", "type":"number","min":0, "max":24},
+						"startMinute" :{"title":"Baş. Dakika", "type":"number","min":0, "max":60},
+						"endHour" :{"title":"Bitiş Saati", "type":"number","min":0, "max":24},
+						"endMinute" :{"title":"Bit. Dakika", "type":"number","min":0, "max":60}
+					},
+					"options": {
+						"selection": false,
+						"filter": false,
+						"confirmBeforeRemove":true,
+						"buttons": {
+							"add": true,
+							"edit": true,
+							"delete": true,
+							"view": false,
+							"print": false,
+							"copy": false
+						}
+					}
+				}
+			},
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/shifts"
+				}
+			}
+		}
+	]
+}

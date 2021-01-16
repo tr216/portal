@@ -1,7 +1,7 @@
 
 Date.prototype.yyyymmdd = function () {
 	var yyyy = this.getFullYear().toString();
-	var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+	var mm = (this.getMonth() + 1).toString();
 	var dd = this.getDate().toString();
 	var HH = this.getHours().toString();
 	var min = this.getMinutes().toString();
@@ -19,12 +19,12 @@ Date.prototype.hhmmss = function () {
 
 Date.prototype.yyyymmddhhmmss = function () {
 	var yyyy = this.getFullYear().toString();
-  var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-  var dd = this.getDate().toString();
-  var HH = this.getHours().toString();
-  var min = this.getMinutes().toString();
-  var sec = this.getSeconds().toString();
-  return yyyy + '-' + (mm[1]?mm:"0" + mm[0]) + '-' + (dd[1]?dd:"0" + dd[0]) + ' ' + (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0]); 
+	var mm = (this.getMonth() + 1).toString();
+	var dd = this.getDate().toString();
+	var HH = this.getHours().toString();
+	var min = this.getMinutes().toString();
+	var sec = this.getSeconds().toString();
+	return yyyy + '-' + (mm[1]?mm:"0" + mm[0]) + '-' + (dd[1]?dd:"0" + dd[0]) + ' ' + (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0]); 
 };
 
 Date.prototype.hhmm = function () {
@@ -81,15 +81,13 @@ function getUrlParameter(name) {
 String.prototype.replaceAll = function (search, replacement) {
 	var target = this;
 	return target.split(search).join(replacement);
-	// var target = this;
-	// return target.replace(new RegExp(search, 'g'), replacement);
 }
 
 function fnCsvReport(tableId,fileName)
 {
 	var tab_text="";
 	var textRange; 
-	tab = document.getElementById(tableId); // id of table
+	tab = document.getElementById(tableId);
 
 	for(var i = 0 ; i < tab.rows.length ; i++) 
 	{   
@@ -103,26 +101,25 @@ function fnCsvReport(tableId,fileName)
 				if(j<tab.rows[0].cells.length-1){
 					if(isNumeric(tab.rows[i].cells[j].innerHTML)){
 						var sayi=tab.rows[i].cells[j].innerHTML;
-				// decimal pointer turkiye gibi virgul olanlar haricindekiler icin yapildi
-				if(whatDecimalPointer()=='.'){
-					sayi=sayi.replaceAll('.','##');
-					sayi=sayi.replaceAll(',','.');
-					sayi=sayi.replaceAll('##',',');
+						if(whatDecimalPointer()=='.'){
+							sayi=sayi.replaceAll('.','##');
+							sayi=sayi.replaceAll(',','.');
+							sayi=sayi.replaceAll('##',',');
+						}
+						tab_text=tab_text + (i>0?'"':'') + sayi + (i>0?'"':'') + ';';
+					}else{
+						tab_text=tab_text + (i>0?'"':'') + tab.rows[i].cells[j].innerHTML + (i>0?'"':'') + ';';
+					}
 				}
-				tab_text=tab_text + (i>0?'"':'') + sayi + (i>0?'"':'') + ';';
-			}else{
-				tab_text=tab_text + (i>0?'"':'') + tab.rows[i].cells[j].innerHTML + (i>0?'"':'') + ';';
 			}
+			tab_text=tab_text + "\n";
 		}
 	}
-	tab_text=tab_text + "\n";
-}
-}
 
-	tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-	tab_text= tab_text.replace(/<a[^>]*>|<\/a>/g, "");//remove if u want links in your table
-	tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
-	tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+	tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");
+	tab_text= tab_text.replace(/<a[^>]*>|<\/a>/g, "");
+	tab_text= tab_text.replace(/<img[^>]*>/gi,""); 
+	tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, "");
 	tab_text= tab_text.replace(/<button[^>]*>|<\/button>/gi, "");
 	tab_text= tab_text.replace(/<select[^>]*>|<\/select>/gi, "");
 	tab_text= tab_text.replace(/<option[^>]*>|<\/option>/gi, "");
@@ -136,40 +133,39 @@ function exportToCsv(table,fileName){
 	var uri = 'data:application/text;base64,';
 	var template = '{table}'; 
 	var base64 = function(s) {
-				// return window.btoa(unescape(encodeURIComponent(s)))
-				return b64EncodeUnicode(s);
-			};
+		return b64EncodeUnicode(s);
+	};
 
-			var format = function(s, c) {
-				return s.replace(/{(\w+)}/g, function(m, p) {
-					return c[p];
-				})
-			};
+	var format = function(s, c) {
+		return s.replace(/{(\w+)}/g, function(m, p) {
+			return c[p];
+		})
+	};
 
-			htmls = table;
+	htmls = table;
 
-			var ctx = {
-				worksheet : 'Sayfa 1',
-				table : htmls
-			}
+	var ctx = {
+		worksheet : 'Sayfa 1',
+		table : htmls
+	}
 
 
-			var link = document.createElement("a");
-			if(fileName==undefined){
-				link.download = "export.csv";
-			}else{
-				link.download = fileName + ".csv";
-			}
-			
-			link.href = uri + base64(format(template, ctx));
-			link.click();
-		}
+	var link = document.createElement("a");
+	if(fileName==undefined){
+		link.download = "export.csv";
+	}else{
+		link.download = fileName + ".csv";
+	}
 
-		function fnExcelReport(tableId,fileName)
-		{
-			var tab_text="<table border='1px'>";
-			var textRange; 
-	tab = document.getElementById(tableId); // id of table
+	link.href = uri + base64(format(template, ctx));
+	link.click();
+}
+
+function fnExcelReport(tableId,fileName)
+{
+	var tab_text="<table border='1px'>";
+	var textRange; 
+	tab = document.getElementById(tableId);
 
 	for(var i = 0 ; i < tab.rows.length ; i++) 
 	{   
@@ -189,27 +185,24 @@ function exportToCsv(table,fileName){
 
 				if(isNumeric(tab.rows[i].cells[j].innerHTML)){
 					var sayi=tab.rows[i].cells[j].innerHTML;
-			  // decimal pointer turkiye gibi virgul olanlar haricindekiler icin yapildi
-			  if(whatDecimalPointer()=='.'){
-			  	sayi=sayi.replaceAll('.','##');
-			  	sayi=sayi.replaceAll(',','.');
-			  	sayi=sayi.replaceAll('##',',');
-			  }
-			  tab_text=tab_text + "<td>" + sayi + "</td>";
-			}else{
-				tab_text=tab_text + "<td>" + tab.rows[i].cells[j].innerHTML + "</td>";
+					if(whatDecimalPointer()=='.'){
+						sayi=sayi.replaceAll('.','##');
+						sayi=sayi.replaceAll(',','.');
+						sayi=sayi.replaceAll('##',',');
+					}
+					tab_text=tab_text + "<td>" + sayi + "</td>";
+				}else{
+					tab_text=tab_text + "<td>" + tab.rows[i].cells[j].innerHTML + "</td>";
+				}
 			}
+			tab_text=tab_text + "</tr>";
 		}
-		  //+ tab.rows[i].innerHTML
-		  tab_text=tab_text + "</tr>";
-		}
-		//tab_text=tab_text+"</tr>";
 	}
 
 	tab_text=tab_text+"</table>";
-	tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-	tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
-	tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+	tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");
+	tab_text= tab_text.replace(/<img[^>]*>/gi,"");
+	tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); 
 	tab_text= tab_text.replace(/<button[^>]*>|<\/button>/gi, "");
 	tab_text= tab_text.replace(/<select[^>]*>|<\/select>/gi, "");
 	tab_text= tab_text.replace(/<option[^>]*>|<\/option>/gi, "");
@@ -223,178 +216,170 @@ function exportToExcel(table,fileName){
 	var uri = 'data:application/vnd.ms-excel;base64,';
 	var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>{table}</body></html>'; 
 	var base64 = function(s) {
-				// return window.btoa(unescape(encodeURIComponent(s)))
-				return b64EncodeUnicode(s);
-			};
+		return b64EncodeUnicode(s);
+	};
 
-			var format = function(s, c) {
-				return s.replace(/{(\w+)}/g, function(m, p) {
-					return c[p];
-				})
-			};
+	var format = function(s, c) {
+		return s.replace(/{(\w+)}/g, function(m, p) {
+			return c[p];
+		})
+	};
 
-			htmls = table;
+	htmls = table;
 
-			var ctx = {
-				worksheet : 'Sayfa 1',
-				table : htmls
-			}
+	var ctx = {
+		worksheet : 'Sayfa 1',
+		table : htmls
+	}
 
 
-			var link = document.createElement("a");
-			if(fileName==undefined){
-				link.download = "export.xls";
-			}else{
-				link.download = fileName + ".xls";
-			}
-			
-			link.href = uri + base64(format(template, ctx));
-			link.click();
+	var link = document.createElement("a");
+	if(fileName==undefined){
+		link.download = "export.xls";
+	}else{
+		link.download = fileName + ".xls";
+	}
+
+	link.href = uri + base64(format(template, ctx));
+	link.click();
+}
+
+function isNumeric(str){
+	if(str.toString().trim()=='') return false;
+	for(var i=0;i<str.length;i++){ 
+		if(!(str[i]>='0' && str[i]<='9' || str[i]=='.' || str[i]==',')){
+			return false;
+		}
+	}
+	return true;
+}
+function whatDecimalPointer() {
+	var n = 1.1;
+	n = n.toLocaleString().substring(1, 2);
+	return n;
+}
+
+function b64EncodeUnicode(str) {
+	return btoa(unescape(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+	                                                     function toSolidBytes(match, p1) {
+	                                                     	return String.fromCharCode('0x' + p1);
+	                                                     })));
+}
+
+Number.prototype.formatDecimal = function(){
+	var c=0;
+	var d=whatDecimalPointer();
+	var t=d==','?'.':',';
+
+	var s= _formatMoney(this,c,d,t);
+
+	return s;
+};
+
+Number.prototype.formatMoney = function(c1){
+	var c=c1 || 2;
+	var d=whatDecimalPointer();
+	var t=d==','?'.':',';
+
+	var s= _formatMoney(this,c,d,t);
+
+	return s;
+};
+
+function _formatMoney(value,c,d,t){
+	var n = value, 
+	c = isNaN(c = Math.abs(c)) ? 2 : c, 
+	d = d == undefined ? "." : d, 
+	t = t == undefined ? "," : t, 
+	s = n < 0 ? "-" : "", 
+	i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+	j = (j = i.length) > 3 ? j % 3 : 0;
+	return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+}
+
+Number.prototype.n2 = function(){
+	var sbuf=this.toString();
+	if(sbuf.length==1){
+		sbuf ='0' + sbuf;
+	}   
+
+	return sbuf;
+};
+
+Number.prototype.formatQuantity = function(c){
+
+	var d=whatDecimalPointer();
+	var t=d==','?'.':',';
+
+	var s= _formatQuantity(this,c,d,t);
+
+	return s;
+};
+
+function _formatQuantity(value,c,d,t){
+	var n = value, 
+
+	d = d == undefined ? "." : d, 
+	t = t == undefined ? "," : t, 
+	s = n < 0 ? "-" : "";
+
+
+	if(c==undefined){
+		i = parseInt(n = Math.abs(+n || 0)) + "";
+		j = (j = i.length) > 3 ? j % 3 : 0;
+		var kusurat=Math.round(Math.abs(n - i)*1000)/1000;
+
+		return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (Math.abs(n - i)>0?d:'') + kusurat.toString().slice(2);
+	}else{
+		i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "";
+		j = (j = i.length) > 3 ? j % 3 : 0;
+		return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+	}
+
+}
+
+Element.prototype.remove = function() {
+	this.parentElement.removeChild(this);
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+	for(var i = this.length - 1; i >= 0; i--) {
+		if(this[i] && this[i].parentElement) {
+			this[i].parentElement.removeChild(this[i]);
+		}
+	}
+}
+
+function savePageFilter(path,key,value){
+	var filter={}
+	if(localStorage.getItem(path+ '_filter')){
+		try{
+			filter=JSON.parse(localStorage.getItem(path+ '_filter'));
+		}catch(tryErr){
+			localStorage.removeItem(path+ '_filter');
 		}
 
-		function isNumeric(str){
-			if(str.toString().trim()=='') return false;
-			for(var i=0;i<str.length;i++){ 
-				if(!(str[i]>='0' && str[i]<='9' || str[i]=='.' || str[i]==',')){
-					return false;
-				}
-			}
-			return true;
-		}
-		function whatDecimalPointer() {
-			var n = 1.1;
-			n = n.toLocaleString().substring(1, 2);
-			return n;
-		}
+	}
+	filter[key]=value;
+	localStorage.setItem(path + '_filter',JSON.stringify(filter));
+}
 
-		function b64EncodeUnicode(str) {
-			return btoa(unescape(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-			                                                     function toSolidBytes(match, p1) {
-			                                                     	return String.fromCharCode('0x' + p1);
-			                                                     })));
+function getPageFilter(path,key,defaultValue=''){
+	var filter={}
+	if(localStorage.getItem(path+ '_filter')){
+		try{
+			filter=JSON.parse(localStorage.getItem(path+ '_filter'));
+		}catch(tryErr){
+			localStorage.removeItem(path+ '_filter');
 		}
 
-		Number.prototype.formatDecimal = function(){
-			var c=0;
-			var d=whatDecimalPointer();
-			var t=d==','?'.':',';
+	}
+	if(filter[key]){
+		return filter[key];
+	}else{
+		return defaultValue;
+	}
+}
 
-			var s= _formatMoney(this,c,d,t);
-
-			return s;
-		};
-
-		Number.prototype.formatMoney = function(c1){
-			var c=c1 || 2;
-			var d=whatDecimalPointer();
-			var t=d==','?'.':',';
-
-			var s= _formatMoney(this,c,d,t);
-
-			return s;
-		};
-
-		function _formatMoney(value,c,d,t){
-			var n = value, 
-			c = isNaN(c = Math.abs(c)) ? 2 : c, 
-			d = d == undefined ? "." : d, 
-			t = t == undefined ? "," : t, 
-			s = n < 0 ? "-" : "", 
-			i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
-			j = (j = i.length) > 3 ? j % 3 : 0;
-			return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-		}
-
-		Number.prototype.n2 = function(){
-			var sbuf=this.toString();
-			if(sbuf.length==1){
-				sbuf ='0' + sbuf;
-			}   
-
-			return sbuf;
-		};
-
-		Number.prototype.formatQuantity = function(c){
-
-			var d=whatDecimalPointer();
-			var t=d==','?'.':',';
-
-			var s= _formatQuantity(this,c,d,t);
-
-			return s;
-		};
-
-		function _formatQuantity(value,c,d,t){
-			var n = value, 
-
-			d = d == undefined ? "." : d, 
-			t = t == undefined ? "," : t, 
-			s = n < 0 ? "-" : "";
-
-
-			if(c==undefined){
-				i = parseInt(n = Math.abs(+n || 0)) + "";
-				j = (j = i.length) > 3 ? j % 3 : 0;
-				var kusurat=Math.round(Math.abs(n - i)*1000)/1000;
-
-				return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (Math.abs(n - i)>0?d:'') + kusurat.toString().slice(2);
-			}else{
-				i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "";
-				j = (j = i.length) > 3 ? j % 3 : 0;
-				return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-			}
-
-		}
-
-
-		Element.prototype.remove = function() {
-			this.parentElement.removeChild(this);
-		}
-		NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
-			for(var i = this.length - 1; i >= 0; i--) {
-				if(this[i] && this[i].parentElement) {
-					this[i].parentElement.removeChild(this[i]);
-				}
-			}
-		}
-
-		function savePageFilter(path,key,value){
-			var filter={}
-			if(localStorage.getItem(path+ '_filter')){
-				try{
-					filter=JSON.parse(localStorage.getItem(path+ '_filter'));
-				}catch(tryErr){
-					localStorage.removeItem(path+ '_filter');
-				}
-
-			}
-			filter[key]=value;
-			localStorage.setItem(path + '_filter',JSON.stringify(filter));
-		}
-
-		function getPageFilter(path,key,defaultValue=''){
-			var filter={}
-			if(localStorage.getItem(path+ '_filter')){
-				try{
-					filter=JSON.parse(localStorage.getItem(path+ '_filter'));
-				}catch(tryErr){
-					localStorage.removeItem(path+ '_filter');
-				}
-
-			}
-			if(filter[key]){
-				return filter[key];
-			}else{
-				return defaultValue;
-			}
-		}
-
-		const dbType=typeof types!='undefined'?types.types:'';
-// const fbuilder=typeof formBuilder!='undefined'?formBuilder.formBuilder:'';
-// const frmBuilder=typeof FormBuilder!='undefined'?FormBuilder.FormBuilder:'';
-const formBuilder=typeof FormBuilder!='undefined'?FormBuilder.FormBuilder:'';
-const gridBuilder=typeof GridBuilder!='undefined'?GridBuilder.GridBuilder:'';
-const filterBuilder=typeof FilterBuilder!='undefined'?FilterBuilder.FilterBuilder:'';
 
 
 
@@ -403,7 +388,6 @@ function clone(obj){
 }
 
 function goBack(){
-	//if(document.referrer)
 	window.location.href=document.referrer;
 }
 
@@ -845,14 +829,14 @@ function ajaxLookup(url,...params){
 
 
 function cboEasyDateChange(value){
-	
+
 	var date1=new Date()
 	var date2=new Date()
 	date1.setHours(0, 0, 0, 0)
 	date1.setMinutes((new Date()).getTimezoneOffset())
 	date2.setHours(0, 0, 0, 0)
 	date2.setMinutes((new Date()).getTimezoneOffset())
-	
+
 	switch(value){
 		case 'today':
 		break
@@ -907,9 +891,8 @@ function replaceUrlCurlyBracket(url,item){
 		}
 	})
 
-
 	fieldList.forEach((e)=>{
-		url=url.replace(`{${e}}`,getPropertyByKeyPath(item,e))
+		url=url.replaceAll(`{${e}}`,getPropertyByKeyPath(item,e))
 	})
 
 	return url
@@ -917,11 +900,17 @@ function replaceUrlCurlyBracket(url,item){
 
 
 
-function getPropertyByKeyPath(targetObj, keyPath) { 
+function getPropertyByKeyPath(targetObj, keyPath) {
+	if(keyPath.substr(0,1)=='/')
+		keyPath=keyPath.substr(1)
+	if(keyPath.substr(0,2)=='./')
+		keyPath=keyPath.substr(2)
+	keyPath=keyPath.replaceAll('/','.')
+
 	var keys = keyPath.split('.')
 	if(keys.length == 0) 
 		return undefined
-		keys = keys.reverse()
+	keys = keys.reverse()
 	var subObject = targetObj
 	while(keys.length) {
 		var k = keys.pop()
@@ -994,18 +983,25 @@ function getAjax(url,labelStr='{name}',exceptId='',cb){
 		success: function(result) {
 			if(result.success){
 				var dizi=[]
+				
 				if(result.data.docs!=undefined){
 					result.data.docs.forEach((e)=>{
-						console.log(`labelStr:`,labelStr)
 
 						var text=replaceUrlCurlyBracket(labelStr, e,e)
 						dizi.push({label:text,value:text,obj:e})
 					})
 				}else{
-					var text=replaceUrlCurlyBracket(labelStr, result.data, result.data)
-					dizi.push({label:text,value:text,obj:result.data})
+					if(Array.isArray(result.data)){
+						result.data.forEach((e)=>{
+							var text=replaceUrlCurlyBracket(labelStr, e,e)
+							dizi.push({label:text,value:text,obj:e})
+						})
+					}else{
+						var text=replaceUrlCurlyBracket(labelStr, result.data, result.data)
+						dizi.push({label:text,value:text,obj:result.data})
+					}
 				}
-				
+
 				if(cb)
 					cb(null,dizi)
 			}else{
@@ -1065,3 +1061,5 @@ function ifNull(item,defaultValue){
 	}
 }
 
+
+const gridHelper=typeof GridHelper!='undefined'?GridHelper.GridHelper:''

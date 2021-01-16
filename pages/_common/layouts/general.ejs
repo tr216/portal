@@ -4,6 +4,7 @@
 	<a class="btn btn-sm border" data-toggle="collapse" href="#layoutSidenav_nav" role="button" aria-expanded="false" aria-controls="layoutSidenav_nav" title="Menü göster/gizle"><i class="fas fa-bars"></i></a>
 	<!-- Navbar Search-->
 	<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+
 		<div class="input-group">
 			<input class="form-control" type="text" placeholder="ara..." aria-label="Search" aria-describedby="basic-addon2" />
 			<div class="input-group-append">
@@ -15,7 +16,7 @@
 	<ul class="navbar-nav ml-auto ml-md-0">
 		<li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle" id="databasesDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Veri Ambarları">
-				<i class="fas fa-database fa-fw"></i>
+				<i class="fas fa-database"></i>
 			</a>
 
 
@@ -35,9 +36,9 @@
 			</div>
 		</li>
 		<li class="nav-item dropdown">
-			<a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Kullanıcı işlemleri"><i class="fas fa-user fa-fw"></i></a>
+			<a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Kullanıcı işlemleri"><i class="fas fa-user"></i></a>
 			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-				<a class="dropdown-item" href="/general/me?sid=<%- sid %>">Profilim</a>
+				<a class="dropdown-item" href="/me/profile?sid=<%- sid %>">Profilim</a>
 				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="javascript:logout();">Çıkış</a>
 			</div>
@@ -67,14 +68,15 @@
 					<% } %>
 					<% }) %>
 					<% }else{ %>
-					<% if(typeof icon!='undefined'){%><i class="<%=icon%>"></i> 
+					<% if(typeof icon!='undefined'){%><i class="<%- icon%>"></i> 
 					<%}%>
-					<% if(funcTitle==''){%><span class="font-weight-bold text-orange"><%=title%></span><% } else { %><%=title%> <%}%>
+					<% if(funcTitle==''){%><span class="font-weight-bold text-orange"><%- title%></span><% } else { %><%- title%> <%}%>
 					<% } %>
-					<% if(funcTitle!=''){%> - <span class="font-weight-bold text-orange"><%=funcTitle%></span><% } %>
+					<% if(funcTitle!=''){%> - <span class="font-weight-bold text-orange"><%- funcTitle%></span><% } %>
 				</h1>
-				<div id="headerButtons" class="float-right" style="min-height: 26px;"></div>
-				
+				<% if(typeof headerButtons!='undefined'){ %>
+				<div id="headerButtons" class="float-right" style="min-height: 26px;"><%- headerButtons %></div>
+				<%}%>
 			</div>
 			<div class="clearfix"></div>
 			<div class="container-fluid mb-3">
@@ -115,20 +117,19 @@
 						</tr>
 					</thead>
 					<tbody id="gridPrograms">
-
 					</tbody>
 				</table>
 			</div>
 			<div class="modal-footer">
+				<a class="btn btn-primary" href="javascript:modalFormOptions_OK()" title="Kaydet"><i class="fas fa-check"></i> Tamam</a>
 				<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
-				<a class="btn btn-primary" href="javascript:modalFormOptions_OK()" title="Kaydet"><i class="fas fa-ok"></i> Tamam</a>
 			</div>
 		</div>
 	</div>
 </div>
 
 
-<div class="modal" id="modalMessage" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalMessageLabel" aria-hidden="true">
+<div class="modal" id="modalMessage" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalMessageLabel" aria-hidden="true" style="z-index: 1051">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div id="modalMessageHeader" class="modal-header p-2 ">
@@ -195,7 +196,7 @@
 		<div class="modal-content">
 			<div class="modal-body row align-items-center p-3" style="overflow: auto;">
 				<div class="col-md-2" style="font-size:16pt;">
-					<i class="far fa-question-circle fa-2x"></i>
+					<i class="fas fa-question-circle fa-2x"></i>
 				</div>
 				<div class="col message" style="font-size:12pt;">
 				</div>
@@ -310,6 +311,7 @@
 			}
 		})
 	}
+	
 	function modalFormOptions_OK(){
 		var data={page:{}}
 		data.page[windowPathToFieldName()]={programs:[null]}
@@ -408,7 +410,7 @@
 				
 			</div>
 			<div class="modal-footer">
-				<button id="modalCopyOk" class="btn btn-primary" type="button" data-dismiss="modal">Tamam</button>
+				<a href="javascript:modalCopyOk()" id="modalCopyOk" class="btn btn-primary">Tamam</a>
 				<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
 			</div>
 		</div>
@@ -416,34 +418,42 @@
 </div>
 
 <script type="text/javascript">
-	var copyX_response=false
-	function copyX(fields,title,cb){
-		copyX_response=false
-		if(typeof title=='function'){
-			cb=title
-			title='Kopyala'
-		}
+	var copyX_cb=null
+	var copyX_fields={}
+	function copyX(fields,title,cb=null){
+		copyX_fields=fields
+		copyX_cb=cb
 
 		$('#modalCopyLabel').html(title)
-		$('#modalCopy .modal-body').html(formBuilder.generateForm(fields,{mode:'addnew',isForm:false,row:false},q,{}))
+		var s=``
+		Object.keys(fields).forEach((key)=>{
+			var field=fields[key]
+			s+=`<div class="form-group">
+				<label class="m-0 p-0">${field.title || ''}</label>
+				<input type="text" class="form-control ${field.class || ''}" id="modalCopyField-${generateFormId(key)}" placeholder="${ field.placeholder || field.title || ''}" ${field.readonly==true?'readonly':''} autocomplete="off" autofill="off" spellcheck="false" value="${field.value}">
+			</div>`
+		})
+		$('#modalCopy .modal-body').html(s)
 		
 		$('#modalCopy').modal('show')
 		
-		$('#modalCopy').on('hidden.bs.modal', function (e) {
-			$('#modalCopy').unbind('hidden.bs.modal')
-
-			if(cb){
-				var formData=formBuilder.getData('#modalCopy .modal-body',fields)
-				console.log('formData:',formData)
-				cb(copyX_response,formData)
-			}
-		})
-		$('#modalCopyOk').on('click', function (e) {
-			$('#modalCopyOk').unbind('click')
-			copyX_response=true
-			$('#modalCopyOk').modal('hide')
-		})
 	}
 
+	function modalCopyOk(){
+		$('#modalCopyOk').modal('hide')
+		if(copyX_cb){
+			var formData={}
+			Object.keys(copyX_fields).forEach((key)=>{
+				var field=copyX_fields[key]
+				formData[key]=$(`#modalCopyField-${generateFormId(key)}`).val()
+			})
+			formData=listObjectToObject(clone(formData))
+			
+			copyX_cb(true,formData)
+			
+		}else{
+			$('#modalCopyOk').modal('hide')
+		}
+	}
 	
 </script>

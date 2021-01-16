@@ -1,0 +1,38 @@
+<%
+	locals.value={}
+%>
+<div class="form-group <%- locals.col %> <%- locals.visible==false?'hidden':'' %>">
+	<label for="fileToUpload_<%-locals.field.replaceAll('.','_')%>" class="btn btn-primary"><i class="far fa-file-image"></i> <%- locals.title %></label>
+	<br>
+	<img id="fileToUpload_download_<%-locals.field.replaceAll('.','_')%>" src="<%- locals.value.data || '/img/placehold-place.jpg'%>" download="<%- locals.value.fileName || ''%>" style="width: 100%;object-fit: contain;">
+
+	<input type="file" name="fileToUpload_<%-locals.field%>" id="fileToUpload_<%-locals.field.replaceAll('.','_')%>" style="visibility:hidden;" accept="" >
+	<input type="hidden" name="<%-locals.name%>[data]" id="fileDataBase64_<%-locals.field.replaceAll('.','_')%>" value="<%- locals.value.data || '' %>" <%-field.onchange || ''%>>
+	<input type="hidden" name="<%-locals.name%>[type]" id="fileToUpload_<%-locals.field.replaceAll('.','_')%>_type" value="<%- locals.value.type || '' %>">
+	<input type="hidden" name="<%-locals.name%>[fileName]" id="fileToUpload_<%-locals.field.replaceAll('.','_')%>_fileName" value="<%- locals.value.fileName || ''%>">
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#fileToUpload_<%-locals.field.replaceAll('.','_')%>").change(()=>{
+				var files= $("#fileToUpload_<%-locals.field.replaceAll('.','_')%>").prop('files')
+				if(files.length==0)
+					return
+				var filename =files[0].name
+
+				$('#fileToUpload_download_<%-locals.field.replaceAll('.','_')%>').attr('download',filename)
+				var file =files[0]
+
+				var reader  = new FileReader()
+				reader.addEventListener("load", function () {
+					$('#fileDataBase64_<%-locals.field.replaceAll('.','_')%>').val(reader.result)
+					$('#fileToUpload_<%-locals.field.replaceAll('.','_')%>_type').val(file.type)
+					$('#fileToUpload_<%-locals.field.replaceAll('.','_')%>_fileName').val(filename)
+					$('#fileToUpload_download_<%-locals.field.replaceAll('.','_')%>').attr('src',$('#fileDataBase64_<%-locals.field.replaceAll('.','_')%>').val())
+				}, false)
+				if(file){
+					reader.readAsDataURL(file)
+				}
+			})
+		})
+	</script>
+</div> 

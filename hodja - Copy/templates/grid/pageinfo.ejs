@@ -1,0 +1,8 @@
+
+<div class="ml-2" style="display: inline-block">
+	<% if(locals.data.pageSize>0 && locals.data.recordCount>0){ %>
+		<%-((locals.data.page-1)*locals.data.pageSize)+1 %> - <%-(locals.data.page*locals.data.pageSize<locals.data.recordCount)?locals.data.page*locals.data.pageSize:locals.data.recordCount%> arası, Toplam: <%-locals.data.recordCount%> kayit, <%-locals.data.pageCount%> sayfa
+	<% } else{ %>
+		Toplam: <%- locals.data.recordCount %> kayit
+	<% } %>
+</div>

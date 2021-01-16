@@ -1,0 +1,86 @@
+{
+	"index":[
+		{
+			"type": "grid",
+			"fields": {
+				"location" : {"title":"Lokasyon", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/locations",
+						"label":"{name}"
+					}
+				},
+				"service" : {"title":"Service", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/pos-device-services",
+						"label":"{name}"
+					}
+				},
+  			"deviceSerialNo" 				: {"title":"Cihaz Seri No", "type":"string"},
+  			"deviceModel" 				: {"title":"Model", "type":"string"},
+  			"passive" 				: {"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": true
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/pos-devices"
+				}
+			},
+			"data": {
+				"docs":[],
+				"page":1,
+				"pageSize":10,
+				"pageCount":0,
+				"recordCount":0
+			}
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields": {
+				"location" : {"title":"Lokasyon", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/locations",
+						"label":"{name}"
+					}
+				},
+				"service" : {"title":"Service", "type":"remoteLookup", 
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/pos-device-services",
+						"label":"{name}"
+					}
+				},
+  			"deviceSerialNo" 				: {"title":"Cihaz Seri No", "type":"string"},
+  			"deviceModel" 				: {"title":"Model", "type":"string"},
+  			"passive" 				: {"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/pos-devices"
+				}
+			}
+		}
+	]
+}

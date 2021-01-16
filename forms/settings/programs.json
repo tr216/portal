@@ -1,0 +1,166 @@
+{
+	"index":[
+		{
+			"type": "grid",
+			"fields": {
+				"name":{"title":"Adı", "type":"string"},
+				"type":{"title":"Türü", "type":"lookup", "staticValues":"programTypes"},
+				"crontab":{"title":"crontab (m h dom dow)", "type":"string"},
+				"showButtonText":{"title":"ButtonText?", "type":"boolean"},
+				"passive":{"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": true
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/programs"
+				}
+			}
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"tabs":[
+				{
+					"title":"Bilgiler",
+					"fields": {
+						"name":{"title":"Adı", "type":"string", "required":true, "col":6},
+						"type":{"title":"Türü", "type":"lookup", "staticValues":"programTypes","col":3},
+						"crontab":{"title":"crontab (zamanlayici) m h dom dow", "type":"string"},
+						"passive":{"title":"Pasif?", "type":"boolean"},
+						"button":{
+							"title":"Buton",
+							"collapsed":true,
+							"fields":{
+								"showButtonText":{"title":"ButtonText?", "type":"boolean","col":3},
+								"icon":{"title":"icon", "type":"string","col":3},
+								"class":{"title":"class", "type":"string","col":3}
+							}
+						},
+						"tables1":{
+							"title":"Collection",
+							"collapsed":true,
+							"fields":	{
+								"collections.0.name":{"title":"collection", "type":"lookup", "staticValues":"collections"},
+								"collections.0.filter":{"title":"filter", "type":"string"},
+								"collections.0.updateExpression":{"title":"updateExpression", "type":"string"},
+								"collections.0.updateErrorExpression":{"title":"updateExpression", "type":"string"}
+							}
+						},
+						"fileImporter1":{
+							"title":"File Importer",
+							"collapsed":true,
+							"fields":	{
+								"fileImporter.accept":{"title":"Accept Files", "type":"string"}
+							}
+						},
+						"fileExporter1":{
+							"title":"File Exporter",
+							"collapsed":true,
+							"fields":	{
+								"fileExporter.fileName":{"title":"Dosya Adı", "type":"string"}
+							}
+						},
+						"connector1":{
+							"title":"Local Connector",
+							"collapsed":true,
+							"fields":	{
+								"connector.connectorId":{"title":"connectorId", "type":"string", "col":4},
+								"connector.connectorPass":{"title":"connectorPass", "type":"string", "col":4},
+								"connector.connectionType":{"title":"Server Connection Type", "type":"lookup","staticValues":"localConnectorConnectionTypes", "col":4, "onchange":"localConnType_Change()"},
+								"connection1":{
+									"title":"Server Connection",
+									"collapsed":false,
+									"fields":	{
+										"connector.connection.server":{"title":"server", "type":"string", "col":3},
+										"connector.connection.port":{"title":"port", "type":"number", "col":2},
+										"connector.connection.database":{"title":"database", "type":"string", "col":3},
+										"connector.connection.username":{"title":"username", "type":"string", "col":2},
+										"connector.connection.password":{"title":"password", "type":"string", "col":2}
+									}
+								}
+							}
+						},
+						"emailSender1":{
+							"title":"Email Sender",
+							"collapsed":true,
+							"fields":	{
+								"emailSender.host":{"title":"Host", "type":"string"},
+								"emailSender.port":{"title":"Port", "type":"number", "value":587},
+								"emailSender.secure":{"title":"Secure", "type":"boolean", "value":false},
+								"emailSender.auth.user":{"title":"Auth User", "type":"string"},
+								"emailSender.auth.pass":{"title":"Auth Pass", "type":"string"},
+								"emailSender.from":{"title":"From", "type":"string"}
+							}
+						},
+						"smsSender1":{
+							"title":"SMS Sender",
+							"collapsed":true,
+							"fields":	{
+								"smsSender.api":{"title":"API", "type":"string"},
+								"smsSender.method":{"title":"Method", "type":"lookup", "lookup":{"GET":"GET","POST":"POST","PUT":"PUT"}}
+							}
+						}
+					}
+				},
+				{
+					"title":"Code",
+					"fields": {
+						"file0":{
+							"title":"File 0",
+							"collapsed":false,
+							"fields":	{
+								"files.0.fileName":{"title":"fileName", "type":"string", "value":"index.ejs"},
+								"files.0.data":{"title":"Code", "type":"code", "help":"https://ejs.co/"}
+							}
+						},
+						"file1":{
+							"title":"File 1",
+							"collapsed":true,
+							"fields":	{
+								"files.1.fileName":{"title":"fileName", "type":"string", "value":""},
+								"files.1.data":{"title":"Code", "type":"code", "help":"https://ejs.co/"}
+							}
+						},
+						"file2":{
+							"title":"File 2",
+							"collapsed":true,
+							"fields":	{
+								"files.2.fileName":{"title":"fileName", "type":"string", "value":""},
+								"files.2.data":{"title":"Code", "type":"code", "help":"https://ejs.co/"}
+							}
+						}
+					}
+				}
+			],
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/programs"
+				}
+			},
+			"script":[
+				"function localConnType_Change(){",
+				"if($('#connector-connectionType').val()=='mysql' || $('#connector-connectionType').val()=='mssql'){",
+				"$('#cardCollapseconnection1').closest('.card').show()",
+				"}else{",
+				"$('#cardCollapseconnection1').closest('.card').hide()",
+				"}",
+				"}"
+			]
+		}
+	]
+}

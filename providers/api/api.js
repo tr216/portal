@@ -32,7 +32,7 @@ exports.get=(endpoint,req, params, callback)=>{
 
 			request(options, function (error, response, body) {
 				if(error){
-					return callback({code: 'API_ERROR_GET1', message: error.message})
+					return callback({code: 'API_ERROR_GET', message: error.message})
 				}
 				try{
 
@@ -44,7 +44,7 @@ exports.get=(endpoint,req, params, callback)=>{
 						resp=body
 					}
 				}catch(e){
-					return callback({code: 'API_ERROR_GET2', message: e.message || e})
+					return callback({code: 'API_ERROR_GET', message: e.message || e})
 				}
 
 				if(resp.success){
@@ -295,6 +295,8 @@ exports.delete=(endpoint,req, callback)=>{
 }
 
 function sessionId2Token(req,cb){
+	if(!req)
+		return cb(null,{token:''})
 	var sid=req.query!=undefined?req.query.sid || '':req.sid || ''
 	var mid=req.query!=undefined?req.query.mid || '':req.mid || ''
 

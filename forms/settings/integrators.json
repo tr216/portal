@@ -32,132 +32,133 @@
 	"form": [
 		{
 			"type":"form",
-			"fields":{
-				"tabs":[
-					{
-						"title":"Bilgiler",
-						"controls":{
-							"eIntegrator":{"title":"Entegrator", "type":"lookup", "staticValues":"eIntegrators", "col":4 , "required":true},
-							"name":{"title":"Adı(nick name)", "type":"string", "col":4   , "required":true},
-							"isDefault" 						:{"title":"Varsayılan?", "type":"boolean","col":2},
-							"passive" 						:{"title":"Pasif?", "type":"boolean","col":2},
-							"partyType":{
-								"title":"Diger",
-								"collapsed":true,
-								"controls":{
-									"party.partyName.name.value":{"title":"Şirket adınız", "type":"string" },
-									"party.person.firstName.value":{"title":"Kişi Adı", "type":"string"},
-									"party.person.familyName.value":{"title":"Kişi Soyadı", "type":"string"},
-									"party.partyIdentification.0.ID.value":{"title":"Vergi No/Tckn", "type":"string"},
-									"party.partyIdentification.0.ID.attr.schemeID":{"title":"Tür", "type":"lookup", "lookup":{"VKN":"VKN","TCKN":"TCKN"}},
-									"party.partyTaxScheme.taxScheme.name.value":{"title":"Vergi Dairesi", "type":"string"},
-									"party.websiteURI.value":{"title":"Web sitesi", "type":"string"},
-									"iletisim":{
-										"title":"İletişim",
-										"controls":{
-											"party.contact.telephone.value":{"title":"Telefon", "type":"string"},
-											"party.contact.telefax.value":{"title":"Fax", "type":"string"},
-											"party.contact.electronicMail.value":{"title":"E-Mail", "type":"string"}
-										}
-									},
-									"adresBilgileri":{
-										"title":"Adres bilgisi",
-										"controls":{
-											"party.postalAddress.streetName.value":{"title":"Cadde/Sokak", "type":"string"},
-											"party.postalAddress.buildingNumber.value":{"title":"Cadde Sokak Kapı No", "type":"string"},
-											"party.postalAddress.buildingName.value":{"title":"Bina/Site adı", "type":"string"},
-											"party.postalAddress.blockName.value":{"title":"Blok adı", "type":"string"},
-											"party.postalAddress.room.value":{"title":"Daire", "type":"string"},
-											"party.postalAddress.citySubdivisionName.value":{"title":"Mahalle/Semt", "type":"string"},
-											"party.postalAddress.district.value":{"title":"İlçe", "type":"string"},
-											"party.postalAddress.cityName.value":{"title":"Şehir", "type":"string"},
-											"party.postalAddress.region.value":{"title":"Bölge", "type":"string"},
-											"party.postalAddress.country.identificationCode.value":{"title":"Ülke Kodu", "type":"lookup", "staticValues":"countryList"},
-											"party.postalAddress.country.name.value":{"title":"Ülke", "type":"string"},
-											"party.postalAddress.postbox.value":{"title":"Posta Kutusu", "type":"string"}
-										}
+
+			"tabs":[
+				{
+					"title":"Bilgiler",
+					"fields":{
+						"eIntegrator":{"title":"Entegrator", "type":"lookup", "staticValues":"eIntegrators", "col":4 , "required":true},
+						"name":{"title":"Adı(nick name)", "type":"string", "col":4   , "required":true},
+						"isDefault" 						:{"title":"Varsayılan?", "type":"boolean","col":2},
+						"passive" 						:{"title":"Pasif?", "type":"boolean","col":2},
+						"partyType":{
+							"title":"Şirket/Firma Bilgileri",
+							"collapsed":true,
+							"fields":{
+								"party.partyName.name.value":{"title":"Şirket adınız", "type":"string" },
+								"party.person.firstName.value":{"title":"Kişi Adı", "type":"string"},
+								"party.person.familyName.value":{"title":"Kişi Soyadı", "type":"string"},
+								"party.partyIdentification.0.ID.value":{"title":"Vergi No/Tckn", "type":"string"},
+								"party.partyIdentification.0.ID.attr.schemeID":{"title":"Tür", "type":"lookup", "lookup":{"VKN":"VKN","TCKN":"TCKN"}},
+								"party.partyTaxScheme.taxScheme.name.value":{"title":"Vergi Dairesi", "type":"string"},
+								"party.websiteURI.value":{"title":"Web sitesi", "type":"string"},
+								"iletisim":{
+									"title":"İletişim",
+									"fields":{
+										"party.contact.telephone.value":{"title":"Telefon", "type":"string"},
+										"party.contact.telefax.value":{"title":"Fax", "type":"string"},
+										"party.contact.electronicMail.value":{"title":"E-Mail", "type":"string"}
+									}
+								},
+								"adresBilgileri":{
+									"title":"Adres bilgisi",
+									"fields":{
+										"party.postalAddress.streetName.value":{"title":"Cadde/Sokak", "type":"string"},
+										"party.postalAddress.buildingNumber.value":{"title":"Cadde Sokak Kapı No", "type":"string"},
+										"party.postalAddress.buildingName.value":{"title":"Bina/Site adı", "type":"string"},
+										"party.postalAddress.blockName.value":{"title":"Blok adı", "type":"string"},
+										"party.postalAddress.room.value":{"title":"Daire", "type":"string"},
+										"party.postalAddress.citySubdivisionName.value":{"title":"Mahalle/Semt", "type":"string"},
+										"party.postalAddress.district.value":{"title":"İlçe", "type":"string"},
+										"party.postalAddress.cityName.value":{"title":"Şehir", "type":"string"},
+										"party.postalAddress.region.value":{"title":"Bölge", "type":"string"},
+										"party.postalAddress.country.identificationCode.value":{"title":"Ülke Kodu", "type":"lookup", "staticValues":"countryList"},
+										"party.postalAddress.country.name.value":{"title":"Ülke", "type":"string"},
+										"party.postalAddress.postbox.value":{"title":"Posta Kutusu", "type":"string"}
 									}
 								}
 							}
 						}
-					},
-					{
-						"title":"Fatura",
-						"controls":{
-							"invoice.url":{"title":"Web service url", "type":"string"    },
-							"invoice.firmNo":{"title":"Firma No", "type":"string"    },
-							"invoice.username":{"title":"Service Username", "type":"string"    },
-							"invoice.password":{"title":"Service Password", "type":"string"    },
-							"invoice.prefixOutbox":{"title":"Giden Fatura Ön Ek", "type":"string"  },
-							"invoice.prefixInbox":{"title":"Gelen Fatura Ön Ek", "type":"string"  },
-							"invoice.postboxAlias":{"title":"Posta Kutusu", "type":"string"  },
-							"invoice.senderboxAlias":{"title":"Gonderim Kutusu", "type":"string"  },
-							"invoice.xsltFiles.0"  :{"title":"XSLT Dosya",     "type":"fileBase64"   }
-						}
-					},
-					{
-						"title":"Sipariş",
-						"controls":{
-							"order.url":{"title":"Web service url", "type":"string"    },
-							"order.firmNo":{"title":"Firma No", "type":"string"    },
-							"order.username":{"title":"Service Username", "type":"string"    },
-							"order.password":{"title":"Service Password", "type":"string"    },
-							"order.prefixOutbox":{"title":"Sipariş Ön Ek", "type":"string"  },
-							"order.prefixInbox":{"title":"Alım Sipariş Ön Ek", "type":"string"  },
-							"order.postboxAlias":{"title":"Posta Kutusu", "type":"string"  },
-							"order.senderboxAlias":{"title":"Gonderim Kutusu", "type":"string"  },
-							"order.xsltFiles.0"  :{"title":"XSLT Dosya",     "type":"fileBase64"   }
-						}
-					},
-					{
-						"title":"İrsaliye",
-						"controls":{
-							"despatch.url":{"title":"Web service url", "type":"string"    },
-							"despatch.firmNo":{"title":"Firma No", "type":"string"    },
-							"despatch.username":{"title":"Service Username", "type":"string"    },
-							"despatch.password":{"title":"Service Password", "type":"string"    },
-							"despatch.prefixOutbox":{"title":"Giden Irsaliye Ön Ek", "type":"string"  },
-							"despatch.prefixInbox":{"title":"Gelen Irsaliye Ön Ek", "type":"string"  },
-							"despatch.prefixReceiptAdviceOutbox":{"title":"Giden irsaliyeler icin teslim belge Numarasi Ön Ek", "type":"string"  },
-              "despatch.prefixReceiptAdviceInbox":{"title":"Gelen irsaliyeler icin teslim belge Numarasi Ön Ek", "type":"string"  },
-							"despatch.postboxAlias":{"title":"Posta Kutusu", "type":"string"  },
-							"despatch.senderboxAlias":{"title":"Gonderim Kutusu", "type":"string"  },
-							"despatch.xsltFiles.0"  :{"title":"XSLT Dosya",     "type":"fileBase64"   }
-						}
-					},
-					{
-						"title":"E-Defter",
-						"controls":{
-							"ledger.url":{"title":"Web service url", "type":"string"    },
-							"ledger.firmNo":{"title":"Firma No", "type":"string"    },
-							"ledger.username":{"title":"Service Username", "type":"string"    },
-							"ledger.password":{"title":"Service Password", "type":"string"    }
-						}
-					},
-					{
-						"title":"E-Belge",
-						"controls":{
-							"document.url":{"title":"Web service url", "type":"string"    },
-							"document.firmNo":{"title":"Firma No", "type":"string"    },
-							"document.username":{"title":"Service Username", "type":"string"    },
-							"document.password":{"title":"Service Password", "type":"string"    },
-							"document.prefixOutbox":{"title":"Girden Belge Ön Ek", "type":"string"  },
-							"document.prefixInbox":{"title":"Gelen Belge Ön Ek", "type":"string"  },
-							"document.postboxAlias":{"title":"Posta Kutusu", "type":"string"  },
-							"document.senderboxAlias":{"title":"Gonderim Kutusu", "type":"string"  },
-							"document.xsltFiles.0"  :{"title":"XSLT Dosya",     "type":"fileBase64"   }
-						}
 					}
-				]
-},
-"options": {
-	"mode": "general",
-	"isForm":true,
-	"dataSource": {
-		"method":"GET",
-		"url":"/dbapi/integrators"
-	}
-}
-}
-]
+				},
+				{
+					"title":"Fatura",
+					"fields":{
+						"invoice.url":{"title":"Web service url", "type":"string"    },
+						"invoice.firmNo":{"title":"Firma No", "type":"string"    },
+						"invoice.username":{"title":"Service Username", "type":"string"    },
+						"invoice.password":{"title":"Service Password", "type":"string"    },
+						"invoice.prefixOutbox":{"title":"Giden Fatura Ön Ek", "type":"string"  },
+						"invoice.prefixInbox":{"title":"Gelen Fatura Ön Ek", "type":"string"  },
+						"invoice.postboxAlias":{"title":"Posta Kutusu", "type":"string"  },
+						"invoice.senderboxAlias":{"title":"Gonderim Kutusu", "type":"string"  },
+						"invoice.xsltFiles.0"  :{"title":"XSLT Dosya",     "type":"fileBase64"   }
+					}
+				},
+				{
+					"title":"Sipariş",
+					"fields":{
+						"order.url":{"title":"Web service url", "type":"string"    },
+						"order.firmNo":{"title":"Firma No", "type":"string"    },
+						"order.username":{"title":"Service Username", "type":"string"    },
+						"order.password":{"title":"Service Password", "type":"string"    },
+						"order.prefixOutbox":{"title":"Sipariş Ön Ek", "type":"string"  },
+						"order.prefixInbox":{"title":"Alım Sipariş Ön Ek", "type":"string"  },
+						"order.postboxAlias":{"title":"Posta Kutusu", "type":"string"  },
+						"order.senderboxAlias":{"title":"Gonderim Kutusu", "type":"string"  },
+						"order.xsltFiles.0"  :{"title":"XSLT Dosya",     "type":"fileBase64"   }
+					}
+				},
+				{
+					"title":"İrsaliye",
+					"fields":{
+						"despatch.url":{"title":"Web service url", "type":"string"    },
+						"despatch.firmNo":{"title":"Firma No", "type":"string"    },
+						"despatch.username":{"title":"Service Username", "type":"string"    },
+						"despatch.password":{"title":"Service Password", "type":"string"    },
+						"despatch.prefixOutbox":{"title":"Giden Irsaliye Ön Ek", "type":"string"  },
+						"despatch.prefixInbox":{"title":"Gelen Irsaliye Ön Ek", "type":"string"  },
+						"despatch.prefixReceiptAdviceOutbox":{"title":"Giden irsaliyeler icin teslim belge Numarasi Ön Ek", "type":"string"  },
+						"despatch.prefixReceiptAdviceInbox":{"title":"Gelen irsaliyeler icin teslim belge Numarasi Ön Ek", "type":"string"  },
+						"despatch.postboxAlias":{"title":"Posta Kutusu", "type":"string"  },
+						"despatch.senderboxAlias":{"title":"Gonderim Kutusu", "type":"string"  },
+						"despatch.xsltFiles.0"  :{"title":"XSLT Dosya",     "type":"fileBase64"   }
+					}
+				},
+				{
+					"title":"E-Defter",
+					"fields":{
+						"ledger.url":{"title":"Web service url", "type":"string"    },
+						"ledger.firmNo":{"title":"Firma No", "type":"string"    },
+						"ledger.username":{"title":"Service Username", "type":"string"    },
+						"ledger.password":{"title":"Service Password", "type":"string"    }
+					}
+				},
+				{
+					"title":"E-Belge",
+					"fields":{
+						"document.url":{"title":"Web service url", "type":"string"    },
+						"document.firmNo":{"title":"Firma No", "type":"string"    },
+						"document.username":{"title":"Service Username", "type":"string"    },
+						"document.password":{"title":"Service Password", "type":"string"    },
+						"document.prefixOutbox":{"title":"Girden Belge Ön Ek", "type":"string"  },
+						"document.prefixInbox":{"title":"Gelen Belge Ön Ek", "type":"string"  },
+						"document.postboxAlias":{"title":"Posta Kutusu", "type":"string"  },
+						"document.senderboxAlias":{"title":"Gonderim Kutusu", "type":"string"  },
+						"document.xsltFiles.0"  :{"title":"XSLT Dosya",     "type":"fileBase64"   }
+					}
+				}
+			]
+
+			,
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/integrators"
+				}
+			}
+		}
+	]
 }

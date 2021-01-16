@@ -91,8 +91,8 @@
 			},
 			{"text":"Tanimlamalar", "icon":"fas fa-sliders-h",
 				"nodes":[
-					{"module":"posDevice.defines.serviceDefines", "text":"Servis Tanimlari", "path":"/pos-device/services-defines",	"icon":"fas fa-cogs"},
-					{"module":"posDevice.defines.devices", "text":"Cihaz listesi", "path":"/pos-device/list",  "icon":"fas fa-cash-register"}
+					{"module":"posDevice.defines.services", "text":"Servis Tanimlari", "path":"/pos-device/services",	"icon":"fas fa-cogs"},
+					{"module":"posDevice.defines.devices", "text":"Cihaz listesi", "path":"/pos-device/devices",  "icon":"fas fa-cash-register"}
 				]
 			}
 		]

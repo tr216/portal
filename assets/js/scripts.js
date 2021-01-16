@@ -32,7 +32,7 @@
   	var $anchor = $(this);
   	$('html, body').stop().animate({
   		scrollTop: ($($anchor.attr('href')).offset().top)
-  	}, 1000, 'easeInOutExpo');
+  	}, 300, 'easeInOutExpo');
   	e.preventDefault();
   });
 })(jQuery);
@@ -136,7 +136,10 @@ function load_card_collapses(){
 	var kartlar=document.getElementsByClassName('card-collapse')
 	var i=0
 	while(i<kartlar.length){
-		$(`#${kartlar[i].id}`).collapse(pageSettings.getItem(`collapse_${kartlar[i].id}`))
+		if(pageSettings.getItem(`collapse_${kartlar[i].id}`)){
+			$(`#${kartlar[i].id}`).collapse(pageSettings.getItem(`collapse_${kartlar[i].id}`))			
+		}
+
 		i++
 	}
 }
@@ -172,7 +175,24 @@ $('.modal .card-collapse').on('hide.bs.collapse',(e)=>{
 // })
 
 $(document).ready(function(){
-	$(':text').attr('autocomplete','off')
+	// $('input[type="text"]' ).attr('autocomplete','pre'+Math.random(0,100000000))
+	// $('input[type="search"]' ).attr('autocomplete','pre'+Math.random(0,100000000))
+	// $('input[type="text"]' ).attr('autocomplete','pre'+Math.random(0,100000000))
+	// $('input[type="search"]' ).attr('autocomplete','none' + (new Date()).getTime())
+	// $('input[type="text"]' ).attr('autocomplete','none' + (new Date()).getTime())
+	//$('input' ).attr('autocomplete','off')
+	// $('input' ).attr('autofill','off')
+	// $('input[type="text"]' ).attr('autocomplete','none')
+	
+	// $('input[type="search"]' ).attr('autocorrect','none')
+	// $('input[type="text"]' ).attr('autocorrect','none')
+
+	// $('input[type="search"]' ).attr('spellcheck','false')
+	// $('input[type="text"]' ).attr('spellcheck','false')
+	// let tagArr = document.getElementsByTagName("input");
+ //  for (let i = 0; i < tagArr.length; i++) {
+ //    tagArr[i].autocomplete ='off' // 'pre'+(new Date()).getTime().toString()+Math.random(0,100000000);
+ //  }
 })
 
 $(function () {

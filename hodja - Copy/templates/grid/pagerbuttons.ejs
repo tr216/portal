@@ -1,0 +1,38 @@
+<%
+if(locals.data.pageCount<=0)
+	return
+
+var q=locals.data.uiParams
+var d=locals.data
+var sayfalar=pagination(d.page,d.pageCount)
+
+var s=``
+if(d.pageCount>1) {
+	s=`
+	<ul class="pagination mb-1">`
+	if(d.page>1){
+		s+=`<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=1&${q.filterString!=''?q.filterString:''}">|&lt;</a></li>
+		<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=${(d.page-1)}&${q.filterString!=''?q.filterString:''}">&lt;</a></li>`
+	}
+
+	var sayfalar=pagination(d.page,d.pageCount)
+	sayfalar.forEach((e)=>{
+		if(e==d.page.toString()){
+			s+=`<li class="page-item active"><span class="page-link">${d.page}</span></li>`
+		}else if(e=='...'){
+			s+=`<li class="page-item"><span class="page-link">...</span></li>`
+		} else {
+			s+=`<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=${e}&${q.filterString!=''?q.filterString:''}">${e}</a></li>`
+		}
+	})
+
+	if(d.page<d.pageCount){
+		s+=`<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=${d.page+1}&${q.filterString!=''?q.filterString:''}">&gt;</a></li>
+		<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=${d.pageCount}&${q.filterString!=''?q.filterString:''}">&gt;|</a></li>`
+	}
+
+	s+=`</ul>`
+}
+
+%>
+<%-s%>

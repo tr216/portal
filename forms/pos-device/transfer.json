@@ -1,0 +1,59 @@
+{
+	"index":[
+		{
+			"type":"filter",
+			"fields" :{
+				"tarih" :{"title":"Tarih", "type":"dateRange"}
+			}
+		},
+		{
+			"type": "grid",
+			"fields": {
+				"posDevice.location" 	: {"title":"Lokasyon", "type":"remoteLookup",
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/locations"
+					}
+				},
+				"status" 										: {"title":"Durum", "type":"string"},
+				"posDevice.deviceSerialNo" 	: {"title":"Cihaz Seri No", "type":"string"},
+				"zNo" 											: {"title":"zNo", "type":"number"},
+				"zDate" 										: {"title":"Tarih", "type":"string"},
+				"zTotal" 										: {"title":"Toplam", "type":"money"},
+				"data" 											: {"title":"Açıklama", "type":"string"},
+				"posDevice.service" 	: {"title":"Servis", "type":"remoteLookup",
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/pos-device-services"
+					},"filter":false
+				}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": false,
+					"edit": false,
+					"delete": false,
+					"view": false,
+					"print": false,
+					"copy": false
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/pos-device-zreports"
+				}
+			},
+			"data": {
+				"docs":[],
+				"page":1,
+				"pageSize":10,
+				"pageCount":0,
+				"recordCount":0
+			}
+		}
+	]
+}

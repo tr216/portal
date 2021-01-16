@@ -1,0 +1,52 @@
+{
+	"index":[
+		{
+			"type": "grid",
+			"fields": {
+				"module":{"title":"Modül", "type":"lookup","staticValues":"modules"},
+				"function":{"title":"Fonksiyon", "type":"lookup","lookup":{"index":"index","form":"form"}},
+				"name":{"title":"Adı", "type":"string"},
+				"isDefault":{"title":"Varsayılan?", "type":"boolean"},
+				"passive":{"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": true
+				},
+				"dataSource": {
+					"type":"remote",
+					"method":"GET",
+					"url":"/dbapi/print-designs"
+				}
+			}
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields": {
+				"module":{"title":"Modül", "type":"lookup","staticValues":"modules", "required":true,"col":4,"help":"/help/qwerty"},
+				"function":{"title":"Fonksiyon", "type":"lookup","lookup":{"index":"index","form":"form"}, "required":true,"col":2,"value":"form","help":"/help/qwerty"},
+				"name":{"title":"Adı", "type":"string", "required":true,"col":4},
+				"isDefault":{"title":"Varsayılan?", "type":"boolean","col":2},
+				"design":{"title":"Tasarım (EJS)", "type":"code", "help":"https://ejs.co/"},
+				"passive":{"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"dataSource": {
+					"method":"GET",
+					"url":"/dbapi/print-designs"
+				}
+			}
+		}
+	]
+}

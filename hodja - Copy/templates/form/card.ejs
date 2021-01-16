@@ -1,0 +1,11 @@
+<div class="card cerceve1 <%- locals.col %> p-0 m-0 mb-2 <%- !locals.visible?'hidden':'' %>">
+	<div class="card-header">
+		<a class="btn btn-collapse <%- locals.collapsed?'collapsed':'' %>" data-toggle="collapse" data-target="#cardCollapse<%- locals.id %>" aria-expanded="<%- !locals.collapsed?'false':'true'%>" aria-fields="cardCollapse<%- locals.id %>" href="#"><i class="fi fi-select-box-arrow-top fi-2x"></i></a>
+		<%- locals.title %>
+	</div>
+	<div  id="cardCollapse<%- locals.id %>" class="card-body p-1 card-collapse collapse <%- locals.collapsed?'collapsed':'show'%>">
+		<div class="row">
+			<%- locals.controls %>
+		</div>
+	</div>
+</div>
