@@ -35,9 +35,9 @@
 			item.options.mode='addnew'
 
 		var s=``
-		item['data']=clone(data)
+		// item['data']=clone(data)
 
-		if(item.tabs){
+		if((item.tabs || '')!=''){
 			var bActiveFound=false
 			item.tabs.forEach((tab,tabIndex)=>{
 				if(tab.active)
@@ -51,35 +51,89 @@
 			})
 			if(bActiveFound==false)
 				item.tabs[0]['active']=true
-
+			
 			item.controls=builder.control('form/tab',item)		
 		}else{
+			
 			item.controls=generateControls(item.fields, item.options, data)
 		}
 
-		s=builder.control('form/form',item)		
-
+		s+=includeCode(item)
+		s+=builder.control('form/form',item)		
+		s+=scriptCode(item)
 		return s
 	}
 
+	function includeCode(item){
+		var s=``
+
+		if((item.includeFile || '')!=''){
+			
+			var dizi=[]
+			if(!Array.isArray(item.includeFile)){
+				dizi.push(item.includeFile)
+			}else{
+				dizi=item.includeFile
+			}
+
+			dizi.forEach((e)=>{
+				if(e.substr(-3)=='.js'){
+					s+=`<script type="text/javascript" src="${e}"></script>\r\n`
+				}else if(e.substr(-4)=='.css'){
+					s+=`<link rel="stylesheet" type="text/css" href="${e}" />\r\n`
+				}
+			})
+			return s
+		}else{
+			return ``
+		}
+	}
+
+	function scriptCode(item){
+		var s=``
+		var script=item.options.script || item.script || ''
+		if((script || '')!=''){
+
+			var dizi=[]
+			if(!Array.isArray(script)){
+				dizi.push(script)
+			}else{
+				dizi=script
+			}
+			s+=`<script type="text/javascript">\r\n`
+			dizi.forEach((e)=>{
+				s+=`${e}\r\n`
+			})
+			s+=`</script>\r\n`
+			return s
+		}else{
+			return ``
+		}
+	}
 
 	function generateControls(fields,options,data){
 		if(fields==undefined)
 			return ''
 		var s=''
-
+		
 		Object.keys(fields).forEach((key)=>{
 			var item=clone(fields[key])
 			if(item.field==undefined)
 				item.field=key
 			item=itemDefaultValues(item)
-
+			
+			//item['mid']=data.mid || ''
 
 			if(item.fields!=undefined && item.type!='grid'){
 				item.controls=generateControls(item.fields,options,data)
 				s+=builder.control('form/card',item)
 			}else{
-				item['value']=getPropertyByKeyPath(data,item.field)
+				if(options.mode=='addnew'){
+					item.value=item.value || ''
+				}else{
+					item['value']=getPropertyByKeyPath(data,item.field)
+				}
+				
 				if(item.type==undefined)
 					return
 				switch(item.type.toLowerCase()) {
@@ -88,6 +142,10 @@
 					s+=builder.control('form/textbox',item)	
 					break
 					case 'remotelookup' : 
+					// item['data']=data
+					if(item.lookupTextField){
+						item['valueText']=getPropertyByKeyPath(data,item.lookupTextField)
+					}
 					s+=builder.control('form/remotelookup',item)	
 					break
 
@@ -113,13 +171,18 @@
 					break
 					case 'w-100': 
 					case 'w100': 
+					case 'divisor': 
 					s+=`<div class="w-100"></div>`	
 					break
 					case 'strings' :
 					case 'textarea' :
 					s+=builder.control('form/textarea',item)	
 					break
-
+					case 'code' :
+					item.rows=item.rows || 40
+					item.encoding=item.encoding || 'base64'
+					s+=builder.control('form/textarea',item)	
+					break
 					case 'file' : 
 					case 'filebase64' : 
 					s+=builder.control('form/filebase64',item)	
@@ -149,51 +212,27 @@
 					break
 				}
 			}
-
 		})
 
 		return s
-
 	}
 
 	function insideGrid(item,options,data){
-		var formGridOptions={
-			insideForm:true,
-			parentField:item.field
-		}
-		console.log(`options:`,options)
-		console.log(`item.options:`,item.options)
-		var s=``
-		if(item.data==undefined)
-			item.data={}
-
-		if(data.docs==undefined)
-			data.docs=[]
-
-		
-		if(Array.isArray(item.value)){
-			data.docs=item.value
-		}else{
-			data.docs=[]
-		}
+		var s=''
+		item.parentField=item.field
+		item.id=item.field
 		Object.keys(item.fields).forEach((key)=>{
-			if(item.fields[key].type=='lookup' && item.fields[key].staticValues!=undefined){
-				item.fields[key].lookup=staticValues[item.fields[key].staticValues]
+			var field=item.fields[key]
+			if(field.type=='lookup' && field.staticValues!=undefined){
+				field.lookup=staticValues[field.staticValues] || {}
 			}
 		})
-		formGridOptions=Object.assign({},formGridOptions,options)
-		formGridOptions=Object.assign({},formGridOptions,item.options)
-
-		item.options=formGridOptions
-		console.log(`item.options:`,item.options)
-		item.controls=gridBuilder.build(item,data)
+		item.controls=insideGridBuilder.build(item)
 		item.id=item.field
 		s=builder.control('form/card',item)
-	
-
-
 		return s
 	}
+
 	function itemDefaultValues(item){
 		item['id']=generateFormId(item.field)
 		item['name']=generateFormName(item.field)
@@ -210,12 +249,14 @@
 		item['collapsed']=ifNull(item['collapsed'],false)
 		item['lookup']=ifNull(item['lookup'],{})
 		if(item.staticValues!=undefined){
-			item['lookup']=staticValues[item.staticValues]
+			item['lookup']=staticValues[item.staticValues] || {}
 		}
 		item['class']=ifNull(item['class'],'')
 		item['readonly']=item.readonly || false
 		item['hasChildren']=false
 
+		if(item.required)
+			item.title=`*${item.title}`
 		return item
 	}
 })(typeof exports === 'undefined'? this['FormBuilder']={}: exports)

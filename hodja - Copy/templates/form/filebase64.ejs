@@ -4,14 +4,14 @@
 <div class="form-group <%- locals.col %> <%- locals.visible==false?'hidden':'' %>">
 	<label class="m-0 p-0"><%- locals.title || '' %></label><br>
 
-	<label for="fileToUpload_<%- locals.field.replaceAll('.','_')%>" class="btn btn-primary float-left"><i class="fi fi-file-line"></i> Dosya seçiniz</label>
+	<label for="fileToUpload_<%- locals.field.replaceAll('.','_')%>" class="btn btn-primary float-left"><i class="far fa-file"></i> Dosya seçiniz</label>
 	<input type="file" name="fileToUpload_<%-locals.field%>" id="fileToUpload_<%-locals.field.replaceAll('.','_')%>" style="visibility:hidden;" accept="" >
 	<input type="hidden" name="<%-locals.name%>[data]" id="fileDataBase64_<%-locals.field.replaceAll('.','_')%>" value="<%- locals.value.data || '' %>" <%-field.onchange || ''%>>
 	<input type="hidden" name="<%-locals.name%>[type]" id="fileToUpload_<%-locals.field.replaceAll('.','_')%>_type" value="<%- locals.value.type || '' %>">
 	<input type="hidden" name="<%-locals.name%>[fileName]" id="fileToUpload_<%-locals.field.replaceAll('.','_')%>_fileName" value="<%- locals.value.fileName || ''%>">
 
 
-	<a id="fileToUpload_download_<%- locals.field.replaceAll('.','_') %>" class="float-left ml-md-3 mt-md-1" href="<%- locals.value.data || '#'%>" download="<%- locals.value.fileName || ''%>"><%- locals.value.fileName?'<i class="fi fi-file-line"></i>' + locals.value.fileName:''%></a>
+	<a id="fileToUpload_download_<%- locals.field.replaceAll('.','_') %>" class="float-left ml-md-3 mt-md-1" href="<%- locals.value.data || '#'%>" download="<%- locals.value.fileName || ''%>"><%- locals.value.fileName?'<i class="far fa-file"></i>' + locals.value.fileName:''%></a>
 	
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -21,7 +21,7 @@
 					return
 				var filename = files[0].name
 				$('#fileToUpload_download_<%-locals.field.replaceAll('.','_')%>').attr('download',filename)
-				$('#fileToUpload_download_<%-locals.field.replaceAll('.','_')%>').html('<i class="fi fi-file-line"></i> ' + filename)
+				$('#fileToUpload_download_<%-locals.field.replaceAll('.','_')%>').html('<i class="far fa-file"></i> ' + filename)
 				var file =files[0]
 				var reader  = new FileReader()
 				reader.addEventListener("load", ()=>{

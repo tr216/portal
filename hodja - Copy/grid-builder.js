@@ -84,6 +84,8 @@
 				field.visible=true
 			if(field.field==undefined)
 				field.field=key
+			if(field.type=='lookup' && field.staticValues)
+				field.lookup=staticValues[field.staticValues] || {}
 		})
 		
 		var s=``
@@ -117,34 +119,34 @@
 				}
 			})
 		}
-		console.log(`options.buttons.add:`,options.buttons.add)
+		
 		if(options.buttons.add[0]==true && options.buttons.add[1]==''){
 			if(!options.insideForm){
-				options.buttons.add[1]=`<a href="${currentPath}/addnew?sid=${qParams.sid}&mid=${qParams.mid}" class="btn btn-primary  btn-sm fi fi-plus-line" target="_self"  title="Yeni Ekle"></a>`
+				options.buttons.add[1]=`<a href="${currentPath}/addnew?mid=${qParams.mid}" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 			}else{
-				options.buttons.add[1]=`<a href="javascript:addGridRow(${item.id})" class="btn btn-primary  btn-sm fi fi-plus-line" target="_self"  title="Yeni Ekle"></a>`
+				options.buttons.add[1]=`<a href="javascript:addGridRow(${item.id})" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 			}
 			
 		}
 
 		if(options.buttons.copy[0]==true && options.buttons.copy[1]==''){
-			options.buttons.copy[1]=`<a href="javascript:gridCopyItem('{field[0]}','{_id}')" class="btn btn-grid-row btn-success " title="Kopyala"><i class="fi fi-copy"></i></a>`
+			options.buttons.copy[1]=`<a href="javascript:gridHelper.gridCopyItem('{field[0]}', '{_id}')" class="btn btn-grid-row btn-success " title="Kopyala"><i class="fas fa-copy"></i></a>`
 		}
 
 		if(options.buttons.print[0]==true && options.buttons.print[1]==''){
-			options.buttons.print[1]=`<a href="javascript:popupCenter('${currentPath}/print/{_id}?sid=${qParams.sid}&mid=${qParams.mid}','Yazdır','900','600')" class="btn btn-grid-row btn-info " title="Yazdır"><i class="fi fi-print"></i></a>`
+			options.buttons.print[1]=`<a href="javascript:popupCenter('${currentPath}/print/{_id}?mid=${qParams.mid}','Yazdır','900','600')" class="btn btn-grid-row btn-info " title="Yazdır"><i class="fas fa-print"></i></a>`
 		}
 
 		if(options.buttons.view[0]==true && options.buttons.view[1]==''){
-			options.buttons.view[1]=`<a href="javascript:popupCenter('${currentPath}/view/{_id}?sid=${qParams.sid}&mid=${qParams.mid}','İncele','900','600')" class="btn btn-info btn-grid-row fi fi-eye" title="İncele"></a>`
+			options.buttons.view[1]=`<a href="javascript:popupCenter('${currentPath}/view/{_id}?mid=${qParams.mid}','İncele','900','600')" class="btn btn-info btn-grid-row fas fa-eye" title="İncele"></a>`
 		}
 
 		if(options.buttons.edit[0]==true && options.buttons.edit[1]==''){
-			options.buttons.edit[1]=`<a href="${currentPath}/edit/{_id}?sid=${qParams.sid}&mid=${qParams.mid}" class="btn btn-primary btn-grid-row fi fi-pencil" target="_self"  title="Düzenle"></a>`
+			options.buttons.edit[1]=`<a href="${currentPath}/edit/{_id}?mid=${qParams.mid}" class="btn btn-primary btn-grid-row fas fa-edit" target="_self"  title="Düzenle"></a>`
 		}
 
 		if(options.buttons.delete[0]==true && options.buttons.delete[1]==''){
-			options.buttons.delete[1]=`<a href="javascript:gridHelper.gridDeleteItem('{field[0]}','{_id}')" class="btn btn-danger btn-grid-row fi fi-recycle-bin" title="Sil"></a>`
+			options.buttons.delete[1]=`<a href="javascript:gridHelper.gridDeleteItem('{field[0]}','{_id}')" class="btn btn-danger btn-grid-row fas fa-trash-alt" title="Sil"></a>`
 		}
 
 		Object.keys(options.buttons).forEach((key)=>{

@@ -31,8 +31,14 @@
 			currentPath=data.uiParams.urlPath
 			qParams=data.uiParams
 		}
+		
 
-
+		var filter=listObjectToObject(data.filter)
+		Object.keys(filter).forEach((key)=>{
+			data[key]=filter[key]
+		})
+		
+		
 		Object.keys(item.fields).forEach((key)=>{
 			var field=item.fields[key]
 			if(field.type=='lookup' && field.all==undefined){

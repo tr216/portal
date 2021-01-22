@@ -26,13 +26,9 @@ function getList(req,res,data,callback){
             }
         }
 
-        res.redirect(`/general/search?sid=${req.query.sid}&${mrutil.encodeUrl(filter)}`);
+        res.redirect(`/general/search?${mrutil.encodeUrl(filter)}`);
     }else{
         data.filter=Object.assign(data.filter,req.query);
-        data.filter.db=undefined;
-        delete data.filter.db;
-        data.filter.sid=undefined;
-        delete data.filter.sid;
 
         api.get(`/{db}/search`,req,data.filter,(err,resp)=>{
             if(!err){

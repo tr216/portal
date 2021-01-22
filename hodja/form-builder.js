@@ -7,7 +7,10 @@
 	}
 
 	exports.FormBuilder = Object.freeze({
-		build:build
+		build:build,
+		itemDefaultValues:itemDefaultValues,
+		insideGrid:insideGrid,
+		includeCode:includeCode
 	})
 
 	function build(item,data,callback){
@@ -19,6 +22,7 @@
 	}
 
 	function start(item,data){
+
 
 		var headerButtons=''
 
@@ -34,8 +38,14 @@
 		if(item.options.mode==undefined)
 			item.options.mode='addnew'
 
+		if(item.type=='modalRow'){
+			item.options.type='modalRow'
+		}
+		if(item.parentField){
+			item.options.parentField=item.parentField
+		}
 		var s=``
-		item['data']=clone(data)
+		// item['data']=clone(data)
 
 		if((item.tabs || '')!=''){
 			var bActiveFound=false
@@ -115,14 +125,23 @@
 		if(fields==undefined)
 			return ''
 		var s=''
-		console.log(`options:`,options)
+		if(options.type=='modalRow' && options.parentField){
+			var obj={}
+			Object.keys(fields).forEach((key)=>{
+				obj[`modalRow${options.parentField}.${key}`]=fields[key]
+				if(fields[key].lookupTextField){
+					obj[`modalRow${options.parentField}.${key}`].lookupTextField=`modalRow${options.parentField}.${fields[key].lookupTextField}`
+				}
+			})
+			fields=obj
+		}
 		Object.keys(fields).forEach((key)=>{
 			var item=clone(fields[key])
 			if(item.field==undefined)
 				item.field=key
 			item=itemDefaultValues(item)
-			item['sid']=data.sid || ''
-			item['mid']=data.mid || ''
+			
+			
 
 			if(item.fields!=undefined && item.type!='grid'){
 				item.controls=generateControls(item.fields,options,data)
@@ -142,7 +161,10 @@
 					s+=builder.control('form/textbox',item)	
 					break
 					case 'remotelookup' : 
-					item['data']=data
+					// item['data']=data
+					if(item.lookupTextField){
+						item['valueText']=getPropertyByKeyPath(data,item.lookupTextField)
+					}
 					s+=builder.control('form/remotelookup',item)	
 					break
 

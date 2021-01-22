@@ -35,12 +35,16 @@ function login(req,res,data, cb){
 			if(!err){
 				sessionHelper.newSession(resp.data,req,res,(err,sessionId)=>{
 					if(!err){
-						res.redirect(`/general/dashboard?sid=${sessionId}`)
+						if(req.query.r){
+							res.redirect(req.query.r)
+						}else{
+							res.redirect(`/general/dashboard`)
+						}
+						
 					}else{
 						data['message']=err.message
 						cb(null,data)
 					}
-					
 				})
 			}else{
 				data['message']=err.message
@@ -49,6 +53,9 @@ function login(req,res,data, cb){
 			
 		})
 	}else{
+		if(req.query.e=='timeout'){
+			data['message']='Oturum süresi dolmuş veya oturum kapanmış'
+		}
 		cb(null,data)
 	}
 }
@@ -94,7 +101,7 @@ function verify(req,res,data,cb){
 					var doc=new db.sessions({token:resp.data,ip:IP,userAgent:userAgent})
 					doc.save((err,sessionDoc)=>{
 						if(!err){
-							res.redirect(`/passport?sid=${sessionDoc._id}`)
+							res.redirect(`/passport`)
 						}else{
 							data['message']=err.message
 							cb(null,data)

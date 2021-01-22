@@ -150,7 +150,41 @@
 							"required":true
 						},
 						"deliveredQuantity.value" :{"title":"Miktar", "type":"number","required":true},
-						"deliveredQuantity.attr.unitCode" :{"title":"Birim", "type":"lookup","staticValues":"unitCodeList","required":true}
+						"deliveredQuantity.attr.unitCode" :{"title":"Birim", "type":"lookup","staticValues":"unitCodeList","required":true},
+						"note.0.value":{"title":"Notlar 1", "type":"string","col":12, "visible":false},
+						"note.1.value":{"title":"Notlar 2", "type":"string","col":12, "visible":false},
+						"note.2.value":{"title":"Notlar 3", "type":"string","col":12, "visible":false}
+					},
+					"modal":{
+						"tabs":[
+							{
+								"title":"Satir bilgileri",
+								"fields": {
+									"ID.value" :{"title":"#", "type":"identity","readonly":true, "width":"50px","col":1},
+									"item._id" :{"title":"Mal/Hizmet", "type":"remoteLookup",
+										"dataSource":{
+											"type":"remote",
+											"method":"GET",
+											"url":"/dbapi/items?itemType=all",
+											"label":"{name.value} {description.value}"
+										},
+										"lookupTextField":"item.name.value",
+										"required":true,"col":5
+									},
+									"deliveredQuantity.value" :{"title":"Miktar", "type":"number","required":true,"col":3},
+									"deliveredQuantity.attr.unitCode" :{"title":"Birim", "type":"lookup","staticValues":"unitCodeList","required":true,"col":3}
+								}
+							},
+							{
+								"title":"notlar",
+								"fields": {
+									"note.0.value":{"title":"Notlar 1", "type":"string","col":12},
+									"note.1.value":{"title":"Notlar 2", "type":"string","col":12},
+									"note.2.value":{"title":"Notlar 3", "type":"string","col":12}
+								}
+							}
+						]
+						
 					},
 					"options": {
 						"selection": false,

@@ -1063,3 +1063,408 @@ function ifNull(item,defaultValue){
 
 
 const gridHelper=typeof GridHelper!='undefined'?GridHelper.GridHelper:''
+
+
+
+function generateLeftMenu(leftMenu){
+	var mid=q.mid || ''
+	var breadCrumbs=[]
+
+	
+	breadCrumbs=getBreadCrumbs(leftMenu,mid)
+	
+	if(breadCrumbs.length>0){
+		pageTitle=``
+		pageTitle+=`<i class="${breadCrumbs[breadCrumbs.length-1].icon || ''}"></i>`
+		breadCrumbs.forEach((e,index)=>{
+			if(index<breadCrumbs.length-1){
+				pageTitle+=`${e.text} \\ `
+			} else {
+				if(funcTitle!=''){
+					pageTitle+=`${e.text} \\ `
+				} else {
+					pageTitle+=`<span class="font-weight-bold text-orange">${e.text}</span>`
+				}
+			}
+		})
+		document.title=(breadCrumbs[breadCrumbs.length-1].text || '') + ' - tr216'
+		
+	}
+
+	var s=``
+	leftMenu.forEach((item,index)=>{
+		s+=generateMenu(item,mid)
+	})
+	return s
+}
+
+
+function generateMenu(menu,mid,parent){
+	var s=``
+	var bActive=false
+
+	if(typeof menu.nodes!='undefined'){
+		if(menu.nodes.length>0){
+			bActive=false
+			menu.nodes.forEach((e)=>{
+				if(e.mId==mid){
+					bActive=true
+					return
+				}
+				if(typeof e.nodes!='undefined'){
+					e.nodes.forEach((e2)=>{
+						if(e2.mId==mid){
+							bActive=true
+							return
+						}
+					})
+				}
+			})
+			s=`\n`
+			if(bActive){
+				s+=`<a class="nav-link" href="#" data-toggle="collapse" data-target="#pagesCollapse${menu.mId.replaceAll('.','-')}" aria-expanded="false" aria-controls="pagesCollapse${menu.mId.replaceAll('.','-')}">\n`
+			}else{
+				s+=`<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapse${menu.mId.replaceAll('.','-')}" aria-expanded="false" aria-controls="pagesCollapse${menu.mId.replaceAll('.','-')}">\n`
+			}
+
+			s+=`<div class="sb-nav-link-icon"><i class="${menu.icon || 'fas fa-table'}"></i></div>
+			${menu.text}
+			<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+			</a>`
+
+			if(bActive){
+				s+=`<div class="collapse show" `
+			}else{
+				s+=`<div class="collapse" `
+			}
+			if(parent){
+				s+=`id="pagesCollapse${menu.mId.replaceAll('.','-')}" data-parent="#pagesCollapse${parent.mId.replaceAll('.','-')}">`
+			}else{
+				s+=`id="pagesCollapse${menu.mId.replaceAll('.','-')}" data-parent="#sidenavAccordion">`
+			}
+
+			s+=`<nav class="sb-sidenav-menu-nested nav accordion" id="navId${menu.mId.replaceAll('.','-')}">
+			`
+			menu.nodes.forEach((e)=>{
+				s+=generateMenu(e,mid,menu)
+			})
+			s+=`
+			</nav>
+			</div>`
+		}
+		return s
+	}else{
+		if(menu.mId==mid){
+			bActive=true
+		}
+		s=`\n`
+		if(bActive){
+			s+=`<a id="${menu.mId.replaceAll('.','-')}" class="nav-link navigation active" href="${menu.path}?mid=${menu.mId}">`
+		}else{
+			s+=`<a id="${menu.mId.replaceAll('.','-')}" class="nav-link navigation" href="${menu.path}?mid=${menu.mId}">`
+		}
+		s+=`<div class="sb-nav-link-icon"><i class="${menu.icon || 'fas fa-table'}"></i></div>
+		${menu.text}
+		</a>
+		`
+		return s
+
+	}
+}
+
+
+function cboEasyDateUrlParams(value){
+	var date1=new Date();
+	var date2=new Date();
+	switch(value){
+		case 'today':break;
+		case 'thisWeek':
+		date1=date1.addDays(-1 * (date1.getDay()-1));
+		date2=date2.addDays(7- date2.getDay());
+		break;
+		case 'thisMonth': 
+		date1=date1.addDays(-1 * (date1.getDate()-1));
+		date2=date2.lastThisMonth();
+		break;
+		case 'last1Week':
+		date1=date1.addDays(-7);
+		break;
+
+		case 'last1Month':
+		date1=new Date(date1.setMonth(date1.getMonth()-1))
+		break;
+		case 'last3Months':
+		date1=new Date(date1.setMonth(date1.getMonth()-3))
+		break;
+		case 'last6Months':
+		date1=new Date(date1.setMonth(date1.getMonth()-6))
+		break;
+		case 'thisYear':
+		date1=new Date(date1.getFullYear(),0,1);
+		date2=new Date(date2.getFullYear(),11,31);
+		break;
+		case 'last1Year':
+		date1=new Date(date1.setMonth(date1.getMonth()-12))
+		break;
+		default:
+		break;
+	}
+	return '&date1=' + date1.yyyymmdd() + '&date2=' + date2.yyyymmdd();
+}
+
+function getBreadCrumbs(leftMenu,mid){
+	var menuItem=[]
+
+	leftMenu.forEach((m1)=>{
+		if(menuItem.length>0)
+			return
+		if(m1.mId==mid){
+			menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+			return
+		}
+		
+		if(m1.nodes){
+			m1.nodes.forEach((m2)=>{
+				
+				if(m2.mId==mid){
+					menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+					menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId})
+					return
+				}
+				if(m2.nodes){
+					m2.nodes.forEach((m3)=>{
+						if(m3.mId==mid){
+							menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+							menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId})
+							menuItem.push({text:m3.text,icon:m3.icon, mId:m3.mId})
+							return
+						}
+						if(m3.nodes){
+							m3.nodes.forEach((m4)=>{
+								if(m4.mId==mid){
+									menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+									menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId})
+									menuItem.push({text:m3.text,icon:m3.icon, mId:m3.mId})
+									menuItem.push({text:m4.text,icon:m4.icon, mId:m4.mId})
+									return
+								}
+							})
+						}
+					})
+				}
+			})
+		}
+	})
+
+	return menuItem
+}
+
+
+
+$("#fileUpload").change(function() {
+	var reader  = new FileReader()
+	var fileIndex=0
+	var files=this.files
+	var uploadFiles=[]
+	reader.addEventListener("load", function(){
+
+		if(reader.result){
+			uploadFiles[uploadFiles.length-1].data=reader.result.split('base64,')[1]
+		}
+		fileIndex++
+		runReader()
+	})
+
+	function runReader(){
+		if(fileIndex>=files.length){
+			document.dispatchEvent(new CustomEvent("file-upload-finished", {detail:uploadFiles}))
+			return
+		}
+		var file=files[fileIndex]
+		uploadFiles.push({name:file.name,modifiedDate:file.lastModifiedDate,size:file.size,data:''})
+		
+		reader.readAsDataURL(file)
+	}
+
+	runReader()
+})
+
+var programId=''
+var programType=''
+
+document.addEventListener('file-upload-finished', function(event) {
+	var data={files:event.detail}
+	runProgramAjax(data)
+})
+
+function runProgram(_id,type){
+	programId=_id
+	programType=type
+	if(type=='file-importer'){
+		$('#fileUpload').trigger('click')
+		return
+	}
+	var list=[]
+
+	$(".checkSingle").each(function() {
+		if(this.checked){
+				//var satir=JSON.parse(decodeURIComponent(this.value))
+				//list.push({_id:satir._id})
+				list.push({_id:this.value})
+			}
+		})
+	if(list.length==0)
+		return alertX('Hiç kayıt seçilmemiş')
+	var data={list:list}
+	runProgramAjax(data)
+
+}
+
+function runProgramAjax(data){
+	$.ajax({
+		url:`/dbapi/programs/run/${programId}`,
+		data:data,
+		type:'POST',
+		dataType: "json",
+		success:function(result){
+			if(result.success){
+				if(typeof result.data=='string'){
+					if(programType=='file-exporter'){
+						download(`data:application/file;base64,${btoa2(result.data)}`,`export_${(new Date()).yyyymmddhhmmss()}.txt`,'application/file')
+						return
+					}else if(programType=='connector-exporter'){
+						alert(result.data)
+					}
+				}
+				
+				window.location.reload()	
+			}else{
+				alertX(result.error.message,'HATA','danger')
+			}
+		},
+		error:function(err){
+			alertX((err.message || err.name || 'Hata oluştu'),'HATA','danger')
+		}
+	})
+}
+
+function remoteLookupAutocomplete(locals,prefix=''){
+	var controlId=prefix+ generateFormId(locals.field)
+	var controlName=prefix + generateFormName(locals.field)
+	var controlNameTextField=''
+	var valueText=locals.valueText || ''
+	if(locals.lookupTextField){
+		controlNameTextField=prefix+ generateFormName(locals.lookupTextField)
+	}
+	
+	var searchUrl=''
+	if((locals.dataSource.search || '')!=''){
+		searchUrl=replaceUrlCurlyBracket(locals.dataSource.search, {_id:locals.value})
+
+	}else if((locals.dataSource.url || '')!=''){
+		searchUrl=replaceUrlCurlyBracket(locals.dataSource.url, {_id:locals.value})
+		if(searchUrl.indexOf('?')<0){
+			searchUrl+='?search={search}'
+		}else{
+			searchUrl+='&search={search}'
+		}
+	}
+	var idUrl=''
+	if(locals.dataSource.id || locals.dataSource.idUrl){
+		idUrl=replaceUrlCurlyBracket(locals.dataSource.id  || locals.dataSource.idUrl, {_id:locals.value})
+
+	}else if(locals.dataSource.url){
+		idUrl=replaceUrlCurlyBracket(locals.dataSource.url, {_id:locals.value})
+		if(idUrl.indexOf('?')<0){
+			idUrl+=`/${locals.value}`
+		}else{
+			idUrl+=`&id=${locals.value}`
+		}
+
+	}
+
+
+	if(searchUrl=='' || idUrl==''){
+		return
+	}
+	var labelStr=(locals.dataSource.label || '{name}')
+
+	$(`#${controlId}-autocomplete-text`).autocomplete({
+		source:function(request,response){
+			var typedText=encodeURIComponent2(request.term)
+			var url=searchUrl.replace('{search}',typedText).replace('{search}',typedText).replace('{mid}',q.mid)
+
+			getAjax(url,`${labelStr}`,``,(err,result)=>{
+				if(!err){
+					response(result)
+				}else{
+					console.error(err)
+					response([])
+				}
+			})
+		},
+		select: function (event, ui) {
+			$(`#${controlId}-autocomplete-text`).val((ui.item.label || ''))
+			$(`input[name="${controlName}"]`).val(ui.item.obj._id.toString())
+			$(`#${controlId}-obj`).val(encodeURIComponent2(JSON.stringify(ui.item.obj)))
+			if(controlNameTextField){
+				$(`input[name="${controlNameTextField}"]`).val((ui.item.label || ''))
+				$(`#${controlId}-original-text`).html((ui.item.label || ''))
+			}
+			if(locals.onchange){
+				eval(`${locals.onchange}`)
+			}
+			return false
+		}
+	})
+
+
+	$(`#${controlId}-autocomplete-text`).on('change',()=>{
+
+		if($(`#${controlId}-autocomplete-text`).val()==''){
+			$(`input[name="${controlName}"]`).val('')
+			$(`#${controlId}-obj`).val('')
+			if(controlNameTextField){
+				$(`#${controlId}-original-text`).html('')
+			}
+		}
+		if(controlNameTextField){
+			$(`input[name="${controlNameTextField}"]`).val($(`#${controlId}-autocomplete-text`).val())
+		}
+
+	})
+
+
+	if((locals.value || '')!=''){
+
+		var url=idUrl.replace('{mid}',q.mid)
+
+		getAjax(url,`${labelStr}`,``,(err,result)=>{
+			if(!err){
+				if(result.length>0){
+					if(valueText==''){
+						$(`#${controlId}-autocomplete-text`).val((result[0].label || ''))
+					}
+
+					$(`input[name="${controlName}"]`).val(result[0].obj._id.toString())
+					$(`#${controlId}-obj`).val(encodeURIComponent2(JSON.stringify(result[0].obj)))
+
+					if(controlNameTextField){
+						$(`#${controlId}-original-text`).html((result[0].label || ''))
+					}
+
+				}else{
+					if(valueText=='')
+						$(`#${controlId}-autocomplete-text`).val('')
+					$(`input[name="${controlName}"]`).val('')
+					$(`#${controlId}-obj`).val('')
+					$(`#${controlId}-original-text`).html('')
+				}
+
+			}else{
+				$(`#${controlId}-autocomplete-text`).val(err.message)
+			}
+		})
+
+	}
+}

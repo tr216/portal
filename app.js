@@ -1,6 +1,11 @@
 require('./eventlog.js')
 
 var express = require('express')
+var session = require('express-session')
+// const redis = require('redis')
+// let RedisStore = require('connect-redis')(session)
+// let redisClient = redis.createClient()
+
 var favicon = require('serve-favicon')
 var logger = require('morgan')
 var cookieParser = require('cookie-parser')
@@ -19,7 +24,7 @@ global.ejs = require('ejs')
 
 global.config = require('./config.json')
 
-global.config['status']='dist'
+
 
 if(process.argv.length>=3){
 	if(process.argv[2]=='localhost' || process.argv[2]=='-l'){
@@ -49,6 +54,7 @@ global.dbType=require('./assets/js/dbtypes.js').types
 
 
 var app = express()
+
 var flash = require('connect-flash')
 
 
@@ -58,7 +64,10 @@ app.set('views', path.join(__dirname, 'pages'))
 app.set('view engine', 'ejs')
 // app.set('view engine', 'hoca')
 
-app.set('port', config.httpserver.port)
+app.set('name',require('./package').name)
+app.set('version',require('./package').version)
+app.set('port',config.httpserver.port)
+
 
 app.use(favicon(path.join(__dirname,'assets','img','webicon.png')))
 
@@ -73,7 +82,17 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'assets'), {maxAge: (60 * 1000 * 60 * 24 * 30) })) 
 app.use('/hodja',express.static(path.join(__dirname, 'hodja'), { maxAge: (60 * 1000 * 60 * 24 * 30) })) 
 
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: 'gizliSir',
+  resave: false,
+  saveUninitialized: true,
+  name:app.get('name'),
+  cookie: { path: '/', httpOnly: false, secure: false, maxAge: null }
+  // cookie: { secure: true }
+}))
 app.use(flash())
+
 
 global.hodjaTemplates={}
 
@@ -105,7 +124,7 @@ require('./lib/loader_db.js')((err)=>{
 			}
 		})
 	}else{
-		console.log('loader_db.js ERROR:',err)
+		errorLog('loader_db.js ERROR:',err)
 	}
 })
 
@@ -128,6 +147,7 @@ global.mobileMenu=require('./resources/mobile-menu.json')
 
 
 global.staticValues=require('./resources/staticvalues.json')
+
 var tryCount=0
 function getPortalModules(){
 	if(tryCount>6)
@@ -137,13 +157,15 @@ function getPortalModules(){
 			staticValues['modules']=resp.data
 		}else{
 			tryCount++
-			console.log(`getPortalModules tryCount:`,tryCount)
+			eventLog(`getting portal modules from API Service. retrying...`,tryCount)
 			setTimeout(getPortalModules,10000)
 			console.error(`err:`,err)
 		}
 	})
 }
-getPortalModules()
+
+setTimeout(getPortalModules,10000)
+
 
 //============= HTTP SERVER ==================
 var debug = require('debug')('node-sbadmin:server')

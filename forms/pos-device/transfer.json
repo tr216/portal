@@ -16,12 +16,12 @@
 						"url":"/dbapi/locations"
 					}
 				},
-				"status" 										: {"title":"Durum", "type":"string"},
+				"status" 										: {"title":"Durum", "type":"lookup", "lookup":{"waiting":"Bekleyen","error":"Hata","transferred":"Aktarılmış"}},
 				"posDevice.deviceSerialNo" 	: {"title":"Cihaz Seri No", "type":"string"},
 				"zNo" 											: {"title":"zNo", "type":"number"},
 				"zDate" 										: {"title":"Tarih", "type":"string"},
 				"zTotal" 										: {"title":"Toplam", "type":"money"},
-				"data" 											: {"title":"Açıklama", "type":"string"},
+				"data" 											: {"title":"Açıklama", "type":"string","filter":false},
 				"posDevice.service" 	: {"title":"Servis", "type":"remoteLookup",
 					"dataSource":{
 						"type":"remote",

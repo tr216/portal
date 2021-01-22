@@ -12,8 +12,8 @@ if (cluster.isMaster) {
     console.log(`worker ${worker.process.pid} died`);
   });
 } else {
+	
   console.log('cluster.worker.id:' + cluster.worker.id); 
   var kp=require('./app.js');
-  
 
 }

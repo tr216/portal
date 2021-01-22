@@ -1,16 +1,13 @@
 
-<script type="text/javascript" src="<%- assetVersion('/hodja/templates/grid/grid-helper.js') %>"></script>
-<script type="text/javascript">
-	const gridHelper=typeof GridHelper!='undefined'?GridHelper.GridHelper:''
-	
-</script>
 <%
-	var showInfoRow=false
+var showInfoRow=false
 
-	if(locals.options.show.filter || locals.options.show.pageSize || locals.options.show.pageCount || locals.options.show.pagerButtons)
-		showInfoRow=true
-	
+if(locals.options.show.filter || locals.options.show.pageSize || locals.options.show.pageCount || locals.options.show.pagerButtons)
+	showInfoRow=true
+
+
 %>
+<%- programButtons(locals.data.session,locals.data.urlPath) %>
 <div class="table-responsive <%- showInfoRow?'mt-1':''%>">
 	<div class="table-responsive">
 		<!-- info row -->
@@ -18,7 +15,7 @@
 		<div class="row m-0 border">
 			<div class="col-12 pt-1 px-1">
 				<div class="float-left form-inline m-0 p-0 mt-1 mb-1">
-					<%- locals.options.show.filter?`<a class="btn btn-secondary btn-sm mr-3" data-toggle="collapse" href="#filterRow" role="button" aria-expanded="false" aria-controls="filterRow" title="Filtre satırını göster/gizle"><i class="fi fi-filter"></i></a>`:``%>
+					<%- locals.options.show.filter?`<a class="btn btn-secondary btn-sm mr-3" data-toggle="collapse" href="#filterRow" role="button" aria-expanded="false" aria-controls="filterRow" title="Filtre satırını göster/gizle"><i class="fas fa-filter"></i></a>`:``%>
 					<%- locals.options.show.pageSize?`${builder.control('grid/pagesize',locals)}`:``%>
 					<%- locals.options.show.pageCount?`${builder.control('grid/pageinfo',locals)}`:``%>
 				</div>
@@ -53,10 +50,14 @@
 		<!-- ./info row -->
 	</div>
 </div>
+
+
 <script type="text/javascript">
 	$(document).ready(()=>{
-		
 		gridHelper.init(<%- locals.id %>,<%-JSON.stringify(locals.fields)%>,<%-JSON.stringify(locals.options)%>)
+		
+		
 	})
+	
 
 </script>

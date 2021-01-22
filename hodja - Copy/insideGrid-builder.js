@@ -6,216 +6,110 @@
 		}
 	}
 
-	exports.FormBuilder = Object.freeze({
+	exports.InsideGridBuilder = Object.freeze({
 		build:build
 	})
 
-	function build(item,data,callback){
+	function build(item,callback){
 		if(callback==undefined){
-			return start(item,data)
+			return start(item)
 		}
-		return callback(null,start(item,data))
+		return callback(null,start(item))
 
 	}
 
-	function start(item,data){
+	function start(item){
+		var s=`
 
-		var headerButtons=''
-
-		if(!item.options)
-			item.options={}
-
-		if(item.options.form==undefined)
-			item.options.form=true
-
-		if(item.options.row==undefined)
-			item.options.row=true
-
-		if(item.options.mode==undefined)
-			item.options.mode='addnew'
-
-		var s=``
-		item['data']=clone(data)
-
-		if(item.tabs){
-			var bActiveFound=false
-			item.tabs.forEach((tab,tabIndex)=>{
-				if(tab.active)
-					bActiveFound=true
-				tab.field='tab' + tabIndex
-				tab.title=tab.title || ''
-				tab.icon=tab.icon || ''
-				if(tab.fields){
-					tab.controls=generateControls(tab.fields, item.options, data )
-				}
-			})
-			if(bActiveFound==false)
-				item.tabs[0]['active']=true
-
-			item.controls=builder.control('form/tab',item)		
-		}else{
-			item.controls=generateControls(item.fields, item.options, data)
-		}
-
-		s=builder.control('form/form',item)		
-
-		return s
-	}
-
-
-	function generateControls(fields,options,data){
-		if(fields==undefined)
-			return ''
-		var s=''
-
-		Object.keys(fields).forEach((key)=>{
-			var item=clone(fields[key])
-			if(item.field==undefined)
-				item.field=key
-			item=itemDefaultValues(item)
-
-
-			if(item.fields!=undefined && item.type!='grid'){
-				item.controls=generateControls(item.fields,options,data)
-				s+=builder.control('form/card',item)
-			}else{
-				item['value']=getPropertyByKeyPath(data,item.field)
-				if(item.type==undefined)
-					return
-				switch(item.type.toLowerCase()) {
-					case 'string' : 
-					case 'textbox' : 
-					s+=builder.control('form/textbox',item)	
-					break
-					case 'remotelookup' : 
-					s+=builder.control('form/remotelookup',item)	
-					break
-
-					case 'money' :
-					case 'number' :
-					case 'numberbox' :
-					s+=builder.control('form/numberbox',item)	
-					break
-					case 'date' :
-					s+=builder.control('form/datebox',item)	
-					break
-					case 'time' :
-					s+=builder.control('form/timebox',item)	
-					break
-					case 'daterange' :
-					s+=builder.control('form/daterangebox',item)	
-					break
-					case 'label':
-					s+=builder.control('form/label',item)	
-					break
-					case 'div': 
-					s+=builder.control('form/div',item)	
-					break
-					case 'w-100': 
-					case 'w100': 
-					s+=`<div class="w-100"></div>`	
-					break
-					case 'strings' :
-					case 'textarea' :
-					s+=builder.control('form/textarea',item)	
-					break
-
-					case 'file' : 
-					case 'filebase64' : 
-					s+=builder.control('form/filebase64',item)	
-					break
-
-					case 'image' :
-					case 'filebase64image' :
-					s+=builder.control('form/filebase64image',item)	
-					break
-					case 'boolean':
-					case 'checkbox':
-					s+=builder.control('form/checkbox',item)
-					break
-
-					case 'lookup': 
-					case 'combobox': 
-					s+=builder.control('form/lookup',item)
-					break
-					case 'json': 
-					s+=builder.control('form/jsondata',item)
-					break
-					case 'grid': 
-					s+=insideGrid(item,options,data)
-					break
-					default :
-					s+=builder.control('form/textbox',item)
-					break
-				}
-			}
-
-		})
-
-		return s
-
-	}
-
-	function insideGrid(item,options,data){
-		var formGridOptions={
-			insideForm:true,
-			parentField:item.field
-		}
-		console.log(`options:`,options)
-		console.log(`item.options:`,item.options)
-		var s=``
-		if(item.data==undefined)
-			item.data={}
-
-		if(data.docs==undefined)
-			data.docs=[]
+		<div class="table-responsive">
+				<table id="grid${item.id}" class="table table-striped border m-0 table-bordered" cellspacing="0">
+				${header(item)}
+				<tbody>
+				</tbody>
+				</table>
+		</div>
+		${modalRow(item)}
 
 		
-		if(Array.isArray(item.value)){
-			data.docs=item.value
-		}else{
-			data.docs=[]
+		<script type="text/javascript">
+		`
+
+		if(item.onchange){
+			var onchange=item.onchange.replace('this.value',`e.detail`).replace('(this)','(e.detail)')
+			s+=`document.getElementById('grid${item.id}').addEventListener('onchange',(e)=>{
+				${onchange}
+			})
+			`
 		}
-		Object.keys(item.fields).forEach((key)=>{
-			if(item.fields[key].type=='lookup' && item.fields[key].staticValues!=undefined){
-				item.fields[key].lookup=staticValues[item.fields[key].staticValues]
-			}
+
+
+		s+=`
+		var grid${item.id}=JSON.parse(decodeURIComponent('${encodeURIComponent2(JSON.stringify(item))}'))
+
+		$(document).ready(()=>{
+
+			gridHelper.refreshGridRows('grid${item.id}',grid${item.id})
 		})
-		formGridOptions=Object.assign({},formGridOptions,options)
-		formGridOptions=Object.assign({},formGridOptions,item.options)
 
-		item.options=formGridOptions
-		console.log(`item.options:`,item.options)
-		item.controls=gridBuilder.build(item,data)
-		item.id=item.field
-		s=builder.control('form/card',item)
 	
+		</script>
+		`
 
-
+		s+=builder.control('form/modal_row',item)
+		
 		return s
 	}
-	function itemDefaultValues(item){
-		item['id']=generateFormId(item.field)
-		item['name']=generateFormName(item.field)
-		item['title']=ifNull(item['title'],'')
-		item['icon']=ifNull(item['icon'],'')
-		item['col']=ifNull(item['col'],'col-md-12')
+	
+	function header(item){
+		var fields=item.fields
+		var s=`<thead><tr class="text-nowrap">`
+		Object.keys(fields).forEach((key)=>{
+				var field=fields[key]
+				if((field.visible==undefined?true:field.visible)){
+					var cls=''
+					switch(field.type ){
+						case 'money':
+						case 'number':
+						cls='text-right mr-1'
+						break
+						case 'boolean':
+						cls='text-center'
+						break
+					}
 
-		if(!isNaN(item.col)){
-			item.col='col-md-' + item.col
-		}
-		item['type']=ifNull(item['type'],'string')
-		item['required']=ifNull(item['required'],false)
-		item['visible']=ifNull(item['visible'],true)
-		item['collapsed']=ifNull(item['collapsed'],false)
-		item['lookup']=ifNull(item['lookup'],{})
-		if(item.staticValues!=undefined){
-			item['lookup']=staticValues[item.staticValues]
-		}
-		item['class']=ifNull(item['class'],'')
-		item['readonly']=item.readonly || false
-		item['hasChildren']=false
-
-		return item
+					s+=`<th class="${cls}" style="${field.width?'width:' + field.width:''}">${field.icon?'<i class="' + field.icon + '"></i>':''} ${field.title || ''}</th>`
+				}
+		})
+		s+=`<td style="width:100px;">#</td>`
+		
+		s+=`</tr></thead>`
+		return s
 	}
-})(typeof exports === 'undefined'? this['FormBuilder']={}: exports)
+
+	function modalRow(item){
+		var fields=item.fields
+		var s=`
+		<div class="modal" id="modal${item.id}" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modal${item.id}Label" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header p-2 ">
+						<label class="modal-title" id="modal${item.id}Label"><i class="fas fa-edit"></i> Satır düzenle</label>
+						<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body p-2" style="overflow: auto;">
+						${formBuilder.build(item,{})}
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-primary" href="javascript:modal${item.id}_OK()" title="Kaydet"><i class="fas fa-check"></i> Tamam</a>
+						<button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		`
+		
+		return s
+	}
+})(typeof exports === 'undefined'? this['InsideGridBuilder']={}: exports)

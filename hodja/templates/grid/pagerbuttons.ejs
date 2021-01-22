@@ -10,18 +10,18 @@ var d=locals.data
 var sayfalar=pagination(d.page,d.pageCount)
 var filterString=''
 Object.keys(locals.data.q).forEach((key)=>{
-	if(key!='sid' && key!='mid' && key!='page')
+	if(key!='mid' && key!='page')
 		filterString+=`${key}=${encodeURIComponent2(locals.data.q[key])}&`
 })
 filterString=filterString.substr(0,filterString.length-1)
-console.log(`filterString:`,filterString)
+
 var s=``
 if(d.pageCount>1) {
 	s=`
 	<ul class="pagination mb-1">`
 	if(d.page>1){
-		s+=`<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=1&${filterString!=''?filterString:''}">|&lt;</a></li>
-		<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=${(d.page-1)}&${filterString!=''?filterString:''}">&lt;</a></li>`
+		s+=`<li class="page-item"><a class="page-link" href="${q.urlPath}?mid=${q.mid}&page=1&${filterString!=''?filterString:''}">|&lt;</a></li>
+		<li class="page-item"><a class="page-link" href="${q.urlPath}?mid=${q.mid}&page=${(d.page-1)}&${filterString!=''?filterString:''}">&lt;</a></li>`
 	}
 
 	var sayfalar=pagination(d.page,d.pageCount)
@@ -31,13 +31,13 @@ if(d.pageCount>1) {
 		}else if(e=='...'){
 			s+=`<li class="page-item"><span class="page-link">...</span></li>`
 		} else {
-			s+=`<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=${e}&${filterString!=''?filterString:''}">${e}</a></li>`
+			s+=`<li class="page-item"><a class="page-link" href="${q.urlPath}?mid=${q.mid}&page=${e}&${filterString!=''?filterString:''}">${e}</a></li>`
 		}
 	})
 
 	if(d.page<d.pageCount){
-		s+=`<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=${d.page+1}&${filterString!=''?filterString:''}">&gt;</a></li>
-		<li class="page-item"><a class="page-link" href="${q.urlPath}?sid=${q.sid}&mid=${q.mid}&page=${d.pageCount}&${filterString!=''?filterString:''}">&gt;|</a></li>`
+		s+=`<li class="page-item"><a class="page-link" href="${q.urlPath}?mid=${q.mid}&page=${d.page+1}&${filterString!=''?filterString:''}">&gt;</a></li>
+		<li class="page-item"><a class="page-link" href="${q.urlPath}?mid=${q.mid}&page=${d.pageCount}&${filterString!=''?filterString:''}">&gt;|</a></li>`
 	}
 
 	s+=`</ul>`

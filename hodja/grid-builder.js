@@ -122,7 +122,7 @@
 		
 		if(options.buttons.add[0]==true && options.buttons.add[1]==''){
 			if(!options.insideForm){
-				options.buttons.add[1]=`<a href="${currentPath}/addnew?sid=${qParams.sid}&mid=${qParams.mid}" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
+				options.buttons.add[1]=`<a href="${currentPath}/addnew?mid=${qParams.mid}" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 			}else{
 				options.buttons.add[1]=`<a href="javascript:addGridRow(${item.id})" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 			}
@@ -134,15 +134,15 @@
 		}
 
 		if(options.buttons.print[0]==true && options.buttons.print[1]==''){
-			options.buttons.print[1]=`<a href="javascript:popupCenter('${currentPath}/print/{_id}?sid=${qParams.sid}&mid=${qParams.mid}','Yazdır','900','600')" class="btn btn-grid-row btn-info " title="Yazdır"><i class="fas fa-print"></i></a>`
+			options.buttons.print[1]=`<a href="javascript:popupCenter('${currentPath}/print/{_id}?mid=${qParams.mid}','Yazdır','900','600')" class="btn btn-grid-row btn-info " title="Yazdır"><i class="fas fa-print"></i></a>`
 		}
 
 		if(options.buttons.view[0]==true && options.buttons.view[1]==''){
-			options.buttons.view[1]=`<a href="javascript:popupCenter('${currentPath}/view/{_id}?sid=${qParams.sid}&mid=${qParams.mid}','İncele','900','600')" class="btn btn-info btn-grid-row fas fa-eye" title="İncele"></a>`
+			options.buttons.view[1]=`<a href="javascript:popupCenter('${currentPath}/view/{_id}?mid=${qParams.mid}','İncele','900','600')" class="btn btn-info btn-grid-row fas fa-eye" title="İncele"></a>`
 		}
 
 		if(options.buttons.edit[0]==true && options.buttons.edit[1]==''){
-			options.buttons.edit[1]=`<a href="${currentPath}/edit/{_id}?sid=${qParams.sid}&mid=${qParams.mid}" class="btn btn-primary btn-grid-row fas fa-edit" target="_self"  title="Düzenle"></a>`
+			options.buttons.edit[1]=`<a href="${currentPath}/edit/{_id}?mid=${qParams.mid}" class="btn btn-primary btn-grid-row fas fa-edit" target="_self"  title="Düzenle"></a>`
 		}
 
 		if(options.buttons.delete[0]==true && options.buttons.delete[1]==''){

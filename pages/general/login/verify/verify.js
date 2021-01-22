@@ -31,7 +31,7 @@ function verify(req,res,data,cb){
 
 	
 	data.form.username=req.query.username;
-	console.log('req.query.username:',req.query.username);
+	
 	if(req.method=='POST' || req.method=='PUT'){
 		data.form.authCode=req.body.authCode;
 		api.post(`/verify`,req,data.form,(err,resp)=>{
@@ -42,7 +42,7 @@ function verify(req,res,data,cb){
 				var doc=new db.sessions({token:resp.data.token,username:resp.data.username,isSysUser:resp.data.isSysUser,isMember: resp.data.isMember, ip:IP,userAgent:userAgent});
 				doc.save((err,sessionDoc)=>{
 					if(!err){
-						res.redirect(`/passport?sid=' + sessionDoc._id);
+						res.redirect(`/passport`);
 					}else{
 						data['message']=err.message;
 						cb(null,data);

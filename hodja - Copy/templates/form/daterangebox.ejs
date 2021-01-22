@@ -1,5 +1,5 @@
 <div class="form-group <%- locals.col %> <%- locals.visible==false?'hidden':'' %>">
-	<label class="m-0 p-0"><%- locals.title || locals.label || '' %></label>
+	<label class="m-0 p-0"><%- locals.title || locals.label || '' %><%- helpButton(locals) %></label>
 	<div id="<%-locals.id%>" class="row m-0 p-0">
 		<select class="form-control col-sm-4 <%-field.class || ''%>" name="cboEasyDate" id="cboEasyDate">
 			<option value="">Tarih</option>

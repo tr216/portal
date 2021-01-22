@@ -12,10 +12,7 @@ exports.get=(endpoint,req, params, callback)=>{
 			}
 			
 			if(params){
-				if(params.sid!=undefined){
-					params.sid=undefined;
-					delete params.sid;
-				}
+				
 				if(params.mid!=undefined){
 					params.mid=undefined;
 					delete params.mid;
@@ -72,10 +69,7 @@ exports.getFile=(endpoint,req, params, callback)=>{
 			}
 
 			if(params){
-				if(params.sid!=undefined){
-					params.sid=undefined
-					delete params.sid
-				}
+				
 				if(params.mid!=undefined){
 					params.mid=undefined
 					delete params.mid
@@ -297,7 +291,7 @@ exports.delete=(endpoint,req, callback)=>{
 function sessionId2Token(req,cb){
 	if(!req)
 		return cb(null,{token:''})
-	var sid=req.query!=undefined?req.query.sid || '':req.sid || ''
+	var elvanDalton=req.session.elvanDalton
 	var mid=req.query!=undefined?req.query.mid || '':req.mid || ''
 
 	if(req.params!=undefined){
@@ -306,11 +300,11 @@ function sessionId2Token(req,cb){
 		}
 	}
 	
-	if(sid=='')
+	if(elvanDalton=='')
 		return cb({code:'SESSION_NOT_FOUND',message:'Oturum sonlandırılmış. Tekrar giriş yapınız.'})
 
 	
-	db.sessions.findOne({_id:sid.toLongId(),passive:false},(err,doc)=>{
+	db.sessions.findOne({_id:elvanDalton,passive:false},(err,doc)=>{
 		if(!err){
 			if(doc!=null){
 				
@@ -326,7 +320,6 @@ function sessionId2Token(req,cb){
 					if(!err){
 						cb(null,doc2)
 					}else{
-						console.log(`sessionId2Token err:`,err)
 						cb(err)
 					}
 				})

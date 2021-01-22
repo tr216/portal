@@ -1,5 +1,10 @@
 <div class="form-group <%- locals.col %> <%- locals.visible==false?'hidden':'' %>">
-	<label class="m-0 p-0"><%- locals.title || locals.label || '' %></label>
-	<input type="text" class="form-control <%- locals.class %>" id="<%- locals.id %>" name="<%- locals.name %>" placeholder="<%- locals.placeholder || locals.title || locals.label %>" <%- locals.required?'required="required"':'' %> <%- locals.readonly==true?'readonly':'' %> onchange="<%- locals.onchange %>" value="<%- locals.value %>">
+	<label class="m-0 p-0 <%- locals.required?'form-required':''%>"><%- locals.title || locals.label || '' %><%- helpButton(locals) %></label>
+	<input type="text" class="form-control <%- locals.class %>" id="<%- locals.id %>" name="<%- locals.name %>" placeholder="<%- locals.placeholder || locals.title || locals.label %>" <%- locals.required?'required="required"':'' %> <%- locals.readonly==true?'readonly':'' %> onchange="<%- locals.onchange %>" autocomplete="off" autofill="off" spellcheck="false" value="">
 </div>
 
+<script type="text/javascript">
+	$(document).ready(()=>{
+		$('#<%-locals.id%>').val(decodeURIComponent('<%- encodeURIComponent2(locals.value || '') %>'))
+	})
+</script>

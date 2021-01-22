@@ -1,6 +1,7 @@
 <% 
 if(!locals.options.filter)
 	return
+
 %>
 <tr id="filterRow" class="text-nowrap collapse">
 	<%- locals.options.selection?`<th></th>`:``%>
@@ -9,24 +10,38 @@ if(!locals.options.filter)
 		var s=''
 		if((field.visible==undefined?true:field.visible)){
 			if((field.filter==undefined?locals.options.filter:field.filter)){
-				if(field.type=='lookup' || field.type=='remoteLookup'){
-					if(field.staticValues)
-						field.lookup=staticValues[field.staticValues]
+				switch(field.type.toLowerCase()){
+					case 'lookup':
 					s+=`<select name="filter_${index}" id="filter_${index}" class="form-control p-0 m-0 grid-filter">`
 					s+=`<option value="">*</option>`
 					Object.keys(field.lookup || {}).forEach((key2)=>{
 						s+=`<option value="${key2}">${field.lookup[key2]}</option>`
 					})
 					s+=`</select>`
-				}else if(field.type=='boolean'){
+					break
+					case 'remotelookup':
+					var s=`<div class="input-group">
+						<input type="search" class="form-control p-0 m-0 grid-filter" name="filter_${index}_text" id="filter_${index}_text" placeholder="${field.placeholder || ''}" value="">
+						<div class="input-group-prepend">
+						<div class="input-group-text"><i class="fas fa-ellipsis-v"></i></div>
+						</div>
+						</div>
+						<input type="hidden" name="filter_${index}" id="filter_${index}" value="">
+					`
+						
+					break
+					case 'boolean':
 					s+=`<select name="filter_${index}" id="filter_${index}" class="form-control p-0 m-0 grid-filter">
 					<option value="">*</option>
-					<option value="true"><i class="fi fi-check-mark-square text-primary"></i> Evet</option>
-					<option value="false"><i class="fi fi-square-line text-dark"></i> Hayır</option>
+					<option value="true"><i class="fas fa-check-square text-primary"></i> Evet</option>
+					<option value="false"><i class="far fa-square text-dark"></i> Hayır</option>
 					</select>`
-				}else{
+					break
+					default:
 					s+=`<input type="text" class="form-control p-0 m-0 grid-filter" name="filter_${index}" id="filter_${index}" placeholder="${field.placeholder || ''}" value="">`
+					break
 				}
+				
 			}
 		}
 		%>
@@ -36,3 +51,22 @@ if(!locals.options.filter)
 	%>
 	<th></th>
 </tr>
+<script type="text/javascript">
+	$(document).ready(()=>{
+		var fields=JSON.parse(decodeURIComponent('<%-encodeURIComponent2(JSON.stringify(locals.fields || {}))%>'))
+		var options=JSON.parse(decodeURIComponent('<%-encodeURIComponent2(JSON.stringify(locals.options || {}))%>'))
+		Object.keys(fields).forEach((key,index)=>{
+			var field=fields[key]
+			field.field=field.field || key
+			var s=''
+			if((field.visible==undefined?true:field.visible)){
+				if((field.filter==undefined?options.filter:field.filter)){
+					if(field.type.toLowerCase()=='remotelookup'){ 
+						
+						gridHelper.filterRowAutocomplete(field,`filter_${index}`,q[field.field])
+					}
+				}
+			}
+		})
+	})
+</script>

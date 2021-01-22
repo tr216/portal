@@ -38,24 +38,6 @@
 })(jQuery);
 
 
-(function(){
-	var originalAddClassMethod = jQuery.fn.addClass;
-	var originalRemoveClassMethod = jQuery.fn.removeClass;
-	jQuery.fn.addClass = function(){
-		var result = originalAddClassMethod.apply( this, arguments );
-		jQuery(this).trigger('classChanged');
-		return result;
-	}
-	jQuery.fn.removeClass = function(){
-		var result = originalRemoveClassMethod.apply( this, arguments );
-		jQuery(this).trigger('classChanged');
-		return result;
-	}
-})();
-
-
-
-
 $(document).ready(function(){
 	$('body').on('keydown', 'input, select', function(e) {
 		if(e)
@@ -162,39 +144,236 @@ $('.modal .card-collapse').on('hide.bs.collapse',(e)=>{
 	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
 })
 
+var copyX_cb=null
+var copyX_fields={}
+function copyX(fields,title,cb=null){
+	copyX_fields=fields
+	copyX_cb=cb
+
+	$('#modalCopyLabel').html(title)
+	var s=``
+	Object.keys(fields).forEach((key)=>{
+		var field=fields[key]
+		s+=`<div class="form-group">
+		<label class="m-0 p-0">${field.title || ''}</label>
+		<input type="text" class="form-control ${field.class || ''}" id="modalCopyField-${generateFormId(key)}" placeholder="${ field.placeholder || field.title || ''}" ${field.readonly==true?'readonly':''} autocomplete="off" autofill="off" spellcheck="false" value="${field.value}">
+		</div>`
+	})
+	$('#modalCopy .modal-body').html(s)
+
+	$('#modalCopy').modal('show')
+
+}
+
+function modalCopyOk(){
+	$('#modalCopyOk').modal('hide')
+	if(copyX_cb){
+		var formData={}
+		Object.keys(copyX_fields).forEach((key)=>{
+			var field=copyX_fields[key]
+			formData[key]=$(`#modalCopyField-${generateFormId(key)}`).val()
+		})
+		formData=listObjectToObject(clone(formData))
+
+		copyX_cb(true,formData)
+
+	}else{
+		$('#modalCopyOk').modal('hide')
+	}
+}
 
 
-// jQuery('document').ready(function(){
-	/* For disabling Chrome Autocomplete */
-	//setTimeout(()=>{
-		//jQuery( ":text" ).attr('autocomplete','pre'+Math.random(0,100000000))
-		//jQuery( ":text" ).attr('autocomplete','chrome-off')
-	//},200)
+
+
+function modalFormOptions(){
+	$("#gridPrograms tr").remove()
+
+	$.ajax({
+		url:`/dbapi/programs?passive=false`,
+		type:'GET',
+		dataType: 'json',
+		success: function(result) {
+			if(result.success){
+				$.ajax({
+					url:`/dbapi/settings`,
+					type:'GET',
+					dataType: 'json',
+					success: function(result2) {
+						var secilmisOlanlar=[]
+						
+						
+						if(result2.success){
+							if(result2.data.settings){
+								if(result2.data.settings.page){
+									if(result2.data.settings.page[windowPathToFieldName()]){
+										if(result2.data.settings.page[windowPathToFieldName()].programs){
+											secilmisOlanlar=result2.data.settings.page[windowPathToFieldName()].programs
+										}
+									}
+								}
+							}
+						}
+						
+						var lineGrid=document.getElementById('gridPrograms')
+						result.data.docs.forEach((prg,index)=>{
+
+							var newRow=lineGrid.insertRow(lineGrid.rows.length)
+							var bChecked=false
+
+							secilmisOlanlar.forEach((e)=>{
+								if(e._id.toString()==prg._id.toString()){
+									bChecked=true
+									return
+								}
+							})
+							
+							if(bChecked){
+								newRow.insertCell(0).innerHTML=`<input type="checkbox" class="programRow" name="programRow[${index}]" checked="true" value="${encodeURIComponent2(JSON.stringify(prg))}">`
+							}else{
+								newRow.insertCell(0).innerHTML=`<input type="checkbox" class="programRow" name="programRow[${index}]" value="${encodeURIComponent2(JSON.stringify(prg))}">`
+							}
+							
+							
+							newRow.insertCell(1).innerHTML=prg.name
+							newRow.insertCell(2).innerHTML=prg.type
+						})
+						$('#modalFormOptions').modal('show')
+					}
+				})
+			}
+		},
+		error:function(err){
+			console.log('err:',err)
+		}
+	})
+}
+
+function modalFormOptions_OK(){
+	var data={page:{}}
+	data.page[windowPathToFieldName()]={programs:[null]}
+	$(".programRow").each(function() {
+		if(this.checked){
+			var prg=JSON.parse(decodeURIComponent(this.value))
+
+			data.page[windowPathToFieldName()].programs.push({_id:prg._id,type:prg.type,name:prg.name})
+		}
+	})
 	
 	
-// })
+	$.ajax({
+		url:`/dbapi/settings`,
+		data:data,
+		type:'POST',
+		dataType: 'json',
+		success: function(result) {
+			
+			if(result.success){
+				
+				window.location.href=`/changedb`
+				
+			}
+		},
+		error:function(err){
+			console.log('err:',err)
+		}
+	})
+	
+}
+
+function logout(){
+	confirmX('Programdan çıkmak istiyor musunuz?',(resp)=>{
+		
+		if(resp)
+			window.location.href=`${window.location.origin}/logout`
+	})
+}
 
 $(document).ready(function(){
-	// $('input[type="text"]' ).attr('autocomplete','pre'+Math.random(0,100000000))
-	// $('input[type="search"]' ).attr('autocomplete','pre'+Math.random(0,100000000))
-	// $('input[type="text"]' ).attr('autocomplete','pre'+Math.random(0,100000000))
-	// $('input[type="search"]' ).attr('autocomplete','none' + (new Date()).getTime())
-	// $('input[type="text"]' ).attr('autocomplete','none' + (new Date()).getTime())
-	//$('input' ).attr('autocomplete','off')
-	// $('input' ).attr('autofill','off')
-	// $('input[type="text"]' ).attr('autocomplete','none')
+	var a=document.getElementById('main-container')
+	var spinner=document.getElementById('spinner')
+	a.style.display='initial'
+	spinner.style.display='none'
+})
+
+
+var confirmX_response=false
+function confirmX(message, type='info',cb){
+	confirmX_response=false
+	if(typeof type=='function'){
+		cb=type
+		type='info'
+	}
+
+
+	$('#modalConfirm .modal-content').removeClass('alert-warning')
+	$('#modalConfirm .modal-content').removeClass('alert-info')
+	$('#modalConfirm .modal-content').removeClass('alert-danger')
+
+	$('#modalConfirm .modal-content').addClass(`alert-${type}`)
+
+	$('#modalConfirm .message').html(message.replaceAll('\n','<br>'))
 	
-	// $('input[type="search"]' ).attr('autocorrect','none')
-	// $('input[type="text"]' ).attr('autocorrect','none')
+	$('#modalConfirm').modal('show')
+	
+	$('#modalConfirm').on('hidden.bs.modal', function (e) {
+		$('#modalConfirm').unbind('hidden.bs.modal')
+		if(cb)
+			cb(confirmX_response)
+	})
+	$('#modalConfirmOk').on('click', function (e) {
+		$('#modalConfirmOk').unbind('click')
+		confirmX_response=true
+		$('#modalConfirm').modal('hide')
+	})
+}
+	// $('input').keypress(function(e) {
+	// 	if(e.keyCode == 13){
+	// 		$(this).next('input').focus()
+	// 		e.preventDefault()
+	// 	}
+	// })
 
-	// $('input[type="search"]' ).attr('spellcheck','false')
-	// $('input[type="text"]' ).attr('spellcheck','false')
-	// let tagArr = document.getElementsByTagName("input");
- //  for (let i = 0; i < tagArr.length; i++) {
- //    tagArr[i].autocomplete ='off' // 'pre'+(new Date()).getTime().toString()+Math.random(0,100000000);
- //  }
-})
 
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
+
+	function alertX(message, title='', type='info',cb){
+		var icon='fas fa-exclamation-triangle'
+		if(typeof title=='function'){
+			cb=title
+			title=''
+			type='info'
+		}else if(typeof type=='function'){
+			cb=type
+			type='info'
+		}
+		$('#modalMessageHeader').removeClass('alert-warning')
+		$('#modalMessageHeader').removeClass('alert-info')
+		$('#modalMessageHeader').removeClass('alert-danger')
+
+		switch(type){
+			case 'danger':
+			icon='fas fa-skull-crossbones'
+			$('#modalMessageHeader').addClass('alert-danger')
+			break
+			case 'warning':
+			icon='fas fa-exclamation-triangle'
+			$('#modalMessageHeader').addClass('alert-warning')
+			break
+			default:
+			icon='fas fa-info-circle'
+			$('#modalMessageHeader').addClass('alert-info')
+			break
+		}
+		title=`<i class="${icon}"></i> ${title}`
+		$('#modalMessageLabel').html(title)
+
+		$('#modalMessage .modal-body').html(`${message.replaceAll('\n','<br>')}`)
+		
+		$('#modalMessage').modal('show')
+		$('#modalMessage').on('hidden.bs.modal', function (e) {
+			if(cb)
+				cb('ok')
+		})
+	}
+
+
+

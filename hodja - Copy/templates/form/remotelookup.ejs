@@ -1,155 +1,35 @@
 <%
-var lookupTextField_id=generateFormId(locals.field) + '-autocomplete-text'
-var lookupTextField_name=generateFormName(locals.field)+ '-autocomplete-text'
-var lookupTextValue=''
-if(locals.lookupTextField!=undefined){
-	lookupTextField_id=generateFormId(locals.lookupTextField)
-	lookupTextField_name=generateFormName(locals.lookupTextField)
-	if(locals.data!=undefined){
-		lookupTextValue=getPropertyByKeyPath(locals.data,locals.lookupTextField)
-		if((lookupTextValue || '')=='')
-			lookupTextValue=''
-	}
-}
 
+var controlId=generateFormId(locals.field)
+var controlName=generateFormName(locals.field)
+var controlNameTextField=''
+var valueText=locals.valueText || ''
+if(locals.lookupTextField){
+	controlNameTextField=generateFormName(locals.lookupTextField)
+}
 %>
 <div class="form-group <%- locals.col %> <%- locals.visible==false?'hidden':'' %>">
-	<label class="m-0 p-0"><%- locals.title || locals.label || '' %></label>
+	<label class="m-0 p-0 <%- locals.required?'form-required':''%>"><%- locals.title || '' %><%- helpButton(locals) %> <%- controlNameTextField?`<span class="ml-3 bold small text-success" id="${controlId}-original-text"></span>`:`` %></label>
 	<div class="input-group">
-		<input type="search" class="form-control <%- locals.class %>" id="<%-lookupTextField_id %>" name="<%-lookupTextField_name%>" placeholder="<%- locals.placeholder || locals.title || locals.label %>" value="<%-lookupTextValue %>" <%- locals.required?'required="required"':'' %> <%- locals.readonly?'readonly':'' %> >
-		
+		<input type="search" class="form-control <%- locals.class %>" id="<%-controlId %>-autocomplete-text"  placeholder="<%- locals.placeholder || locals.title || ''%>" value="<%-valueText %>" autocomplete="off" autofill="off" spellcheck="false" <%- locals.required?'required="required"':'' %> <%- locals.readonly?'readonly':'' %> >
 		<div class="input-group-prepend">
-			<div class="input-group-text"><i class="fi fi-ellipsis-v"></i></div>
+			<div class="input-group-text"><i class="fas fa-ellipsis-v"></i></div>
 		</div>
 	</div>
-	<input type="hidden" id="<%- locals.id %>" name="<%- locals.name %>" value="<%- locals.value %>">
-	<input type="hidden" id="<%- locals.id %>-obj"  value="">
-	<% if(locals.lookupTextField!=undefined){ %>
-	<input type="hidden" id="<%-generateFormId(locals.lookupTextField)%>" name="<%-generateFormName(locals.lookupTextField)%>" value="">
+	<input type="hidden" name="<%- controlName %>" value="<%- locals.value %>">
+	<input type="hidden" id="<%- controlId %>-obj"  value="">
+	<% if(controlNameTextField){ %>
+	<input type="hidden" name="<%-controlNameTextField%>" value="<%-valueText%>">
+	
 	<%}%>
 </div>
 
-
-
-
-<% 
-var searchUrl=''
-if((locals.dataSource.search || '')!=''){
-	searchUrl=replaceUrlCurlyBracket(locals.dataSource.search, {_id:locals.value})
-	if(searchUrl.indexOf('sid=')<0){
-		if(searchUrl.indexOf('?')<0){
-			searchUrl+='?sid={sid}'
-		}else{
-			searchUrl+='&sid={sid}'
-		}
-	}
-}else if((locals.dataSource.url || '')!=''){
-	searchUrl=replaceUrlCurlyBracket(locals.dataSource.url, {_id:locals.value})
-	if(searchUrl.indexOf('?')<0){
-		searchUrl+='?search={search}'
-	}else{
-		searchUrl+='&search={search}'
-	}
-
-	if(searchUrl.indexOf('sid=')<0){
-		searchUrl+='&sid={sid}'
-	}
-}
-
-
-var idUrl=''
-if(locals.dataSource.id || locals.dataSource.idUrl){
-	idUrl=replaceUrlCurlyBracket(locals.dataSource.id  || locals.dataSource.idUrl, {_id:locals.value})
-	if(idUrl.indexOf('sid=')<0){
-		if(idUrl.indexOf('?')<0){
-			idUrl+='?sid={sid}'
-		}else{
-			idUrl+='&sid={sid}'
-		}
-	}
-
-}else if(locals.dataSource.url){
-	idUrl=replaceUrlCurlyBracket(locals.dataSource.url, {_id:locals.value})
-	if(idUrl.indexOf('?')<0){
-		idUrl+=`/${locals.value}?sid={sid}`
-	}else{
-		idUrl+=`&id=${locals.value}`
-	}
-
-	if(searchUrl.indexOf('sid=')<0){
-		searchUrl+='&sid={sid}'
-	}
-}
-
-
-if(searchUrl=='' || idUrl==''){
-	return
-}
-var labelStr=(locals.dataSource.label || '{name}')
-
-%>
-
-
 <script type="text/javascript">
+	var locals_<%- controlId.replaceAll('-','_')%> =<%- JSON.stringify(locals) %>
+
 	$(document).ready(()=>{
-
-		$('#<%-lookupTextField_id%>').autocomplete({
-			source:function(request,response){
-				var typedText=encodeURIComponent2(request.term)
-				var url=('<%-searchUrl%>').replace('{search}',typedText).replace('{search}',typedText).replace('{sid}',q.sid).replace('{mid}',q.mid)
-
-				getAjax(url,'<%-labelStr%>','<%- locals.value || ''%>',(err,result)=>{
-					if(!err){
-						response(result)
-					}else{
-						console.error(err)
-						response([])
-					}
-				})
-			},
-			select: function (event, ui) {
-
-				$("#<%-lookupTextField_id%>").val((ui.item.label || ''))
-				$("#<%-locals.id %>").val(ui.item.obj._id.toString())
-				$("#<%-locals.id %>-obj").val(encodeURIComponent2(JSON.stringify(ui.item.obj)))
-
-				<%- locals.onchange || '' %>
-
-				return false
-			}
-		})
-
-
-		$('#<%-lookupTextField_id%>').on('change',()=>{
-			if($('#<%-lookupTextField_id%>').val()==''){
-				$('#<%-locals.id %>').val('')
-				$('#<%-locals.id %>-obj').val('')
-			}
-		})
-
-		<% if((locals.value || '')!=''){ %>
-
-			var url=('<%-idUrl %>').replace('{sid}',q.sid).replace('{mid}',q.mid)
-			getAjax(url,'<%-labelStr%>','', (err,result)=>{
-				if(!err){
-					if(result.length>0){
-						$('#<%-lookupTextField_id%>').val((result[0].label || ''))
-						$('#<%-locals.id %>').val(result[0].obj._id.toString())
-						$("#<%-locals.id %>-obj").val(encodeURIComponent2(JSON.stringify(result[0].obj)))
-					}else{
-						$('#<%-lookupTextField_id%>').val('')
-						$('#<%-locals.id %>').val('')
-						$('#<%-locals.id %>-obj').val('')
-					}
-
-				}else{
-					$('#<%-lookupTextField_id%>').val(err.message)
-				}
-			})
-			
-		<%}%>
-
-
+		remoteLookupAutocomplete(locals_<%- controlId.replaceAll('-','_')%>)
 	})
 </script>
+
 

@@ -1,0 +1,293 @@
+<nav class="sb-sidenav accordion sb-sidenav-light" id="sidenavAccordion">
+	<div class="sb-sidenav-menu">
+		<div class="nav">
+			<div id="leftMenu"></div>
+			<hr class="w-100 mt-3" style="border-top: 1px solid #fd7e144d;">
+			<a id="tawkto" class="nav-link" href="javascript:openInNewTab('https://tawk.to/chat/5f4bbf07cc6a6a5947b01c77/default');">
+				<div class="sb-nav-link-icon"><i class="fas fa-medkit"></i></div>
+				Destek216
+			</a>
+		</div>
+	</div>
+
+</nav>
+<script type="text/javascript">
+	var leftMenu=<%- JSON.stringify(leftMenu) %>
+	var funcTitle='<%- funcTitle %>'
+	var pageTitle=''
+	
+
+	var mid=getAllUrlParams().mid || ''
+	var breadCrumbs=[]
+
+	
+	breadCrumbs=getBreadCrumbs()
+	
+	if(breadCrumbs.length>0){
+		pageTitle=``
+		pageTitle+=`<i class="${breadCrumbs[breadCrumbs.length-1].icon || ''}"></i>`
+		breadCrumbs.forEach((e,index)=>{
+			if(index<breadCrumbs.length-1){
+				pageTitle+=`${e.text} \\ `
+			} else {
+				if(funcTitle!=''){
+					pageTitle+=`${e.text} \\ `
+				} else {
+					pageTitle+=`<span class="font-weight-bold text-orange">${e.text}</span>`
+				}
+			}
+		})
+		document.title=(breadCrumbs[breadCrumbs.length-1].text || '') + ' - tr216'
+		//mid=breadCrumbs[breadCrumbs.length-1].mId
+		//console.log(`mid:`,mid)
+	}
+
+	var s=``
+	leftMenu.forEach((item,index)=>{
+		s+=generateMenu(item)
+	})
+
+	document.getElementById('leftMenu').innerHTML=s
+
+
+	function generateMenu(menu,parent){
+		var s=``
+		var bActive=false
+
+		if(typeof menu.nodes!='undefined'){
+			if(menu.nodes.length>0){
+				bActive=false
+				menu.nodes.forEach((e)=>{
+					if(e.mId==mid){
+						bActive=true
+						return
+					}
+					if(typeof e.nodes!='undefined'){
+						e.nodes.forEach((e2)=>{
+							if(e2.mId==mid){
+								bActive=true
+								return
+							}
+						})
+					}
+				})
+				s=`\n`
+				if(bActive){
+					s+=`<a class="nav-link" href="#" data-toggle="collapse" data-target="#pagesCollapse${menu.mId.replaceAll('.','-')}" aria-expanded="false" aria-controls="pagesCollapse${menu.mId.replaceAll('.','-')}">\n`
+				}else{
+					s+=`<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapse${menu.mId.replaceAll('.','-')}" aria-expanded="false" aria-controls="pagesCollapse${menu.mId.replaceAll('.','-')}">\n`
+				}
+
+				s+=`<div class="sb-nav-link-icon"><i class="${menu.icon || 'fas fa-table'}"></i></div>
+				${menu.text}
+				<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+				</a>`
+
+				if(bActive){
+					s+=`<div class="collapse show" `
+				}else{
+					s+=`<div class="collapse" `
+				}
+				if(parent){
+					s+=`id="pagesCollapse${menu.mId.replaceAll('.','-')}" data-parent="#pagesCollapse${parent.mId.replaceAll('.','-')}">`
+				}else{
+					s+=`id="pagesCollapse${menu.mId.replaceAll('.','-')}" data-parent="#sidenavAccordion">`
+				}
+
+				s+=`<nav class="sb-sidenav-menu-nested nav accordion" id="navId${menu.mId.replaceAll('.','-')}">
+				`
+				menu.nodes.forEach((e)=>{
+					s+=generateMenu(e,menu)
+				})
+				s+=`
+				</nav>
+				</div>`
+			}
+			return s
+		}else{
+			if(menu.mId==mid){
+				bActive=true
+			}
+			s=`\n`
+			if(bActive){
+				s+=`<a id="${menu.mId.replaceAll('.','-')}" class="nav-link navigation active" href="${menu.path}?mid=${menu.mId}">`
+			}else{
+				s+=`<a id="${menu.mId.replaceAll('.','-')}" class="nav-link navigation" href="${menu.path}?mid=${menu.mId}">`
+			}
+			s+=`<div class="sb-nav-link-icon"><i class="${menu.icon || 'fas fa-table'}"></i></div>
+			${menu.text}
+			</a>
+			`
+			return s
+
+		}
+	}
+
+
+
+
+	// $(function() {
+	// 	$(document).on('click', '.navigation', function(e) {
+	// 		localStorage.setItem('mid_back',(localStorage.getItem('mid') || ''))
+	// 		localStorage.setItem('mid',e.target.id.replaceAll('-','.'))
+	// 	})
+	// })
+
+	function cboEasyDateUrlParams(value){
+		var date1=new Date();
+		var date2=new Date();
+		switch(value){
+			case 'today':break;
+			case 'thisWeek':
+			date1=date1.addDays(-1 * (date1.getDay()-1));
+			date2=date2.addDays(7- date2.getDay());
+			break;
+			case 'thisMonth': 
+			date1=date1.addDays(-1 * (date1.getDate()-1));
+			date2=date2.lastThisMonth();
+			break;
+			case 'last1Week':
+			date1=date1.addDays(-7);
+			break;
+
+			case 'last1Month':
+			date1=new Date(date1.setMonth(date1.getMonth()-1))
+			break;
+			case 'last3Months':
+			date1=new Date(date1.setMonth(date1.getMonth()-3))
+			break;
+			case 'last6Months':
+			date1=new Date(date1.setMonth(date1.getMonth()-6))
+			break;
+			case 'thisYear':
+			date1=new Date(date1.getFullYear(),0,1);
+			date2=new Date(date2.getFullYear(),11,31);
+			break;
+			case 'last1Year':
+			date1=new Date(date1.setMonth(date1.getMonth()-12))
+			break;
+			default:
+			break;
+		}
+		return '&date1=' + date1.yyyymmdd() + '&date2=' + date2.yyyymmdd();
+	}
+
+	function getBreadCrumbs111(){
+		var menuItem=[]
+
+		leftMenu.forEach((m1)=>{
+			if(menuItem.length>0)
+				return
+			if(m1.path==window.location.pathname){
+				menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+				return
+			}
+			
+			if(m1.nodes){
+				m1.nodes.forEach((m2)=>{
+					
+					if(m2.path==window.location.pathname){
+						menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+						menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId})
+						return
+					}
+					if(m2.nodes){
+						m2.nodes.forEach((m3)=>{
+							if(m3.path==window.location.pathname){
+								menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+								menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId})
+								menuItem.push({text:m3.text,icon:m3.icon, mId:m3.mId})
+								return
+							}
+							if(m3.nodes){
+								m3.nodes.forEach((m4)=>{
+									if(m4.path==window.location.pathname){
+										menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+										menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId})
+										menuItem.push({text:m3.text,icon:m3.icon, mId:m3.mId})
+										menuItem.push({text:m4.text,icon:m4.icon, mId:m4.mId})
+										return
+									}
+								})
+							}
+						})
+					}
+				})
+			}
+		})
+		
+		return menuItem
+	}
+
+
+	function getBreadCrumbs(){
+		var menuItem=[]
+
+		leftMenu.forEach((m1)=>{
+			if(menuItem.length>0)
+				return
+			if(m1.mId==mid){
+				menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+				return
+			}
+			
+			if(m1.nodes){
+				m1.nodes.forEach((m2)=>{
+					
+					if(m2.mId==mid){
+						menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+						menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId})
+						return
+					}
+					if(m2.nodes){
+						m2.nodes.forEach((m3)=>{
+							if(m3.mId==mid){
+								menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+								menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId})
+								menuItem.push({text:m3.text,icon:m3.icon, mId:m3.mId})
+								return
+							}
+							if(m3.nodes){
+								m3.nodes.forEach((m4)=>{
+									if(m4.mId==mid){
+										menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId})
+										menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId})
+										menuItem.push({text:m3.text,icon:m3.icon, mId:m3.mId})
+										menuItem.push({text:m4.text,icon:m4.icon, mId:m4.mId})
+										return
+									}
+								})
+							}
+						})
+					}
+				})
+			}
+		})
+
+		return menuItem
+	}
+
+
+// function getMenuIcon(){
+
+// 	var dizi=getBreadCrumbs()
+// 	if(dizi.length>0){
+// 		return dizi[dizi.length-1].icon
+// 	}else{
+// 		return ''
+// 	}
+
+// }
+
+// function getMenuText(){
+// 	var dizi=getBreadCrumbs()
+// 	if(dizi.length>0){
+// 		return dizi[dizi.length-1].text
+// 	}else{
+// 		return ''
+// 	}
+// }
+
+
+
+</script>

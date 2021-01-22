@@ -2,7 +2,7 @@
 	locals.value={}
 %>
 <div class="form-group <%- locals.col %> <%- locals.visible==false?'hidden':'' %>">
-	<label for="fileToUpload_<%-locals.field.replaceAll('.','_')%>" class="btn btn-primary"><i class="fi fi-image-file"></i> <%- locals.title %></label>
+	<label for="fileToUpload_<%-locals.field.replaceAll('.','_')%>" class="btn btn-primary"><i class="far fa-file-image"></i> <%- locals.title %></label>
 	<br>
 	<img id="fileToUpload_download_<%-locals.field.replaceAll('.','_')%>" src="<%- locals.value.data || '/img/placehold-place.jpg'%>" download="<%- locals.value.fileName || ''%>" style="width: 100%;object-fit: contain;">
 

@@ -5,10 +5,11 @@ var s=''
 
 locals.data.docs.forEach((row,rowIndex)=>{
 	var row2=clone((row || {}))
-	modifyFields(rowIndex)
+	// modifyFields(rowIndex)
 	
 	s+=`<tr id="grid${locals.id}-row-${rowIndex}" class="grid${locals.id}-row">`
-	s+=`${locals.options.selection && row._id?'<td><input type="checkbox" class="grid-checkbox checkSingle" value="' + encodeURIComponent2(JSON.stringify(row)) + '" name="selected[' + rowIndex + ']"  id="selected[' + rowIndex + ']" title="Seç"></td>':''}`
+	// s+=`${locals.options.selection && row._id?'<td><input type="checkbox" class="grid-checkbox checkSingle" value="' + encodeURIComponent2(JSON.stringify(row)) + '" name="selected[' + rowIndex + ']"  id="selected[' + rowIndex + ']" title="Seç"></td>':''}`
+	s+=`${locals.options.selection && row._id?'<td><input type="checkbox" class="grid-checkbox checkSingle" value="' + row._id + '" name="selected[' + rowIndex + ']"  id="selected[' + rowIndex + ']" title="Seç"></td>':''}`
 	Object.keys(locals.fields).forEach((key)=>{
 		var field=locals.fields[key]
 		var itemValue=getPropertyByKeyPath(row,field.field) || ''
@@ -83,9 +84,7 @@ locals.data.docs.forEach((row,rowIndex)=>{
 			s+=td
 
 		}
-		if(locals.options.insideForm){
-			s+=`<input type="hidden" id="${generateFormId(field.fullField)}" name="${generateFormName(field.fullField)}" value="${itemValue}">`
-		}
+		
 		s+=`</td>`
 	})
 	s+=buttonCell(row,rowIndex)
@@ -97,12 +96,12 @@ locals.data.docs.forEach((row,rowIndex)=>{
 
 
 <% if(remoteList){%>
-<script id="script1" type="text/javascript">
+<script type="text/javascript">
 	$(document).ready(()=>{
 	<% Object.keys(remoteList).forEach((e)=>{ %>
 		<% 
 			Object.keys(remoteList[e].list).forEach((key)=>{ 
-			var url=`${remoteList[e].dataSource.url.split('?')[0]}/${key}?sid=${locals.data.sid}`
+			var url=`${remoteList[e].dataSource.url.split('?')[0]}/${key}`
 			%>
 			getAjax('<%-url%>','<%-remoteList[e].dataSource.label || {name}%>','',(err,dizi)=>{
 				if(!err){
@@ -110,13 +109,12 @@ locals.data.docs.forEach((row,rowIndex)=>{
 						$('<%-remoteList[e].list[key].cellId %>').html(dizi[0].value)
 					}
 				}else{
-					console.log('getAjax err:',err)
+					console.error('getAjax err:',err)
 				}
 			})
 		<% }) %>
 	<% }) %>
 	})
-
 </script>
 <%}%>
 
@@ -181,23 +179,23 @@ function buttonCell(row,rowIndex){
 	return s
 }
 
-function modifyFields(rowIndex){
-	Object.keys(locals.fields).forEach((key)=>{
-		var field=locals.fields[key]
-		if(locals.options.parentField!=''){
-			if(rowIndex>-1){
-				field.fullField=`${locals.options.parentField}.${rowIndex}.${field.field}`
-			}else{
-				field.fullField=`${locals.options.parentField}.${field.field}`
-			}
-		}else{
-			field.fullField=field.field
-		}
+// function modifyFields(rowIndex){
+// 	Object.keys(locals.fields).forEach((key)=>{
+// 		var field=locals.fields[key]
+// 		if(locals.options.parentField!=''){
+// 			if(rowIndex>-1){
+// 				field.fullField=`${locals.options.parentField}.${rowIndex}.${field.field}`
+// 			}else{
+// 				field.fullField=`${locals.options.parentField}.${field.field}`
+// 			}
+// 		}else{
+// 			field.fullField=field.field
+// 		}
 
 		
-	})
+// 	})
 
-}
+// }
 
 %>
 

@@ -1,3 +1,8 @@
+<script type="text/javascript">
+
+	
+
+</script>
 <% if(locals.options.form){%>
 <form method="POST" action="<%- locals.action %>" name="<%- locals.name || 'form-general' %>" id="<%- locals.id || locals.name || 'form-general' %>" >
 	<%}%>
@@ -7,10 +12,6 @@
 <%- locals.options.row?'</div>':'' %>
 <% if(locals.options.form){%>
 </form>
+
 <%}%>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('#<%- locals.id || locals.name || 'form-general' %>').disableAutoFill({
-		})
-	})
-</script>
+

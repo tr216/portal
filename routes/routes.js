@@ -3,8 +3,6 @@ global.pages = {}
 
 module.exports = function(app){
 	
-
-
 	loadPages(pages,'',path.join(__dirname, '../pages'))
 
 	app.all("/*", function(req, res, next) {
@@ -18,9 +16,8 @@ module.exports = function(app){
 
 
 	app.all('/', function(req, res) {
-		if((req.query.sid || '')!=''){
-			// res.redirect(`/general/dashboard?db=${req.query.db}&sid=${req.query.sid}&mid=${req.query.mid}`)
-			res.redirect(`/general/dashboard?sid=${req.query.sid}`)
+		if(req.session.elvanDalton){
+			res.redirect(`/general/dashboard`)
 		}else{
 			res.redirect('/general/login')
 		}
@@ -28,13 +25,10 @@ module.exports = function(app){
 	})
 	
 	app.all('/changedb', function(req, res) {
-		if((req.query.sid || '')==''){
+		if(!req.session.elvanDalton){
 			res.redirect('/general/login')
 		}else{
 			var referer=req.headers.referer
-			// if((req.query.db || req.query.dbId || '')=='')
-			// 	return res.redirect(referer)
-
 			sessionHelper.changeDb(req,res,(err,data)=>{
 				if(!err){
 					res.redirect(referer)
@@ -47,10 +41,12 @@ module.exports = function(app){
 
 
 	app.all('/login', function(req, res) {
-		res.redirect('/general/login')
+		res.redirect(`/general/login?${mrutil.encodeUrl(req.query)}`)
 	})
 	app.all('/logout', function(req, res) {
-		if((req.query.sid || '')==''){
+		
+
+		if((req.session.elvanDalton || '')==''){
 			res.redirect('/general/login')
 		}else{
 			sessionHelper.logout(req,res,(err,data)=>{
@@ -127,22 +123,21 @@ module.exports = function(app){
 		apiDownload(req,res,false)
 	})
 
-	app.all('/hodja/templates', function(req, res) {
-		res.status(200).json(hodjaTemplates)
-	})
+	// app.all('/hodja/templates', function(req, res) {
+	// 	res.status(200).json(hodjaTemplates)
+	// })
 
 	app.all('/:module/:page', userInfo, function(req, res) {
-		
 		pageRander(req,res)
 	})
 
-	app.all('/:module/:page/:func', userInfo,  function(req, res) {
+	app.all('/:module/:page/:func', userInfo, function(req, res) {
 		
 		pageRander(req,res)
 	})
 	
 
-	app.all('/:module/:page/:func/:id', userInfo, function(req, res) {
+	app.all('/:module/:page/:func/:id',userInfo, function(req, res) {
 		
 		pageRander(req,res)
 	})
@@ -165,8 +160,8 @@ function pageRander(req,res){
 		setGeneralParams(req,res, {jsonPage:jsonPage}, (err,data)=>{
 			if(err)
 				return errorPage(req,res,err)
-			var jsFile='../pages/_render/render2.js'
-			var ejsFile='../pages/_render/render2.ejs'
+			var jsFile='../pages/_common/render.js'
+			var ejsFile='../pages/_common/render.ejs'
 			
 
 			require(jsFile)(req,res,jsonPage,data, (err,data2)=>{
@@ -220,7 +215,7 @@ function pageRander(req,res){
 }
 
 function IsSpecialPages(req){
-	if(req.params.module=='general' && (req.params.page=='login' || req.params.page=='error' || req.params.page=='dashboard')){
+	if(req.params.module=='general' && (req.params.page=='login' || req.params.page=='error' || req.params.page=='dashboard' || req.params.page=='closed-module')){
 		return true
 	}
 	return false
@@ -230,42 +225,16 @@ function setGeneralParams(req, res, data, cb){
 	var referer=req.headers.referer || ''
 	var currentUrl=req.protocol + '://' + req.get('host') + req.originalUrl
 
+	
 	data['q']=req.query
-	data['isSysUser']=req.params.isSysUser || false
-	data['isMember']=req.params.isMember || true
-	data['isSysUser']=req.params.isSysUser || false
-	data['role']=req.params.role || 'user'
+
 	data['username']=req.params.username || ''
 
 	data['func']=req.params.func
-	data['message']=data['message'] || ''
-	data['successMessage']=data['successMessage'] || ''
-
-	data['apiUrl']=config.api.url
 
 
-	if(req.params.isSysUser){
-		data['leftMenu']=sysmenu
-	}else{
-		data['leftMenu']=[]
-	}
+	data['urlPath']=req.originalUrl.split('?')[0]
 
-	if(req.params.id && req.params.func && req.params.page && req.params.module){
-
-		data['urlPath']='/' + req.params.module + '/' + req.params.page + '/' + req.params.func + '/' + req.params.id
-
-	}else if(req.params.func && req.params.page && req.params.module ){
-
-		data['urlPath']='/' + req.params.module + '/' + req.params.page + '/' + req.params.func
-
-	}else if(req.params.page && req.params.module){
-
-		data['urlPath']='/' + req.params.module + '/' + req.params.page
-
-	}else{
-
-		data['urlPath']='/'
-	}
 
 	data['page']=1
 	if(req.query.pageSize!=undefined)
@@ -282,13 +251,13 @@ function setGeneralParams(req, res, data, cb){
 
 
 
-	data['icon']=getMenuIcon(menu, req, currentUrl)
-	data['pageTitle']=getMenuText(menu, req, currentUrl)
-	data['breadCrumbs']=getBreadCrumbs(menu, req, currentUrl)
+	// data['icon']=getMenuIcon(menu, req, currentUrl)
+	// data['pageTitle']=getMenuText(menu, req, currentUrl)
+	// data['breadCrumbs']=getBreadCrumbs(menu, req, currentUrl)
 
 	data['pagePath']='/' + req.params.module + '/' + req.params.page
 
-	data['title']=data['pageTitle']
+	//data['title']=data['pageTitle']
 	data['funcTitle']=''
 	if(req.params.func){
 		switch(req.params.func){
@@ -305,10 +274,10 @@ function setGeneralParams(req, res, data, cb){
 			data['funcTitle']=req.params.func
 			break
 		}
-		data['title']=data['title'] + ' - ' + data['funcTitle']
+		// data['title']=data['title'] + ' - ' + data['funcTitle']
 	}
 
-	data['sid']=req.query.sid || ''
+	data['elvanDalton']=req.session.elvanDalton || ''
 	data['mid']=req.query.mid || ''
 	data['leftMenu']=[]
 	data['databases']=[]
@@ -323,18 +292,18 @@ function setGeneralParams(req, res, data, cb){
 	data['successMessage']=data['successMessage']==undefined?'':data['successMessage']
 
 	data['uiParams']={
-		sid:data.sid,
+		elvanDalton:data.elvanDalton,
 		urlPath:data.urlPath,
 		mid:data.mid,
 		params:req.params
 	}
 	
-	if(IsSpecialPages(req) && (data.sid || '')==''){
+	if(IsSpecialPages(req) && (data.elvanDalton || '')==''){
 
 		return cb(null,data)
 	}
 
-	db.sessions.findOne({_id:(data.sid).toLongId(), passive:false},(err,doc)=>{
+	db.sessions.findOne({_id:req.session.elvanDalton, passive:false},(err,doc)=>{
 		if(!err){
 			if(doc!=null){
 				data['db']=doc.dbId
@@ -355,70 +324,59 @@ function setGeneralParams(req, res, data, cb){
 	})
 }
 
-// function pageRanderNext(req,res){
-
-// 	if(pages[req.params.module]==undefined){
-// 		errorPage(req,res,null)
-// 	}else if (pages[req.params.module][req.params.page] == undefined) {
-// 		errorPage(req,res,null)
-// 	} else {
-
-// 		// setGeneralParams(req,res,data, (err,data)=>{
-// 		// 	if(err)
-// 		// 		return errorPage(req,res,null)
-// 		pages[req.params.module][req.params.page].code(req, res, (err,data,view)=>{
-// 			if(err)
-// 				return errorPage(req,res,err)
-
-// 			if(!data)
-// 				data={}
-
-// 			if(view){
-// 				res.render(view, data)
-// 			}else{
-// 				var funcName=req.params.func || 'index'
-// 				if(pages[req.params.module][req.params.page].view[funcName]){
-// 					res.render(pages[req.params.module][req.params.page].view[funcName], data,(err,html)=>{
-// 						if(!err){
-// 							res.status(200).send(html)
-// 						}else{
-// 							errorPage(req,res,err)
-// 						}
-// 					})
-// 				}else{
-// 					errorPage(req,res,null)
-// 				}
-// 			}
-// 		})
-
-// 		// })
-// 	}
-// }
-
 
 var userInfo = function (req, res, next) {
-	req.params.isSysUser=false
-	req.params.isMember=true
-	req.params.role='user'
-	req.params.username=''
-	if(req.query.sid){
-		db.sessions.findOne({_id:req.query.sid.toLongId()},(err,doc)=>{
-			if(!err){
-				if(doc!=null){
-					req.params.username=doc.username
-					req.params.role=doc.role
-					req.params.isSysUser=doc.isSysUser
-					req.params.isMember=doc.isMember
-					return next()
-				}else{
-					errorPage(req,res,{code:'503',message:'Yetkisiz giris'})
+	
+	
+	
+	if(req.params.module=='general' && req.params.page=='login')
+		return next()
+
+	developmentSession(req,()=>{
+		if((req.session.elvanDalton || '')!=''){
+			db.sessions.findOne({_id:req.session.elvanDalton},(err,doc)=>{
+				if(!err){
+					if(doc!=null){
+						return next()
+					}
 				}
-			}else{
-				errorPage(req,res,{code:err.name,message:err.message})
+				redirectLogin(req,res)
+				
+				
+			})
+		}else{
+			redirectLogin(req,res)
+			
+		}
+	})
+}
+
+function redirectLogin(req,res){
+	var referer=req.headers.referer || ''
+	var currentUrl=req.protocol + '://' + req.get('host')
+	var r=''
+	if(referer!=''){
+		if(referer.substr(0,currentUrl.length)==currentUrl){
+			r=`?e=timeout&r=${referer.substr(currentUrl.length)}`
+		}
+	}
+
+	res.redirect(`/login${r}`)
+}
+
+
+function developmentSession(req,next){
+	if(config.status=='development' && req.get('host')=='localhost:5100'){
+		db.sessions.find({passive:false}).sort({_id:-1}).limit(1).exec((err,docs)=>{
+			if(!err){
+				if(docs.length>0){
+					req.session.elvanDalton=docs[0]._id.toString()
+				}
 			}
+			next()
 		})
 	}else{
-		return next()
+		next()	
 	}
 }
 
@@ -426,9 +384,10 @@ function errorPage(req,res,err){
 	var data={}
 	data['title']='Hata'
 	data['err']=err || {code:404,message:'Sayfa bulunamadi'}
+	
 	setGeneralParams(req,res,data,(err,data2)=>{
 		if(!err){
-			data2['leftMenu']=[]
+			//data2['leftMenu']=[]
 		}else{
 			data2=data
 		}
@@ -503,82 +462,8 @@ function loadFunctionPages(folder,module,pageName){
 }
 
 
-function getMenuIcon(menu, req, urlPath){
-
-	var dizi=getBreadCrumbs(menu, req, urlPath)
-	if(dizi.length>0){
-		return dizi[dizi.length-1].icon
-	}else{
-		return ''
-	}
-
-}
-
-function getMenuText(menu, req, urlPath){
-	var dizi=getBreadCrumbs(menu, req, urlPath)
-	if(dizi.length>0){
-		return dizi[dizi.length-1].text
-	}else{
-		return ''
-	}
 
 
-
-}
-
-
-function getBreadCrumbs(menu, req, urlPath){
-	var menuItem=[]
-	var m0=menu
-
-	m0.forEach((m1)=>{
-		if(m1.path){
-			if(m1.mId==req.query.mid){
-				menuItem.push({text:m1.text,icon:m1.icon})
-				return
-			}
-		}
-		if(m1.nodes){
-			if(m1.nodes.length>0){
-				m1.nodes.forEach((m2)=>{
-					if(m2.path){
-						if(m2.mId==req.query.mid){
-							menuItem.push({text:m1.text,icon:m1.icon})
-							menuItem.push({text:m2.text,icon:m2.icon})
-							return
-						}
-					}
-					if(m2.nodes){
-						if(m2.nodes.length>0){
-							m2.nodes.forEach((m3)=>{
-								if(m3.mId==req.query.mid){
-									menuItem.push({text:m1.text,icon:m1.icon})
-									menuItem.push({text:m2.text,icon:m2.icon})
-									menuItem.push({text:m3.text,icon:m3.icon})
-									return
-								}
-								if(m3.nodes){
-									if(m3.nodes.length>0){
-										m3.nodes.forEach((m4)=>{
-											if(m4.mId==req.query.mid){
-												menuItem.push({text:m1.text,icon:m1.icon})
-												menuItem.push({text:m2.text,icon:m2.icon})
-												menuItem.push({text:m3.text,icon:m3.icon})
-												menuItem.push({text:m4.text,icon:m4.icon})
-												return
-											}
-										})
-									}
-								}
-							})
-						}
-					}
-				})
-			}
-		}
-	})
-	return menuItem
-}
 
 function localApi(req,res,dbApi){
 	var dburl=''
@@ -678,24 +563,24 @@ function apiDownload(req,res,dbApi){
 
 function repairMenu(menu){
 	menu.forEach((m1,index1)=>{
-		m1.mId=`m${index1}`
+		m1.mId=`${index1}`
 		//m1=repairMenuPath(m1)
 
 		if(m1.nodes){
 			if(m1.nodes.length>0){
 				m1.nodes.forEach((m2,index2)=>{
-					m2.mId=`m${index1}.${index2}`
+					m2.mId=`${index1}.${index2}`
 					//m2=repairMenuPath(m2)
 
 					if(m2.nodes){
 						if(m2.nodes.length>0){
 							m2.nodes.forEach((m3,index3)=>{
-								m3.mId=`m${index1}.${index2}.${index3}`
+								m3.mId=`${index1}.${index2}.${index3}`
 								//m3=repairMenuPath(m3)
 								if(m3.nodes){
 									if(m3.nodes.length>0){
 										m3.nodes.forEach((m4,index4)=>{
-											m4.mId=`m${index1}.${index2}.${index3}.${index4}`
+											m4.mId=`${index1}.${index2}.${index3}.${index4}`
 											//m4=repairMenuPath(m4)
 										})
 									}

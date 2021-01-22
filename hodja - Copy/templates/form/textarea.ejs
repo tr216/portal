@@ -1,5 +1,25 @@
+<%
+	textAreaValue=locals.value || ''
+	if(locals.encoding=='base64'){
+		textAreaValue=b64DecodeUnicode(locals.value || '')
+	}
+%>
 <div class="form-group <%- locals.col %> <%- locals.visible==false?'hidden':'' %>">
-	<label class="m-0 p-0"><%- locals.title || locals.label || '' %></label>
-	<textarea class="form-control <%- locals.class %>" id="<%-locals.id%>" name="<%-locals.name%>"  rows="<%- locals.rows || 4 %>"  placeholder="<%- locals.placeholder || locals.title || locals.label %>" <%- locals.required?'required="required"':'' %> <%- locals.readonly==true?'readonly':'' %> onchange="<%- locals.onchange %> value="<%- locals.value %>"></textarea>
+	<label class="m-0 p-0 <%- locals.required?'form-required':''%>"><%- locals.title || locals.label || '' %><%- helpButton(locals) %></label>
+	<textarea class="form-control text-nowrap <%- locals.class %>" style="font-family: courier new"  id="<%-locals.id%>-textarea" rows="<%- locals.rows || 4 %>"  placeholder="<%- locals.placeholder || locals.title || locals.label %>" <%- locals.required?'required="required"':'' %> <%- locals.readonly==true?'readonly':'' %> onchange="<%- locals.onchange %>" autocorrect="off" spellcheck="false"></textarea>
+	<input type="hidden" id="<%-locals.id%>" name="<%-locals.name%>" >
 </div>
+<script type="text/javascript">
+	$(document).ready(()=>{
+		$('#<%-locals.id%>-textarea').val(decodeURIComponent('<%- encodeURIComponent2(textAreaValue) %>'))
+		$('#<%-locals.id%>').val(decodeURIComponent('<%- encodeURIComponent2(locals.value || '') %>'))
+		$('#<%-locals.id%>-textarea').change(()=>{
+			<% if(locals.encoding=='base64'){ %>
+			$('#<%-locals.id%>').val(b64EncodeUnicode($('#<%-locals.id%>-textarea').val()))
+			<% }else{ %>
+			$('#<%-locals.id%>').val($('#<%-locals.id%>-textarea').val())
+			<% } %>
+		})
+	})
+</script>
 

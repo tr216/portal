@@ -145,7 +145,46 @@
 						"price.priceAmount.value" :{"title":"Fiyat", "type":"money","required":true},
 						"lineExtensionAmount.value" :{"title":"Tutar", "type":"money","calc":"Math.round({orderedQuantity.value}*{price.priceAmount.value}*100)/100" , "readonly":true},
 						"taxTotal.taxSubtotal.0.percent.value" :{"title":"Kdv %", "type":"number"},
-						"taxTotal.taxAmount.value" :{"title":"Kdv", "type":"number","calc":"Math.round(100*{lineExtensionAmount.value}*{taxTotal.taxSubtotal.0.percent.value}/100)/100", "readonly":true}
+						"taxTotal.taxAmount.value" :{"title":"Kdv", "type":"number","calc":"Math.round(100*{lineExtensionAmount.value}*{taxTotal.taxSubtotal.0.percent.value}/100)/100", "readonly":true},
+						"note.0.value":{"title":"Notlar 1", "type":"string","col":12, "visible":false},
+						"note.1.value":{"title":"Notlar 2", "type":"string","col":12, "visible":false},
+						"note.2.value":{"title":"Notlar 3", "type":"string","col":12, "visible":false}
+					},
+					"modal":{
+						"tabs":[
+							{
+								"title":"Satir bilgileri",
+								"fields": {
+									"ID.value" :{"title":"#", "type":"identity","readonly":true, "width":"50px","col":2},
+									"item._id" :{"title":"Mal/Hizmet", "type":"remoteLookup",
+										"dataSource":{
+											"type":"remote",
+											"method":"GET",
+											"url":"/dbapi/items?itemType=all",
+											"label":"{name.value} {description.value}"
+										},
+										"lookupTextField":"item.name.value",
+										"required":true,"col":4
+									},
+									"orderedQuantity.value" :{"title":"Miktar", "type":"number","required":true,"col":2},
+									"orderedQuantity.attr.unitCode" :{"title":"Birim", "type":"lookup","staticValues":"unitCodeList","required":true,"col":2},
+									"price.priceAmount.value" :{"title":"Fiyat", "type":"money","required":true,"col":2},
+									"lineExtensionAmount.value" :{"title":"Tutar", "type":"money","calc":"Math.round({orderedQuantity.value}*{price.priceAmount.value}*100)/100" , "readonly":true,"col":2},
+									"taxTotal.taxSubtotal.0.percent.value" :{"title":"Kdv %", "type":"number","col":2},
+									"taxTotal.taxAmount.value" :{"title":"Kdv", "type":"number","calc":"Math.round(100*{lineExtensionAmount.value}*{taxTotal.taxSubtotal.0.percent.value}/100)/100", "readonly":true,"col":2}
+								
+								}
+							},
+							{
+								"title":"notlar",
+								"fields": {
+									"note.0.value":{"title":"Notlar 1", "type":"string","col":12},
+									"note.1.value":{"title":"Notlar 2", "type":"string","col":12},
+									"note.2.value":{"title":"Notlar 3", "type":"string","col":12}
+								}
+							}
+						]
+						
 					},
 					"options": {
 						"selection": false,
