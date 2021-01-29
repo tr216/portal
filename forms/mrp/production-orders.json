@@ -5,7 +5,7 @@
 			"type":"filter",
 			"fields": {
 				"tarih": {"title":"Tarih", "type":"dateRange"},
- 				"productionTypeCode":{"title":"Türü", "type":"lookup", "staticValues":"productionTypeCodeList"}
+				"productionTypeCode":{"title":"Türü", "type":"lookup", "staticValues":"productionTypeCodeList"}
 			}
 		},
 		{
@@ -32,21 +32,13 @@
 					"view": false,
 					"print": false,
 					"copy": false
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/production-orders"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/production-orders"
 			}
-
 		}
 	],
 	"form": [
@@ -169,11 +161,11 @@
 },
 "options": {
 	"mode": "general",
-	"isForm":true,
-	"dataSource": {
-		"method":"GET",
-		"url":"/dbapi/production-orders"
-	}
+	"isForm":true
+},
+"dataSource": {
+	"method":"GET",
+	"url":"/dbapi/production-orders"
 }
 }
 ]

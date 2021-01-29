@@ -28,8 +28,14 @@ module.exports = function(req,res,jsonPage,data,callback){
 }
 
 function createPage(req,res,jsonPage,data,callback){
-	var func=req.params.func || 'index'
 
+	var func=req.params.func || 'index'
+	data.sayfa=clone(jsonPage)
+	
+	data.mid=data.mid || req.query.mid || ''
+	return callback(null,data)
+	
+	data.jsonPage=clone(jsonPage)
 	data.headerButtons=''
 	switch(func){
 		case 'edit':
@@ -55,7 +61,7 @@ function createPage(req,res,jsonPage,data,callback){
 	}
 
 	
-	data.mid=data.mid || req.query.mid || ''
+
 	iteration(jsonPage,(page,cb)=>{
 
 		switch(page.type){

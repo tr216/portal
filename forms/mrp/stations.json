@@ -25,27 +25,13 @@
 					"view": false,
 					"print": true,
 					"copy": false
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/mrp-stations"
 				}
 			},
-			"data": {
-				"docs":[{
-					"_id":"34344",
-					"location":"34344",
-					"name":"isim",
-					"description":"merhaba",
-					"passive":false
-				}],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/mrp-stations"
 			}
-
 		}
 	],
 	"form": [
@@ -68,11 +54,11 @@
 			},
 			"options": {
 				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/mrp-stations"
-				}
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/mrp-stations"
 			}
 		}
 	]

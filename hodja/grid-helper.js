@@ -408,6 +408,10 @@ function modalRowChange(modalId,locals,e){
 					$(`input[name="${controlNameTextField}"]`).val(valueText)
 				}
 				break
+				case 'grid':
+				eval(`gridHelper.refreshGridRows('grid${generateFormId(modalId + '.' + field.field)}',grid${generateFormId(modalId + '.' + field.field)})`)
+				
+				break
 				default:
 				$(`#${generateFormId(modalId + '.' + field.field)}`).val(itemValue)
 				break

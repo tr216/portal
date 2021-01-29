@@ -40,19 +40,12 @@
 					"view": false,
 					"print": false,
 					"copy": false
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/pos-device-zreports"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/pos-device-zreports"
 			}
 		}
 	]

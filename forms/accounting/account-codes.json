@@ -4,7 +4,7 @@
 			"type": "grid",
 			"fields": {
 				"accountCode" : {"title":"Hesap Kodu", "type":"string"},
-  			"name" 				: {"title":"Hesap Ismi", "type":"string"}
+				"name" 				: {"title":"Hesap Ismi", "type":"string"}
 			},
 			"options": {
 				"selection": true,
@@ -16,19 +16,12 @@
 					"view": false,
 					"print": false,
 					"copy": true
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/accounts"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/accounts"
 			}
 		}
 	],
@@ -50,11 +43,11 @@
 			},
 			"options": {
 				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/accounts"
-				}
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/accounts"
 			}
 		}
 	]

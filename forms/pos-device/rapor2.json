@@ -1,5 +1,6 @@
 {
-	"index":[
+	"index":
+	[
 		{
 			"type":"filter",
 			"fields" :{
@@ -9,52 +10,46 @@
 		{
 			"type": "grid",
 			"fields": {
-				"location" 	: {"title":"Lokasyon", "type":"remoteLookup","dataSource":{
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/locations"
-				}
+				"location" : {"title":"Lokasyon", "type":"remoteLookup",
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/locations"
+					}
+				},
+				"count" 				: {"title":"ZRap Adet", "type":"number"},
+				"GunlukToplamTutar" 				: {"title":"Toplam Tutar", "type":"money"},
+				"MaliFisAdedi" 				: {"title":"Mali Fiş Adedi", "type":"number"},
+				"NakitTutari" 				: {"title":"Nakit Tutar", "type":"money"},
+				"KrediTutari" 				: {"title":"Kredi K. Tutar", "type":"money"},
+				"FoodSaleCnt" 				: {"title":"Yemek Çek Sayısı", "type":"number"},
+				"FoodRcptTotalAmount" : {"title":"Yemek Çek Tutarı", "type":"money"},
+				"InvoiceTotal" 				: {"title":"Fatura", "type":"money"},
+				"EInvoiceTotal" 				: {"title":"E-Fatura", "type":"money"},
+				"EArchiveInvoiceTotal" 	: {"title":"E-Arşiv", "type":"money"},
+				"BankaTransferTutari" 	: {"title":"Banka", "type":"money"},
+				"TaxRate0Amount" 				: {"title":"Kdv0", "type":"money"},
+				"TaxRate1Amount" 				: {"title":"Kdv1", "type":"money"},
+				"TaxRate8Amount" 				: {"title":"Kdv8", "type":"money"},
+				"TaxRate18Amount" 				: {"title":"Kdv18", "type":"money"}
 			},
-			"count" 				: {"title":"ZRap Adet", "type":"number"},
-			"GunlukToplamTutar" 				: {"title":"Toplam Tutar", "type":"money"},
-			"MaliFisAdedi" 				: {"title":"Mali Fiş Adedi", "type":"number"},
-			"NakitTutari" 				: {"title":"Nakit Tutar", "type":"money"},
-			"KrediTutari" 				: {"title":"Kredi K. Tutar", "type":"money"},
-			"FoodSaleCnt" 				: {"title":"Yemek Çek Sayısı", "type":"number"},
-			"FoodRcptTotalAmount" : {"title":"Yemek Çek Tutarı", "type":"money"},
-			"InvoiceTotal" 				: {"title":"Fatura", "type":"money"},
-			"EInvoiceTotal" 				: {"title":"E-Fatura", "type":"money"},
-			"EArchiveInvoiceTotal" 	: {"title":"E-Arşiv", "type":"money"},
-			"BankaTransferTutari" 	: {"title":"Banka", "type":"money"},
-			"TaxRate0Amount" 				: {"title":"Kdv0", "type":"money"},
-			"TaxRate1Amount" 				: {"title":"Kdv1", "type":"money"},
-			"TaxRate8Amount" 				: {"title":"Kdv8", "type":"money"},
-			"TaxRate18Amount" 				: {"title":"Kdv18", "type":"money"}
-		},
-		"options": {
-			"selection": false,
-			"filter": true,
-			"buttons": {
-				"add": false,
-				"edit": false,
-				"delete": false,
-				"view": false,
-				"print": false,
-				"copy": false
+			"options": {
+				"selection": false,
+				"filter": true,
+				"buttons": {
+					"add": false,
+					"edit": false,
+					"delete": false,
+					"view": false,
+					"print": false,
+					"copy": false
+				}
 			},
 			"dataSource": {
 				"type":"remote",
 				"method":"GET",
 				"url":"/dbapi/pos-device-zreports/rapor2"
 			}
-		},
-		"data": {
-			"docs":[],
-			"page":1,
-			"pageSize":10,
-			"pageCount":0,
-			"recordCount":0
 		}
-	}
-]
+	]
 }

@@ -19,9 +19,9 @@
 						"label":"{name}"
 					}
 				},
-  			"deviceSerialNo" 				: {"title":"Cihaz Seri No", "type":"string"},
-  			"deviceModel" 				: {"title":"Model", "type":"string"},
-  			"passive" 				: {"title":"Pasif?", "type":"boolean"}
+				"deviceSerialNo" 				: {"title":"Cihaz Seri No", "type":"string"},
+				"deviceModel" 				: {"title":"Model", "type":"string"},
+				"passive" 				: {"title":"Pasif?", "type":"boolean"}
 			},
 			"options": {
 				"selection": true,
@@ -33,19 +33,12 @@
 					"view": false,
 					"print": false,
 					"copy": true
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/pos-devices"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/pos-devices"
 			}
 		}
 	],
@@ -69,17 +62,17 @@
 						"label":"{name}"
 					}
 				},
-  			"deviceSerialNo" 				: {"title":"Cihaz Seri No", "type":"string"},
-  			"deviceModel" 				: {"title":"Model", "type":"string"},
-  			"passive" 				: {"title":"Pasif?", "type":"boolean"}
+				"deviceSerialNo" 				: {"title":"Cihaz Seri No", "type":"string"},
+				"deviceModel" 				: {"title":"Model", "type":"string"},
+				"passive" 				: {"title":"Pasif?", "type":"boolean"}
 			},
 			"options": {
 				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/pos-devices"
-				}
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/pos-devices"
 			}
 		}
 	]

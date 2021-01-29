@@ -38,15 +38,15 @@
 })(jQuery);
 
 
-$(document).ready(function(){
-	$('body').on('keydown', 'input, select', function(e) {
-		if(e)
-			if(e.key)
-				if (e.key === "Enter") {
-					return enterNext(this);
-				}
-			})
-});
+// $(document).ready(function(){
+// 	$('body').on('keydown', 'input, select', function(e) {
+// 		if(e)
+// 			if(e.key)
+// 				if (e.key === "Enter") {
+// 					return enterNext(this);
+// 				}
+// 			})
+// });
 
 function enterNext(bu){
 	
@@ -130,11 +130,13 @@ load_card_collapses()
 
 $('.card-collapse').on('show.bs.collapse',(e)=>{
 	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+	console.log(`'show.bs.collapse:`,e.target.id)
 	// save_form_settings(e)	
 })
 $('.card-collapse').on('hide.bs.collapse',(e)=>{
 	// save_form_settings(e)
 	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+	console.log(`'hide.bs.collapse:`,e.target.id)
 })
 
 $('.modal .card-collapse').on('show.bs.collapse',(e)=>{

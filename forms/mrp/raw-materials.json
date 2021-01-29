@@ -31,21 +31,13 @@
 					"view": false,
 					"print": false,
 					"copy": false
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/items?itemType=raw-material"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/items?itemType=raw-material"
 			}
-
 		}
 	],
 	"form": [
@@ -155,11 +147,11 @@
 },
 "options": {
 	"mode": "general",
-	"isForm":true,
-	"dataSource": {
-		"method":"GET",
-		"url":"/dbapi/items?itemType=raw-material"
-	}
+	"isForm":true
+},
+"dataSource": {
+	"method":"GET",
+	"url":"/dbapi/items?itemType=raw-material"
 }
 }
 ]

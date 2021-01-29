@@ -1,0 +1,392 @@
+<% layout('../_common/layouts/general') %>
+
+<!-- <div style="">
+	<a class="btn btn-primary" href="javascript:formBilgisi()">form Bilgisi</a>
+</div> -->
+<div id="mainCtrl"></div>
+
+<%- partial('render_functions.ejs') %>
+
+<%- partial('form_control.ejs') %>
+
+
+<script type="text/javascript">
+	(function(exports) {
+				
+		var script=''
+		var frm=FormControl.FormControl
+		var grd=GridControl.GridControl
+
+		exports.Control = Object.freeze({
+			generateControls:generateControls,
+			get script(){
+				return script
+			},
+			set script(value){
+				script=value
+			}
+			
+		})
+		// grd.generateControls=generateControls
+
+		function generateControls(item,data,bRoot=false){
+			var s=''
+			var autocol=item.options?(item.options.autocol===true?true:false):false
+			if(item.script!=undefined){
+				if(Array.isArray(item.script)){
+					script+=item.script.join('\r\n')
+				}else{
+					script+=`${item.script || ''}\r\n`
+				}
+			}
+
+			if(item.fields){
+				Object.keys(item.fields).forEach((key)=>{
+					item.fields[key].field=key
+					item.fields[key]=itemDefaultValues(item.fields[key],autocol)
+					if(item.type=='grid'){
+						item.fields[key].parentField=item.field || ''
+						item.parentField=item.field || ''
+					}
+				})
+			}else if(item.tabs){
+				item.tabs.forEach((tab)=>{
+					if(tab.fields){
+						Object.keys(tab.fields).forEach((key)=>{
+							tab.fields[key].field=key
+							tab.fields[key]=itemDefaultValues(tab.fields[key],autocol)
+						})
+					}
+				})
+			}
+			if(!data){
+				data={value:{}}
+			}
+
+
+			frm.script=''
+
+			switch((item.type || '').toLowerCase()){
+				case 'string' :
+				item.value=getPropertyByKeyPath(data.value,item.field) || ''
+				s+=frm.textBox(item)
+				break
+				case 'number' :
+				item.value=getPropertyByKeyPath(data.value,item.field) || 0
+				s+=frm.numberBox(item)
+				break
+				case 'money' :
+				item.value=Number(getPropertyByKeyPath(data.value,item.field) || 0).formatMoney()
+				s+=frm.numberBox(item)
+				break
+				case 'date' : 
+				item.value=getPropertyByKeyPath(data.value,item.field)
+				s+=frm.dateBox(item)
+				break
+				case 'time' : 
+				item.value=getPropertyByKeyPath(data.value,item.field)
+				s+=frm.timeBox(item)
+				break
+				case 'lookup' :
+				item.value=getPropertyByKeyPath(data.value,item.field)
+				s+=frm.lookup(item)
+				break
+				case 'remotelookup' : 
+				item.value=getPropertyByKeyPath(data.value,item.field)
+				if(item.lookupTextField){
+					item.valueText=getPropertyByKeyPath(data.value,item.lookupTextField)
+				}
+				s+=frm.remoteLookup(item)
+				break
+				case 'boolean' :
+				item.value=getPropertyByKeyPath(data.value,item.field)
+				s+=frm.checkBox(item)
+				break
+				case 'daterange' : 
+				s+=frm.dateRangeBox(item)
+				break
+				case 'w-100': 
+				case 'w100': 
+				case 'divisor': 
+				s+=`<div class="w-100"></div>`
+				break
+				case 'grid':
+
+				grd.script=''
+				if(bRoot){
+					item.value=data.value || []
+					item.paging=data.paging
+					s+=grd.build(item, bRoot)
+				}else{
+					item.value=getPropertyByKeyPath(data.value,item.field)
+					
+					item.controls=grd.build(item, bRoot)
+					s+=frm.card(item)
+				}
+
+				script+=grd.script
+				break
+
+				case 'tab':
+				case 'form':
+				case 'filter':
+				case 'group':
+				case 'modal':
+				
+				
+				if(item.fields){
+					item.controls=''
+					Object.keys(item.fields).forEach((key)=>{
+						item.controls+=generateControls(item.fields[key],data)
+					})
+					if(bRoot || item.type=='modal'){
+						s+=item.controls
+					}else{
+
+						s+=frm.card(item)
+					}
+				}else if(item.tabs){
+					item.tabs.forEach((tab,index)=>{
+						tab.controls=''
+						if(tab.fields){
+							Object.keys(tab.fields).forEach((key)=>{
+								tab.controls+=generateControls(tab.fields[key],data)
+							})
+						}
+					})
+					s+=frm.tab(item)
+				}
+				
+				break
+				
+				default:
+				item.value=getPropertyByKeyPath(data.value,item.field)
+				s+=frm.textBox(item)
+				break
+			}
+
+			
+			script+=frm.script
+			return s
+		}
+
+		function itemDefaultValues(item,autocol=false){
+			var field=item.field
+			var lookupTextField=item.lookupTextField || ''
+			if(item.parentField){
+				field=`${item.parentField}.${field}`
+
+			}
+			if(item.lookupTextField){
+				var lookupTextField=item.lookupTextField
+				if(item.parentField){
+					lookupTextField=`${item.parentField}.${item.lookupTextField}`
+				}
+				item.lookupTextFieldId=generateFormId(lookupTextField)
+				item.lookupTextFieldName=generateFormName(lookupTextField)
+
+			}
+			item['id']=generateFormId(field)
+			item['name']=generateFormName(field)
+			item['title']=ifNull(item['title'],'')
+			item['icon']=ifNull(item['icon'],'')
+
+			item['type']=ifNull(item['type'],'')
+
+			if(item.type=='' && item.fields){
+				item.type='group'
+			}
+			if(item.type=='' && item.tabs){
+				item.type='tab'
+			}
+
+			if(!isNaN(item.col)){
+				item.col='col-md-' + item.col
+			}else{
+				if(autocol){
+					switch(item.type.toLowerCase()){
+						case 'identity':
+						item.col='col-md-1'
+						break
+						case 'number':
+						case 'money':
+						item.col='col-md-2'
+						break
+						case 'remotelookup':
+						item.col='col-md-6'
+						break
+						case 'lookup':
+						item.col='col-md-2'
+						if(maxLookupLength(item.lookup || {})>30){
+							item.col='col-md-4'
+						}
+						break
+						case 'boolean':
+						item.col='col-md-2'
+						break
+						default:
+						item.col='col-md-4'
+						break
+					}
+				}else{
+					if(item.type.toLowerCase()=='daterange'){
+						item['col']=ifNull(item['col'],'col-md-6')
+					}else{
+						item['col']=ifNull(item['col'],'col-md-12')
+					}
+					
+				}
+			}
+
+			item['required']=ifNull(item['required'],false)
+			item['visible']=ifNull(item['visible'],true)
+			item['collapsed']=ifNull(item['collapsed'],false)
+			item['lookup']=ifNull(item['lookup'],{})
+			if(item.staticValues!=undefined){
+				item['lookup']=staticValues[item.staticValues] || {}
+			}
+			item['class']=ifNull(item['class'],'')
+			item['readonly']=item.readonly || false
+			item['hasChildren']=false
+
+			if(item.required){
+				if(item.title.substr(0,1)!='*'){
+					item.title=`*${item.title}`
+				}
+			}
+
+				
+			return item
+		}
+
+	})(typeof exports === 'undefined'? this['Control']={}: exports)
+
+
+</script>
+
+
+<script type="text/javascript">
+	(function(exports) {
+
+		var ctl=Control.Control
+
+		exports.PageBuilder = Object.freeze({
+			build:build
+		})
+
+		function build(pageObj,divId){
+			
+			var mainCtrl=document.getElementById(divId)
+
+			var sayfalar=[]
+			var jsonPage
+			switch(window.hashObj.function){
+				case 'edit':
+				jsonPage=clone(pageObj.edit || pageObj.form)
+				break
+				case 'view':
+				jsonPage=clone(pageObj.view || pageObj.edit || pageObj.form)
+				break
+				case 'addnew':
+				jsonPage=clone(pageObj.addnew || pageObj.form)
+				break
+				default:
+				jsonPage=clone(pageObj.index)
+				break
+			}
+			
+			if(!Array.isArray(jsonPage)){
+				sayfalar.push(jsonPage)
+			}else{
+				sayfalar=jsonPage
+			}
+			
+ 			$('#headerButtons').html('')
+
+			var s='<form><div class="row">'
+			var script=''
+			var index=0
+
+			function calistir(cb){
+				if(index>=sayfalar.length)
+					return cb()
+				
+				getRemoteData(sayfalar[index],(err,data)=>{
+					if(!err){
+						ctl.script=''
+						if(sayfalar[index].type=='form' && sayfalar[index].dataSource){
+							var hbtn=`
+							<a href="javascript:formKaydet('#${divId}');" class="btn btn-primary  btn-form-header" title="Kaydet"><i class="fas fa-save"></i></a>
+							<a href="javascript:history.back(-1);" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>`
+							$('#headerButtons').html(hbtn)
+							ctl.script=`
+								function formKaydet(divId){
+									var dataSource=${JSON.stringify(sayfalar[index].dataSource)}
+									var formData=getFormData(\`\${divId} form\`)
+									formSave(dataSource,formData)
+								}
+							`
+						}
+						
+						s+=ctl.generateControls(clone(sayfalar[index]),data,true)
+
+						script+=ctl.script
+						index++
+						setTimeout(calistir,0,cb)
+					}else{
+						cb(err)
+					}
+				})
+			}
+
+
+
+			calistir((err)=>{
+				if(!err){
+					s+=`</div></form>`
+					mainCtrl.innerHTML=s
+					loadCardCollapses()
+					$(`#${divId}`).append(`<script type="text/javascript">${script}<\/script>`)
+				}else{
+					s+=`Hata:${err.code || err.name || ''} - ${err.message || err.name || ''}</div></form>`
+					mainCtrl.innerHTML=s
+				}
+			})
+
+
+			// }catch(err){
+			// 	console.error('Hata:',err)
+			// 	mainCtrl.innerHTML=`Oppsss! Render Hatasi: <br>${err.name || ''}<br>${err.message || ''}<br>${(err.stack || '').replaceAll('\n','<br>')}`
+			// }
+		}
+
+
+	})(typeof exports === 'undefined'? this['PageBuilder']={}: exports)
+
+
+</script>
+
+
+<script type="text/javascript">
+
+	var sayfa=JSON.parse(decodeURIComponent(`<%- encodeURIComponent2(JSON.stringify(sayfa)) %>`))
+	
+	var pb=PageBuilder.PageBuilder
+
+	if(!window.location.hash){
+		window.location.hash='index/page=1&pageSize=10'
+	}
+	
+	window.hashObj=getHashObject()
+
+
+	window.onhashchange=()=>{
+		window.hashObj=getHashObject()
+		pb.build(sayfa,'mainCtrl')
+	}
+	
+	
+	$(document).ready(()=>{
+		pb.build(sayfa,'mainCtrl')
+	})
+</script>

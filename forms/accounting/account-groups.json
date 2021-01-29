@@ -4,13 +4,13 @@
 			"type": "grid",
 			"fields": {
 				"name":{"title":"Grup Ismi", "type":"string"},
-		  	"account.accountCode":{"title":"Muh. Kodu", "type":"string"},
-		  	"salesAccount.accountCode":{"title":"Satış", "type":"string"},
-		  	"returnAccount.accountCode":{"title":"Iade", "type":"string"},
-		  	"exportSalesAccount.accountCode":{"title":"İhracat", "type":"string"},
-		  	"salesDiscountAccount.accountCode":{"title":"Şatış indirim", "type":"string"},
-		  	"buyingDiscountAccount.accountCode":{"title":"Alım indirim", "type":"string"},
-		  	"costOfGoodsSoldAccount.accountCode":{"title":"S.M.Maliyeti", "type":"string"}
+				"account.accountCode":{"title":"Muh. Kodu", "type":"string"},
+				"salesAccount.accountCode":{"title":"Satış", "type":"string"},
+				"returnAccount.accountCode":{"title":"Iade", "type":"string"},
+				"exportSalesAccount.accountCode":{"title":"İhracat", "type":"string"},
+				"salesDiscountAccount.accountCode":{"title":"Şatış indirim", "type":"string"},
+				"buyingDiscountAccount.accountCode":{"title":"Alım indirim", "type":"string"},
+				"costOfGoodsSoldAccount.accountCode":{"title":"S.M.Maliyeti", "type":"string"}
 			},
 			"options": {
 				"selection": true,
@@ -22,19 +22,12 @@
 					"view": false,
 					"print": false,
 					"copy": false
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/account-groups"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/account-groups"
 			}
 
 		}
@@ -89,7 +82,8 @@
 					},
 					"col":4
 				},
-				"buyingDiscountAccount" :{"title":"Alım indirim", "type":"remoteLookup","dataSource":{
+				"buyingDiscountAccount" :{"title":"Alım indirim", "type":"remoteLookup",
+					"dataSource":{
 						"type":"remote",
 						"method":"GET",
 						"url":"/dbapi/accounts",
@@ -97,7 +91,8 @@
 					},
 					"col":4
 				},
-				"costOfGoodsSoldAccount":{"title":"S.M.Maliyeti", "type":"remoteLookup","dataSource":{
+				"costOfGoodsSoldAccount":{"title":"S.M.Maliyeti", "type":"remoteLookup",
+					"dataSource":{
 						"type":"remote",
 						"method":"GET",
 						"url":"/dbapi/accounts",
@@ -108,11 +103,11 @@
 			},
 			"options": {
 				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/account-groups"
-				}
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/account-groups"
 			}
 		}
 	]

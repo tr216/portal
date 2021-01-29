@@ -32,19 +32,12 @@
 					"view": false,
 					"print": false,
 					"copy": true
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/items?itemType=item"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/items?itemType=item"
 			}
 
 		}
@@ -156,11 +149,11 @@
 },
 "options": {
 	"mode": "general",
-	"isForm":true,
-	"dataSource": {
-		"method":"GET",
-		"url":"/dbapi/items?itemType=item"
-	}
+	"isForm":true
+},
+"dataSource": {
+	"method":"GET",
+	"url":"/dbapi/items?itemType=item"
 }
 }
 ]

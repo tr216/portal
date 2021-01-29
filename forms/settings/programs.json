@@ -19,12 +19,12 @@
 					"view": false,
 					"print": false,
 					"copy": true
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/programs"
 				}
+			},
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/programs"
 			}
 		}
 	],
@@ -144,23 +144,23 @@
 					}
 				}
 			],
-			"options": {
-				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/programs"
-				}
-			},
-			"script":[
-				"function localConnType_Change(){",
-				"if($('#connector-connectionType').val()=='mysql' || $('#connector-connectionType').val()=='mssql'){",
-				"$('#cardCollapseconnection1').closest('.card').show()",
-				"}else{",
-				"$('#cardCollapseconnection1').closest('.card').hide()",
-				"}",
-				"}"
-			]
-		}
-	]
+"options": {
+	"mode": "general",
+	"isForm":true
+},
+"dataSource": {
+	"method":"GET",
+	"url":"/dbapi/programs"
+},
+"script":[
+	"function localConnType_Change(){",
+	"if($('#connector-connectionType').val()=='mysql' || $('#connector-connectionType').val()=='mssql'){",
+	"$('#cardCollapseconnection1').closest('.card').show()",
+	"}else{",
+	"$('#cardCollapseconnection1').closest('.card').hide()",
+	"}",
+	"}"
+]
+}
+]
 }

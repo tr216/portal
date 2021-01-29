@@ -35,12 +35,12 @@
 					"view": false,
 					"print": false,
 					"copy": true
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/persons"
 				}
+			},
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/persons"
 			}
 		}
 	],
@@ -105,11 +105,11 @@
 			},
 			"options": {
 				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/persons"
-				}
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/persons"
 			}
 		}
 	]

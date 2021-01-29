@@ -1036,7 +1036,7 @@ function generateFormName(name){
 
 function generateFormId(name) { 
 	if(typeof name=='string')
-		return name.replaceAll('.','-')
+		return name.replaceAll('.','_')
 	else
 		return ''
 }
@@ -1348,7 +1348,7 @@ function runProgramAjax(data){
 	})
 }
 
-function remoteLookupAutocomplete(locals,prefix=''){
+function remoteLookupAutocomplete1111(locals,prefix=''){
 	var controlId=prefix+ generateFormId(locals.field)
 	var controlName=prefix + generateFormName(locals.field)
 	var controlNameTextField=''
@@ -1467,4 +1467,11 @@ function remoteLookupAutocomplete(locals,prefix=''){
 		})
 
 	}
+}
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c)=>{
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
 }

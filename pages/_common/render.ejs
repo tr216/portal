@@ -1,2 +1,38 @@
-<%layout('../_common/layouts/general')%>
-<%- html %>
+<% layout('../_common/layouts/general') %>
+
+<!-- <div style="">
+	<a class="btn btn-primary" href="javascript:formBilgisi()">form Bilgisi</a>
+</div> -->
+<div id="mainCtrl"></div>
+
+<%- partial('render_functions.ejs') %>
+
+<%- partial('form_control.ejs') %>
+
+
+
+
+
+<script type="text/javascript">
+
+	var sayfa=JSON.parse(decodeURIComponent(`<%- encodeURIComponent2(JSON.stringify(sayfa)) %>`))
+	
+	var frm=FormControl.FormControl
+
+	if(!window.location.hash){
+		window.location.hash='index/page=1&pageSize=10'
+	}
+	
+	window.hashObj=getHashObject()
+
+
+	window.onhashchange=()=>{
+		window.hashObj=getHashObject()
+		frm.build(sayfa,'mainCtrl')
+	}
+	
+	
+	$(document).ready(()=>{
+		frm.build(sayfa,'mainCtrl')
+	})
+</script>

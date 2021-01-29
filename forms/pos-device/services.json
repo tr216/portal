@@ -4,11 +4,11 @@
 			"type": "grid",
 			"fields": {
 				"type" : {"title":"Türü", "type":"lookup", "staticValues":"posDeviceServiceTypes"},
-  			"name" 				: {"title":"Adı", "type":"string"},
-  			"username" 				: {"title":"Username", "type":"string"},
-  			"password" 				: {"title":"Password", "type":"string"},
-  			"url" 				: {"title":"Url", "type":"string"},
-  			"passive" 				: {"title":"Pasif?", "type":"boolean"}
+				"name" 				: {"title":"Adı", "type":"string"},
+				"username" 				: {"title":"Username", "type":"string"},
+				"password" 				: {"title":"Password", "type":"string"},
+				"url" 				: {"title":"Url", "type":"string"},
+				"passive" 				: {"title":"Pasif?", "type":"boolean"}
 			},
 			"options": {
 				"selection": true,
@@ -20,19 +20,12 @@
 					"view": false,
 					"print": false,
 					"copy": true
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/pos-device-services"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/pos-device-services"
 			}
 		}
 	],
@@ -41,19 +34,19 @@
 			"type":"form",
 			"fields": {
 				"type" : {"title":"Türü", "type":"lookup", "staticValues":"posDeviceServiceTypes"},
-  			"name" 				: {"title":"Adı", "type":"string"},
-  			"username" 				: {"title":"Username", "type":"string"},
-  			"password" 				: {"title":"Password", "type":"string"},
-  			"url" 				: {"title":"Url", "type":"string"},
-  			"passive" 				: {"title":"Pasif?", "type":"boolean"}
+				"name" 				: {"title":"Adı", "type":"string"},
+				"username" 				: {"title":"Username", "type":"string"},
+				"password" 				: {"title":"Password", "type":"string"},
+				"url" 				: {"title":"Url", "type":"string"},
+				"passive" 				: {"title":"Pasif?", "type":"boolean"}
 			},
 			"options": {
 				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/pos-device-services"
-				}
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/pos-device-services"
 			}
 		}
 	]

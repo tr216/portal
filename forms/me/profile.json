@@ -13,11 +13,11 @@
 			},
 			"options": {
 				"mode": "edit",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/me"
-				}
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/me"
 			}
 		}
 	]

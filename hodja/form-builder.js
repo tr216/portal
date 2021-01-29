@@ -139,10 +139,8 @@
 			var item=clone(fields[key])
 			if(item.field==undefined)
 				item.field=key
-			item=itemDefaultValues(item)
+			item=itemDefaultValues(item,(options.autocol || false))
 			
-			
-
 			if(item.fields!=undefined && item.type!='grid'){
 				item.controls=generateControls(item.fields,options,data)
 				s+=builder.control('form/card',item)
@@ -157,7 +155,8 @@
 					return
 				switch(item.type.toLowerCase()) {
 					case 'string' : 
-					case 'textbox' : 
+					case 'textbox' :
+
 					s+=builder.control('form/textbox',item)	
 					break
 					case 'remotelookup' : 
@@ -236,10 +235,12 @@
 		return s
 	}
 
+
+
 	function insideGrid(item,options,data){
 		var s=''
 		item.parentField=item.field
-		item.id=item.field
+		item.id=item.field.replace('.','_')
 		Object.keys(item.fields).forEach((key)=>{
 			var field=item.fields[key]
 			if(field.type=='lookup' && field.staticValues!=undefined){
@@ -247,22 +248,53 @@
 			}
 		})
 		item.controls=insideGridBuilder.build(item)
-		item.id=item.field
+		item.id=generateFormId(item.field)
 		s=builder.control('form/card',item)
 		return s
 	}
 
-	function itemDefaultValues(item){
+	function itemDefaultValues(item,autocol=false){
 		item['id']=generateFormId(item.field)
 		item['name']=generateFormName(item.field)
 		item['title']=ifNull(item['title'],'')
 		item['icon']=ifNull(item['icon'],'')
-		item['col']=ifNull(item['col'],'col-md-12')
+		
+
+		item['type']=ifNull(item['type'],'string')
 
 		if(!isNaN(item.col)){
 			item.col='col-md-' + item.col
+		}else{
+			if(autocol){
+				switch(item.type.toLowerCase()){
+					case 'identity':
+					item.col='col-md-1'
+					break
+					case 'number':
+					case 'money':
+					item.col='col-md-2'
+					break
+					case 'remotelookup':
+					item.col='col-md-6'
+					break
+					case 'lookup':
+					item.col='col-md-2'
+					if(maxLookupLength(item.lookup || {})>30){
+						item.col='col-md-4'
+					}
+					break
+					case 'boolean':
+					item.col='col-md-2'
+					break
+					default:
+					item.col='col-md-4'
+					break
+				}
+			}else{
+				item['col']=ifNull(item['col'],'col-md-12')
+			}
 		}
-		item['type']=ifNull(item['type'],'string')
+		
 		item['required']=ifNull(item['required'],false)
 		item['visible']=ifNull(item['visible'],true)
 		item['collapsed']=ifNull(item['collapsed'],false)
@@ -277,5 +309,14 @@
 		if(item.required)
 			item.title=`*${item.title}`
 		return item
+	}
+
+	function maxLookupLength(lookup){
+		var max=0
+		Object.keys(lookup).forEach((key)=>{
+			if(lookup[key].length>max)
+				max=lookup[key].length
+		})
+		return max
 	}
 })(typeof exports === 'undefined'? this['FormBuilder']={}: exports)

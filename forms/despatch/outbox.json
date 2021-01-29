@@ -28,19 +28,12 @@
 					"view": false,
 					"print": false,
 					"copy": true
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/despatch/outbox"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/despatch/outbox"
 			}
 
 		}
@@ -80,7 +73,6 @@
 						"despatchAdviceTypeCode.value" :{"title":"Tipi","type":"lookup", "staticValues":"despatchAdviceTypeCodeList","col":3}
 					}
 				},
-				
 				"cari":{
 					"title":"Müşteri Bilgileri",
 					"collapsed":false,
@@ -208,16 +200,13 @@
 					}
 				}
 			},
-			"includeFile":[
-				"/js/user-js-files/doc-helper.js"
-			],
 			"options": {
 				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/despatch"
-				}
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/despatch"
 			},
 			"script":[
 				"function toplamlariGuncelle(grid){",

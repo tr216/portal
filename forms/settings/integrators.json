@@ -20,12 +20,12 @@
 					"view": false,
 					"print": false,
 					"copy": true
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/integrators"
 				}
+			},
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/integrators"
 			}
 		}
 	],
@@ -150,15 +150,15 @@
 				}
 			]
 
-			,
-			"options": {
-				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/integrators"
-				}
-			}
-		}
-	]
+,
+"options": {
+	"mode": "general",
+	"isForm":true
+},
+"dataSource": {
+	"method":"GET",
+	"url":"/dbapi/integrators"
+}
+}
+]
 }

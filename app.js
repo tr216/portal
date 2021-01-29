@@ -81,6 +81,7 @@ app.use(cookieParser())
 
 app.use(express.static(path.join(__dirname, 'assets'), {maxAge: (60 * 1000 * 60 * 24 * 30) })) 
 app.use('/hodja',express.static(path.join(__dirname, 'hodja'), { maxAge: (60 * 1000 * 60 * 24 * 30) })) 
+app.use('/pb',express.static(path.join(__dirname, 'pb'), { maxAge: (60 * 1000 * 60 * 24 * 30) })) 
 
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({

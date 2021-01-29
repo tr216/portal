@@ -12,7 +12,7 @@
 		{
 			"type": "grid",
 			"fields": {
-				"orderNo"				:{"title":"Sip. No",  "type":"string","html":"<b>{ID}</b><br>{localDocumentId}"},
+				"orderNo"	:{"title":"Sip. No",  "type":"string","html":"<b>{ID}</b><br>{localDocumentId}"},
 				"tarih"	:{"title":"Tarih",  "type":"string","html":"{issueDate}<br><small class=\"text-primary\">{issueTime}</small>"},
 				"musteri"	:{"title":"Müşteri", "type":"string", "filterField":"partyName", "html":"<b>{party.title}</b><br><small class=\"text-primary\">{party.vknTckn}</small> | Satır:{lineCountNumeric}"},
 				"orderStatus"	:{"title":"Durum", "type":"lookup", "staticValues":"orderStatusTypes"}
@@ -27,21 +27,13 @@
 					"view": false,
 					"print": false,
 					"copy": true
-				},
-				"dataSource": {
-					"type":"remote",
-					"method":"GET",
-					"url":"/dbapi/order/outbox"
 				}
 			},
-			"data": {
-				"docs":[],
-				"page":1,
-				"pageSize":10,
-				"pageCount":0,
-				"recordCount":0
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/order/outbox"
 			}
-
 		}
 	],
 	"form": [
@@ -60,10 +52,8 @@
 							},
 							"col":"col-sm-6 col-md-3"
 						},
-
 						"ID.value" :{"title":"Belge No(Boş ise otomatik)","type":"string" ,"col":"col-sm-6 col-md-3"},
 						"uuid.value" :{"title":"ETTN(uuid)","type":"string", "readonly":true,"col":"col-sm-6 col-md-3"},
-						
 						"divsor1" :{"type":"w-100"},
 						"issueDate.value" :{"title":"Tarih","type":"date","col":3},
 						"issueTime.value" :{"title":"Saat","type":"time","col":3},
@@ -90,7 +80,7 @@
 						"buyerCustomerParty.party.person.familyName.value":{"title":"Kişi Soyadı", "type":"string", "col":3},
 						"buyerCustomerParty.party.partyIdentification.0.ID.value":{"title":"Vergi No/Tckn", "type":"string", "col":4},
 						"buyerCustomerParty.party.partyIdentification.0.ID.attr.schemeID":{"title":"Tür", "type":"lookup", "lookup":{"VKN":"VKN","TCKN":"TCKN"}, "col":4},
-						"buyerCustomerParty.party.partyTaxScheme.taxScheme.name.value":{"title":"Vergi Dairesi", "type":"string", "col":4},
+						"buyerCustomerParty.party.partyTaxScheme.taxScheme.name.value":{"title":"Vergi Dairesi", "type":"string", "col":4 , "calc":"3*{buyerCustomerParty.party.person.firstName.value}"},
 						"adresBilgileri":{
 							"title":"Adres bilgisi",
 							"collapsed":true,
@@ -146,16 +136,16 @@
 						"lineExtensionAmount.value" :{"title":"Tutar", "type":"money","calc":"Math.round({orderedQuantity.value}*{price.priceAmount.value}*100)/100" , "readonly":true},
 						"taxTotal.taxSubtotal.0.percent.value" :{"title":"Kdv %", "type":"number"},
 						"taxTotal.taxAmount.value" :{"title":"Kdv", "type":"number","calc":"Math.round(100*{lineExtensionAmount.value}*{taxTotal.taxSubtotal.0.percent.value}/100)/100", "readonly":true},
-						"note.0.value":{"title":"Notlar 1", "type":"string","col":12, "visible":false},
-						"note.1.value":{"title":"Notlar 2", "type":"string","col":12, "visible":false},
-						"note.2.value":{"title":"Notlar 3", "type":"string","col":12, "visible":false}
+						"note.0.value":{"title":"Notlar 1", "type":"string", "visible":false},
+						"note.1.value":{"title":"Notlar 2", "type":"string", "visible":false},
+						"note.2.value":{"title":"Notlar 3", "type":"string", "visible":false}
 					},
 					"modal":{
 						"tabs":[
 							{
 								"title":"Satir bilgileri",
 								"fields": {
-									"ID.value" :{"title":"#", "type":"identity","readonly":true, "width":"50px","col":2},
+									"ID.value" :{"title":"#", "type":"identity","readonly":true, "width":"50px"},
 									"item._id" :{"title":"Mal/Hizmet", "type":"remoteLookup",
 										"dataSource":{
 											"type":"remote",
@@ -163,27 +153,46 @@
 											"url":"/dbapi/items?itemType=all",
 											"label":"{name.value} {description.value}"
 										},
-										"lookupTextField":"item.name.value",
-										"required":true,"col":4
+										"lookupTextField":"item.name.value"
 									},
-									"orderedQuantity.value" :{"title":"Miktar", "type":"number","required":true,"col":2},
-									"orderedQuantity.attr.unitCode" :{"title":"Birim", "type":"lookup","staticValues":"unitCodeList","required":true,"col":2},
-									"price.priceAmount.value" :{"title":"Fiyat", "type":"money","required":true,"col":2},
-									"lineExtensionAmount.value" :{"title":"Tutar", "type":"money","calc":"Math.round({orderedQuantity.value}*{price.priceAmount.value}*100)/100" , "readonly":true,"col":2},
-									"taxTotal.taxSubtotal.0.percent.value" :{"title":"Kdv %", "type":"number","col":2},
-									"taxTotal.taxAmount.value" :{"title":"Kdv", "type":"number","calc":"Math.round(100*{lineExtensionAmount.value}*{taxTotal.taxSubtotal.0.percent.value}/100)/100", "readonly":true,"col":2}
-								
+									"orderedQuantity.value" :{"title":"Miktar", "type":"number"},
+									"orderedQuantity.attr.unitCode" :{"title":"Birim", "type":"lookup","staticValues":"unitCodeList"},
+									"price.priceAmount.value" :{"title":"Fiyat", "type":"money"},
+									"lineExtensionAmount.value" :{"title":"Tutar", "type":"money","calc":"Math.round({orderedQuantity.value}*{price.priceAmount.value}*100)/100" , "readonly":true},
+									"taxTotal.taxSubtotal.0.percent.value" :{"title":"Kdv %", "type":"number"},
+									"taxTotal.taxAmount.value" :{"title":"Kdv", "type":"number","calc":"Math.round(100*{lineExtensionAmount.value}*{taxTotal.taxSubtotal.0.percent.value}/100)/100", "readonly":true}
+									
 								}
 							},
 							{
-								"title":"notlar",
-								"fields": {
-									"note.0.value":{"title":"Notlar 1", "type":"string","col":12},
-									"note.1.value":{"title":"Notlar 2", "type":"string","col":12},
-									"note.2.value":{"title":"Notlar 3", "type":"string","col":12}
+								"title":"Diger",
+								"fields":{
+									"note": {
+										"type":"grid",
+										"title":"Notlar",
+										"fields":{
+											"value":{"title":"Notlar 1", "type":"string"}
+										},
+										"options": {
+											"selection": false,
+											"filter": false,
+											"confirmBeforeRemove":false,
+											"buttons": {
+												"add": true,
+												"edit": true,
+												"delete": true,
+												"view": false,
+												"print": false,
+												"copy": false
+											}
+										}
+									}
 								}
 							}
-						]
+						],
+						"options":{
+							"autocol":true
+						}
 						
 					},
 					"options": {
@@ -199,7 +208,7 @@
 							"copy": false
 						}
 					},
-					"onchange":"toplamlariGuncelle(this.value)"
+					"onchange":"toplamlariGuncelle(this)"
 				},
 				"group1":{
 					"title":"Toplamlar",
@@ -209,16 +218,13 @@
 					}
 				}
 			},
-			"includeFile":[
-				"/js/user-js-files/doc-helper.js"
-			],
 			"options": {
 				"mode": "general",
-				"isForm":true,
-				"dataSource": {
-					"method":"GET",
-					"url":"/dbapi/order"
-				}
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/order"
 			},
 			"script":[
 				"function toplamlariGuncelle(grid){",
@@ -229,8 +235,8 @@
 				"toplamTutar+=Number(e.lineExtensionAmount.value)",
 				"})",
 				"$('#toplamMiktar').val(Math.round(toplamMiktar*1000)/1000)",
-				"$('#anticipatedMonetaryTotal-lineExtensionAmount-value').attr('type','text')",
-				"$('#anticipatedMonetaryTotal-lineExtensionAmount-value').val(Number(toplamTutar).formatMoney(2))",
+				"$('#anticipatedMonetaryTotal_lineExtensionAmount_value').attr('type','text')",
+				"$('#anticipatedMonetaryTotal_lineExtensionAmount_value').val(Number(toplamTutar).formatMoney(2))",
 				"}"
 			]
 			
