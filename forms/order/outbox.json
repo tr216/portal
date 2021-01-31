@@ -136,9 +136,7 @@
 						"lineExtensionAmount.value" :{"title":"Tutar", "type":"money","calc":"Math.round({orderedQuantity.value}*{price.priceAmount.value}*100)/100" , "readonly":true},
 						"taxTotal.taxSubtotal.0.percent.value" :{"title":"Kdv %", "type":"number"},
 						"taxTotal.taxAmount.value" :{"title":"Kdv", "type":"number","calc":"Math.round(100*{lineExtensionAmount.value}*{taxTotal.taxSubtotal.0.percent.value}/100)/100", "readonly":true},
-						"note.0.value":{"title":"Notlar 1", "type":"string", "visible":false},
-						"note.1.value":{"title":"Notlar 2", "type":"string", "visible":false},
-						"note.2.value":{"title":"Notlar 3", "type":"string", "visible":false}
+						"note":{"title":"Notlar 1", "type":"string", "visible":false}
 					},
 					"modal":{
 						"tabs":[
@@ -171,7 +169,7 @@
 										"type":"grid",
 										"title":"Notlar",
 										"fields":{
-											"value":{"title":"Notlar 1", "type":"string"}
+											"value":{"title":"Not", "type":"string"}
 										},
 										"options": {
 											"selection": false,

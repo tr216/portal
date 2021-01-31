@@ -31,14 +31,15 @@
 			checkBox:checkBox,
 			checkBoxLookup:checkBoxLookup,
 			dateRangeBox:dateRangeBox,
-		
+
 			grid:grid,
 			gridHtml:gridHtml,
-			addGridRow:addGridRow,
-			editRow:editRow,
-			modalRowOK:modalRowOK,
-			refreshGrid:refreshGrid,
+			gridModalAddRow:gridModalAddRow,
+			gridModalEditRow:gridModalEditRow,
+			gridModalOK:gridModalOK,
+			gridRefresh:gridRefresh,
 			generateControls:generateControls,
+			gridEditRow:gridEditRow,
 			get item(){
 				return controlItem
 			},
@@ -94,7 +95,7 @@
 				sayfalar=jsonPage
 			}
 			
- 			$('#headerButtons').html('')
+			$('#headerButtons').html('')
 
 			var s='<form><div class="row">'
 			
@@ -110,7 +111,7 @@
 						var fieldList=collectFieldList(sayfalar[index])
 
 						script+=`
-					
+
 						`
 						if(sayfalar[index].type=='form' && sayfalar[index].dataSource){
 							var hbtn=`
@@ -118,28 +119,26 @@
 							<a href="javascript:history.back(-1);" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>`
 							$('#headerButtons').html(hbtn)
 							script+=`
-								function formKaydet(divId){
-									var dataSource=${JSON.stringify(sayfalar[index].dataSource)}
-									var formData=getFormData(\`\${divId} form\`)
-									formSave(dataSource,formData)
-								}
-								
-								$('#${divId} input,select').on('change',(e)=>{
-									var fields=${JSON.stringify(fieldList)}
-									var valueObj=getDivData('#${divId}')
-									console.log('root fields:',fields)
-									console.log('root valueObj:',valueObj)
-									Object.keys(fields).forEach((key)=>{
-										if(fields[key].id!=e.target.id && fields[key].calc){
-											try{
-												$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
-											}catch(tryErr){
-												$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
-											}
-											
+							function formKaydet(divId){
+								var dataSource=${JSON.stringify(sayfalar[index].dataSource)}
+								var formData=getFormData(\`\${divId} form\`)
+								formSave(dataSource,formData)
+							}
+
+							$('#${divId} input,select').on('change',(e)=>{
+								var fields=${JSON.stringify(fieldList)}
+								var valueObj=getDivData('#${divId}')
+								Object.keys(fields).forEach((key)=>{
+									if(fields[key].id!=e.target.id && fields[key].calc){
+										try{
+											$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
+										}catch(tryErr){
+											$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
 										}
-									})
+
+									}
 								})
+							})
 							`
 						}
 						
@@ -178,7 +177,7 @@
 			// }
 		}
 
-		function generateControls(item,data,bRoot=false){
+		function generateControls(item,data,bRoot=false,insideOfModal=false){
 			var s=''
 			var autocol=item.options?(item.options.autocol===true?true:false):false
 			if(item.script!=undefined){
@@ -192,7 +191,7 @@
 			if(item.fields){
 				Object.keys(item.fields).forEach((key)=>{
 					item.fields[key].field=key
-					item.fields[key]=itemDefaultValues(item.fields[key],autocol)
+					item.fields[key]=itemDefaultValues(item.fields[key],autocol,insideOfModal)
 					if(item.type=='grid'){
 						item.fields[key].parentField=item.field || ''
 						item.parentField=item.field || ''
@@ -203,7 +202,7 @@
 					if(tab.fields){
 						Object.keys(tab.fields).forEach((key)=>{
 							tab.fields[key].field=key
-							tab.fields[key]=itemDefaultValues(tab.fields[key],autocol)
+							tab.fields[key]=itemDefaultValues(tab.fields[key],autocol,insideOfModal)
 						})
 					}
 				})
@@ -212,7 +211,7 @@
 				data={value:{}}
 			}
 
-
+			item.insideOfModal=insideOfModal
 
 			switch((item.type || '').toLowerCase()){
 				case 'string' :
@@ -223,8 +222,21 @@
 				item.value=getPropertyByKeyPath(data.value,item.field) || 0
 				s+=numberBox(item)
 				break
+
 				case 'money' :
-				item.value=Number(getPropertyByKeyPath(data.value,item.field) || 0).formatMoney()
+				if(item.readonly){
+					item.value=Number(getPropertyByKeyPath(data.value,item.field) || 0).formatMoney()
+					item.class+=' text-right'
+					s+=textBox(item)
+				}else{
+					item.value=getPropertyByKeyPath(data.value,item.field) || 0
+					s+=numberBox(item)
+				}
+				break
+				case 'identity' :
+
+				item.value=getPropertyByKeyPath(data.value,item.field) || 0
+				item.readonly=true
 				s+=numberBox(item)
 				break
 				case 'date' : 
@@ -264,11 +276,16 @@
 				if(bRoot){
 					item.value=data.value || []
 					item.paging=data.paging
-					s+=grid(item, bRoot)
+					s+=grid(item, bRoot,insideOfModal)
 				}else{
 					item.value=getPropertyByKeyPath(data.value,item.field)
 					
-					item.controls=grid(item, bRoot)
+					item.controls=grid(item, bRoot,insideOfModal)
+					if(insideOfModal){
+						console.log('item:',item)
+						// item.controls=item.controls.replaceAll('type="hidden"','type="text"')
+					}
+					
 					s+=card(item)
 				}
 
@@ -284,7 +301,7 @@
 				if(item.fields){
 					item.controls=''
 					Object.keys(item.fields).forEach((key)=>{
-						item.controls+=generateControls(item.fields[key],data)
+						item.controls+=generateControls(item.fields[key],data,false,insideOfModal)
 					})
 					if(bRoot || item.type=='modal'){
 						s+=item.controls
@@ -297,7 +314,7 @@
 						tab.controls=''
 						if(tab.fields){
 							Object.keys(tab.fields).forEach((key)=>{
-								tab.controls+=generateControls(tab.fields[key],data)
+								tab.controls+=generateControls(tab.fields[key],data,false,insideOfModal)
 							})
 						}
 					})
@@ -317,38 +334,38 @@
 			return s
 		}
 
-		function grid(item,bRoot,cb){
-			this.item=gridDefaults(item,bRoot)
-			script+=`
+		function grid(item,bRoot,insideOfModal){
+			
+			var s=``
+			this.item=gridDefaults(item,bRoot,insideOfModal)
+			if(insideOfModal==false){
+				
+				script+=`
 				var grid${item.id}=FormControl.FormControl
 				grid${item.id}.item=${JSON.stringify(item)}
 				grid${item.id}.bRoot=${bRoot}
-				grid${item.id}.refreshGrid()
-			`
-			this.bRoot=bRoot
+				grid${item.id}.gridRefresh()
 
-			return `<div id="${item.id}" class="table-responsive ${item.options.show.infoRow?'mt-1':''}"></div>
-			${modalRow(this.item)}
-			`
+				document.getElementById('${item.id}').item=${JSON.stringify(item)}
+				`
+				this.bRoot=bRoot
+
+				s=`<div id="${item.id}" class="table-responsive ${item.options.show.infoRow?'mt-1':''}"></div>
+				${gridModalTemplate(this.item)}
+				`
+			}else{
+				s=`<div id="${item.id}" class="table-responsive ${item.options.show.infoRow?'mt-1':''}">${gridHtml(item,false,true)}</div>`
+
+				script+=`
+				document.getElementById('${item.id}').item=${JSON.stringify(item)}
+				`
+			}
 			
-			// var s=``
-			// // getRemoteData(item,bRoot,(err,item)=>{
-			// // 	if(!err){
-			// 	s+=gridHtml(this.item,bRoot)
-			// 	s+=modalRow(this.item)
-			// 	// }else{
-			// 	// 	s+=`Hata:${err.code || err.name || ''} - ${err.message || ''}`
-			// 	// }
-			// 	if(cb){
-			// 		cb(null,s)
-			// 	}else{
-			// 		return s
-			// 	}
-				
-			// // })
+			return s
 		}
 
-		function buttonOptions(item,bRoot){
+		function gridButtonOptions(item,bRoot,insideOfModal){
+			
 			var options=item.options || {}
 			var buttonCount=0
 			var currentPath=window.location.pathname
@@ -372,7 +389,11 @@
 					// options.buttons.add[1]=`<a href="${currentPath}/addnew?mid=${q.mid}" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 					options.buttons.add[1]=`<a href="${currentPath}?mid=${q.mid}#addnew/" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 				}else{
-					options.buttons.add[1]=`<a href="javascript:grid${item.id}.addGridRow()" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
+					if(item.modal && !item.insideOfModal){
+						options.buttons.add[1]=`<a href="javascript:grid${item.id}.gridModalAddRow()" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
+					}else{
+						options.buttons.add[1]=``
+					}
 				}
 			}
 
@@ -389,11 +410,15 @@
 			}
 
 			if(options.buttons.edit[0]==true && options.buttons.edit[1]==''){
-				// options.buttons.edit[1]=`<a href="${currentPath}/edit/{_id}?mid=${q.mid}" class="btn btn-primary btn-grid-row fas fa-edit" target="_self"  title="Düzenle"></a>`
 				if(bRoot){
 					options.buttons.edit[1]=`<a href="${currentPath}?mid=${q.mid}#edit/id={_id}" class="btn btn-primary btn-grid-row fas fa-edit" target="_self"  title="Düzenle"></a>`
 				}else{
-					options.buttons.edit[1]=`<a href="javascript:grid${item.id}.editRow({rowIndex})" class="btn btn-success btn-grid-row fas fa-edit" target="_self"  title="Düzenle"></a>`
+					if(item.modal && !item.insideOfModal){
+						options.buttons.edit[1]=`<a href="javascript:grid${item.id}.gridModalEditRow({rowIndex})" class="btn btn-success btn-grid-row fas fa-edit" title="Düzenle"></a>`	
+					}else{
+						options.buttons.edit[1]=`<a href="javascript:gridSatirDuzenle({rowIndex},'${item.id}',${insideOfModal})" class="btn btn-info btn-grid-row fas fa-edit" title="Düzenle"></a>`	
+					}
+					
 				}
 			}
 
@@ -401,7 +426,11 @@
 				if(bRoot){
 					options.buttons.delete[1]=`<a href="javascript:gridHelper.gridDeleteItem('{field[0]}','{_id}')" class="btn btn-danger btn-grid-row fas fa-trash-alt" title="Sil"></a>`
 				}else{
-					options.buttons.delete[1]=`<a href="javascript:grid${item.id}.deleteRow({rowIndex})" class="btn btn-danger btn-grid-row fas fa-trash-alt" title="Sil"></a>`
+					if(item.modal && !item.insideOfModal){
+						options.buttons.delete[1]=`<a href="javascript:grid${item.id}.deleteRow({rowIndex})" class="btn btn-danger btn-grid-row fas fa-trash-alt" title="Sil"></a>`
+					}else{
+						options.buttons.delete[1]=`<a href="javascript:gridSatirSil({rowIndex},'${item.id}',${insideOfModal})" class="btn btn-danger btn-grid-row fas fa-trash-alt" title="Sil"></a>`
+					}
 				}
 			}
 
@@ -419,11 +448,13 @@
 				options.buttonWidth=`${2*45+10}px`
 			}
 			item.options=options
+
 			return item
 		}
 
 
-		function gridHtml(item,bRoot){
+		function gridHtml(item,bRoot,insideOfModal=false){
+
 			var s=``
 			if(item.options.show.infoRow){
 				s+=`
@@ -432,10 +463,10 @@
 				<div class="col-12 pt-1 px-1">
 				<div class="float-left form-inline m-0 p-0 mt-1 mb-1">
 				${item.options.show.filter?'<a class="btn btn-secondary btn-sm mr-3" data-toggle="collapse" href="#filterRow' + item.id +'" role="button" aria-expanded="false" aria-controls="filterRow' + item.id +'" title="Filtre satırını göster/gizle"><i class="fas fa-filter"></i></a>':''}
-				${item.options.show.pageSize?pageSize(item,bRoot):''}
-				${item.options.show.pageCount?pageCount(item,bRoot):''}
+				${item.options.show.pageSize?gridPageSize(item,bRoot):''}
+				${item.options.show.pageCount?gridPageCount(item,bRoot):''}
 				</div>
-				${item.options.show.pagerButtons?'<div class="float-right">' + pagerButtons(item,bRoot) + '</div>':''}
+				${item.options.show.pagerButtons?'<div class="float-right">' + gridPagerButtons(item,bRoot) + '</div>':''}
 				</div>
 				</div>
 				<!-- ./info row -->
@@ -444,9 +475,9 @@
 			s+=`
 			<!-- table -->
 			<table id="table${item.id}" class="table table-striped border m-0 ${!bRoot?'table-bordered':''}"  cellspacing="0">
-			${item.options.show.header?header(item):''}
-			${body(item,bRoot)}
-			${item.options.show.footer?footer(item):''}
+			${item.options.show.header?gridHeader(item):''}
+			${gridBody(item,bRoot,insideOfModal)}
+			${item.options.show.footer?gridFooter(item):''}
 			</table>
 			<!-- ./table -->
 			`
@@ -459,9 +490,9 @@
 				<div class="">
 				buraya butonlar geliyor
 				</div>
-				${item.options.show.pageCount?pageCount(item,bRoot):''}
+				${item.options.show.pageCount?gridPageCount(item,bRoot):''}
 				</div>
-				${item.options.show.pagerButtons?'<div class="float-right">' + pagerButtons(item,bRoot) + '</div>':''}
+				${item.options.show.pagerButtons?'<div class="float-right">' + gridPagerButtons(item,bRoot) + '</div>':''}
 				</div>
 				</div>
 				<!-- ./info row -->
@@ -470,7 +501,7 @@
 			return s
 		}
 
-		function itemDefaultValues(item,autocol=false){
+		function itemDefaultValues(item,autocol=false,insideOfModal=false){
 			var field=item.field
 			var lookupTextField=item.lookupTextField || ''
 			if(item.parentField){
@@ -524,6 +555,9 @@
 						case 'boolean':
 						item.col='col-md-2'
 						break
+						case 'grid':
+						item.col='col-md-12'
+						break
 						default:
 						item.col='col-md-4'
 						break
@@ -555,12 +589,13 @@
 				}
 			}
 
-				
+			item['insideOfModal']=insideOfModal
 			return item
 		}
 		
-		function refreshGrid(){
-			
+		function gridRefresh(){
+			this.script=''
+
 			$(`#${this.item.id}`).html(this.gridHtml(this.item,this.bRoot))
 
 			$(`#pageSize${this.item.id}`).on('change',()=>{
@@ -569,9 +604,9 @@
 				this.item.paging.pageSize=$(`#pageSize${this.item.id}`).val()
 				this.item.paging.page=1
 				
-				this.refreshGrid()
+				this.gridRefresh()
 			})
-
+			$(`#${this.item.id}`).append(`<script type="text/javascript">${this.script}<\/script>`)
 			
 			if(this.item.onchange){
 				var onchange=this.item.onchange
@@ -585,29 +620,22 @@
 					eval(onchange)
 				}
 			}
-			// this.grid(this.item,this.bRoot,(err,html)=>{
-			// 	if(!err){
-			// 		$(`#${this.item.id}`).html(html)
-			// 	}else{
-			// 		$(`#${this.item.id}`).html()
-			// 	}
-				
-			// 	$(`#pageSize${this.item.id}`).on('change',()=>{
-			// 		if(this.item.paging==undefined)
-			// 			this.item.paging={}
-			// 		this.item.paging.pageSize=$(`#pageSize${this.item.id}`).val()
-			// 		this.item.paging.page=1
-					
-			// 		this.refreshGrid()
-			// 	})
-			// })
+			
 		}
 
-		function addGridRow(){
-			this.editRow(-1)
+		function gridEditRow(editRowIndex){
+			console.log(`gridEditRow editRowIndex:`,editRowIndex)
+			console.log(`gridEditRow this.item:`,this.item)
+
+			//return `<tr><td>edit row satir</td><td>ikinci edit</td></tr>`
+			
 		}
 
-		function editRow(rowIndex){
+		function gridModalAddRow(){
+			this.gridModalEditRow(-1)
+		}
+
+		function gridModalEditRow(rowIndex){
 			if(!this.item.value){
 				this.item.value=[]
 			}
@@ -634,24 +662,27 @@
 			
 			gridLine=modalRowIcinParentFieldAyarla(this.item,gridLine)
 
-			$(`#modalRow${this.item.id} .modal-body`).html(`<div class="row">${this.generateControls(gridLine,{value:gridLine.value})}</div>`)
-			$(`#modalRow${this.item.id} .modal-footer`).html(`<a class="btn btn-primary" href="javascript:grid${this.item.id}.modalRowOK(${rowIndex})" title="Kaydet"><i class="fas fa-check"></i> Tamam</a><button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>`)
+			$(`#modalRow${this.item.id} .modal-body`).html(`<div class="row">${this.generateControls(gridLine,{value:gridLine.value},false,true,-1)}</div>`)
+			$(`#modalRow${this.item.id} .modal-footer`).html(`<a class="btn btn-primary" href="javascript:grid${this.item.id}.gridModalOK(${rowIndex})" title="Kaydet"><i class="fas fa-check"></i> Tamam</a><button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>`)
 
 			script+=`
 			$('#modalRow${this.item.id} .modal-body input,select').on('change',(e)=>{
-					var fields=${JSON.stringify(gridLine.fieldList)}
-					var valueObj=getDivData('#modalRow${this.item.id}','modalRow${this.item.id}')
-					Object.keys(fields).forEach((key)=>{
-						if(fields[key].id!=e.target.id && fields[key].calc){
-							try{
-								$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
-							}catch(tryErr){
-								$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
-							}
+				var fields=${JSON.stringify(gridLine.fieldList)}
+				var valueObj=getDivData('#modalRow${this.item.id}','modalRow${this.item.id}')
+				Object.keys(fields).forEach((key)=>{
+					if(fields[key].id!=e.target.id && fields[key].calc){
+						try{
+							$(\`#\${fields[key].id}\`).attr('type','text')
+							$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
+						}catch(tryErr){
+							console.error('tryErr:',tryErr)
+							$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
 						}
-					})
+					}
 				})
+			})
 			`
+
 			if(script!=''){
 				$(`#${this.divId}`).append(`<script type="text/javascript">${script}<\/script>`)
 			}
@@ -670,10 +701,6 @@
 						var fields={}
 						Object.keys(tab.fields).forEach((key)=>{
 							fields[`${pfield}.${key}`]=tab.fields[key]
-							// if(fields[`${pfield}.${key}`].calc){
-							// 	fields[`${pfield}.${key}`].calc=fields[`${pfield}.${key}`].calc.replaceAll('{',`{modalRow${item.id}.`)
-							// }
-							
 							if(tab.fields[key].lookupTextField){
 								fields[`${pfield}.${key}`].lookupTextField=`${pfield}.${tab.fields[key].lookupTextField}`
 							}
@@ -686,9 +713,6 @@
 				var fields={}
 				Object.keys(gridLine.fields).forEach((key)=>{
 					fields[`${pfield}.${key}`]=gridLine.fields[key]
-					// if(fields[`${pfield}.${key}`].calc){
-					// 	fields[`${pfield}.${key}`].calc=fields[`${pfield}.${key}`].calc.replaceAll('{',`{modalRow${item.id}.`)
-					// }
 					if(gridLine.fields[key].lookupTextField){
 						fields[`${pfield}.${key}`].lookupTextField=`${pfield}.${gridLine.fields[key].lookupTextField}`
 					}
@@ -696,8 +720,10 @@
 				gridLine.fields=fields
 				fieldList=Object.assign({},fieldList,clone(fields))
 			}
+
 			var listObj=objectToListObject(gridLine.value)
-			gridLine.value={} 
+			
+			gridLine.value={}
 			Object.keys(listObj).forEach((key)=>{
 				gridLine.value[`${pfield}.${key}`]=listObj[key]
 			})
@@ -711,21 +737,23 @@
 
 			return gridLine
 		}
-
-
 		
-		function modalRowOK(rowIndex){
+		function gridModalOK(rowIndex){
 			if(!this.item)
 				return
 			if(!this.item.value)
 				this.item.value=[]
 			
+			var dizi=[]
+
+
 			var pfield=`modalRow${this.item.id}`
 			
-			var obj=getDivData(`#modalRow${this.item.id}`,pfield)
+			var obj=getDivData(`#modalRow${this.item.id}`,pfield,false)
 			if(rowIndex>=0 && rowIndex<this.item.value.length){
-				var valObj=objectToListObject(this.item.value[rowIndex])
-				valObj=Object.assign({},valObj,objectToListObject(obj))
+				var valObj=objectToListObject(this.item.value[rowIndex],true)
+				valObj=Object.assign({},valObj,objectToListObject(obj,true))
+
 				this.item.value[rowIndex]=listObjectToObject(valObj)
 			}else if(rowIndex<0){
 				this.item.value.push(obj)
@@ -734,38 +762,13 @@
 			
 			$(`#modalRow${this.item.id}`).modal('hide')
 
-			this.refreshGrid()
+			this.gridRefresh()
 		}
 
-		function modalRowOK111(rowIndex){
-			if(!this.item)
-				return
-			if(!this.item.value)
-				this.item.value=[]
-			
-			var pfield=`modalRow${this.item.id}`
-			var listObj=getDivData(`#modalRow${this.item.id}`,pfield)
-			var obj=listObjectToObject(listObj)
-			if(rowIndex>=0 && rowIndex<this.item.value.length){
-				var valObj=objectToListObject(this.item.value[rowIndex])
-				valObj=Object.assign({},valObj,listObj)
-
-				this.item.value[rowIndex]=listObjectToObject(valObj)
-
-				
-			}else if(rowIndex<0){
-				this.item.value.push(listObjectToObject(obj))
+		function gridModalTemplate(item){
+			if(item.insideOfModal){
+				return ''
 			}
-			
-			
-			$(`#modalRow${this.item.id}`).modal('hide')
-
-			this.refreshGrid()
-		}
-
-		
-
-		function modalRow(item){
 			var s=`
 			<div class="modal" id="modalRow${item.id}" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalRow${item.id}Label" aria-hidden="true">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered" role="document">
@@ -780,7 +783,6 @@
 
 			</div>
 			<div class="modal-footer">
-			
 			</div>
 			</div>
 			</div>
@@ -789,10 +791,18 @@
 			return s
 		}
 
-		function body(item,bRoot){
+		function gridBody(item,bRoot,insideOfModal){
 			var s=`<tbody>`
 			
 			if(item.value){
+				var dizi=[]
+				item.value.forEach((e)=>{
+					if(!(e==null || e==undefined)){
+						dizi.push(e)
+					}
+				})
+				item.value=dizi
+
 				item.value.forEach((listItem,rowIndex)=>{
 					s+=`<tr>`
 					if(item.options.selection){
@@ -822,6 +832,7 @@
 						}
 						switch(field.type.toLowerCase()){
 							case 'lookup':
+
 							Object.keys(field.lookup || {}).forEach((key2)=>{
 								if(key2===itemValue.toString()){
 									td+= field.lookup[key2]
@@ -830,6 +841,10 @@
 							})
 							if(td=='')
 								td+=itemValue
+							if(field.lookupTextField){
+								var valueText=getPropertyByKeyPath(listItem,field.lookupTextField) || ''
+								td+=`<input type="hidden" grid-element="true" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}" value="${valueText}" />`
+							}
 							break
 							case 'number':
 							tdClass=field.class || 'text-right mr-1'
@@ -842,497 +857,543 @@
 
 							case 'boolean':
 							tdClass=field.class || 'text-center'
-						// td.style.fontSize='20px'
-						td=itemValue?'<i class="fas fa-check-square text-primary"></i>':'<i class="far fa-square text-dark"></i>'
-						break
-						case 'remotelookup':
-						var bRemoteOlarakBulalim=true
-						if(itemValue==undefined)
-							itemValue=''
+							itemValue=itemValue.toString()==='true'?true:false
+							td=itemValue?'<i class="fas fa-check-square text-primary"></i>':'<i class="far fa-square text-dark"></i>'
+							break
+							case 'remotelookup':
+							var bRemoteOlarakBulalim=true
+							if(itemValue==undefined)
+								itemValue=''
 
-						if(typeof itemValue=='object' && itemValue._id!=undefined){
-							
-							td=`<div class="">${replaceUrlCurlyBracket((field.dataSource.label || '{name}'), itemValue)}</div>`
-							bRemoteOlarakBulalim=false
+							if(typeof itemValue=='object' && itemValue._id!=undefined){
 
-						}else	if(field.lookupTextField){
-							var valueText=getPropertyByKeyPath(listItem,field.lookupTextField)
-							td=`<div class="">${valueText}</div>`
-							if(!bRoot){
-								td+=`<input type="hidden" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}" value="${valueText}" />`
-							}
-							
-							if(valueText=='' && itemValue!=''){
-								bRemoteOlarakBulalim=true
-							}else{
+								td=`<div class="">${replaceUrlCurlyBracket((field.dataSource.label || '{name}'), itemValue)}</div>`
 								bRemoteOlarakBulalim=false
-							}
-						}
 
-						if(bRemoteOlarakBulalim){
-							var cellId=''
-							if(itemValue!=''){
-								cellId=`${gridId}-cell-${itemValue}`
-								if(remoteList==undefined){
-									remoteList={}
+							}else	if(field.lookupTextField){
+								var valueText=getPropertyByKeyPath(listItem,field.lookupTextField)
+								td=`<div class="">${valueText}</div>`
+								if(!bRoot){
+									td+=`<input type="hidden" grid-element="true" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}" value="${valueText}" />`
 								}
 
-								if(remoteList[field.field]==undefined){
-									remoteList[field.field]={
-										dataSource:field.dataSource,
-										list:{}
-									}
-								}
-								if(remoteList[field.field].list[itemValue]==undefined){
-									remoteList[field.field].list[itemValue]={
-										cellId:'.' + cellId,
-										text:''
-									}
-									if(field.lookupTextField){
-										remoteList[field.field].list[itemValue]['lookupTextField']=`${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}`
-									}
+								if(valueText=='' && itemValue!=''){
+									bRemoteOlarakBulalim=true
+								}else{
+									bRemoteOlarakBulalim=false
 								}
 							}
-							
-							td+=`<div class="${cellId}">rmtlkup${itemValue}</div>`
+
+							if(bRemoteOlarakBulalim){
+								var cellId=''
+								if(itemValue!=''){
+									cellId=`${gridId}-cell-${itemValue}`
+									if(remoteList==undefined){
+										remoteList={}
+									}
+
+									if(remoteList[field.field]==undefined){
+										remoteList[field.field]={
+											dataSource:field.dataSource,
+											list:{}
+										}
+									}
+									if(remoteList[field.field].list[itemValue]==undefined){
+										remoteList[field.field].list[itemValue]={
+											cellId:'.' + cellId,
+											text:''
+										}
+										if(field.lookupTextField){
+											remoteList[field.field].list[itemValue]['lookupTextField']=`${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}`
+										}
+									}
+								}
+
+								td+=`<div class="${cellId}">rmtlkup${itemValue}</div>`
+							}
+
+
+							break
+							default:
+
+							td=itemValue
+							break
+						}
+						if(!field.html && !bRoot){
+							var prefix=(field.parentField?field.parentField + '.':'') + rowIndex
+							if(typeof itemValue=='object'){
+								itemValue=objectToListObject(itemValue)
+								Object.keys(itemValue).forEach((e)=>{
+
+									td+=`<input type="hidden" grid-element="${prefix}" name="${generateFormName(prefix + '.' + key + '.' + e)}" value="${itemValue[e]}" />`
+								})
+
+							}else if(Array.isArray(itemValue)){
+								itemValue.forEach((e,inndex)=>{
+									td+=`<input type="hidden" grid-element="true" name="${generateFormName(prefix + '.' + key + '.' + index)}" value="${e}" />`
+								})
+							}else{
+								td+=`<input type="hidden" grid-element="${prefix}" name="${generateFormName(prefix + '.' + key)}" value="${itemValue}" />`
+							}
+
 						}
 
+						s+=`<td class="${tdClass || ''} ${field.visible===false?'hidden':''}">${td}</td>`
+					})
 
-						break
-						default:
-						
-						td=itemValue
-						break
-					}
-					if(!field.html && !bRoot){
-						td+=`<input type="hidden" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + key)}" value="${itemValue}" />`
-					}
-					
-					s+=`<td class="${tdClass || ''} ${field.visible===false?'hidden':''}">${td}</td>`
-				})
+s+=`<td class="text-center">${buttonRowCell(listItem,rowIndex,item,bRoot)}</td>`
+s+=`</tr>`
 
-					s+=`<td class="text-center">${buttonRowCell(listItem,rowIndex,item,bRoot)}</td>`
+})
+}
 
-					s+=`</tr>`
-				})
+if(insideOfModal && item.options.buttons.add[0]){
+	s+=`<tr id="${item.id}-row-editor">`
+
+	Object.keys(item.fields).forEach((key)=>{
+		var field=item.fields[key]
+		var cls=''
+		field.field=`${item.parentField}.-1.${key}`
+		field.noGroup=true
+		field.id=generateFormId(field.field)
+		field.name=generateFormName(field.field)
+		if(field.type=='boolean'){
+			cls+=' text-center'
+		}
+		if(field.visible===false){
+			cls+=' hidden'
+		}
+		var td=`<td class="${cls || ''}">${generateControls(field,{}, false,true)}</td>`
+
+		s+=td
+	})
+	s+=`<td class="text-center">
+	<a href="javascript:gridSatirOK('${item.id}','${item.id}-row-editor',-1,${insideOfModal})" class="btn btn-primary btn-grid-row" title="Tamam"><i class="fas fa-check"></i></a>
+	<a href="javascript:gridSatirVazgec('${item.id}','${item.id}-row-editor',-1) "class="btn btn-dark btn-grid-row" title="Vazgeç"><i class="fas fa-reply"></i></a>
+	</td>`
+	s+=`</tr>`
+}
+
+
+
+s+=`</tbody>`
+return s
+}
+
+function buttonRowCell(listItem,rowIndex,item,bRoot){
+	var s=``
+
+	listItem['rowIndex']=rowIndex
+	Object.keys(item.options.buttons).forEach((key)=>{
+		if(key!='add')
+			s+=`${item.options.buttons[key][0]?replaceUrlCurlyBracket(item.options.buttons[key][1],listItem):''}`
+	})
+
+	return s
+}
+
+function gridPageSize(item,bRoot){
+	var s=`<div class="mt-1 align-items-center" style="display: inline-flex">
+	Sayfada
+	<select class="form-control input-inline input-sm" id="pageSize${item.id}">
+	<option value="10" ${item.paging.pageSize==10?'selected':''}>10</option>
+	<option value="20" ${item.paging.pageSize==20?'selected':''}>20</option>
+	<option value="50" ${item.paging.pageSize==50?'selected':''}>50</option>
+	<option value="100" ${item.paging.pageSize==100?'selected':''}>100</option>
+	<option value="250" ${item.paging.pageSize==250?'selected':''}>250</option>
+	<option value="500" ${item.paging.pageSize==500?'selected':''}>500</option>
+	</select>
+	</div>`
+
+	return s
+}
+
+function gridPageCount(item,bRoot){
+	var s=`<div class="ml-2" style="display: inline-block">`
+	if(item.paging.pageSize>0 && item.paging.recordCount>0){
+		s+=`${((item.paging.page-1)*item.paging.pageSize)+1} - ${(item.paging.page*item.paging.pageSize<item.paging.recordCount)?item.paging.page*item.paging.pageSize:item.paging.recordCount} arası, Toplam: ${item.paging.recordCount} kayit, ${item.paging.pageCount} sayfa`
+	}else{
+		s+=`Toplam: ${item.paging.recordCount} kayit`
+	}
+	s+=`</div>`
+
+	return s
+}
+
+function gridPagerButtons(item,bRoot){
+	var s=``
+
+	return s
+}
+
+
+function gridHeader(item){
+	var s=`
+	<thead>
+	<tr class="text-nowrap">
+	${item.options.selection===true?'<th style="width: 30px;"><input class="grid-checkbox" type="checkbox" value="true" name="selectAll" id="selectAll" title="Tümünü seç"></th>':''}
+	`
+	Object.keys(item.fields).forEach((key)=>{
+		var field=item.fields[key]
+		var cls=''
+		switch(item.fields[key].type ){
+			case 'money':
+			case 'number':
+			cls='text-right mr-1'
+			break
+			case 'boolean':
+			cls='text-center'
+			break
+		}
+		if(field.visible===false){
+			cls+=' hidden'
+		}
+		s+=`<th class="${cls}" style="${field.width?'width:' + field.width:''}">${field.icon?'<i class="' + field.icon + '"></i>':''} ${field.title || ''}</th>`
+	})
+
+	s+=`<th class="text-center" style="width:${item.options.buttonWidth}">
+	${item.options.buttons.add[0]==true?item.options.buttons.add[1]:''}
+	</th>
+	</tr>
+	${item.options.show.filterRow===true?gridFilterRow(item):''}
+	</thead>
+	`
+
+	return s
+}
+
+function gridFilterRow(item){
+
+	var s=`<tr id="filterRow${item.id}" class="text-nowrap collapse">
+	${item.options.selection===true?'<th></th>':''}
+	`
+	Object.keys(item.fields).forEach((key,index)=>{
+		var field=clone(item.fields[key])
+		var cell=''
+		field.visible=field.visible==undefined?field.visible:true
+		field.filter=field.filter==undefined?item.options.filter:field.filter
+		field.id=generateFormId(`filter_${index}`)
+		field.class='grid-filter'
+		field.noGroup=true
+
+		if(field.filter){
+			switch(field.type.toLowerCase()){
+				case 'lookup':
+				field.showAll=true
+				cell=lookup(field)
+				break
+				case 'remotelookup':
+				cell=remoteLookup(field)
+				break
+				case 'boolean':
+				cell=checkBoxLookup(field)
+				break
+				case 'date':
+				cell=dateBox(field)
+				break
+				case 'time':
+				cell=timeBox(field)
+				break
+				case 'number':
+				cell=numberBox(field)
+				break
+				case 'money':
+				cell=numberBox(field)
+				break
+				default:
+				cell=textBox(field)
+				break
 			}
-			s+=`</tbody>`
-			return s
 		}
+		s+=`<th class="${field.visible==false?'hidden':''}">${cell}</th>`
+	})
 
-		function buttonRowCell(listItem,rowIndex,item,bRoot){
-			var s=``
-			
-			listItem['rowIndex']=rowIndex
-			Object.keys(item.options.buttons).forEach((key)=>{
-				if(key!='add')
-					s+=`${item.options.buttons[key][0]?replaceUrlCurlyBracket(item.options.buttons[key][1],listItem):''}`
-			})
+	s+=`
+	<th></th>
+	</tr>
+	`
 
-			return s
+	return s
+}
+
+function gridFooter(item){
+	return `<tfood>qwerty</tfood>`
+}
+
+function gridDefaults(item,bRoot,insideOfModal){
+	if(item.id==undefined && bRoot){
+		rootGridId++
+		item.id=`rootGrid${rootGridId}`
+	}
+	item=gridButtonOptions(item,bRoot,insideOfModal)
+	if(!bRoot){
+		item.options.show={
+			filter:false,
+			pageSize:false,
+			pageCount:false,
+			pagerButtons:false,
+			header:true,
+			footer:false
 		}
-
-		function pageSize(item,bRoot){
-			var s=`<div class="mt-1 align-items-center" style="display: inline-flex">
-			Sayfada
-			<select class="form-control input-inline input-sm" id="pageSize${item.id}">
-			<option value="10" ${item.paging.pageSize==10?'selected':''}>10</option>
-			<option value="20" ${item.paging.pageSize==20?'selected':''}>20</option>
-			<option value="50" ${item.paging.pageSize==50?'selected':''}>50</option>
-			<option value="100" ${item.paging.pageSize==100?'selected':''}>100</option>
-			<option value="250" ${item.paging.pageSize==250?'selected':''}>250</option>
-			<option value="500" ${item.paging.pageSize==500?'selected':''}>500</option>
-			</select>
-			</div>`
-
-			return s
+	}else{
+		item.options.show={
+			filter:true,
+			pageSize:true,
+			pageCount:true,
+			pagerButtons:true,
+			header:true,
+			footer:true
 		}
+	}
+	if(item.options.show.filter || item.options.show.pageSize || item.options.show.pageCount || item.options.show.pagerButtons){
+		item.options.show.infoRow=true
+	}else{
+		item.options.show.infoRow=false
+	}
+	item.options.show.filterRow=item.options.filter || false
+	if(bRoot===false)
+		item.options.show.filterRow=false
 
-		function pageCount(item,bRoot){
-			var s=`<div class="ml-2" style="display: inline-block">`
-			if(item.paging.pageSize>0 && item.paging.recordCount>0){
-				s+=`${((item.paging.page-1)*item.paging.pageSize)+1} - ${(item.paging.page*item.paging.pageSize<item.paging.recordCount)?item.paging.page*item.paging.pageSize:item.paging.recordCount} arası, Toplam: ${item.paging.recordCount} kayit, ${item.paging.pageCount} sayfa`
+	if(item.options.show.filterRow){
+		var bFound=false
+		Object.keys(item.fields).forEach((key)=>{
+			item.fields[key].filter=item.fields[key].filter==undefined?true:false
+			if(item.fields[key].filter===true){
+				bFound=true
+				return
+			}
+		})
+		if(bFound==false){
+			item.options.show.filterRow=false
+		}
+	}
+
+	item.value=objectArrayControl(item.value)
+
+	return item
+}
+
+function card(item){
+	var s=`<div class="card cerceve1 ${item.col || ''} p-0 m-0 mb-2 ${item.visible===false?'hidden':''}">
+	<div class="card-header">
+	<a class="btn btn-collapse ${item.collapsed?'collapsed':''}" data-toggle="collapse" data-target="#cardCollapse${item.id}" aria-expanded="${!item.collapsed?'false':'true'}" aria-fields="cardCollapse${item.id}" href="#"><i class="far fa-caret-square-up fa-2x"></i></a>
+	${item.title}${helpButton(item)}
+	</div>
+	<div  id="cardCollapse${item.id}" class="card-body p-1 card-collapse collapse ${item.collapsed?'collapsed':'show'}">
+	<div class="row">
+	${item.html || item.controls || ''}
+	</div>
+	</div>
+	</div>`
+	return s
+}
+
+function tab(item){
+	var bActive=false
+	item.tabs.forEach((tab)=>{
+		if(tab.active===true){
+			bActive=true
+			return
+		}
+	})
+	if(!bActive && item.tabs.length>0){
+		item.tabs[0].active=true
+	}
+	var s=`
+	<div class="col-12">
+	<ul class="nav nav-tabs" role="tablist">`
+	item.tabs.forEach((tab,tabIndex)=>{
+		s+=`<li class="nav-item">
+		<a class="nav-link ${tab.active?'active':''}" href="#formTab${item.id}${tabIndex}" role="tab" data-toggle="tab" id="IDformTab${item.id}${tabIndex}" aria-controls="formTab${item.id}${tabIndex}" aria-selected="${tab.active?'true':'false'}">
+		${tab.icon?'<i class="' + tab.icon + '"></i>':''} ${tab.title || ''}
+		</a>
+		</li>`
+	}) 
+	s+=`</ul>
+	<div class="tab-content" style="min-height: 70vh;overflow: auto;">`
+	item.tabs.forEach((tab,tabIndex)=>{
+		s+=`<div class="tab-pane ${tab.active?'show active':''}" id="formTab${item.id}${tabIndex}" role="tabpanel" aria-labelledby="IDformTab${item.id}${tabIndex}">
+		<div class="row">
+		${tab.controls || ''}
+		</div>
+		</div>`
+	})
+	s+=`</div>
+	</div>
+	`
+	return s
+}
+
+function group(input,item){
+	if(item.noGroup===true){
+		return input
+	}else{
+		return `<div class="form-group ${item.col || ''} ${item.visible===false?'hidden':''}">
+		<label class="m-0 p-0 ${item.required?'form-required':''}">${item.title || ''}${helpButton(item)}</label>
+		${input}
+		</div>`
+	}
+}
+
+function textBox(item){
+	return group(`<input type="text" class="form-control ${item.class || ''}" id="${item.id}" name="${item.name}" placeholder="${item.placeholder || item.title || item.label}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''} onchange="${item.onchange || ''}" autocomplete="off" autofill="off" spellcheck="false" value="${item.value || ''}">`,item)
+}
+
+function numberBox(item){
+	return group(`<input type="number" class="form-control text-right ${item.class || ''}" id="${item.id}" name="${item.name}" placeholder="${item.placeholder || item.title || item.label}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''} onchange="${item.onchange || ''}" autocomplete="off" autofill="off" spellcheck="false" value="${item.value || 0}">`,item)
+}
+
+function dateBox(item){
+	return group(`<input type="date" class="form-control ${item.class || ''}" id="${item.id}" name="${item.name}" placeholder="${item.placeholder || item.title || item.label}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''} onchange="${item.onchange || ''}" autocomplete="off" autofill="off" spellcheck="false" value="${item.value || ''}">`,item)
+}
+
+function timeBox(item){
+	return group(`<input type="time" class="form-control ${item.class || ''}" id="${item.id}" name="${item.name}" placeholder="${item.placeholder || item.title || item.label}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''} onchange="${item.onchange || ''}" autocomplete="off" autofill="off" spellcheck="false" value="${item.value || ''}">`,item)
+}
+
+function lookup(item){
+	var s=`<select type="text" class="form-control ${item.class || ''}" id="${item.id}" name="${item.name}" placeholder="${item.placeholder || item.title || item.label}" autocomplete="chrome-off" ${item.required?'required="required"':''} ${item.readonly==true?'disabled':''} onchange="${item.onchange || ''}">
+	<option value="" ${item.value==''?'selected':''}>${item.showAll===true?'*':'-- Seç --'}</option>`
+	if(item.lookup){
+		Object.keys(item.lookup).forEach((key)=>{
+			s+=`<option value="${key}" ${key===item.value?'selected':''}>${item.lookup[key]}</option>`
+		})
+	}
+	s+=`</select>`
+	if(item.lookupTextField){
+		s+=`<input type="hidden" name="${item.lookupTextFieldName || ''}" value="">`
+		script+=`
+		$('#${item.id}').on('change',()=>{
+			if($('#${item.id}').val()!=''){
+				$('input[name="${item.lookupTextFieldName || ''}"]').val($('#${item.id} option:selected').text())
 			}else{
-				s+=`Toplam: ${item.paging.recordCount} kayit`
+				$('input[name="${item.lookupTextFieldName || ''}"]').val('')
 			}
-			s+=`</div>`
+		})
+		`
+	}
 
-			return s
-		}
+	return group(s,item)
+}
 
-		function pagerButtons(item,bRoot){
-			var s=``
+function checkBoxLookup(item){
 
-			return s
-		}
+	var s=``
+	var input=`
+	<select name="${item.name}" id="${item.id}" class="form-control p-0 m-0 ${item.class || ''}">
+	<option value="">*</option>
+	<option value="true"><i class="fas fa-check-square text-primary"></i> Evet</option>
+	<option value="false"><i class="far fa-square text-dark"></i> Hayır</option>
+	</select>
+	`
+	if(item.noGroup===true){
+		s=input
+	}else{
+		s=`<div class="form-group ${item.col || ''} ${item.visible===false?'hidden':''}">
+		<label>
+		<span class="mb-1" style="display:block;">${item.title || ''}${helpButton(item)}</span>
+		${input}
+		</label>
+		</div>`
+	}
+
+	return s
+}
+function remoteLookup(item){
+	var s=``
+	var input=`
+	<div class="input-group">
+	<input type="search" class="form-control ${item.class || ''}" id="${item.id}-autocomplete-text"  placeholder="${item.placeholder || item.title || ''}" value="${item.valueText || ''}" autocomplete="off" autofill="off" spellcheck="false" ${item.required?'required="required"':''} ${item.readonly?'readonly':''} >
+	<div class="input-group-prepend">
+	<div class="input-group-text"><i class="fas fa-ellipsis-v"></i></div>
+	</div>
+	</div>
+	<input type="hidden" name="${item.name}" value="${item.value || ''}">
+	<input type="hidden" id="${item.id}-obj"  value="">
+	`
+	if(item.lookupTextField){
+		input+=`<input type="hidden" name="${item.lookupTextFieldName || ''}" value="${item.valueText || ''}">`
+	}
 
 
-		function header(item){
-			var s=`
-			<thead>
-			<tr class="text-nowrap">
-			${item.options.selection===true?'<th style="width: 30px;"><input class="grid-checkbox" type="checkbox" value="true" name="selectAll" id="selectAll" title="Tümünü seç"></th>':''}
-			`
-			Object.keys(item.fields).forEach((key)=>{
-				var field=item.fields[key]
-				var cls=''
-				switch(item.fields[key].type ){
-					case 'money':
-					case 'number':
-					cls='text-right mr-1'
-					break
-					case 'boolean':
-					cls='text-center'
-					break
-				}
-				if(field.visible===false){
-					cls+=' hidden'
-				}
-				s+=`<th class="${cls}" style="${field.width?'width:' + field.width:''}">${field.icon?'<i class="' + field.icon + '"></i>':''} ${field.title || ''}</th>`
-			})
+	if(item.noGroup===true){
+		s=input
+	}else{
+		s=`<div class="form-group ${item.col || ''} ${item.visible===false?'hidden':''}">
+		<label class="m-0 p-0 ${item.required?'form-required':''}">${item.title || ''}${helpButton(item)} ${item.lookupTextField?'<span class="ml-3 bold small text-success" id="' + item.id + '-original-text"></span>':''}</label>
+		${input}
+		</div>
+		`
+	}
 
-			s+=`<th class="text-center" style="width:${item.options.buttonWidth}">
-			${item.options.buttons.add[0]==true?item.options.buttons.add[1]:''}
-			</th>
-			</tr>
-			${item.options.show.filterRow===true?filterRow(item):''}
-			</thead>
-			`
+	script+=`
+	remoteLookupAutocomplete(JSON.parse(decodeURIComponent('${encodeURIComponent2(JSON.stringify(item))}')))
+	`
+	return s
+}
 
-			return s
-		}
+function checkBox(item){
+	var s=``
+	var input=`<input type="checkbox" class="${item.class || 'form-checkbox'}" id="${item.id}" name="${item.name}" value="true" ${item.value?'checked':''} ${item.readonly==true?'disabled':''} onchange="${item.onchange || ''}" />`
+	if(item.noGroup===true){
+		s=input
+	}else{
+		s=`<div class="form-group ${item.col || ''} ${item.visible===false?'hidden':''}">
+		<label>
+		<span class="mb-1" style="display:block;">${item.title || ''}${helpButton(item)}</span>
+		${input}
+		</label>
+		</div>`
+	}
 
-		function filterRow(item){
-			
-			var s=`<tr id="filterRow${item.id}" class="text-nowrap collapse">
-			${item.options.selection===true?'<th></th>':''}
-			`
-			Object.keys(item.fields).forEach((key,index)=>{
-				var field=clone(item.fields[key])
-				var cell=''
-				field.visible=field.visible==undefined?field.visible:true
-				field.filter=field.filter==undefined?item.options.filter:field.filter
-				field.id=generateFormId(`filter_${index}`)
-				field.class='grid-filter'
-				field.noGroup=true
+	return s
+}
 
-				if(field.filter){
-					switch(field.type.toLowerCase()){
-						case 'lookup':
-						field.showAll=true
-						cell=lookup(field)
-						break
-						case 'remotelookup':
-						cell=remoteLookup(field)
-						break
-						case 'boolean':
-						cell=checkBoxLookup(field)
-						break
-						case 'date':
-						cell=dateBox(field)
-						break
-						case 'time':
-						cell=timeBox(field)
-						break
-						case 'number':
-						cell=numberBox(field)
-						break
-						case 'money':
-						cell=numberBox(field)
-						break
-						default:
-						cell=textBox(field)
-						break
-					}
-				}
-				s+=`<th class="${field.visible==false?'hidden':''}">${cell}</th>`
-			})
+function dateRangeBox(item){
+	var s=`<div id="${item.id}" class="row m-0 p-0">
+	<select class="form-control col-sm-4 ${item.class || ''}" name="cboEasyDate" id="cboEasyDate">
+	<option value="">Tarih</option>
+	<option value="today">Bugün</option>
+	<option value="thisWeek">Bu Hafta</option>
+	<option value="thisMonth" selected>Bu Ay</option>
+	<option value="last1Week">Son 1 Hafta</option>
+	<option value="last1Month">Son 1 Ay</option>
+	<option value="last3Months">Son 3 Ay</option>
+	<option value="last6Months">Son 6 Ay</option>
+	<option value="thisYear">Bu yıl</option>
+	<option value="last1Year">Son 1 yıl</option>
+	</select>
+	<input type="date" name="date1" id="date1" class="form-control col-sm-4" value="${moment().format('YYYY-MM-DD')}">
+	<input type="date" name="date2" id="date2" class="form-control col-sm-4" value="${moment().format('YYYY-MM-DD')}">
+	</div>`
 
-			s+=`
-			<th></th>
-			</tr>
-			`
-			
-			return s
-		}
+	script+=`
+	$('#${item.id} #cboEasyDate').on('change',cboEasyDate_onchange_${item.id})
 
-		function footer(item){
-			return `<tfood>qwerty</tfood>`
-		}
+	if(pageSettings.getItem('${item.id}')){
+		$('#${item.id} #cboEasyDate').val(pageSettings.getItem('${item.id}'))
+		cboEasyDate_onchange_${item.id}()
+	}
 
-		
-		
-		function gridDefaults(item,bRoot){
-			if(item.id==undefined && bRoot){
-				rootGridId++
-				item.id=`rootGrid${rootGridId}`
-			}
-			item=buttonOptions(item,bRoot)
-			if(!bRoot){
-				item.options.show={
-					filter:false,
-					pageSize:false,
-					pageCount:false,
-					pagerButtons:false,
-					header:true,
-					footer:false
-				}
-			}else{
-				item.options.show={
-					filter:true,
-					pageSize:true,
-					pageCount:true,
-					pagerButtons:true,
-					header:true,
-					footer:true
-				}
-			}
-			if(item.options.show.filter || item.options.show.pageSize || item.options.show.pageCount || item.options.show.pagerButtons){
-				item.options.show.infoRow=true
-			}else{
-				item.options.show.infoRow=false
-			}
-			item.options.show.filterRow=item.options.filter || false
-			if(bRoot===false)
-				item.options.show.filterRow=false
+	function cboEasyDate_onchange_${item.id}(){
+		var obj=cboEasyDateChange($('#${item.id} #cboEasyDate').val())
+		$('#${item.id} #date1').val(obj.date1)
+		$('#${item.id} #date2').val(obj.date2)
+		pageSettings.setItem('${item.id}',$('#${item.id} #cboEasyDate').val())
+	}
 
-			if(item.options.show.filterRow){
-				var bFound=false
-				Object.keys(item.fields).forEach((key)=>{
-					item.fields[key].filter=item.fields[key].filter==undefined?true:false
-					if(item.fields[key].filter===true){
-						bFound=true
-						return
-					}
-				})
-				if(bFound==false){
-					item.options.show.filterRow=false
-				}
-			}
-			return item
-		}
-
-		function card(item){
-			var s=`<div class="card cerceve1 ${item.col || ''} p-0 m-0 mb-2 ${item.visible===false?'hidden':''}">
-			<div class="card-header">
-			<a class="btn btn-collapse ${item.collapsed?'collapsed':''}" data-toggle="collapse" data-target="#cardCollapse${item.id}" aria-expanded="${!item.collapsed?'false':'true'}" aria-fields="cardCollapse${item.id}" href="#"><i class="far fa-caret-square-up fa-2x"></i></a>
-			${item.title}${helpButton(item)}
-			</div>
-			<div  id="cardCollapse${item.id}" class="card-body p-1 card-collapse collapse ${item.collapsed?'collapsed':'show'}">
-			<div class="row">
-			${item.html || item.controls || ''}
-			</div>
-			</div>
-			</div>`
-			return s
-		}
-
-		function tab(item){
-			var bActive=false
-			item.tabs.forEach((tab)=>{
-				if(tab.active===true){
-					bActive=true
-					return
-				}
-			})
-			if(!bActive && item.tabs.length>0){
-				item.tabs[0].active=true
-			}
-			var s=`
-			<div class="col-12">
-			<ul class="nav nav-tabs" role="tablist">`
-				item.tabs.forEach((tab,tabIndex)=>{
-				s+=`<li class="nav-item">
-					<a class="nav-link ${tab.active?'active':''}" href="#formTab${item.id}${tabIndex}" role="tab" data-toggle="tab" id="IDformTab${item.id}${tabIndex}" aria-controls="formTab${item.id}${tabIndex}" aria-selected="${tab.active?'true':'false'}">
-						${tab.icon?'<i class="' + tab.icon + '"></i>':''} ${tab.title || ''}
-					</a>
-				</li>`
-				}) 
-			s+=`</ul>
-			<div class="tab-content" style="min-height: 70vh;overflow: auto;">`
-				item.tabs.forEach((tab,tabIndex)=>{
-				s+=`<div class="tab-pane ${tab.active?'show active':''}" id="formTab${item.id}${tabIndex}" role="tabpanel" aria-labelledby="IDformTab${item.id}${tabIndex}">
-					<div class="row">
-					${tab.controls || ''}
-					</div>
-				</div>`
-				})
-			s+=`</div>
-			</div>
-			`
-			return s
-		}
-
-		function group(input,item){
-			if(item.noGroup===true){
-				return input
-			}else{
-				return `<div class="form-group ${item.col || ''} ${item.visible===false?'hidden':''}">
-				<label class="m-0 p-0 ${item.required?'form-required':''}">${item.title || ''}${helpButton(item)}</label>
-				${input}
-				</div>`
-			}
-		}
-
-		function textBox(item){
-			return group(`<input type="text" class="form-control ${item.class || ''}" id="${item.id}" name="${item.name}" field="${encodeURIComponent2(JSON.stringify(item))}" placeholder="${item.placeholder || item.title || item.label}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''} onchange="${item.onchange || ''}" autocomplete="off" autofill="off" spellcheck="false" value="${item.value || ''}">`,item)
-		}
-
-		function numberBox(item){
-			return group(`<input type="number" class="form-control text-right ${item.class || ''}" id="${item.id}" name="${item.name}" field="${encodeURIComponent2(JSON.stringify(item))}" placeholder="${item.placeholder || item.title || item.label}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''} onchange="${item.onchange || ''}" autocomplete="off" autofill="off" spellcheck="false" value="${item.value || 0}">`,item)
-		}
-
-		function dateBox(item){
-			return group(`<input type="date" class="form-control ${item.class || ''}" id="${item.id}" name="${item.name}" field="${encodeURIComponent2(JSON.stringify(item))}" placeholder="${item.placeholder || item.title || item.label}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''} onchange="${item.onchange || ''}" autocomplete="off" autofill="off" spellcheck="false" value="${item.value || ''}">`,item)
-		}
-
-		function timeBox(item){
-			return group(`<input type="time" class="form-control ${item.class || ''}" id="${item.id}" name="${item.name}" field="${encodeURIComponent2(JSON.stringify(item))}" placeholder="${item.placeholder || item.title || item.label}" ${item.required?'required="required"':''} ${item.readonly==true?'readonly':''} onchange="${item.onchange || ''}" autocomplete="off" autofill="off" spellcheck="false" value="${item.value || ''}">`,item)
-		}
-
-		function lookup(item){
-			var s=`<select type="text" class="form-control ${item.class || ''}" id="${item.id}" name="${item.name}" field="${encodeURIComponent2(JSON.stringify(item))}" placeholder="${item.placeholder || item.title || item.label}" autocomplete="chrome-off" ${item.required?'required="required"':''} ${item.readonly==true?'disabled':''} onchange="${item.onchange || ''}">
-			<option value="" ${item.value==''?'selected':''}>${item.showAll===true?'*':'-- Seç --'}</option>`
-			if(item.lookup){
-				Object.keys(item.lookup).forEach((key)=>{
-					s+=`<option value="${key}" ${key===item.value?'selected':''}>${item.lookup[key]}</option>`
-				})
-			}
-			s+=`</select>`
-			if(item.lookupTextField){
-				s+=`<input type="hidden" name="${item.lookupTextFieldName || ''}" value="">`
-				script+=`
-				$('#${item.id}').on('change',()=>{
-					if($('#${item.id}').val()!=''){
-						$('input[name="${item.lookupTextFieldName || ''}"]').val($('#${item.id} option:selected').text())
-					}else{
-						$('input[name="${item.lookupTextFieldName || ''}"]').val('')
-					}
-				})
-				`
-			}
-			
-			return group(s,item)
-		}
-
-		function checkBoxLookup(item){
-			
-			var s=``
-			var input=`
-			<select name="${item.name}" id="${item.id}" field="${encodeURIComponent2(JSON.stringify(item))}" class="form-control p-0 m-0 ${item.class || ''}">
-			<option value="">*</option>
-			<option value="true"><i class="fas fa-check-square text-primary"></i> Evet</option>
-			<option value="false"><i class="far fa-square text-dark"></i> Hayır</option>
-			</select>
-			`
-			if(item.noGroup===true){
-				s=input
-			}else{
-				s=`<div class="form-group ${item.col || ''} ${item.visible===false?'hidden':''}">
-				<label>
-				<span class="mb-1" style="display:block;">${item.title || ''}${helpButton(item)}</span>
-				${input}
-				</label>
-				</div>`
-			}
-			
-			return s
-		}
-		function remoteLookup(item){
-			var s=``
-			var input=`
-			<div class="input-group">
-			<input type="search" class="form-control ${item.class || ''}" id="${item.id}-autocomplete-text" field="${encodeURIComponent2(JSON.stringify(item))}"  placeholder="${item.placeholder || item.title || ''}" value="${item.valueText || ''}" autocomplete="off" autofill="off" spellcheck="false" ${item.required?'required="required"':''} ${item.readonly?'readonly':''} >
-			<div class="input-group-prepend">
-			<div class="input-group-text"><i class="fas fa-ellipsis-v"></i></div>
-			</div>
-			</div>
-			<input type="hidden" name="${item.name}" value="${item.value || ''}">
-			<input type="hidden" id="${item.id}-obj"  value="">
-			`
-			if(item.lookupTextField){
-				input+=`<input type="hidden" name="${item.lookupTextFieldName || ''}" value="${item.valueText || ''}">`
-			}
-
-			
-			if(item.noGroup===true){
-				s=input
-			}else{
-				s=`<div class="form-group ${item.col || ''} ${item.visible===false?'hidden':''}">
-				<label class="m-0 p-0 ${item.required?'form-required':''}">${item.title || ''}${helpButton(item)} ${item.lookupTextField?'<span class="ml-3 bold small text-success" id="' + item.id + '-original-text"></span>':''}</label>
-				${input}
-				</div>
-				`
-			}
-			
-			script+=`
-			remoteLookupAutocomplete(JSON.parse(decodeURIComponent('${encodeURIComponent2(JSON.stringify(item))}')))
-			`
-			return s
-		}
-
-		function checkBox(item){
-			var s=``
-			var input=`<input type="checkbox" class="form-checkbox" id="${item.id}" name="${item.name}" field="${encodeURIComponent2(JSON.stringify(item))}" value="true" ${item.value?'checked':''} ${item.readonly==true?'disabled':''} onchange="${item.onchange || ''}" />`
-			if(item.noGroup===true){
-				s=input
-			}else{
-				s=`<div class="form-group ${item.col || ''} ${item.visible===false?'hidden':''}">
-				<label>
-				<span class="mb-1" style="display:block;">${item.title || ''}${helpButton(item)}</span>
-				${input}
-				</label>
-				</div>`
-			}
-			
-			return s
-		}
-
-		function dateRangeBox(item){
-			var s=`<div id="${item.id}" class="row m-0 p-0">
-			<select class="form-control col-sm-4 ${item.class || ''}" name="cboEasyDate" id="cboEasyDate">
-			<option value="">Tarih</option>
-			<option value="today">Bugün</option>
-			<option value="thisWeek">Bu Hafta</option>
-			<option value="thisMonth" selected>Bu Ay</option>
-			<option value="last1Week">Son 1 Hafta</option>
-			<option value="last1Month">Son 1 Ay</option>
-			<option value="last3Months">Son 3 Ay</option>
-			<option value="last6Months">Son 6 Ay</option>
-			<option value="thisYear">Bu yıl</option>
-			<option value="last1Year">Son 1 yıl</option>
-			</select>
-			<input type="date" name="date1" id="date1" class="form-control col-sm-4" value="${moment().format('YYYY-MM-DD')}">
-			<input type="date" name="date2" id="date2" class="form-control col-sm-4" value="${moment().format('YYYY-MM-DD')}">
-			</div>`
-
-			script+=`
-			$('#${item.id} #cboEasyDate').on('change',cboEasyDate_onchange_${item.id})
-
-			if(pageSettings.getItem('${item.id}')){
-				$('#${item.id} #cboEasyDate').val(pageSettings.getItem('${item.id}'))
-				cboEasyDate_onchange_${item.id}()
-			}
-
-			function cboEasyDate_onchange_${item.id}(){
-				var obj=cboEasyDateChange($('#${item.id} #cboEasyDate').val())
-				$('#${item.id} #date1').val(obj.date1)
-				$('#${item.id} #date2').val(obj.date2)
-				pageSettings.setItem('${item.id}',$('#${item.id} #cboEasyDate').val())
-			}
-
-			`
+	`
 
 
 
 
 
 
-			return group(s,item)
-		}
+	return group(s,item)
+}
 
 
-	})(typeof exports === 'undefined'? this['FormControl']={}: exports)
+})(typeof exports === 'undefined'? this['FormControl']={}: exports)
 
 
 </script>
