@@ -13,7 +13,6 @@
 		}
 		var rootGridId=0
 		var controlItem
-		
 		var _bRoot=false
 		var _divId=''
 
@@ -39,7 +38,6 @@
 			gridModalOK:gridModalOK,
 			gridRefresh:gridRefresh,
 			generateControls:generateControls,
-			gridEditRow:gridEditRow,
 			get item(){
 				return controlItem
 			},
@@ -68,107 +66,112 @@
 		})
 
 		function build(pageObj,divId){
-			this.divId=divId
+
+			_divId=divId
+			var hashObj=getHashObject()
 
 			var mainCtrl=document.getElementById(divId)
+			mainCtrl.innerHTML=''
+			script=''
+			// try{
 
-			var sayfalar=[]
-			var jsonPage
-			switch(window.hashObj.function){
-				case 'edit':
-				jsonPage=clone(pageObj.edit || pageObj.form)
-				break
-				case 'view':
-				jsonPage=clone(pageObj.view || pageObj.edit || pageObj.form)
-				break
-				case 'addnew':
-				jsonPage=clone(pageObj.addnew || pageObj.form)
-				break
-				default:
-				jsonPage=clone(pageObj.index)
-				break
-			}
-			
-			if(!Array.isArray(jsonPage)){
-				sayfalar.push(jsonPage)
-			}else{
-				sayfalar=jsonPage
-			}
-			
-			$('#headerButtons').html('')
+				var sayfalar=[]
+				var jsonPage
+				switch(hashObj.function){
+					case 'edit':
+					jsonPage=clone(pageObj.edit || pageObj.form)
+					break
+					case 'view':
+					jsonPage=clone(pageObj.view || pageObj.edit || pageObj.form)
+					break
+					case 'addnew':
+					jsonPage=clone(pageObj.addnew || pageObj.form)
+					break
+					default:
+					jsonPage=clone(pageObj.index)
+					break
+				}
 
-			var s='<form><div class="row">'
-			
-			var index=0
+				if(!Array.isArray(jsonPage)){
+					sayfalar.push(jsonPage)
+				}else{
+					sayfalar=jsonPage
+				}
 
-			function calistir(cb){
-				if(index>=sayfalar.length)
-					return cb()
-				
+				$('#headerButtons').html('')
 
-				getRemoteData(sayfalar[index],(err,data)=>{
-					if(!err){
-						var fieldList=collectFieldList(sayfalar[index])
+				var s='<form><div class="row">'
 
-						script+=`
+				var index=0
 
-						`
-						if(sayfalar[index].type=='form' && sayfalar[index].dataSource){
-							var hbtn=`
-							<a href="javascript:formKaydet('#${divId}');" class="btn btn-primary  btn-form-header" title="Kaydet"><i class="fas fa-save"></i></a>
-							<a href="javascript:history.back(-1);" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>`
-							$('#headerButtons').html(hbtn)
+				function calistir(cb){
+					if(index>=sayfalar.length)
+						return cb()
+
+					var sayfa=clone(sayfalar[index])
+					getRemoteData(sayfa,(err,data)=>{
+						if(!err){
+							var fieldList=collectFieldList(sayfa)
+
 							script+=`
-							function formKaydet(divId){
-								var dataSource=${JSON.stringify(sayfalar[index].dataSource)}
-								var formData=getFormData(\`\${divId} form\`)
-								formSave(dataSource,formData)
+
+							`
+							if(sayfa.type=='form' && sayfa.dataSource){
+								var hbtn=`
+								<a href="javascript:formKaydet('#${divId}');" class="btn btn-primary  btn-form-header" title="Kaydet"><i class="fas fa-save"></i></a>
+								<a href="javascript:history.back(-1);" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>`
+								$('#headerButtons').html(hbtn)
+								script+=`
+								function formKaydet(divId){
+									var dataSource=${JSON.stringify(sayfa.dataSource)}
+									var formData=getFormData(\`\${divId} form\`)
+									formSave(dataSource,formData)
+								}
+
+								$('#${divId} input,select').on('change',(e)=>{
+									var fields=${JSON.stringify(fieldList)}
+									var valueObj=getDivData('#${divId}')
+									Object.keys(fields).forEach((key)=>{
+										if(fields[key].id!=e.target.id && fields[key].calc){
+											try{
+												$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
+											}catch(tryErr){
+												$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
+											}
+
+										}
+									})
+								})
+								`
 							}
 
-							$('#${divId} input,select').on('change',(e)=>{
-								var fields=${JSON.stringify(fieldList)}
-								var valueObj=getDivData('#${divId}')
-								Object.keys(fields).forEach((key)=>{
-									if(fields[key].id!=e.target.id && fields[key].calc){
-										try{
-											$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
-										}catch(tryErr){
-											$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
-										}
+							s+=generateControls(sayfa,data,true)
 
-									}
-								})
-							})
-							`
+
+							index++
+							setTimeout(calistir,0,cb)
+						}else{
+							cb(err)
 						}
-						
-						s+=generateControls(clone(sayfalar[index]),data,true)
-
-						
-						index++
-						setTimeout(calistir,0,cb)
-					}else{
-						cb(err)
-					}
-				})
-			}
-
-
-
-			calistir((err)=>{
-				if(!err){
-					s+=`</div></form>`
-					mainCtrl.innerHTML=s
-					loadCardCollapses()
-					
-					$(`#${divId}`).append(`<script type="text/javascript">${script}<\/script>`)
-
-				}else{
-					s+=`Hata:${err.code || err.name || ''} - ${err.message || err.name || ''}</div></form>`
-					mainCtrl.innerHTML=s
+					})
 				}
-				script=''
-			})
+
+
+
+				calistir((err)=>{
+					if(!err){
+						s+=`</div></form>`
+						mainCtrl.innerHTML=s
+						loadCardCollapses()
+
+						$(`#${divId}`).append(`<script type="text/javascript">${script}<\/script>`)
+
+					}else{
+						s+=`Hata:${err.code || err.name || ''} - ${err.message || err.name || ''}</div></form>`
+						mainCtrl.innerHTML=s
+					}
+					script=''
+				})
 
 
 			// }catch(err){
@@ -215,40 +218,40 @@
 
 			switch((item.type || '').toLowerCase()){
 				case 'string' :
-				item.value=getPropertyByKeyPath(data.value,item.field) || ''
+				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
 				s+=textBox(item)
 				break
 				case 'number' :
-				item.value=getPropertyByKeyPath(data.value,item.field) || 0
+				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || 0
 				s+=numberBox(item)
 				break
 
 				case 'money' :
 				if(item.readonly){
-					item.value=Number(getPropertyByKeyPath(data.value,item.field) || 0).formatMoney()
+					item.value=Number(getPropertyByKeyPath(data.value,item.field) || item.value || 0).formatMoney()
 					item.class+=' text-right'
 					s+=textBox(item)
 				}else{
-					item.value=getPropertyByKeyPath(data.value,item.field) || 0
+					item.value=getPropertyByKeyPath(data.value,item.field) || item.value || 0
 					s+=numberBox(item)
 				}
 				break
 				case 'identity' :
 
-				item.value=getPropertyByKeyPath(data.value,item.field) || 0
+				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || 0
 				item.readonly=true
 				s+=numberBox(item)
 				break
 				case 'date' : 
-				item.value=getPropertyByKeyPath(data.value,item.field)
+				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
 				s+=dateBox(item)
 				break
 				case 'time' : 
-				item.value=getPropertyByKeyPath(data.value,item.field)
+				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
 				s+=timeBox(item)
 				break
 				case 'lookup' :
-				item.value=getPropertyByKeyPath(data.value,item.field)
+				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
 				s+=lookup(item)
 				break
 				case 'remotelookup' : 
@@ -260,7 +263,7 @@
 
 				break
 				case 'boolean' :
-				item.value=getPropertyByKeyPath(data.value,item.field)
+				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
 				s+=checkBox(item)
 				break
 				case 'daterange' : 
@@ -279,13 +282,7 @@
 					s+=grid(item, bRoot,insideOfModal)
 				}else{
 					item.value=getPropertyByKeyPath(data.value,item.field)
-					
 					item.controls=grid(item, bRoot,insideOfModal)
-					if(insideOfModal){
-						console.log('item:',item)
-						// item.controls=item.controls.replaceAll('type="hidden"','type="text"')
-					}
-					
 					s+=card(item)
 				}
 
@@ -324,7 +321,7 @@
 				break
 				
 				default:
-				item.value=getPropertyByKeyPath(data.value,item.field)
+				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
 				s+=textBox(item)
 				break
 			}
@@ -337,7 +334,7 @@
 		function grid(item,bRoot,insideOfModal){
 			
 			var s=``
-			this.item=gridDefaults(item,bRoot,insideOfModal)
+			item=gridDefaults(item,bRoot,insideOfModal)
 			if(insideOfModal==false){
 				
 				script+=`
@@ -347,17 +344,19 @@
 				grid${item.id}.gridRefresh()
 
 				document.getElementById('${item.id}').item=${JSON.stringify(item)}
+
 				`
 				this.bRoot=bRoot
 
 				s=`<div id="${item.id}" class="table-responsive ${item.options.show.infoRow?'mt-1':''}"></div>
-				${gridModalTemplate(this.item)}
+				${gridModalTemplate(item)}
 				`
 			}else{
 				s=`<div id="${item.id}" class="table-responsive ${item.options.show.infoRow?'mt-1':''}">${gridHtml(item,false,true)}</div>`
 
 				script+=`
 				document.getElementById('${item.id}').item=${JSON.stringify(item)}
+				
 				`
 			}
 			
@@ -386,7 +385,6 @@
 
 			if(options.buttons.add[0]==true && options.buttons.add[1]==''){
 				if(bRoot){
-					// options.buttons.add[1]=`<a href="${currentPath}/addnew?mid=${q.mid}" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 					options.buttons.add[1]=`<a href="${currentPath}?mid=${q.mid}#addnew/" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 				}else{
 					if(item.modal && !item.insideOfModal){
@@ -427,7 +425,7 @@
 					options.buttons.delete[1]=`<a href="javascript:gridHelper.gridDeleteItem('{field[0]}','{_id}')" class="btn btn-danger btn-grid-row fas fa-trash-alt" title="Sil"></a>`
 				}else{
 					if(item.modal && !item.insideOfModal){
-						options.buttons.delete[1]=`<a href="javascript:grid${item.id}.deleteRow({rowIndex})" class="btn btn-danger btn-grid-row fas fa-trash-alt" title="Sil"></a>`
+						options.buttons.delete[1]=`<a href="javascript:gridSatirSil({rowIndex},'${item.id}',${insideOfModal})" class="btn btn-danger btn-grid-row fas fa-trash-alt" title="Sil"></a>`
 					}else{
 						options.buttons.delete[1]=`<a href="javascript:gridSatirSil({rowIndex},'${item.id}',${insideOfModal})" class="btn btn-danger btn-grid-row fas fa-trash-alt" title="Sil"></a>`
 					}
@@ -462,7 +460,7 @@
 				<div class="row m-0 border">
 				<div class="col-12 pt-1 px-1">
 				<div class="float-left form-inline m-0 p-0 mt-1 mb-1">
-				${item.options.show.filter?'<a class="btn btn-secondary btn-sm mr-3" data-toggle="collapse" href="#filterRow' + item.id +'" role="button" aria-expanded="false" aria-controls="filterRow' + item.id +'" title="Filtre satırını göster/gizle"><i class="fas fa-filter"></i></a>':''}
+				${item.options.show.filter?'<a class="btn btn-secondary btn-sm mr-3" data-toggle="collapse" href="#filterRow" role="button" aria-expanded="false" aria-controls="filterRow" title="Filtre satırını göster/gizle"><i class="fas fa-filter"></i></a>':''}
 				${item.options.show.pageSize?gridPageSize(item,bRoot):''}
 				${item.options.show.pageCount?gridPageCount(item,bRoot):''}
 				</div>
@@ -593,21 +591,53 @@
 			return item
 		}
 		
-		function gridRefresh(){
-			this.script=''
+		var gridRefreshCalisiyor=false
 
+		function gridRefresh(){
+			// script=''
+			if(gridRefreshCalisiyor)
+				return
+			gridRefreshCalisiyor=true
+			var hashObj=getHashObject()
+			if(!this.item.paging){
+				this.item.paging={
+					page:hashObj.page || 1,
+					pageSize:hashObj.pageSize || pageSettings.getItem(`pageSize`) || 10
+				}
+			}
 			$(`#${this.item.id}`).html(this.gridHtml(this.item,this.bRoot))
 
 			$(`#pageSize${this.item.id}`).on('change',()=>{
-				if(this.item.paging==undefined)
-					this.item.paging={}
-				this.item.paging.pageSize=$(`#pageSize${this.item.id}`).val()
-				this.item.paging.page=1
+				var hashObj=getHashObject()
+				hashObj['pageSize']=$(`#pageSize${this.item.id}`).val()
+				hashObj['page']=1
+				pageSettings.setItem(`pageSize`,$(`#pageSize${this.item.id}`).val())
+				//script=''
+				setHashObject(hashObj)
 				
-				this.gridRefresh()
+				//gridRefresh()
 			})
-			$(`#${this.item.id}`).append(`<script type="text/javascript">${this.script}<\/script>`)
-			
+			$(`#selectAll${this.item.id}`).on(`change`,(e)=>{
+				$(`input:checkbox`).not($(`#selectAll${this.item.id}`)).prop(`checked`, $(`#selectAll${this.item.id}`).prop(`checked`))
+			})
+
+			if(pageSettings.getItem(`filterButton`)==true){
+				$(`#filterRow`).collapse('show');
+			}else{
+				$(`#filterRow`).collapse('hide');
+			}
+
+			$(`#filterRow`).on(`hidden.bs.collapse`, function () {
+				pageSettings.setItem(`filterButton`,false)
+			})
+			$(`#filterRow`).on(`shown.bs.collapse`, function () {
+				pageSettings.setItem(`filterButton`,true)
+			})
+
+			gridFilterRow_changes(this.item)
+
+			$(`#${this.item.id}`).append(`<script type="text/javascript">${script}<\/script>`)
+
 			if(this.item.onchange){
 				var onchange=this.item.onchange
 				if(onchange.indexOf('this.value')>-1){
@@ -620,16 +650,10 @@
 					eval(onchange)
 				}
 			}
-			
+			gridRefreshCalisiyor=false
 		}
 
-		function gridEditRow(editRowIndex){
-			console.log(`gridEditRow editRowIndex:`,editRowIndex)
-			console.log(`gridEditRow this.item:`,this.item)
-
-			//return `<tr><td>edit row satir</td><td>ikinci edit</td></tr>`
-			
-		}
+		
 
 		function gridModalAddRow(){
 			this.gridModalEditRow(-1)
@@ -737,7 +761,7 @@
 
 			return gridLine
 		}
-		
+
 		function gridModalOK(rowIndex){
 			if(!this.item)
 				return
@@ -745,7 +769,6 @@
 				this.item.value=[]
 			
 			var dizi=[]
-
 
 			var pfield=`modalRow${this.item.id}`
 			
@@ -793,16 +816,11 @@
 
 		function gridBody(item,bRoot,insideOfModal){
 			var s=`<tbody>`
-			
+			var nextIdentity=1
+			var remoteList={}
+			var fieldList=clone(item.fields)
 			if(item.value){
-				var dizi=[]
-				item.value.forEach((e)=>{
-					if(!(e==null || e==undefined)){
-						dizi.push(e)
-					}
-				})
-				item.value=dizi
-
+				nextIdentity=item.value.length+1
 				item.value.forEach((listItem,rowIndex)=>{
 					s+=`<tr>`
 					if(item.options.selection){
@@ -830,26 +848,28 @@
 								}
 							}
 						}
+
 						switch(field.type.toLowerCase()){
 							case 'lookup':
-
 							Object.keys(field.lookup || {}).forEach((key2)=>{
 								if(key2===itemValue.toString()){
 									td+= field.lookup[key2]
 									return
 								}
 							})
-							if(td=='')
+							if(td==''){
 								td+=itemValue
+							}
 							if(field.lookupTextField){
 								var valueText=getPropertyByKeyPath(listItem,field.lookupTextField) || ''
-								td+=`<input type="hidden" grid-element="true" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}" value="${valueText}" />`
+								td+=`<input type="hidden" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}" value="${valueText}" />`
 							}
 							break
 							case 'number':
 							tdClass=field.class || 'text-right mr-1'
 							td=itemValue
 							break
+
 							case 'money':
 							tdClass=field.class || 'text-right mr-1'
 							td=Number(itemValue).formatMoney()
@@ -857,24 +877,22 @@
 
 							case 'boolean':
 							tdClass=field.class || 'text-center'
-							itemValue=itemValue.toString()==='true'?true:false
+							itemValue=(itemValue || '').toString()==='true'?true:false
 							td=itemValue?'<i class="fas fa-check-square text-primary"></i>':'<i class="far fa-square text-dark"></i>'
 							break
 							case 'remotelookup':
 							var bRemoteOlarakBulalim=true
-							if(itemValue==undefined)
+							if(itemValue==undefined){
 								itemValue=''
-
+							}
 							if(typeof itemValue=='object' && itemValue._id!=undefined){
-
 								td=`<div class="">${replaceUrlCurlyBracket((field.dataSource.label || '{name}'), itemValue)}</div>`
 								bRemoteOlarakBulalim=false
-
 							}else	if(field.lookupTextField){
 								var valueText=getPropertyByKeyPath(listItem,field.lookupTextField)
 								td=`<div class="">${valueText}</div>`
 								if(!bRoot){
-									td+=`<input type="hidden" grid-element="true" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}" value="${valueText}" />`
+									td+=`<input type="hidden" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}" value="${valueText}" />`
 								}
 
 								if(valueText=='' && itemValue!=''){
@@ -887,7 +905,7 @@
 							if(bRemoteOlarakBulalim){
 								var cellId=''
 								if(itemValue!=''){
-									cellId=`${gridId}-cell-${itemValue}`
+									cellId=`${item.id}-cell-${itemValue}`
 									if(remoteList==undefined){
 										remoteList={}
 									}
@@ -895,9 +913,11 @@
 									if(remoteList[field.field]==undefined){
 										remoteList[field.field]={
 											dataSource:field.dataSource,
-											list:{}
+											list:{
+											}
 										}
 									}
+
 									if(remoteList[field.field].list[itemValue]==undefined){
 										remoteList[field.field].list[itemValue]={
 											cellId:'.' + cellId,
@@ -908,14 +928,10 @@
 										}
 									}
 								}
-
 								td+=`<div class="${cellId}">rmtlkup${itemValue}</div>`
 							}
-
-
 							break
 							default:
-
 							td=itemValue
 							break
 						}
@@ -924,18 +940,15 @@
 							if(typeof itemValue=='object'){
 								itemValue=objectToListObject(itemValue)
 								Object.keys(itemValue).forEach((e)=>{
-
 									td+=`<input type="hidden" grid-element="${prefix}" name="${generateFormName(prefix + '.' + key + '.' + e)}" value="${itemValue[e]}" />`
 								})
-
 							}else if(Array.isArray(itemValue)){
 								itemValue.forEach((e,inndex)=>{
-									td+=`<input type="hidden" grid-element="true" name="${generateFormName(prefix + '.' + key + '.' + index)}" value="${e}" />`
+									td+=`<input type="hidden" name="${generateFormName(prefix + '.' + key + '.' + index)}" value="${e}" />`
 								})
 							}else{
 								td+=`<input type="hidden" grid-element="${prefix}" name="${generateFormName(prefix + '.' + key)}" value="${itemValue}" />`
 							}
-
 						}
 
 						s+=`<td class="${tdClass || ''} ${field.visible===false?'hidden':''}">${td}</td>`
@@ -947,33 +960,51 @@ s+=`</tr>`
 })
 }
 
-if(insideOfModal && item.options.buttons.add[0]){
+if((insideOfModal || !item.modal)  && item.options.buttons.add[0] && !bRoot){
 	s+=`<tr id="${item.id}-row-editor">`
 
-	Object.keys(item.fields).forEach((key)=>{
-		var field=item.fields[key]
+	Object.keys(fieldList).forEach((key)=>{
+		var field=fieldList[key]
 		var cls=''
 		field.field=`${item.parentField}.-1.${key}`
 		field.noGroup=true
 		field.id=generateFormId(field.field)
 		field.name=generateFormName(field.field)
+		field.value=undefined
+		delete field.value
+		field.valueText=undefined
+		delete field.valueText
+
 		if(field.type=='boolean'){
 			cls+=' text-center'
+		}else if(field.type=='identity'){
+			field.value=nextIdentity
 		}
 		if(field.visible===false){
 			cls+=' hidden'
 		}
-		var td=`<td class="${cls || ''}">${generateControls(field,{}, false,true)}</td>`
+		var td=`<td class="${cls || ''}">${generateControls(field,{}, bRoot,insideOfModal)}</td>`
 
 		s+=td
 	})
 	s+=`<td class="text-center">
 	<a href="javascript:gridSatirOK('${item.id}','${item.id}-row-editor',-1,${insideOfModal})" class="btn btn-primary btn-grid-row" title="Tamam"><i class="fas fa-check"></i></a>
-	<a href="javascript:gridSatirVazgec('${item.id}','${item.id}-row-editor',-1) "class="btn btn-dark btn-grid-row" title="Vazgeç"><i class="fas fa-reply"></i></a>
+	<a href="javascript:gridSatirVazgec('${item.id}','${item.id}-row-editor',-1,${insideOfModal}) "class="btn btn-dark btn-grid-row" title="Vazgeç"><i class="fas fa-reply"></i></a>
 	</td>`
 	s+=`</tr>`
+
+
+
+
+	script+=`
+	editRowCalculation('#${item.id}-row-editor','${item.parentField}.-1', ${JSON.stringify(fieldList)})
+
+	`
 }
 
+script+=`
+refreshRemoteList(${JSON.stringify(remoteList)})
+`
 
 
 s+=`</tbody>`
@@ -993,6 +1024,7 @@ function buttonRowCell(listItem,rowIndex,item,bRoot){
 }
 
 function gridPageSize(item,bRoot){
+
 	var s=`<div class="mt-1 align-items-center" style="display: inline-flex">
 	Sayfada
 	<select class="form-control input-inline input-sm" id="pageSize${item.id}">
@@ -1021,8 +1053,49 @@ function gridPageCount(item,bRoot){
 }
 
 function gridPagerButtons(item,bRoot){
-	var s=``
+	if(!item.paging)
+		return ''
+	if((item.paging.pageCount || 0)<=1)
+		return ''
 
+	var hashObj=getHashObject()
+
+	var d=item.paging
+	var filterString=''
+	Object.keys(hashObj).forEach((key)=>{
+		if(['page','function'].includes(key)==false){
+			filterString+=`${key}=${hashObj[key]}&`
+		}
+	})
+	if(filterString!=''){
+		filterString='&' + filterString
+		filterString=filterString.substr(0,filterString.length-1)
+	}
+
+	var s=`
+	<ul class="pagination mb-1">`
+	if(d.page>1){
+		s+=`<li class="page-item"><a class="page-link" href="#${hashObj.function}/page=1${filterString}">|&lt;</a></li>
+		<li class="page-item"><a class="page-link" href="#${hashObj.function}/page=${(d.page-1)}${filterString}">&lt;</a></li>`
+	}
+
+	var sayfalar=pagination(d.page,d.pageCount)
+	sayfalar.forEach((e)=>{
+		if(e==d.page.toString()){
+			s+=`<li class="page-item active"><span class="page-link">${d.page}</span></li>`
+		}else if(e=='...'){
+			s+=`<li class="page-item"><span class="page-link">...</span></li>`
+		} else {
+			s+=`<li class="page-item"><a class="page-link" href="#${hashObj.function}/page=${e}${filterString}">${e}</a></li>`
+		}
+	})
+
+	if(d.page<d.pageCount){
+		s+=`<li class="page-item"><a class="page-link" href="#${hashObj.function}/page=${d.page+1}${filterString}">&gt;</a></li>
+		<li class="page-item"><a class="page-link" href="#${hashObj.function}/page=${d.pageCount}${filterString}">&gt;|</a></li>`
+	}
+
+	s+=`</ul>`
 	return s
 }
 
@@ -1030,9 +1103,11 @@ function gridPagerButtons(item,bRoot){
 function gridHeader(item){
 	var s=`
 	<thead>
-	<tr class="text-nowrap">
-	${item.options.selection===true?'<th style="width: 30px;"><input class="grid-checkbox" type="checkbox" value="true" name="selectAll" id="selectAll" title="Tümünü seç"></th>':''}
-	`
+	<tr class="text-nowrap">`
+	if(item.options.selection===true){
+		s+=`<th style="width: 30px;"><input class="grid-checkbox" type="checkbox" value="true" name="selectAll${item.id}" id="selectAll${item.id}" title="Tümünü seç"></th>`
+	}
+	
 	Object.keys(item.fields).forEach((key)=>{
 		var field=item.fields[key]
 		var cls=''
@@ -1063,20 +1138,27 @@ function gridHeader(item){
 }
 
 function gridFilterRow(item){
-
-	var s=`<tr id="filterRow${item.id}" class="text-nowrap collapse">
+	var fields=clone(item.fields)
+	var hashObj=getHashObject(true)
+	var s=`<tr id="filterRow" class="text-nowrap collapse">
 	${item.options.selection===true?'<th></th>':''}
 	`
-	Object.keys(item.fields).forEach((key,index)=>{
-		var field=clone(item.fields[key])
+
+	Object.keys(fields).forEach((key,index)=>{
+		var field=fields[key]
 		var cell=''
 		field.visible=field.visible==undefined?field.visible:true
 		field.filter=field.filter==undefined?item.options.filter:field.filter
-		field.id=generateFormId(`filter_${index}`)
+		field.filterField=field.filterField || key
+		field.id=generateFormId(`${item.id}_filter_${field.filterField}`)
+		field.name=generateFormName(`${item.id}_filter.${field.filterField}`)
 		field.class='grid-filter'
 		field.noGroup=true
 
 		if(field.filter){
+			if((hashObj[field.filterField] || '')!=''){
+				field.value=hashObj[field.filterField]
+			}
 			switch(field.type.toLowerCase()){
 				case 'lookup':
 				field.showAll=true
@@ -1112,12 +1194,61 @@ function gridFilterRow(item){
 	<th></th>
 	</tr>
 	`
+	// script+=`
+	// 	var ${item.id}_filter_fields=${JSON.stringify(fields)}
+	// 	var ${item.id}_filter_options=${JSON.stringify(item.options)}
 
+	// `
 	return s
 }
 
+function gridFilterRow_changes(item){
+	var fields=clone(item.fields)
+
+	Object.keys(fields).forEach((key,index)=>{
+		var field=fields[key]
+		var cell=''
+		field.visible=field.visible==undefined?field.visible:true
+		field.filter=field.filter==undefined?item.options.filter:field.filter
+		field.filterField=field.filterField || key
+		field.id=generateFormId(`${item.id}_filter_${field.filterField}`)
+		field.name=generateFormName(`${item.id}_filter.${field.filterField}`)
+		field.class='grid-filter'
+		field.noGroup=true
+
+		if(field.filter){
+			if(field.type.toLowerCase()=='lookup' || field.type.toLowerCase()=='boolean'){
+				
+				$(`#${field.id}`).on('change',(e)=>{
+					keyupTimer=0
+					runFilter(`#filterRow`,`${item.id}_filter`)
+				})
+				
+			}else if(field.type.toLowerCase()=='remotelookup'){
+				
+				$(`#${field.id}-autocomplete-text`).on('change',(e)=>{
+					keyupTimer=0
+					runFilter(`#filterRow`,`${item.id}_filter`)
+				})
+				
+			}else{
+				
+				$(`#${field.id}`).on('keyup',(e)=>{
+					setTimeout(()=>{
+						keyupTimer=1
+						runTimer(`#filterRow`,`${item.id}_filter`)
+					},800)
+				})
+				
+			}
+		}
+
+	})
+
+}
+
 function gridFooter(item){
-	return `<tfood>qwerty</tfood>`
+	return ``
 }
 
 function gridDefaults(item,bRoot,insideOfModal){
@@ -1279,11 +1410,12 @@ function lookup(item){
 function checkBoxLookup(item){
 
 	var s=``
+	
 	var input=`
 	<select name="${item.name}" id="${item.id}" class="form-control p-0 m-0 ${item.class || ''}">
 	<option value="">*</option>
-	<option value="true"><i class="fas fa-check-square text-primary"></i> Evet</option>
-	<option value="false"><i class="far fa-square text-dark"></i> Hayır</option>
+	<option value="true" ${(item.value || '').toString()=='true'?'selected':''}><i class="fas fa-check-square text-primary"></i> Evet</option>
+	<option value="false" ${(item.value || '').toString()=='false'?'selected':''}><i class="far fa-square text-dark"></i> Hayır</option>
 	</select>
 	`
 	if(item.noGroup===true){
@@ -1299,6 +1431,7 @@ function checkBoxLookup(item){
 
 	return s
 }
+
 function remoteLookup(item){
 	var s=``
 	var input=`

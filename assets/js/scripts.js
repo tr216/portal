@@ -38,16 +38,6 @@
 })(jQuery);
 
 
-// $(document).ready(function(){
-// 	$('body').on('keydown', 'input, select', function(e) {
-// 		if(e)
-// 			if(e.key)
-// 				if (e.key === "Enter") {
-// 					return enterNext(this);
-// 				}
-// 			})
-// });
-
 function enterNext(bu){
 	
 	if(bu==undefined)

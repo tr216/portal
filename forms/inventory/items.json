@@ -77,7 +77,7 @@
 								}
 							},
 							"tracking1" :{
-								"title":"Stok Takibi",  "type":"string",   
+								"title":"Stok Takibi", 
 								"controls":{
 									"tracking.lotNo":{"title":"Lot No?", "type":"boolean", "col":"col-4 col-md-2"  },
 									"tracking.serialNo":{"title":"Seri No?", "type":"boolean","col":"col-4 col-md-2"    },

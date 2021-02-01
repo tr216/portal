@@ -610,13 +610,7 @@
 			dataType: 'json',
 			success: function(result) {
 				if(result.success){
-					// window.location.href=window.location.href.split('#')[0] + `#index/`
-					var hashObj={
-						function:'index',
-						page:1,
-						pageSize:pageSettings.getItem('pageSize') || 10
-					}
-					setHashObject(hashObj)
+					window.location.href=window.location.href.split('#')[0] + `#index/`
 				}else{
 					alertX(`${result.error.code} - ${result.error.message}`,`Hata`,`danger`)
 				}
@@ -1010,11 +1004,14 @@
 		var hashString=hashObj.function || 'index'
 		var filterString=''
 		Object.keys(hashObj).forEach((key)=>{
-			if(['function','page'].includes(key)==false){
-				filterString+=`&${key}=${hashObj[key]}`
+			if(key!='function'){
+				if(filterString!=''){
+					filterString+='&'
+				}
+				filterString+=`${key}=${hashObj[key]}`
 			}
 		})
-		hashString=hashString + '/page=1&' + filterString
+		hashString=hashString + '/' + filterString
 		window.location.hash=hashString
 	}
 	
