@@ -4,7 +4,6 @@
 		{
 			"type": "grid",
 			"fields": {
-				"itemType"	:{"title":"Turu", "type":"lookup", "lookup":{"product":"Mamul","semi-product":"Yarı Mamul"}, "filter":false},
 				"name.value"				:{"title":"Adı",  "type":"string"},
 				"description.value"	:{"title":"Açıklama",  "type":"string"},
 				"tracking.lotNo"		:{"title":"Lot No?", "type":"boolean"},
@@ -31,7 +30,7 @@
 					"delete": true,
 					"view": false,
 					"print": false,
-					"copy": false
+					"copy": true
 				}
 			},
 			"dataSource": {

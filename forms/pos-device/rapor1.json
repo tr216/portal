@@ -14,7 +14,8 @@
 						"type":"remote",
 						"method":"GET",
 						"url":"/dbapi/locations"
-					}
+					},
+					"width":"140px"
 				},
 				"posDevice.deviceSerialNo" 				: {"title":"Cihaz Seri No", "type":"string"},
 				"startZNo" 				: {"title":"ZNo Baslangic", "type":"number"},

@@ -32,7 +32,8 @@
 			"dataSource": {
 				"type":"remote",
 				"method":"GET",
-				"url":"/dbapi/order/outbox"
+				"url":"/dbapi/order/outbox",
+				"deleteUrl":"/dbapi/order/{_id}"
 			}
 		}
 	],

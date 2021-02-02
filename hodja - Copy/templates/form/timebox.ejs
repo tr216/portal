@@ -1,5 +1,0 @@
-<div class="form-group <%- locals.col %> <%- locals.visible==false?'hidden':'' %>">
-	<label class="m-0 p-0 <%- locals.required?'form-required':''%>"><%- locals.title || locals.label || '' %><%- helpButton(locals) %></label>
-	<input type="time" class="form-control <%- locals.class %>" id="<%- locals.id %>" name="<%- locals.name %>" placeholder="<%- locals.placeholder || locals.title || locals.label %>" autocomplete="chrome-off" <%- locals.required?'required="required"':'' %> <%- locals.readonly==true?'readonly':'' %> onchange="<%- locals.onchange %>" value="<%- locals.value %>">
-</div>
-

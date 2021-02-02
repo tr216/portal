@@ -19,6 +19,9 @@ module.exports = function(req,res,callback){
 		case 'forgot-password':
 		forgotPassword(req,res,data,callback)
 		break
+		case 'passport':
+		passport(req,res,data,callback)
+		break
 		default:
 
 		login(req,res,data,callback)
@@ -38,7 +41,11 @@ function login(req,res,data, cb){
 						if(req.query.r){
 							res.redirect(req.query.r)
 						}else{
-							res.redirect(`/general/dashboard`)
+							var url=`/general/login/passport`
+							if(req.query.r){
+								url+=`?r=${req.query.r}`
+							}
+							res.redirect(url)
 						}
 						
 					}else{
@@ -59,7 +66,9 @@ function login(req,res,data, cb){
 		cb(null,data)
 	}
 }
-
+function passport(req,res,data,cb){
+	cb(null,data)
+}
 
 function signup(req,res,data,cb){
 

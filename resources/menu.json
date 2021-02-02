@@ -1,5 +1,5 @@
 [
-	{"module":"dashboard", "text":"Ana Sayfa", "path":"/general/dashboard", "icon":"fas fa-tachometer-alt"},
+	{"module":"dashboard", "text":"Ana Sayfa", "path":"/dashboard/main", "icon":"fas fa-tachometer-alt"},
 	{"text":"Satış",	"icon":"fas fa-shopping-cart",
 		"nodes":[
 			{"module":"orders.outbox", "text":"Siparişler", "path":"/order/outbox", "icon":"fas fa-file-alt"},
@@ -49,7 +49,7 @@
 	},
 	{"text":"Stok",	"icon":"fas fa-box-open",
 		"nodes":[
-			{"module":"inventory.items", "text":"Stok Kartlari", "path":"/inventory/items?itemType=item", "icon":"fas fa-dolly-flatbed"},
+			{"module":"inventory.items", "text":"Stok Kartlari", "path":"/inventory/items", "icon":"fas fa-dolly-flatbed"},
 			{"module":"inventory.inventory", "text":"Envanter durumu", "path":"/inventory/inventory",  "icon":"fas fa-boxes"},
 			{"module":"inventory.inventoryFiches", "text":"Stok fişleri", "path":"/inventory/inventory-fiches", "icon":"fas fa-truck-loading"},
 			{"text":"Tanimlamalar", "icon":"fas fa-sliders-h", 

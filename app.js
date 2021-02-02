@@ -46,12 +46,6 @@ global.docFormHelper=require('./lib/doc_form_helper.js')
 
 
 global.dbType=require('./assets/js/dbtypes.js').types
-// global.formBuilder=require('./assets/js/ui/form-builder.js').FormBuilder
-
-// global.gridBuilder=require('./assets/js/ui/grid-builder.js').GridBuilder
-// global.filterBuilder=require('./assets/js/ui/filter-builder.js').FilterBuilder
-// global.pageBuilder=require('./assets/js/ui/page-builder.js').PageBuilder
-
 
 var app = express()
 
@@ -62,7 +56,6 @@ app.engine('ejs', engine)
 // app.engine('ejs', hoca)
 app.set('views', path.join(__dirname, 'pages'))
 app.set('view engine', 'ejs')
-// app.set('view engine', 'hoca')
 
 app.set('name',require('./package').name)
 app.set('version',require('./package').version)
@@ -95,35 +88,26 @@ app.use(session({
 app.use(flash())
 
 
-global.hodjaTemplates={}
+global.menu=require('./resources/menu.json')
 
 require('./lib/loader_db.js')((err)=>{
 	if(!err){
-		templateLoader(path.join(__dirname,'hodja/templates'),(err,holder)=>{
-			if(!err){
-				
-				hodjaTemplates=holder
-				global.builder=require('./hodja/builder.js').Builder
-				global.formBuilder=require('./hodja/form-builder.js').FormBuilder
-				global.gridBuilder=require('./hodja/grid-builder.js').GridBuilder
-				global.filterBuilder=require('./hodja/filter-builder.js').FilterBuilder
-				global.insideGridBuilder=require('./hodja/insideGrid-builder.js').InsideGridBuilder
+		
 
-				require('./routes/routes.js')(app)
-				require('./providers/index')
-				switch(config.status){
-					case 'test':
-					eventLog('portal is running on '.yellow + 'test'.cyan + ' platform.'.yellow)
-					break
-					case 'development':
-					eventLog('portal is running on '.yellow + 'development'.cyan + ' platform.'.yellow)
-					break
-					case 'release':
-					eventLog('portal is running '.yellow + 'release'.red + ' mode.'.yellow)
-					break
-				}
-			}
-		})
+		require('./routes/routes.js')(app)
+		require('./providers/index')
+		switch(config.status){
+			case 'test':
+			eventLog('portal is running on '.yellow + 'test'.cyan + ' platform.'.yellow)
+			break
+			case 'development':
+			eventLog('portal is running on '.yellow + 'development'.cyan + ' platform.'.yellow)
+			break
+			case 'release':
+			eventLog('portal is running '.yellow + 'release'.red + ' mode.'.yellow)
+			break
+		}
+			
 	}else{
 		errorLog('loader_db.js ERROR:',err)
 	}
@@ -143,8 +127,8 @@ app.use(function(err, req, res, next) {
 
 })
 
-global.menu=require('./resources/menu.json')
-global.mobileMenu=require('./resources/mobile-menu.json')
+
+
 
 
 global.staticValues=require('./resources/staticvalues.json')

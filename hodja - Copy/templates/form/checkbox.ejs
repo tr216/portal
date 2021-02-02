@@ -1,7 +1,0 @@
-<div class="form-group <%- locals.col%> <%- !locals.visible?'hidden':''%>">
-	<label>
-		<span class="mb-1" style="display:block;"><%- locals.title%><%- helpButton(locals) %></span>
-		<input type="checkbox" class="form-checkbox" id="<%- locals.id %>" name="<%- locals.name %>" value="true" <%- (locals.value?'checked':'')%> <%- locals.readonly==true?'disabled':''%> <%- locals.onchange?'onchange="' + locals.onchange + '"':''%> />
-		
-	</label>
-</div>

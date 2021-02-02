@@ -1,50 +1,64 @@
+$(document).ready(function(){
+	// $("#sidebarToggle").on("click", function(e) {
+	// 	e.preventDefault()
+	// 	$("body").toggleClass("sb-sidenav-toggled")
+	// })
 
-(function($) {
-	"use strict";
+	$(document).on('scroll', function() {
+		var scrollDistance = $(this).scrollTop()
+		if (scrollDistance > 100) {
+			$('.scroll-to-top').fadeIn()
+		} else {
+			$('.scroll-to-top').fadeOut()
+		}
+	})
 
-    // Add active state to sidbar nav links
-    var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
-    // $("#layoutSidenav_nav .sb-sidenav a.nav-link").each(function() {
-    // 	if (this.href === path) {
-    // 		$(this).addClass("active");
-    // 		return;
-    // 	}
-    // });
+	$(document).on('click', 'a.scroll-to-top', function(e) {
+		var $anchor = $(this)
+		$('html, body').stop().animate({
+			scrollTop: ($($anchor.attr('href')).offset().top)
+		}, 300, 'easeInOutExpo')
+		e.preventDefault()
+	})
 
-    // Toggle the side navigation
-    $("#sidebarToggle").on("click", function(e) {
-    	e.preventDefault();
-    	$("body").toggleClass("sb-sidenav-toggled");
-    });
+	$('body').on('keydown', 'input, select', function(e) {
+		if(e){
+			if(e.key){
+				if (e.key === "Enter") {
+					return enterNext(this)
+				}
+			}
+		}
+	})
 
-    // Scroll to top button appear
-    $(document).on('scroll', function() {
-    	var scrollDistance = $(this).scrollTop();
-    	if (scrollDistance > 100) {
-    		$('.scroll-to-top').fadeIn();
-    	} else {
-    		$('.scroll-to-top').fadeOut();
-    	}
-    });
+	$('.modal-dialog').draggable({
+		handle: '.modal-header'
+	})
 
-  // Smooth scrolling using jQuery easing
-  $(document).on('click', 'a.scroll-to-top', function(e) {
-  	var $anchor = $(this);
-  	$('html, body').stop().animate({
-  		scrollTop: ($($anchor.attr('href')).offset().top)
-  	}, 300, 'easeInOutExpo');
-  	e.preventDefault();
-  });
-})(jQuery);
+	$('.card-collapse').on('show.bs.collapse',(e)=>{
+		pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+
+	})
+	$('.card-collapse').on('hide.bs.collapse',(e)=>{
+		pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+	})
+
+	$('.modal .card-collapse').on('show.bs.collapse',(e)=>{
+		pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+	})
+	$('.modal .card-collapse').on('hide.bs.collapse',(e)=>{
+		pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+	})
+})
 
 
 function enterNext(bu){
 	
 	if(bu==undefined)
 		bu=this
-	var self = $(bu), form = self.parents('form:eq(0)'), focusable, next;
+	var self = $(bu), form = self.parents('form:eq(0)'), focusable, next
 	focusable = form.find('input,a,select,button,textarea').filter(':visible')
-	next = focusable.eq(focusable.index(bu)+1);
+	next = focusable.eq(focusable.index(bu)+1)
 	if (next.length) {
 		
 		var readonly=next.prop('readonly') || false
@@ -63,41 +77,41 @@ function enterNext(bu){
 		if(typeof next.select === 'function')
 			next.select()
 	} else {
-		//form.submit();
+		//form.submit()
 	}
 	return false
 }
 
 function openUrl(url,_id,target,popup){
-	url=url.replaceAll('{_id}',_id);
+	url=url.replaceAll('{_id}',_id)
 	if(target=='_blank' && popup!=true){
-		window.open(url,target);
+		window.open(url,target)
 	}else if(popup){
-		popupCenter(url,'Goster','900','600');
+		popupCenter(url,'Goster','900','600')
 	}else{
-		localStorage.setItem('returnUrl',window.location.href);
-		window.location.href=url;
+		localStorage.setItem('returnUrl',window.location.href)
+		window.location.href=url
 	}
 
 }
 function popupCenter(url, title, w, h,isDialog=false) {
-	var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX;
-	var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
+	var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX
+	var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY
 
-	var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-	var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+	var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width
+	var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height
 
-	var systemZoom = width / window.screen.availWidth;
+	var systemZoom = width / window.screen.availWidth
 	var left = (width - w) / 2 / systemZoom + dualScreenLeft
 	var top = (height - h) / 2 / systemZoom + dualScreenTop
 	if(!isDialog){
-		var newWindow=window.open(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left);
+		var newWindow=window.open(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left)
 		if (window.focus)
-			newWindow.focus();
+			newWindow.focus()
 	}else{
-		var newWindow=openDialog(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left);
+		var newWindow=openDialog(url, title, 'scrollbars=yes, width=' + w / systemZoom + ', height=' + h / systemZoom + ', top=' + top + ', left=' + left)
 		if (window.focus)
-			newWindow.focus();
+			newWindow.focus()
 	}
 
 }
@@ -117,24 +131,6 @@ function load_card_collapses(){
 }
 load_card_collapses()
 
-
-$('.card-collapse').on('show.bs.collapse',(e)=>{
-	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
-	console.log(`'show.bs.collapse:`,e.target.id)
-	// save_form_settings(e)	
-})
-$('.card-collapse').on('hide.bs.collapse',(e)=>{
-	// save_form_settings(e)
-	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
-	console.log(`'hide.bs.collapse:`,e.target.id)
-})
-
-$('.modal .card-collapse').on('show.bs.collapse',(e)=>{
-	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
-})
-$('.modal .card-collapse').on('hide.bs.collapse',(e)=>{
-	pageSettings.setItem(`collapse_${e.target.id}`,e.type)
-})
 
 var copyX_cb=null
 var copyX_fields={}
@@ -158,7 +154,7 @@ function copyX(fields,title,cb=null){
 }
 
 function modalCopyOk(){
-	$('#modalCopyOk').modal('hide')
+	$('#modalCopy').modal('hide')
 	if(copyX_cb){
 		var formData={}
 		Object.keys(copyX_fields).forEach((key)=>{
@@ -170,7 +166,7 @@ function modalCopyOk(){
 		copyX_cb(true,formData)
 
 	}else{
-		$('#modalCopyOk').modal('hide')
+		$('#modalCopy').modal('hide')
 	}
 }
 
@@ -235,7 +231,7 @@ function modalFormOptions(){
 			}
 		},
 		error:function(err){
-			console.log('err:',err)
+			showError(err)
 		}
 	})
 }
@@ -261,12 +257,14 @@ function modalFormOptions_OK(){
 			
 			if(result.success){
 				
-				window.location.href=`/changedb`
+				window.location.href=`/general/login/passport?r=${window.location.href}`
 				
+			}else{
+				showError(result.error)
 			}
 		},
 		error:function(err){
-			console.log('err:',err)
+			showError(err)
 		}
 	})
 	
@@ -276,16 +274,9 @@ function logout(){
 	confirmX('Programdan çıkmak istiyor musunuz?',(resp)=>{
 		
 		if(resp)
-			window.location.href=`${window.location.origin}/logout`
+			window.location.href=`/logout`
 	})
 }
-
-$(document).ready(function(){
-	var a=document.getElementById('main-container')
-	var spinner=document.getElementById('spinner')
-	a.style.display='initial'
-	spinner.style.display='none'
-})
 
 
 var confirmX_response=false
@@ -303,7 +294,7 @@ function confirmX(message, type='info',cb){
 
 	$('#modalConfirm .modal-content').addClass(`alert-${type}`)
 
-	$('#modalConfirm .message').html(message.replaceAll('\n','<br>'))
+	$('#modalConfirm .modal-content .message').html(message.replaceAll('\n','<br>'))
 	
 	$('#modalConfirm').modal('show')
 	
@@ -367,5 +358,6 @@ function confirmX(message, type='info',cb){
 		})
 	}
 
-
-
+	function showError(err){
+		alertX(`${err.code || err.name} - ${err.message || err.name}`,'Hata','danger')
+	}

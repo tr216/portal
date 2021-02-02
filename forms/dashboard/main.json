@@ -1,0 +1,30 @@
+{
+	"index":[
+		{
+			"type": "group",
+			"fields":{
+				"partyName.name.value": {"title":"Müşteri adı", "type":"string", "filterField":"partyName"},
+				"postalAddress.cityName.value": {"title":"Şehir", "type":"string", "filterField":"cityName"},
+				"postalAddress.district.value": {"title":"İlçe", "type":"string", "filterField":"district"},
+				"passive": {"title":"Pasif?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": true
+				}				
+			},
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/customers"
+			}
+		}
+	]
+}

@@ -1,7 +1,7 @@
 <% layout('plain') %>
 <nav class="sb-topnav fixed-top navbar navbar-expand navbar-dark bg-dark">
 	<a class="btn btn-sm border ml-3 mr-3" data-toggle="collapse" href="#layoutSidenav_nav" role="button" aria-expanded="true" aria-controls="layoutSidenav_nav" title="Menü göster/gizle"><i class="fas fa-bars"></i></a>
-	<a href="/general/dashboard?mid=0" class="header-logo"></a>
+	<a href="javascript:sayfalariTekrarYukle()" class="header-logo"></a>
 	
 	<!-- Navbar Search-->
 	<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
@@ -26,7 +26,7 @@
 				<% if(e._id.toString()== session.dbId.toString()){%>
 				<div class="dropdown-item active"><%- e.dbName %></div>
 				<% }else{ %>
-				<a class="dropdown-item" href="/changedb?<%- `db=${e._id}` %>"><%- e.dbName %></a>
+				<a class="dropdown-item" href="javascript:changedb('<%- `${e._id}` %>')"><%- e.dbName %></a>
 				<% } %>
 				<% }) %>
 				<% } %>
@@ -36,7 +36,7 @@
 		<li class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Kullanıcı işlemleri"><i class="fas fa-user"></i></a>
 			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-				<a class="dropdown-item" href="/me/profile">Profilim</a>
+				<a class="dropdown-item" href="#/me/profile">Profilim</a>
 				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="javascript:logout();">Çıkış</a>
 			</div>
@@ -49,18 +49,15 @@
 		<%- partial('side-menu') %>
 	</div>
 	<div id="layoutSidenav_content"  style="margin-top:56px;" class="p-2">
-		<main id="main-container" style="display: none;" class="cerceve1 p-1">
+		<main id="main-container" class="cerceve1 p-1">
 			<div class="mt-2 mb-1 px-3" style="height: 36px">
 				<h1 id="pageTitle" class="float-left m-0 page-title text-primary" style="font-size:16pt">...</h1>
 				<div id="headerButtons" class="float-right" style="min-height: 26px;"></div>
-				<% if(typeof headerButtons!='undefined'){ %>
-				<!-- <div id="headerButtons" class="float-right" style="min-height: 26px;"><%- headerButtons %></div> -->
-				<%}%>
+				
 			</div>
 			<div class="clearfix"></div>
 			<div class="container-fluid mb-3">
-				<%- formError(message) %>
-				<%- formSuccess(successMessage) %>
+			
 				<%- body %>
 
 			</div>
@@ -69,10 +66,8 @@
 		<%- partial('footer') %>
 	</div>
 </div>
-<script type="text/javascript">
-	document.getElementById('pageTitle').innerHTML=pageTitle
-</script>
-<div id="spinner" class="spinner-border text-primary" role="status" style="display: initial;position:absolute;top:50%;left:50%">
+
+<div id="spinner" class="spinner-border text-primary" role="status" style="display: none;position:absolute;top:50%;left:50%">
 	<span class="sr-only">Loading...</span>
 </div>
 <!-- Scroll to Top Button-->
@@ -82,10 +77,10 @@
 
 
 <div class="modal" id="modalFormOptions" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalFormOptionsLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header p-2 ">
-				<label class="modal-title" id="modalFormOptionsLabel"><i class="fas fa-cogs"></i> Form Options: <b><%- urlPath %></b></label>
+				<label class="modal-title" id="modalFormOptionsLabel"><i class="fas fa-cogs"></i> Form Options: <b>qwerty urlPath modulu vs gelecek</b></label>
 				<button class="close" type="button" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -134,8 +129,8 @@
 <div class="modal" id="modalConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="true" aria-labelledby="modalConfirmLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
 		<div class="modal-content">
-			<div class="modal-body row align-items-center p-3" style="overflow: auto;">
-				<div class="col-md-2" style="font-size:16pt;">
+			<div class="modal-header modal-body row align-items-center p-3" style="overflow: auto;">
+				<div class="col-md-2 icon" style="font-size:16pt;">
 					<i class="fas fa-question-circle fa-2x"></i>
 				</div>
 				<div class="col message" style="font-size:12pt;">

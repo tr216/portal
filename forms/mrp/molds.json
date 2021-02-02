@@ -1,4 +1,5 @@
 {
+
 	"index":[
 		{
 			"type": "grid",
@@ -43,7 +44,7 @@
 					"delete": true,
 					"view": false,
 					"print": false,
-					"copy": false
+					"copy": true
 				}
 			},
 			"dataSource": {

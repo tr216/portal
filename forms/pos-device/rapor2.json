@@ -15,7 +15,8 @@
 						"type":"remote",
 						"method":"GET",
 						"url":"/dbapi/locations"
-					}
+					},
+					"width":"140px"
 				},
 				"count" 				: {"title":"ZRap Adet", "type":"number"},
 				"GunlukToplamTutar" 				: {"title":"Toplam Tutar", "type":"money"},

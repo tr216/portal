@@ -1,717 +1,707 @@
+<script type="text/javascript">
+	var pages=JSON.parse(localStorage.getItem('pages'))
+	var staticValues=JSON.parse(localStorage.getItem('staticValues'))
+	var menu=JSON.parse(localStorage.getItem('menu'))
+	var pages_version=localStorage.getItem('pages_version')
 
-var pages=JSON.parse(localStorage.getItem('pages'))
-var staticValues=JSON.parse(localStorage.getItem('staticValues'))
-var menu=JSON.parse(localStorage.getItem('menu'))
-var pages_version=localStorage.getItem('pages_version')
-
-function sayfalariTekrarYukle(cb){
-	var sessionId=$('#sessionId').html()
-	$('#sessionId').html('Sayfalar ve degiskener tekrar yukleniyor...')
-	$.ajax({
-		type:'GET',
-		url:'/api/initialize',
-		success:function(result){
-			if(result.success){
-				localStorage.setItem('pages',JSON.stringify(result.data.pages || {}))
-				localStorage.setItem('staticValues',JSON.stringify(result.data.staticValues || {}))
-				localStorage.setItem('menu',JSON.stringify(result.data.menu || {}))
-				localStorage.setItem('pages_version',result.data.version || '')
+	function sayfalariTekrarYukle(cb){
+		var sessionId=$('#sessionId').html()
+		$('#sessionId').html('Sayfalar ve degiskener tekrar yukleniyor...')
+		$.ajax({
+			type:'GET',
+			url:'/api/initialize',
+			success:function(result){
+				if(result.success){
+					localStorage.setItem('pages',JSON.stringify(result.data.pages || {}))
+					localStorage.setItem('staticValues',JSON.stringify(result.data.staticValues || {}))
+					localStorage.setItem('menu',JSON.stringify(result.data.menu || {}))
+					localStorage.setItem('pages_version',result.data.version || '')
 				
+					
+					pages=result.data.pages || {}
+					staticValues=result.data.staticValues || {}
+					menu=result.data.menu || {}
+					pages_version=result.data.version || ''
+					document.getElementById('leftMenu').innerHTML=generateLeftMenu(menu)
+					$('#sessionId').html('Yukleme tamamlandi')
 
-				pages=result.data.pages || {}
-				staticValues=result.data.staticValues || {}
-				menu=result.data.menu || {}
-				pages_version=result.data.version || ''
-				document.getElementById('leftMenu').innerHTML=generateLeftMenu(menu)
-				$('#sessionId').html('Yukleme tamamlandi')
-
-			}else{
-				showError(result.error)
+				}else{
+					alertX(`${result.error.code} - ${result.error.message}`,'Hata')
+				}
+				if(cb)
+					cb()
+				setTimeout(()=>{
+					$('#sessionId').html(sessionId)
+				},500)
+			},
+			error:function(err){
+				alertX(`${err.code || err.name} - ${err.message || err.name}`,'Hata')
+				if(cb)
+					cb()
+				setTimeout(()=>{
+					$('#sessionId').html(sessionId)
+				},500)
 			}
-			if(cb)
-				cb()
-			setTimeout(()=>{
-				$('#sessionId').html(sessionId)
-			},500)
-		},
-		error:function(err){
-			showError(err)
-			if(cb)
-				cb()
-			setTimeout(()=>{
-				$('#sessionId').html(sessionId)
-			},500)
-		}
-	})
-}
+		})
+	}
 
-Date.prototype.yyyymmdd = function () {
-	var yyyy = this.getFullYear().toString()
-	var mm = (this.getMonth() + 1).toString()
-	var dd = this.getDate().toString()
-	var HH = this.getHours().toString()
-	var min = this.getMinutes().toString()
-	var sec = this.getSeconds().toString()
-	return yyyy + '-' + (mm[1]?mm:"0" + mm[0]) + '-' + (dd[1]?dd:"0" + dd[0])
-}
+	Date.prototype.yyyymmdd = function () {
+		var yyyy = this.getFullYear().toString()
+		var mm = (this.getMonth() + 1).toString()
+		var dd = this.getDate().toString()
+		var HH = this.getHours().toString()
+		var min = this.getMinutes().toString()
+		var sec = this.getSeconds().toString()
+		return yyyy + '-' + (mm[1]?mm:"0" + mm[0]) + '-' + (dd[1]?dd:"0" + dd[0])
+	}
 
-Date.prototype.hhmmss = function () {
+	Date.prototype.hhmmss = function () {
 
-	var HH = this.getHours().toString()
-	var min = this.getMinutes().toString()
-	var sec = this.getSeconds().toString()
-	return (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0])
-}
+		var HH = this.getHours().toString()
+		var min = this.getMinutes().toString()
+		var sec = this.getSeconds().toString()
+		return (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0])
+	}
 
-Date.prototype.yyyymmddhhmmss = function () {
-	var yyyy = this.getFullYear().toString()
-	var mm = (this.getMonth() + 1).toString()
-	var dd = this.getDate().toString()
-	var HH = this.getHours().toString()
-	var min = this.getMinutes().toString()
-	var sec = this.getSeconds().toString()
-	return yyyy + '-' + (mm[1]?mm:"0" + mm[0]) + '-' + (dd[1]?dd:"0" + dd[0]) + ' ' + (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0])
-}
+	Date.prototype.yyyymmddhhmmss = function () {
+		var yyyy = this.getFullYear().toString()
+		var mm = (this.getMonth() + 1).toString()
+		var dd = this.getDate().toString()
+		var HH = this.getHours().toString()
+		var min = this.getMinutes().toString()
+		var sec = this.getSeconds().toString()
+		return yyyy + '-' + (mm[1]?mm:"0" + mm[0]) + '-' + (dd[1]?dd:"0" + dd[0]) + ' ' + (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0]) + ':' + (sec[1]?sec:"0" + sec[0])
+	}
 
-Date.prototype.hhmm = function () {
+	Date.prototype.hhmm = function () {
 
-	var HH = this.getHours().toString()
-	var min = this.getMinutes().toString()
-	var sec = this.getSeconds().toString()
-	return (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0])
-}
+		var HH = this.getHours().toString()
+		var min = this.getMinutes().toString()
+		var sec = this.getSeconds().toString()
+		return (HH[1]?HH:"0" + HH[0]) + ':' + (min[1]?min:"0" + min[0])
+	}
 
-Date.prototype.addDays = function(days)
-{
-	var dat = new Date(this.valueOf());
-	dat.setDate(dat.getDate() + days);
-	return dat
-}
+	Date.prototype.addDays = function(days)
+	{
+		var dat = new Date(this.valueOf());
+		dat.setDate(dat.getDate() + days);
+		return dat
+	}
 
-Date.prototype.lastThisMonth = function()
-{
-	var dat = new Date(this.valueOf());
-	dat=new Date((new Date(dat.setMonth(dat.getMonth()+1))).setDate(0))
-	return dat
-}
-
-
-function clone(obj){
-	return JSON.parse(JSON.stringify(obj));
-}
-
-
-function b64EncodeUnicode(str){
-	return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function toSolidBytes(match, p1) { return String.fromCharCode('0x' + p1) }))
-}
-
-function b64DecodeUnicode(str){
-	return decodeURIComponent(atob(str).split('').map(function(c) {
-		return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-	}).join(''))
-}
-
-
-function btoa2(str){
-	return btoa(encodeURIComponent2(str).replace(/%([0-9A-F]{2})/g, function toSolidBytes(match, p1) {
-		return String.fromCharCode('0x' + p1)
-	}))
-}
-
-function atob2(str){
-	return decodeURIComponent(atob(str).split('').map(function(c) {
-		return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-	}).join(''))
-}
-
-
-function encodeURIComponent2(str){
-	return encodeURIComponent(str).replace(/[!'()*]/g, escape)
-}
-
-function htmlEncode(str) {
-	var buf = []
-	if(str){
-		for (var i=str.length-1;i>=0;i--) {
-			buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''))
-		}
-	}else{
-		return ''
+	Date.prototype.lastThisMonth = function()
+	{
+		var dat = new Date(this.valueOf());
+		dat=new Date((new Date(dat.setMonth(dat.getMonth()+1))).setDate(0))
+		return dat
 	}
 
 
-	return buf.join('')
-}
-
-function htmlDecode(str) {
-	return str.replace(/&#(\d+);/g, function(match, dec) {
-		return String.fromCharCode(dec)
-	})
-}
+	function clone(obj){
+		return JSON.parse(JSON.stringify(obj));
+	}
 
 
-function dateTimeFromText(dateStr) {
-	d=new Date(dateStr); 
-	d.setMinutes(d.getMinutes()+(new Date()).getTimezoneOffset()*1);
+	function btoa2(str){
+		return btoa(encodeURIComponent2(str).replace(/%([0-9A-F]{2})/g, function toSolidBytes(match, p1) {
+			return String.fromCharCode('0x' + p1)
+		}))
+	}
 
-	return d;
-}
-
-
-function b64EncodeUnicode(str) {
-	return btoa(unescape(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-	                                                     function toSolidBytes(match, p1) {
-	                                                     	return String.fromCharCode('0x' + p1);
-	                                                     })));
-}
-
-Number.prototype.formatDecimal = function(){
-	var c=0;
-	var d=whatDecimalPointer();
-	var t=d==','?'.':',';
-
-	var s= _formatMoney(this,c,d,t);
-
-	return s;
-};
-
-Number.prototype.formatMoney = function(c1){
-	var c=c1 || 2;
-	var d=whatDecimalPointer();
-	var t=d==','?'.':',';
-
-	var s= _formatMoney(this,c,d,t);
-
-	return s;
-};
-
-function _formatMoney(value,c,d,t){
-	var n = value, 
-	c = isNaN(c = Math.abs(c)) ? 2 : c, 
-	d = d == undefined ? "." : d, 
-	t = t == undefined ? "," : t, 
-	s = n < 0 ? "-" : "", 
-	i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
-	j = (j = i.length) > 3 ? j % 3 : 0;
-	return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-}
-
-Number.prototype.n2 = function(){
-	var sbuf=this.toString();
-	if(sbuf.length==1){
-		sbuf ='0' + sbuf;
-	}   
-
-	return sbuf;
-};
-
-Number.prototype.formatQuantity = function(c){
-
-	var d=whatDecimalPointer();
-	var t=d==','?'.':',';
-
-	var s= _formatQuantity(this,c,d,t);
-
-	return s;
-};
-
-function _formatQuantity(value,c,d,t){
-	var n = value, 
-
-	d = d == undefined ? "." : d, 
-	t = t == undefined ? "," : t, 
-	s = n < 0 ? "-" : "";
+	function atob2(str){
+		return decodeURIComponent(atob(str).split('').map(function(c) {
+			return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+		}).join(''))
+	}
 
 
-	if(c==undefined){
-		i = parseInt(n = Math.abs(+n || 0)) + "";
-		j = (j = i.length) > 3 ? j % 3 : 0;
-		var kusurat=Math.round(Math.abs(n - i)*1000)/1000;
+	function encodeURIComponent2(str){
+		return encodeURIComponent(str).replace(/[!'()*]/g, escape)
+	}
 
-		return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (Math.abs(n - i)>0?d:'') + kusurat.toString().slice(2);
-	}else{
-		i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "";
+	function htmlEncode(str) {
+		var buf = []
+		if(str){
+			for (var i=str.length-1;i>=0;i--) {
+				buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''))
+			}
+		}else{
+			return ''
+		}
+
+
+		return buf.join('')
+	}
+
+	function htmlDecode(str) {
+		return str.replace(/&#(\d+);/g, function(match, dec) {
+			return String.fromCharCode(dec)
+		})
+	}
+
+
+	function dateTimeFromText(dateStr) {
+		d=new Date(dateStr); 
+		d.setMinutes(d.getMinutes()+(new Date()).getTimezoneOffset()*1);
+
+		return d;
+	}
+
+
+	function b64EncodeUnicode(str) {
+		return btoa(unescape(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+		                                                     function toSolidBytes(match, p1) {
+		                                                     	return String.fromCharCode('0x' + p1);
+		                                                     })));
+	}
+
+	Number.prototype.formatDecimal = function(){
+		var c=0;
+		var d=whatDecimalPointer();
+		var t=d==','?'.':',';
+
+		var s= _formatMoney(this,c,d,t);
+
+		return s;
+	};
+
+	Number.prototype.formatMoney = function(c1){
+		var c=c1 || 2;
+		var d=whatDecimalPointer();
+		var t=d==','?'.':',';
+
+		var s= _formatMoney(this,c,d,t);
+
+		return s;
+	};
+
+	function _formatMoney(value,c,d,t){
+		var n = value, 
+		c = isNaN(c = Math.abs(c)) ? 2 : c, 
+		d = d == undefined ? "." : d, 
+		t = t == undefined ? "," : t, 
+		s = n < 0 ? "-" : "", 
+		i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
 		j = (j = i.length) > 3 ? j % 3 : 0;
 		return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 	}
 
-}
+	Number.prototype.n2 = function(){
+		var sbuf=this.toString();
+		if(sbuf.length==1){
+			sbuf ='0' + sbuf;
+		}   
+
+		return sbuf;
+	};
+
+	Number.prototype.formatQuantity = function(c){
+
+		var d=whatDecimalPointer();
+		var t=d==','?'.':',';
+
+		var s= _formatQuantity(this,c,d,t);
+
+		return s;
+	};
+
+	function _formatQuantity(value,c,d,t){
+		var n = value, 
+
+		d = d == undefined ? "." : d, 
+		t = t == undefined ? "," : t, 
+		s = n < 0 ? "-" : "";
 
 
-function whatDecimalPointer() {
-	var n = 1.1;
-	n = n.toLocaleString().substring(1, 2);
-	return n;
-}
+		if(c==undefined){
+			i = parseInt(n = Math.abs(+n || 0)) + "";
+			j = (j = i.length) > 3 ? j % 3 : 0;
+			var kusurat=Math.round(Math.abs(n - i)*1000)/1000;
 
-
-
-var pageSettings={
-	setItem:function(param,value){
-		try{
-			var obj=JSON.parse(localStorage.getItem(`${getModulePageName()}`) || '{}')
-			obj[param]=value
-			localStorage.setItem(`${getModulePageName()}`,JSON.stringify(obj))
-		}catch(err){
-			showError(err)
-		}
-	},
-	getItem:function(param){
-		try{
-			var obj=JSON.parse(localStorage.getItem(`${getModulePageName()}`) || '{}')
-			if(obj[param]==undefined)
-				obj[param]=null
-
-			return obj[param]
-		}catch(err){
-			showError(err)
-			return null
+			return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (Math.abs(n - i)>0?d:'') + kusurat.toString().slice(2);
+		}else{
+			i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "";
+			j = (j = i.length) > 3 ? j % 3 : 0;
+			return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 		}
 
 	}
-}
 
 
-function pagination(c, m) {
-	var current =Number(c),
-	last = Number(m),
-	delta = 2,
-	left = current - delta,
-	right = current + delta + 1,
-	range = [],
-	rangeWithDots = [],
-	l;
+	function whatDecimalPointer() {
+		var n = 1.1;
+		n = n.toLocaleString().substring(1, 2);
+		return n;
+	}
 
-	for (let i = 1; i <= last; i++) {
-		if (i == 1 || i == last || i >= left && i < right) {
-			range.push(i);
+
+
+	var pageSettings={
+		setItem:function(param,value){
+			try{
+				var obj=JSON.parse(localStorage.getItem(`${getModulePageName()}`) || '{}')
+				obj[param]=value
+				localStorage.setItem(`${getModulePageName()}`,JSON.stringify(obj))
+			}catch(err){
+				console.error(err)
+			}
+		},
+		getItem:function(param){
+			try{
+				var obj=JSON.parse(localStorage.getItem(`${getModulePageName()}`) || '{}')
+				if(obj[param]==undefined)
+					obj[param]=null
+
+				return obj[param]
+			}catch(err){
+				console.error(err)
+				return null
+			}
+
 		}
 	}
 
 
-	for (let i of range) {
-		if (l) {
-			if (i - l == 2) {
-				rangeWithDots.push(l + 1);
-			} else if (i - l != 1) {
-				rangeWithDots.push('...');
+	function pagination(c, m) {
+		var current =Number(c),
+		last = Number(m),
+		delta = 2,
+		left = current - delta,
+		right = current + delta + 1,
+		range = [],
+		rangeWithDots = [],
+		l;
+
+		for (let i = 1; i <= last; i++) {
+			if (i == 1 || i == last || i >= left && i < right) {
+				range.push(i);
 			}
 		}
-		rangeWithDots.push(i);
 
 
-		l = i;
-	}
-
-	return rangeWithDots;
-}
-
-
-function getModulePageName(){
-	var pageName='page'
-	var dizi=window.location.pathname.split('/')
-	var c=0
-	dizi.forEach((e)=>{
-		if(e!=''){
-			if(c==2){
-				return
-			}else{
-				pageName+='_' + e
-				c++
+		for (let i of range) {
+			if (l) {
+				if (i - l == 2) {
+					rangeWithDots.push(l + 1);
+				} else if (i - l != 1) {
+					rangeWithDots.push('...');
+				}
 			}
+			rangeWithDots.push(i);
+
+
+			l = i;
 		}
-	})
 
-	return pageName
-}
-
-function helpButton(item){
-	if((item.help || '')!=''){
-		var helpUrl=manipulateUrl(item.help)
-
-		return `<a href="javascript:openInNewTab('${helpUrl}')" class="skip-enter-next text-primary bold ml-2" title="Yardım ve açıklama için tıklayınız"><i class="far fa-question-circle"></i></a>`
-	}else{
-		return ''
-	}
-}
-
-function manipulateUrl(url,mid=''){
-	url+=`${url.indexOf('?')<0?'?':'&'}mid=${mid==''?(q.mid || ''):mid}`
-	return url
-}
-
-
-String.prototype.replaceAll = function (search, replacement) {
-	var target = this
-	return target.split(search).join(replacement)
-}
-
-function uuidv4() {
-	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c)=>{
-		var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
-		return v.toString(16)
-	})
-}
-
-
-function maxLookupLength(lookup){
-	var max=0
-	Object.keys(lookup).forEach((key)=>{
-		if(lookup[key].length>max)
-			max=lookup[key].length
-	})
-	return max
-}
-
-function generateFormName(name){ 
-	var keys = name.toString().split('.')
-	if(keys.length<=1){
-		return name
-	}else{
-		var s=''
-		keys.forEach((k,index)=>{
-			if(index==0)
-				s=k
-			else
-				s+=`[${k}]`
-		})
-		return s
-	}
-}
-
-function generateFormId(name) { 
-	if(typeof name=='string')
-		return name.replaceAll('.','_')
-	else
-		return ''
-}
-
-function loadCardCollapses(){
-	var kartlar=document.getElementsByClassName('card-collapse')
-	var i=0
-	while(i<kartlar.length){
-		if(pageSettings.getItem(`collapse_${kartlar[i].id}`)){
-			$(`#${kartlar[i].id}`).collapse(pageSettings.getItem(`collapse_${kartlar[i].id}`))			
-		}
-		i++
+		return rangeWithDots;
 	}
 
-	$('.card-collapse').on('show.bs.collapse',(e)=>{
-		pageSettings.setItem(`collapse_${e.target.id}`,e.type)
 
-	})
-	$('.card-collapse').on('hide.bs.collapse',(e)=>{
-		pageSettings.setItem(`collapse_${e.target.id}`,e.type)
-
-	})
-
-	$('.modal .card-collapse').on('show.bs.collapse',(e)=>{
-		pageSettings.setItem(`collapse_${e.target.id}`,e.type)
-	})
-	$('.modal .card-collapse').on('hide.bs.collapse',(e)=>{
-		pageSettings.setItem(`collapse_${e.target.id}`,e.type)
-	})
-}
-
-
-function getAjax(url,labelStr='{name}',exceptId='',cb){
-
-	$.ajax({
-		url:url,
-		type:'GET',
-		dataType: 'json',
-		success: function(result) {
-			if(result.success){
-				var dizi=[]
-
-				if(result.data.docs!=undefined){
-					result.data.docs.forEach((e)=>{
-
-						var text=replaceUrlCurlyBracket(labelStr, e,e)
-						dizi.push({label:text,value:text,obj:e})
-					})
+	function getModulePageName(){
+		var pageName='page'
+		var dizi=window.location.pathname.split('/')
+		var c=0
+		dizi.forEach((e)=>{
+			if(e!=''){
+				if(c==2){
+					return
 				}else{
-					if(Array.isArray(result.data)){
-						result.data.forEach((e)=>{
+					pageName+='_' + e
+					c++
+				}
+			}
+		})
+
+		return pageName
+	}
+
+	function helpButton(item){
+		if((item.help || '')!=''){
+			var helpUrl=manipulateUrl(item.help)
+
+			return `<a href="javascript:openInNewTab('${helpUrl}')" class="skip-enter-next text-primary bold ml-2" title="Yardım ve açıklama için tıklayınız"><i class="far fa-question-circle"></i></a>`
+		}else{
+			return ''
+		}
+	}
+
+	function manipulateUrl(url,mid=''){
+		url+=`${url.indexOf('?')<0?'?':'&'}mid=${mid==''?(q.mid || ''):mid}`
+		return url
+	}
+
+
+	String.prototype.replaceAll = function (search, replacement) {
+		var target = this
+		return target.split(search).join(replacement)
+	}
+
+	function uuidv4() {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c)=>{
+			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
+			return v.toString(16)
+		})
+	}
+
+
+	function maxLookupLength(lookup){
+		var max=0
+		Object.keys(lookup).forEach((key)=>{
+			if(lookup[key].length>max)
+				max=lookup[key].length
+		})
+		return max
+	}
+
+	function generateFormName(name){ 
+		var keys = name.toString().split('.')
+		if(keys.length<=1){
+			return name
+		}else{
+			var s=''
+			keys.forEach((k,index)=>{
+				if(index==0)
+					s=k
+				else
+					s+=`[${k}]`
+			})
+			return s
+		}
+	}
+
+	function generateFormId(name) { 
+		if(typeof name=='string')
+			return name.replaceAll('.','_')
+		else
+			return ''
+	}
+
+	function loadCardCollapses(){
+		var kartlar=document.getElementsByClassName('card-collapse')
+		var i=0
+		while(i<kartlar.length){
+			if(pageSettings.getItem(`collapse_${kartlar[i].id}`)){
+				$(`#${kartlar[i].id}`).collapse(pageSettings.getItem(`collapse_${kartlar[i].id}`))			
+			}
+			i++
+		}
+
+		$('.card-collapse').on('show.bs.collapse',(e)=>{
+			pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+
+		})
+		$('.card-collapse').on('hide.bs.collapse',(e)=>{
+			pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+
+		})
+
+		$('.modal .card-collapse').on('show.bs.collapse',(e)=>{
+			pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+		})
+		$('.modal .card-collapse').on('hide.bs.collapse',(e)=>{
+			pageSettings.setItem(`collapse_${e.target.id}`,e.type)
+		})
+	}
+
+
+	function getAjax(url,labelStr='{name}',exceptId='',cb){
+
+		$.ajax({
+			url:url,
+			type:'GET',
+			dataType: 'json',
+			success: function(result) {
+				if(result.success){
+					var dizi=[]
+
+					if(result.data.docs!=undefined){
+						result.data.docs.forEach((e)=>{
+
 							var text=replaceUrlCurlyBracket(labelStr, e,e)
 							dizi.push({label:text,value:text,obj:e})
 						})
 					}else{
-						var text=replaceUrlCurlyBracket(labelStr, result.data, result.data)
-						dizi.push({label:text,value:text,obj:result.data})
+						if(Array.isArray(result.data)){
+							result.data.forEach((e)=>{
+								var text=replaceUrlCurlyBracket(labelStr, e,e)
+								dizi.push({label:text,value:text,obj:e})
+							})
+						}else{
+							var text=replaceUrlCurlyBracket(labelStr, result.data, result.data)
+							dizi.push({label:text,value:text,obj:result.data})
+						}
 					}
-				}
 
-				if(cb)
-					cb(null,dizi)
-			}else{
-				if(cb)
-					cb(result.error)
-			}
-		},
-		error:function(err){
-			if(cb)
-				cb(err)
-		}
-	})
-}
-
-
-function remoteLookupAutocomplete(locals){
-	if(locals.dataSource==undefined)
-		return
-
-	var searchUrl=''
-	if((locals.dataSource.search || '')!=''){
-		searchUrl=replaceUrlCurlyBracket(locals.dataSource.search, {_id:locals.value})
-
-	}else if((locals.dataSource.url || '')!=''){
-		searchUrl=replaceUrlCurlyBracket(locals.dataSource.url, {_id:locals.value})
-		if(searchUrl.indexOf('?')<0){
-			searchUrl+='?search={search}'
-		}else{
-			searchUrl+='&search={search}'
-		}
-	}
-	var idUrl=''
-	if(locals.dataSource.id || locals.dataSource.idUrl){
-		idUrl=replaceUrlCurlyBracket(locals.dataSource.id  || locals.dataSource.idUrl, {_id:locals.value})
-
-	}else if(locals.dataSource.url){
-		idUrl=replaceUrlCurlyBracket(locals.dataSource.url, {_id:locals.value})
-		if(idUrl.indexOf('?')<0){
-			idUrl+=`/${locals.value}`
-		}else{
-			idUrl+=`&id=${locals.value}`
-		}
-	}
-
-
-	if(searchUrl=='' || idUrl==''){
-		return
-	}
-
-	var labelStr=(locals.dataSource.label || '{name}')
-	var valueText=locals.valueText || ''
-
-	$(`#${locals.id}-autocomplete-text`).autocomplete({
-		source:function(request,response){
-			var typedText=encodeURIComponent2(request.term)
-			var url=searchUrl.replace('{search}',typedText).replace('{search}',typedText).replace('{mid}',q.mid)
-
-			getAjax(url,`${labelStr}`,``,(err,result)=>{
-				if(!err){
-					response(result)
+					if(cb)
+						cb(null,dizi)
 				}else{
-					console.error(err)
-					response([])
+					if(cb)
+						cb(result.error)
 				}
-			})
-		},
-		select: function (event, ui) {
-			$(`#${locals.id}-autocomplete-text`).val((ui.item.label || ''))
-			$(`input[name="${locals.name}"]`).val(ui.item.obj._id.toString())
-			$(`#${locals.id}-obj`).val(encodeURIComponent2(JSON.stringify(ui.item.obj)))
-			if(locals.lookupTextField){
-				$(`input[name="${locals.lookupTextFieldName}"]`).val((ui.item.label || ''))
-				$(`#${locals.id}-original-text`).html((ui.item.label || ''))
+			},
+			error:function(err){
+				console.error('err2:',err)
+				if(cb)
+					cb(err)
 			}
-			if(locals.onchange){
-				eval(`${locals.onchange}`)
-			}
-			return false
-		}
-	})
+		})
+	}
 
 
-	$(`#${locals.id}-autocomplete-text`).on('change',()=>{
+	function remoteLookupAutocomplete(locals){
+		if(locals.dataSource==undefined)
+			return
 
-		if($(`#${locals.id}-autocomplete-text`).val()==''){
-			$(`input[name="${locals.name}"]`).val('')
-			$(`#${locals.id}-obj`).val('')
-			if(locals.lookupTextField){
-				$(`#${locals.id}-original-text`).html('')
-			}
-		}
-		if(locals.lookupTextField){
-			$(`input[name="${locals.lookupTextFieldName}"]`).val($(`#${locals.id}-autocomplete-text`).val())
-		}
-	})
+		var searchUrl=''
+		if((locals.dataSource.search || '')!=''){
+			searchUrl=replaceUrlCurlyBracket(locals.dataSource.search, {_id:locals.value})
 
-
-	if((locals.value || '')!=''){
-		var url=idUrl.replace('{mid}',q.mid)
-		getAjax(url,`${labelStr}`,``,(err,result)=>{
-			if(!err){
-				if(result.length>0){
-					if(valueText==''){
-						$(`#${locals.id}-autocomplete-text`).val((result[0].label || ''))
-					}
-
-					$(`input[name="${locals.name}"]`).val(result[0].obj._id.toString())
-					$(`#${locals.id}-obj`).val(encodeURIComponent2(JSON.stringify(result[0].obj)))
-
-					if(locals.lookupTextField){
-						$(`#${locals.id}-original-text`).html((result[0].label || ''))
-					}
-
-				}else{
-					if(valueText=='')
-						$(`#${locals.id}-autocomplete-text`).val('')
-					$(`input[name="${locals.name}"]`).val('')
-					$(`#${locals.id}-obj`).val('')
-					$(`#${locals.id}-original-text`).html('')
-				}
-
+		}else if((locals.dataSource.url || '')!=''){
+			searchUrl=replaceUrlCurlyBracket(locals.dataSource.url, {_id:locals.value})
+			if(searchUrl.indexOf('?')<0){
+				searchUrl+='?search={search}'
 			}else{
-				$(`#${locals.id}-autocomplete-text`).val('')
-				$(`#${locals.id}-autocomplete-text`).attr('placeholder',`Hata:${err.message}`)
+				searchUrl+='&search={search}'
+			}
+		}
+		var idUrl=''
+		if(locals.dataSource.id || locals.dataSource.idUrl){
+			idUrl=replaceUrlCurlyBracket(locals.dataSource.id  || locals.dataSource.idUrl, {_id:locals.value})
+
+		}else if(locals.dataSource.url){
+			idUrl=replaceUrlCurlyBracket(locals.dataSource.url, {_id:locals.value})
+			if(idUrl.indexOf('?')<0){
+				idUrl+=`/${locals.value}`
+			}else{
+				idUrl+=`&id=${locals.value}`
+			}
+		}
+
+
+		if(searchUrl=='' || idUrl==''){
+			return
+		}
+
+		var labelStr=(locals.dataSource.label || '{name}')
+		var valueText=locals.valueText || ''
+
+		$(`#${locals.id}-autocomplete-text`).autocomplete({
+			source:function(request,response){
+				var typedText=encodeURIComponent2(request.term)
+				var url=searchUrl.replace('{search}',typedText).replace('{search}',typedText).replace('{mid}',q.mid)
+
+				getAjax(url,`${labelStr}`,``,(err,result)=>{
+					if(!err){
+						response(result)
+					}else{
+						console.error(err)
+						response([])
+					}
+				})
+			},
+			select: function (event, ui) {
+				$(`#${locals.id}-autocomplete-text`).val((ui.item.label || ''))
+				$(`input[name="${locals.name}"]`).val(ui.item.obj._id.toString())
+				$(`#${locals.id}-obj`).val(encodeURIComponent2(JSON.stringify(ui.item.obj)))
+				if(locals.lookupTextField){
+					$(`input[name="${locals.lookupTextFieldName}"]`).val((ui.item.label || ''))
+					$(`#${locals.id}-original-text`).html((ui.item.label || ''))
+				}
+				if(locals.onchange){
+					eval(`${locals.onchange}`)
+				}
+				return false
 			}
 		})
 
+
+		$(`#${locals.id}-autocomplete-text`).on('change',()=>{
+
+			if($(`#${locals.id}-autocomplete-text`).val()==''){
+				$(`input[name="${locals.name}"]`).val('')
+				$(`#${locals.id}-obj`).val('')
+				if(locals.lookupTextField){
+					$(`#${locals.id}-original-text`).html('')
+				}
+			}
+			if(locals.lookupTextField){
+				$(`input[name="${locals.lookupTextFieldName}"]`).val($(`#${locals.id}-autocomplete-text`).val())
+			}
+		})
+
+
+		if((locals.value || '')!=''){
+			var url=idUrl.replace('{mid}',q.mid)
+			getAjax(url,`${labelStr}`,``,(err,result)=>{
+				if(!err){
+					if(result.length>0){
+						if(valueText==''){
+							$(`#${locals.id}-autocomplete-text`).val((result[0].label || ''))
+						}
+
+						$(`input[name="${locals.name}"]`).val(result[0].obj._id.toString())
+						$(`#${locals.id}-obj`).val(encodeURIComponent2(JSON.stringify(result[0].obj)))
+
+						if(locals.lookupTextField){
+							$(`#${locals.id}-original-text`).html((result[0].label || ''))
+						}
+
+					}else{
+						if(valueText=='')
+							$(`#${locals.id}-autocomplete-text`).val('')
+						$(`input[name="${locals.name}"]`).val('')
+						$(`#${locals.id}-obj`).val('')
+						$(`#${locals.id}-original-text`).html('')
+					}
+
+				}else{
+					$(`#${locals.id}-autocomplete-text`).val('')
+					$(`#${locals.id}-autocomplete-text`).attr('placeholder',`Hata:${err.message}`)
+				}
+			})
+
+		}
 	}
-}
 
 
 
-function cboEasyDateChange(value){
+	function cboEasyDateChange(value){
 
-	var date1=new Date()
-	var date2=new Date()
-	date1.setHours(0, 0, 0, 0)
-	date1.setMinutes((new Date()).getTimezoneOffset())
-	date2.setHours(0, 0, 0, 0)
-	date2.setMinutes((new Date()).getTimezoneOffset())
+		var date1=new Date()
+		var date2=new Date()
+		date1.setHours(0, 0, 0, 0)
+		date1.setMinutes((new Date()).getTimezoneOffset())
+		date2.setHours(0, 0, 0, 0)
+		date2.setMinutes((new Date()).getTimezoneOffset())
 
-	switch(value){
-		case 'today':
-		break
-		case 'thisWeek':
-		date1=date1.addDays(-1 * (date1.getDay()-1))
-		date2=date2.addDays(7- date2.getDay())
-		break
-		case 'thisMonth': 
-		date1=date1.addDays(-1 * (date1.getDate()-1))
-		date2=date2.lastThisMonth()
-		break
-		case 'last1Week':
-		date1=date1.addDays(-7)
-		break
+		switch(value){
+			case 'today':
+			break
+			case 'thisWeek':
+			date1=date1.addDays(-1 * (date1.getDay()-1))
+			date2=date2.addDays(7- date2.getDay())
+			break
+			case 'thisMonth': 
+			date1=date1.addDays(-1 * (date1.getDate()-1))
+			date2=date2.lastThisMonth()
+			break
+			case 'last1Week':
+			date1=date1.addDays(-7)
+			break
 
-		case 'last1Month':
-		date1=new Date(date1.setMonth(date1.getMonth()-1))
-		break
-		case 'last3Months':
-		date1=new Date(date1.setMonth(date1.getMonth()-3))
-		break
-		case 'last6Months':
-		date1=new Date(date1.setMonth(date1.getMonth()-6))
-		break
-		case 'thisYear':
-		date1=new Date(date1.getFullYear(),0,1)
-		date2=new Date(date2.getFullYear(),11,31)
-		break
-		case 'last1Year':
-		date1=new Date(date1.setMonth(date1.getMonth()-12))
-		break
-		default:
-		break
+			case 'last1Month':
+			date1=new Date(date1.setMonth(date1.getMonth()-1))
+			break
+			case 'last3Months':
+			date1=new Date(date1.setMonth(date1.getMonth()-3))
+			break
+			case 'last6Months':
+			date1=new Date(date1.setMonth(date1.getMonth()-6))
+			break
+			case 'thisYear':
+			date1=new Date(date1.getFullYear(),0,1)
+			date2=new Date(date2.getFullYear(),11,31)
+			break
+			case 'last1Year':
+			date1=new Date(date1.setMonth(date1.getMonth()-12))
+			break
+			default:
+			break
+		}
+		return {
+			date1:date1.yyyymmdd(),
+			date2:date2.yyyymmdd()
+		}
 	}
-	return {
-		date1:date1.yyyymmdd(),
-		date2:date2.yyyymmdd()
-	}
-}
 
 
-function replaceUrlCurlyBracket(url,item){
-	if((url || '')=='')
-		return ''
-	if(!(url.indexOf('{')>-1 && url.indexOf('}')>-1))
+	function replaceUrlCurlyBracket(url,item){
+		if((url || '')=='')
+			return ''
+		if(!(url.indexOf('{')>-1 && url.indexOf('}')>-1))
+			return url
+		var fieldList=[]
+		var dizi=url.split('}')
+		dizi.forEach((e)=>{
+			if(e.indexOf('{')>-1){
+				fieldList.push(e.split('{')[1])
+			}
+		})
+
+		fieldList.forEach((e)=>{
+			url=url.replaceAll(`{${e}}`,getPropertyByKeyPath(item,e))
+		})
+
 		return url
-	var fieldList=[]
-	var dizi=url.split('}')
-	dizi.forEach((e)=>{
-		if(e.indexOf('{')>-1){
-			fieldList.push(e.split('{')[1])
-		}
-	})
-
-	fieldList.forEach((e)=>{
-		url=url.replaceAll(`{${e}}`,getPropertyByKeyPath(item,e))
-	})
-
-	return url
-}
-
-
-
-function getPropertyByKeyPath(targetObj, keyPath) {
-	if(targetObj==undefined || targetObj==null || !keyPath)
-		return targetObj
-
-	if(keyPath.substr(0,1)=='/')
-		keyPath=keyPath.substr(1)
-	if(keyPath.substr(0,2)=='./')
-		keyPath=keyPath.substr(2)
-	keyPath=keyPath.replaceAll('/','.')
-
-	var keys = keyPath.split('.')
-	if(keys.length == 0) 
-		return undefined
-	keys = keys.reverse()
-	var subObject = targetObj
-	while(keys.length) {
-		var k = keys.pop()
-		if(typeof subObject[k]=='undefined' || subObject[k]==null) {
-			return undefined
-		} else {
-			subObject = subObject[k]
-		}
 	}
-	return subObject
-}
 
 
 
-function getFormData(divId){
+	function getPropertyByKeyPath(targetObj, keyPath) {
+		if(targetObj==undefined || targetObj==null || !keyPath)
+			return targetObj
 
-	var obj=listObjectToObject($(`${divId}`).serializeArray().reduce((obj, item) => ({ ...obj, ...{ [item.name.replaceAll('[','.').replaceAll(']','')]: item.value } }), {}))
-	return obj
-}
+		if(keyPath.substr(0,1)=='/')
+			keyPath=keyPath.substr(1)
+		if(keyPath.substr(0,2)=='./')
+			keyPath=keyPath.substr(2)
+		keyPath=keyPath.replaceAll('/','.')
 
-$('body').on('keydown', 'input, select', (e)=>{
-	if(e){
-		if(e.key){
-			if (e.key === "Enter") {
-				return enterNext(e.currentTarget)
+		var keys = keyPath.split('.')
+		if(keys.length == 0) 
+			return undefined
+		keys = keys.reverse()
+		var subObject = targetObj
+		while(keys.length) {
+			var k = keys.pop()
+			if(typeof subObject[k]=='undefined' || subObject[k]==null) {
+				return undefined
+			} else {
+				subObject = subObject[k]
 			}
 		}
+		return subObject
 	}
-})
 
-function enterNext(bu){
-	if(bu==undefined)
-		bu=this
-	var self = $(bu), form = self.parents('form:eq(0)'), focusable, next
-	focusable = form.find('input,a,select,button,textarea').filter(':visible')
-	next = focusable.eq(focusable.index(bu)+1)
-	if (next.length) {
 
-		var readonly=next.prop('readonly') || false
-		var disabled=next.prop('disabled') || false
-		var cl=next.prop('class') || ''
 
-		if(cl.indexOf('btn-collapse')>-1 || cl.indexOf('skip-enter-next')>-1 || cl.indexOf('no-enter-next')>-1)
-			return enterNext(next)
+	function getFormData(divId){
 
-		if(readonly || disabled )
-			return enterNext(next)
+		var obj=listObjectToObject($(`${divId}`).serializeArray().reduce((obj, item) => ({ ...obj, ...{ [item.name.replaceAll('[','.').replaceAll(']','')]: item.value } }), {}))
+		return obj
+	}
 
-		next.focus()
-		if(typeof next.select === 'function')
-			next.select()
-	} else {
+	$('body').on('keydown', 'input, select', (e)=>{
+		if(e){
+			if(e.key){
+				if (e.key === "Enter") {
+					return enterNext(e.currentTarget)
+				}
+			}
+		}
+	})
+
+	function enterNext(bu){
+		if(bu==undefined)
+			bu=this
+		var self = $(bu), form = self.parents('form:eq(0)'), focusable, next
+		focusable = form.find('input,a,select,button,textarea').filter(':visible')
+		next = focusable.eq(focusable.index(bu)+1)
+		if (next.length) {
+
+			var readonly=next.prop('readonly') || false
+			var disabled=next.prop('disabled') || false
+			var cl=next.prop('class') || ''
+
+			if(cl.indexOf('btn-collapse')>-1 || cl.indexOf('skip-enter-next')>-1 || cl.indexOf('no-enter-next')>-1)
+				return enterNext(next)
+
+			if(readonly || disabled )
+				return enterNext(next)
+
+			next.focus()
+			if(typeof next.select === 'function')
+				next.select()
+		} else {
 			//form.submit()
 		}
 		return false
@@ -749,6 +739,7 @@ function enterNext(bu){
 			return cb(null,data)
 		}
 		
+
 		var url=item.dataSource.url
 		var bHashParamsEkle=false
 		if(hashObj.func=='addnew'){
@@ -772,6 +763,8 @@ function enterNext(bu){
 		if(filterString!=''){
 			url+=`${url.indexOf('?')>-1?'&':'?'}${filterString}`
 		}
+		
+		console.log(`getRemoteData url:`,url)
 
 		$.ajax({
 			url:url,
@@ -892,11 +885,11 @@ function enterNext(bu){
 					var hashObj=Object.assign({},getHashObject(),{func:'index',page:1})
 					setHashObject(hashObj)
 				}else{
-					showError(result.error)
+					alertX(`${result.error.code} - ${result.error.message}`,`Hata`,`danger`)
 				}
 			},
 			error:function(err){
-				showError(err)
+				alertX(`${err.code || err.name} - ${err.message || err.name}`,`Hata`,`danger`)
 			}
 		})
 	}
@@ -1206,6 +1199,7 @@ function enterNext(bu){
 						$(`#${fields[key].id}`).attr('type','text')
 						$(`#${fields[key].id}`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
 					}catch(tryErr){
+						console.error('tryErr:',tryErr)
 						$(`#${fields[key].id}`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
 					}
 				}
@@ -1256,11 +1250,11 @@ function enterNext(bu){
 					if(result.success){
 						window.onhashchange()
 					}else{
-						showError(result.error)
+						alertX(`${result.error.code} - ${result.error.message}`,`Hata`,`danger`)
 					}
 				},
 				error:function(err){
-					showError(err)
+					alertX(`${err.code || err.name} - ${err.message || err.name}`,`Hata`,`danger`)
 				}
 			})
 		})
@@ -1326,11 +1320,11 @@ function enterNext(bu){
 					if(result.success){
 						window.onhashchange()
 					}else{
-						showError(result.error)
+						alertX(`${result.error.code} - ${result.error.message}`,`Hata`,`danger`)
 					}
 				},
 				error:function(err){
-					showError(err)
+					alertX(`${err.code || err.name} - ${err.message || err.name}`,`Hata`,`danger`)
 				}
 			})
 		})
@@ -1408,7 +1402,7 @@ function enterNext(bu){
 	}
 
 	function menuLink(path,filter){
-		var s=`#${path}`
+		var s=`/haham#${path}`
 		
 		if(!filter){
 			filter={}
@@ -1425,12 +1419,6 @@ function enterNext(bu){
 		return s
 	}
 
-
-	
-
-	function openPage(url,title){
-		history.pushState('', 'New Page Title', '${s}')
-	}
 
 	var q=getAllUrlParams()
 
@@ -1532,75 +1520,11 @@ function enterNext(bu){
 		window.location.hash=hashString
 	}
 	
-	function getHashObject111(){
-
-
-		var hash=window.location.href.split(`${window.location.origin}/haham`)[1]
-		var queryString=hash.split('?')[1]?hash.split('?')[1]:''
-		var dizi=hash.split('?')[0].split('/')
-		dizi.splice(0,1)
-
-		var hashObj={
-			path:dizi.length>1?`/${dizi[0]}/${dizi[1]}`:'',
-			pathKey:dizi.length>1?`${dizi[0]}.${dizi[1]}`:'',
-			func:dizi.length>2?dizi[2]:'',
-			id:dizi.length>3?dizi[3]:'',
-			param1:dizi.length>4?dizi[4]:'',
-			param2:dizi.length>5?dizi[5]:'',
-			param3:dizi.length>6?dizi[6]:'',
-			query:{},
-			queryString:queryString
-		}
-		if(hashObj.path && hashObj.func==''){
-			hashObj.func='index'
-		}
-
-		if(queryString){
-
-			hashObj.query=getAllUrlParams(queryString)
-		}
-		return hashObj
-	}
-
-	function setHashObject111(hashObj){
-		var hashString=hashObj.path || ''
-		
-		if(hashObj.func!='' && hashObj.func!='index'){
-			hashString+='/' + hashObj.func
-			if(hashObj.id){
-				hashString+='/' + hashObj.id
-				if(hashObj.param1){
-					hashString+='/' + hashObj.param1
-					if(hashObj.param2){
-						hashString+='/' + hashObj.param2
-						if(hashObj.param3){
-							hashString+='/' + hashObj.param3
-						}
-					}
-				}
-			}
-		}
-
-		if(hashObj.query){
-			var filterString=''
-			Object.keys(hashObj.query).forEach((key)=>{
-				if(filterString!='')
-					filterString+='&'
-				filterString+=`${key}=${encodeURIComponent2(hashObj.query[key])}`
-			})
-			if(filterString!=''){
-				hashString+=`?${filterString}`
-			}
-		}
-
-		window.location.href= `${window.location.origin}/haham${hashString}`
-	}
-
 	function pageTitle(leftMenu){
 		var breadCrumbs=[]
 		var pageTitle=''
 		var funcTitle=hashObj.func || ''
-		breadCrumbs=getBreadCrumbs(leftMenu,(hashObj.query.mid || '0'))
+		breadCrumbs=getBreadCrumbs(leftMenu,(hashObj.query.mid || ''))
 
 		if(breadCrumbs.length>0){
 			pageTitle+=`<i class="${breadCrumbs[breadCrumbs.length-1].icon || ''}"></i> `
@@ -1642,7 +1566,7 @@ function enterNext(bu){
 
 	function generateLeftMenu(leftMenu){
 		var hashObj=getHashObject()
-		var mid=hashObj.query.mid || '0'
+		var mid=hashObj.query.mid || ''
 		
 		var s=``
 		leftMenu.forEach((item,index)=>{
@@ -1773,20 +1697,4 @@ function enterNext(bu){
 	function changedb(dbId){
 		window.location.href=`/changedb?db=${dbId}&r=${window.location.href}`
 	}
-
-
-	function openInNewTab(url) {
-		var win = window.open(url, '_blank')
-		win.focus()
-	}
-
-	function windowPathToFieldName(path=''){
-		if(path=='')
-			path=getHashObject().path
-		if(path.substr(0,1)=='/')
-			path=path.substr(1)
-		path=path.replaceAll('/','_')
-
-
-		return path
-	}
+</script>

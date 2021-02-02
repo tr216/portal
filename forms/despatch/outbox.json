@@ -33,7 +33,8 @@
 			"dataSource": {
 				"type":"remote",
 				"method":"GET",
-				"url":"/dbapi/despatch/outbox"
+				"url":"/dbapi/despatch/outbox",
+				"deleteUrl":"/dbapi/despatch/{_id}"
 			}
 
 		}
@@ -191,7 +192,7 @@
 							"copy": false
 						}
 					},
-					"onchange":"toplamlariGuncelle(this.value)"
+					"onchange":"toplamlariGuncelle(this)"
 				},
 				"group1":{
 					"title":"Toplamlar",

@@ -5,7 +5,7 @@
 			"type":"filter",
 			"fields": {
 				"tarih": {"title":"Tarih", "type":"dateRange"},
-				"productionTypeCode":{"title":"Türü", "type":"lookup", "staticValues":"productionTypeCodeList"}
+				"productionTypeCode":{"title":"Türü", "type":"lookup", "staticValues":"productionTypeCodeList", "col":3}
 			}
 		},
 		{
@@ -31,7 +31,7 @@
 					"delete": true,
 					"view": false,
 					"print": false,
-					"copy": false
+					"copy": true
 				}
 			},
 			"dataSource": {
