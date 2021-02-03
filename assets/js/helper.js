@@ -25,6 +25,7 @@ initGlobals()
 
 var hashObj=getHashObject()
 
+
 function sayfalariTekrarYukle(cb){
 	var sessionId=$('#sessionId').html()
 	$('#sessionId').html('Sayfalar ve degiskener tekrar yukleniyor...')
@@ -1074,7 +1075,12 @@ function getHashObject(){
 		param2:dizi.length>5?dizi[5]:'',
 		param3:dizi.length>6?dizi[6]:'',
 		query:{},
-		queryString:queryString
+		queryString:queryString,
+		icon:'',
+		title:'',
+		funcTitle:'',
+		breadCrumbs:'',
+		breadCrumbsHtml:''
 	}
 	if(h.path && h.func==''){
 		h.func='index'
@@ -1084,6 +1090,9 @@ function getHashObject(){
 
 		h.query=getAllUrlParams(queryString)
 	}
+	var p=getPageInfos(h)
+	h=Object.assign({},h,p)
+	
 
 	return h
 }
@@ -1123,11 +1132,75 @@ function setHashObject(h){
 	window.location.hash=hashString
 }
 
-function pageTitle(leftMenu){
+function getPageInfos(h=null){
+	
+	var p={
+		icon:'',
+		title:'',
+		funcTitle:'',
+		breadCrumbs:'',
+		breadCrumbsHtml:''
+
+	}
+	if(h==null){
+		h=hashObj
+	}
+	var breadCrumbs=getBreadCrumbs(global.menu,(h.query.mid || '0')) || []
+
+	if(breadCrumbs.length>0){
+		p.icon=breadCrumbs[breadCrumbs.length-1].icon || ''
+		p.title=breadCrumbs[breadCrumbs.length-1].text || ''
+
+		if(h.func!='' && h.func!='index'){
+			switch(h.func){
+				case 'edit':
+				p.funcTitle='Düzenle'
+				break
+				case 'addnew':
+				p.funcTitle='Yeni'
+				break
+				case 'view':
+				p.funcTitle='İzleme'
+				break
+				case 'print':
+				p.funcTitle='Yazdır'
+				break
+				default:
+				p.funcTitle=h.func
+				break
+			}
+			breadCrumbs.push({icon:'',text:p.funcTitle})
+		}
+		var sbuf=''
+		sbuf=breadCrumbs.length>0?breadCrumbs[0].text:''
+		p.breadCrumbs+=sbuf
+		p.breadCrumbsHtml+=breadCrumbs.length==1?`<span class="font-weight-bold text-orange">${breadCrumbs[0].text}</span>`:sbuf
+
+		sbuf=breadCrumbs.length>1?' \\ ' + breadCrumbs[1].text:''
+		p.breadCrumbs+=sbuf
+		p.breadCrumbsHtml+=breadCrumbs.length==2?` \\ <span class="font-weight-bold text-orange">${breadCrumbs[1].text}</span>`:sbuf
+
+		sbuf=breadCrumbs.length>2?' \\ ' + breadCrumbs[2].text:''
+		p.breadCrumbs+=sbuf
+		p.breadCrumbsHtml+=breadCrumbs.length==3?` \\ <span class="font-weight-bold text-orange">${breadCrumbs[2].text}</span>`:sbuf
+
+		sbuf=breadCrumbs.length>3?' \\ ' + breadCrumbs[3].text:''
+		p.breadCrumbs+=sbuf
+		p.breadCrumbsHtml+=breadCrumbs.length==4?` \\ <span class="font-weight-bold text-orange">${breadCrumbs[3].text}</span>`:sbuf
+
+		sbuf=breadCrumbs.length>4?' \\ ' + breadCrumbs[4].text:''
+		p.breadCrumbs+=sbuf
+		p.breadCrumbsHtml+=breadCrumbs.length==5?` \\ <span class="font-weight-bold text-orange">${breadCrumbs[4].text}</span>`:sbuf
+		
+	}
+	return p
+}
+
+function pageTitle11(h){
 	var breadCrumbs=[]
 	var pageTitle=''
-	var funcTitle=hashObj.func || ''
-	breadCrumbs=getBreadCrumbs(leftMenu,(hashObj.query.mid || '0'))
+	var funcTitle=h.func || ''
+	breadCrumbs=getBreadCrumbs(global.menu,(h.query.mid || '0'))
 
 	if(breadCrumbs.length>0){
 		pageTitle+=`<i class="${breadCrumbs[breadCrumbs.length-1].icon || ''}"></i> `

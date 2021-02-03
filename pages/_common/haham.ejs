@@ -2,9 +2,11 @@
 <div id="mainCtrl"></div>
 
 <script type="text/javascript">
+	
 
 	function sayfaBul(){
-		pageTitle(global.menu)
+		document.title=hashObj.title + ' - tr216'
+		$('#pageTitle').html(`<i class="${hashObj.icon}"></i> ${hashObj.breadCrumbsHtml}`)
 		var sayfa=getPropertyByKeyPath(global.pages,hashObj.pathKey)
 		if(!sayfa)
 			return null
@@ -52,11 +54,13 @@
 	
 	var frm=FormControl.FormControl
 	
+
 	$(document).ready(()=>{
 		sayfalariTekrarYukle(()=>{
 			sayfayiAcalim()
 			window.onhashchange=()=>{
 				hashObj=getHashObject()
+				
 				
 				$('#mainCtrl').html('loading...')
 				sayfayiAcalim()

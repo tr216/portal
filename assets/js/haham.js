@@ -492,7 +492,7 @@ script=''
 
 
 		function gridHtml(item,bRoot,insideOfModal=false){
-			var sayfaProgramlari=programButtons()
+			var sayfaProgramlari=bRoot?programButtons():''
 			var s=``
 			if(item.options.show.infoRow || sayfaProgramlari!=''){
 				s+=`
@@ -539,9 +539,12 @@ script=''
 				`
 			}
 
-			script+=`
-			programFileUploaderChangeEvent()
-			`
+			if(bRoot){
+				script+=`
+				programFileUploaderChangeEvent()
+				`
+			}
+			
 			return s
 		}
 

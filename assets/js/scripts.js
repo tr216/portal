@@ -143,7 +143,7 @@ function modalCopyOk(){
 
 function modalFormOptions(){
 	$("#gridPrograms tr").remove()
-
+	$('#modalFormOptions .modal-title').html(`<i class="fas fa-cogs"></i> Form Options: <span class="text-primary bold">${hashObj.title}</span>`)
 	$.ajax({
 		url:`/dbapi/programs?passive=false`,
 		type:'GET',
@@ -219,7 +219,7 @@ function modalFormOptions_OK(){
 	$.ajax({
 		url:`/dbapi/settings`,
 		data:data,
-		type:'POST',
+		type:'PUT',
 		dataType: 'json',
 		success: function(result) {
 			
