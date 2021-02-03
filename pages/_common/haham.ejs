@@ -4,9 +4,8 @@
 <script type="text/javascript">
 
 	function sayfaBul(){
-		pageTitle(menu)
-		var hashObj=getHashObject()
-		var sayfa=getPropertyByKeyPath(pages,hashObj.pathKey)
+		pageTitle(global.menu)
+		var sayfa=getPropertyByKeyPath(global.pages,hashObj.pathKey)
 		if(!sayfa)
 			return null
 		var resp
@@ -36,8 +35,6 @@
 	}
 	
 	function sayfayiAcalim(){
-		var hashObj=getHashObject()
-		
 		if((hashObj.query.mid || '')!=''){
 			$(`#leftMenu a`).removeClass('active')
 			$(`#leftMenu #menu${hashObj.query.mid.replaceAll('.','-')}`).addClass('active')
@@ -54,15 +51,12 @@
 	
 	
 	var frm=FormControl.FormControl
-	window.hashObj=getHashObject()
-
 	
 	$(document).ready(()=>{
 		sayfalariTekrarYukle(()=>{
 			sayfayiAcalim()
 			window.onhashchange=()=>{
-				window.hashObj=getHashObject()
-				
+				hashObj=getHashObject()
 				
 				$('#mainCtrl').html('loading...')
 				sayfayiAcalim()

@@ -1,45 +1,45 @@
 <% layout('../../_common/layouts/login-layout') %>
-
 <div class="container mb-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-5">
-            <div id="loginPanel" class="card shadow-lg border-0 rounded-lg mt-5">
-                <div class="card-header"><div class="text-center login-title text-primary"><i class="fas fa-hourglass-half mr-1"></i> {{Lütfen bekleyiniz}}</div></div>
-                <div class="card-body">
-                    {{yükleniyor...}}
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="row justify-content-center">
+		<div class="col-lg-5">
+			<div id="loginPanel" class="card shadow-lg border-0 rounded-lg mt-5">
+				<div class="card-header"><div class="text-center login-title text-primary"><i class="fas fa-hourglass-half mr-1"></i> {{Lütfen bekleyiniz}}</div></div>
+				<div class="card-body">
+					{{yükleniyor...}}
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+
 <script type="text/javascript">
 	
+
 	function sayfalariYukle(cb){
-		// setTimeout(()=>{
-			$.ajax({
-				type:'GET',
-				url:'/api/initialize',
-				success:function(result){
-					if(result.success){
-						localStorage.setItem('pages',JSON.stringify(result.data.pages || {}))
-						localStorage.setItem('pages_version',result.data.version || '')
-						localStorage.setItem('staticValues',JSON.stringify(result.data.staticValues || {}))
-						localStorage.setItem('menu',JSON.stringify(result.data.menu || {}))
-						cb(null)
-					}else{
-						
-						cb(result.error)
-					}
-				},
-				error:function(err){
-					
-					cb(err)
+		$.ajax({
+			type:'GET',
+			url:'/api/initialize',
+			success:function(result){
+				if(result.success){
+					localStorage.setItem('global',JSON.stringify(result.data || {}))
+					global=Object.assign({},global,result.data)		
+					cb(null)
+				}else{
+
+					cb(result.error)
 				}
-			})
-		// },2000)
+			},
+			error:function(err){
+
+				cb(err)
+			}
+		})
 	}
 
 	$(document).ready(()=>{
+		if((localStorage.getItem('global') || '')==''){
+			localStorage.clear()
+		}
 		var referer=window.location.href.split('?r=')[1] || ''
 		sayfalariYukle((err)=>{
 			if(!err){

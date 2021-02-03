@@ -232,47 +232,6 @@ function IsSpecialPages(req){
 	return false
 }
 
-function setGeneralParams(req, res, data, cb){
-	var referer=req.headers.referer || ''
-	var currentUrl=req.protocol + '://' + req.get('host') + req.originalUrl
-
-	data['elvanDalton']=req.session.elvanDalton || ''
-	data['mid']=req.query.mid || ''
-	data['leftMenu']=[]
-	data['databases']=[]
-	data['db']=''
-	data['dbName']=''
-	data['session']={}
-
-	data['message']=data['message']==undefined?'':data['message']
-	data['successMessage']=data['successMessage']==undefined?'':data['successMessage']
-
-	
-	if(IsSpecialPages(req) && (data.elvanDalton || '')==''){
-		return cb(null,data)
-	}
-
-	db.sessions.findOne({_id:req.session.elvanDalton, passive:false},(err,doc)=>{
-		if(!err){
-			if(doc!=null){
-				data['db']=doc.dbId
-				data['dbName']=doc.dbName
-				data['mid']=req.query.mid || doc.mId || ''
-				data['leftMenu']=doc.menu
-				data['databases']=doc.databases
-				data['session']=doc.toJSON()
-				cb(null, data)
-			}else{
-				cb({code:'SESSION_NOT_FOUND',message:'Oturum süresi bitmiş. Yeniden giriş yapınız.'})
-			}
-
-		}else{
-			console.error(`setGeneralParams err:`,err)
-			cb(err)
-		}
-	})
-}
-
 
 var userInfo = function (req, res, next) {
 	if(req.params.module=='general' && req.params.page=='login')
@@ -343,6 +302,50 @@ function errorPage(req,res,err){
 }
 
 
+
+function setGeneralParams(req, res, data, cb){
+	var referer=req.headers.referer || ''
+	var currentUrl=req.protocol + '://' + req.get('host') + req.originalUrl
+
+	data['elvanDalton']=req.session.elvanDalton || ''
+	data['mid']=req.query.mid || ''
+	data['leftMenu']=[]
+	data['databases']=[]
+	data['db']=''
+	data['dbName']=''
+	data['session']={}
+
+	data['message']=data['message']==undefined?'':data['message']
+	data['successMessage']=data['successMessage']==undefined?'':data['successMessage']
+
+	
+	if(IsSpecialPages(req) && (data.elvanDalton || '')==''){
+		return cb(null,data)
+	}
+
+	db.sessions.findOne({_id:req.session.elvanDalton, passive:false},(err,doc)=>{
+		if(!err){
+			if(doc!=null){
+				data['db']=doc.dbId
+				data['dbName']=doc.dbName
+				data['mid']=req.query.mid || doc.mId || ''
+				data['leftMenu']=doc.menu
+				data['databases']=doc.databases
+				data['session']=doc.toJSON()
+				cb(null, data)
+			}else{
+				cb({code:'SESSION_NOT_FOUND',message:'Oturum süresi bitmiş. Yeniden giriş yapınız.'})
+			}
+
+		}else{
+			console.error(`setGeneralParams err:`,err)
+			cb(err)
+		}
+	})
+}
+
+
+
 var maxVersion=''
 function getJSONPages(req,res){
 	maxVersion=''
@@ -352,8 +355,20 @@ function getJSONPages(req,res){
 				if(!err){
 					getJSONPageLoader(path.join(__dirname,'../forms'),'.json','',(err,holder)=>{
 						if(!err){
-							//eventLog(`/api/pages maxVersion:`.yellow,maxVersion.cyan)
-							res.status(200).json({success:true,data:{version:maxVersion,staticValues:sabitDegerler, pages:holder, menu:require(path.join(__dirname,'../resources/menu.json'))}})
+							res.status(200).json({
+								success:true,
+								data:{
+									version:maxVersion,
+									staticValues:sabitDegerler,
+									pages:holder,
+									menu:data.leftMenu,
+									databases:data.databases,
+									db:data.db,
+									dbName:data.dbName,
+									sessionId:data.elvanDalton || '',
+									settings:data.session.settings || {}
+								}
+							})
 						}else{
 							res.status(200).json({success:false,error:err})
 						}

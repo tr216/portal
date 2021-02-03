@@ -1,4 +1,8 @@
 $(document).ready(function(){
+	// $("#sidebarToggle").on("click", function(e) {
+	// 	e.preventDefault()
+	// 	$("body").toggleClass("sb-sidenav-toggled")
+	// })
 
 	$(document).on('scroll', function() {
 		var scrollDistance = $(this).scrollTop()
@@ -99,6 +103,22 @@ function popupCenter(url, title, w, h,isDialog=false) {
 	}
 
 }
+
+
+// function load_card_collapses(){
+
+// 	var kartlar=document.getElementsByClassName('card-collapse')
+// 	var i=0
+// 	while(i<kartlar.length){
+// 		if(pageSettings.getItem(`collapse_${kartlar[i].id}`)){
+// 			$(`#${kartlar[i].id}`).collapse(pageSettings.getItem(`collapse_${kartlar[i].id}`))			
+// 		}
+
+// 		i++
+// 	}
+// }
+// load_card_collapses()
+
 
 var copyX_cb=null
 var copyX_fields={}
@@ -277,49 +297,55 @@ function confirmX(message, type='info',cb){
 		$('#modalConfirm').modal('hide')
 	})
 }
+	// $('input').keypress(function(e) {
+	// 	if(e.keyCode == 13){
+	// 		$(this).next('input').focus()
+	// 		e.preventDefault()
+	// 	}
+	// })
 
 
 
-function alertX(message, title='', type='info',cb){
-	var icon='fas fa-exclamation-triangle'
-	if(typeof title=='function'){
-		cb=title
-		title=''
-		type='info'
-	}else if(typeof type=='function'){
-		cb=type
-		type='info'
+	function alertX(message, title='', type='info',cb){
+		var icon='fas fa-exclamation-triangle'
+		if(typeof title=='function'){
+			cb=title
+			title=''
+			type='info'
+		}else if(typeof type=='function'){
+			cb=type
+			type='info'
+		}
+		$('#modalMessageHeader').removeClass('alert-warning')
+		$('#modalMessageHeader').removeClass('alert-info')
+		$('#modalMessageHeader').removeClass('alert-danger')
+
+		switch(type){
+			case 'danger':
+			icon='fas fa-skull-crossbones'
+			$('#modalMessageHeader').addClass('alert-danger')
+			break
+			case 'warning':
+			icon='fas fa-exclamation-triangle'
+			$('#modalMessageHeader').addClass('alert-warning')
+			break
+			default:
+			icon='fas fa-info-circle'
+			$('#modalMessageHeader').addClass('alert-info')
+			break
+		}
+		title=`<i class="${icon}"></i> ${title}`
+		$('#modalMessageLabel').html(title)
+
+		$('#modalMessage .modal-body').html(`${message.replaceAll('\n','<br>')}`)
+		
+		$('#modalMessage').modal('show')
+		$('#modalMessage').on('hidden.bs.modal', function (e) {
+			if(cb)
+				cb('ok')
+		})
 	}
-	$('#modalMessageHeader').removeClass('alert-warning')
-	$('#modalMessageHeader').removeClass('alert-info')
-	$('#modalMessageHeader').removeClass('alert-danger')
 
-	switch(type){
-		case 'danger':
-		icon='fas fa-skull-crossbones'
-		$('#modalMessageHeader').addClass('alert-danger')
-		break
-		case 'warning':
-		icon='fas fa-exclamation-triangle'
-		$('#modalMessageHeader').addClass('alert-warning')
-		break
-		default:
-		icon='fas fa-info-circle'
-		$('#modalMessageHeader').addClass('alert-info')
-		break
+	function showError(err){
+		alertX(`${err.code || err.name} - ${err.message || err.name}`,'Hata','danger')
 	}
-	title=`<i class="${icon}"></i> ${title}`
-	$('#modalMessageLabel').html(title)
-
-	$('#modalMessage .modal-body').html(`${message.replaceAll('\n','<br>')}`)
-
-	$('#modalMessage').modal('show')
-	$('#modalMessage').on('hidden.bs.modal', function (e) {
-		if(cb)
-			cb('ok')
-	})
-}
-
-function showError(err){
-	alertX(`${err.code || err.name} - ${err.message || err.name}`,'Hata','danger')
-}
