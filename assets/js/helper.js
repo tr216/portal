@@ -1312,33 +1312,32 @@ function windowPathToFieldName(path=''){
 	if(path.substr(0,1)=='/')
 		path=path.substr(1)
 	path=path.replaceAll('/','_')
-
+	path=path.replaceAll('-','_')
 
 	return path
 }
 
 
-function programButtons(session,urlPath,panelButtons=''){
-
+function programButtons(panelButtons=''){
 	var prgButtons=[]
-	var pathFieldName=convertPathFieldName(urlPath)
-
-	try{
-		prgButtons=session.settings.page[pathFieldName].programs
-	}catch(err){
-
+	if(global.settings){
+		if(global.settings.page[windowPathToFieldName()]){
+			if(global.settings.page[windowPathToFieldName()].programs){
+				prgButtons=global.settings.page[windowPathToFieldName()].programs
+			}
+		}
 	}
+	
 	if(prgButtons.length==0 && panelButtons=='')
 		return ''
 
-	var sbuf=`<div class="button-bar mt-2 p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">\n`
+	var sbuf=`<div class="button-bar mt-0 p-1 rounded justify-content-start" role="toolbar" aria-label="Toolbar with button groups">\n`
 	if(panelButtons!='')
 		sbuf +=panelButtons
 
 	if(prgButtons.length>0){
 		prgButtons.forEach((e)=>{
 			var icon=''
-
 			e.showButtonText=e.showButtonText || false
 			if((e.icon || '')!=''){
 				icon=e.icon
@@ -1370,6 +1369,96 @@ function programButtons(session,urlPath,panelButtons=''){
 			sbuf +=`<a class="btn btn-primary mr-2" href="javascript:runProgram('${e._id}','${e.type}')" title="${e.name}">${icon!=''?'<i class="' + icon + '"></i>':''} ${e.showButtonText?e.name:''}</a>\n`
 		})
 	}
-	sbuf+=`</div>\n`
+	sbuf+=`
+	<input type="file" name="fileUpload" id="fileUpload" style="visibility:hidden;" accept="*.*" multiple>
+	</div>
+	`
 	return sbuf
+}
+
+function programFileUploaderChangeEvent(){
+	$("#fileUpload").change(function() {
+		var reader  = new FileReader()
+		var fileIndex=0
+		var files=this.files
+		var uploadFiles=[]
+		reader.addEventListener("load", function(){
+
+			if(reader.result){
+				uploadFiles[uploadFiles.length-1].data=reader.result.split('base64,')[1]
+			}
+			fileIndex++
+			runReader()
+		})
+
+		function runReader(){
+			if(fileIndex>=files.length){
+				document.dispatchEvent(new CustomEvent("file-upload-finished", {detail:uploadFiles}))
+				return
+			}
+			var file=files[fileIndex]
+			uploadFiles.push({name:file.name,modifiedDate:file.lastModifiedDate,size:file.size,data:''})
+
+			reader.readAsDataURL(file)
+		}
+
+		runReader()
+	})
+}
+
+var programId=''
+var programType=''
+
+document.addEventListener('file-upload-finished', function(event) {
+	var data={files:event.detail}
+	runProgramAjax(data)
+})
+
+function runProgram(_id,type){
+	programId=_id
+	programType=type
+	if(type=='file-importer'){
+		$('#fileUpload').trigger('click')
+		return
+	}
+	var list=[]
+
+	$(".checkSingle").each(function() {
+		if(this.checked){
+			list.push({_id:this.value})
+		}
+	})
+	if(list.length==0)
+		return alertX('Hiç kayıt seçilmemiş')
+	var data={list:list}
+	runProgramAjax(data)
+
+}
+
+function runProgramAjax(data){
+	$.ajax({
+		url:`/dbapi/programs/run/${programId}`,
+		data:data,
+		type:'POST',
+		dataType: "json",
+		success:function(result){
+			if(result.success){
+				if(typeof result.data=='string'){
+					if(programType=='file-exporter'){
+						download(`data:application/file;base64,${btoa2(result.data)}`,`export_${(new Date()).yyyymmddhhmmss()}.txt`,'application/file')
+						return
+					}else if(programType=='connector-exporter'){
+						alert(result.data)
+					}
+				}
+				
+				window.location.reload()	
+			}else{
+				showError(result.error)
+			}
+		},
+		error:function(err){
+			showError(err)
+		}
+	})
 }

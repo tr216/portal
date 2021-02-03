@@ -301,11 +301,11 @@ script=''
 				break
 				case 'filter':
 				if(item.fields){
-					
 					item.controls=`<div id="filterForm" class="col-12 m-0 p-0"><div class="row m-0 p-0">`
 					Object.keys(item.fields).forEach((key)=>{
 						item.fields[key].value=hashObj[key] || ''
 						item.fields[key].showAll=true
+						item.fields[key].class='my-0'
 						item.controls+=generateControls(item.fields[key],{value:{}},false,insideOfModal)
 					})
 					item.controls+=`${filterFormButton('filterForm')}</div></div>`
@@ -492,10 +492,11 @@ script=''
 
 
 		function gridHtml(item,bRoot,insideOfModal=false){
-
+			var sayfaProgramlari=programButtons()
 			var s=``
-			if(item.options.show.infoRow){
+			if(item.options.show.infoRow || sayfaProgramlari!=''){
 				s+=`
+				${sayfaProgramlari}
 				<!-- info row -->
 				<div class="row m-0 border">
 				<div class="col-12 pt-1 px-1">
@@ -513,6 +514,7 @@ script=''
 			s+=`
 			<!-- table -->
 			<table id="table${item.id}" class="table table-striped border m-0 ${!bRoot?'table-bordered':''}"  cellspacing="0">
+			
 			${item.options.show.header?gridHeader(item):''}
 			${gridBody(item,bRoot,insideOfModal)}
 			${item.options.show.footer?gridFooter(item):''}
@@ -526,7 +528,7 @@ script=''
 				<div class="col-12 pt-1 px-1">
 				<div class="float-left form-inline m-0 p-0 mt-1 mb-1">
 				<div class="">
-				buraya butonlar geliyor
+				export buttons qwerty
 				</div>
 				${item.options.show.pageCount?gridPageCount(item,bRoot):''}
 				</div>
@@ -536,6 +538,10 @@ script=''
 				<!-- ./info row -->
 				`
 			}
+
+			script+=`
+			programFileUploaderChangeEvent()
+			`
 			return s
 		}
 
@@ -869,7 +875,7 @@ script=''
 				item.value.forEach((listItem,rowIndex)=>{
 					s+=`<tr>`
 					if(item.options.selection){
-						s+=`<td><input class="grid-checkbox" type="checkbox" value="${listItem._id || ''}" /></td>`
+						s+=`<td><input class="grid-checkbox checkSingle" type="checkbox" value="${listItem._id || ''}" /></td>`
 					}
 					Object.keys(fields).forEach((key)=>{
 						var field=fields[key]

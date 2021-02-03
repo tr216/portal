@@ -303,6 +303,8 @@ function sessionId2Token(req,cb){
 	if(elvanDalton=='')
 		return cb({code:'SESSION_NOT_FOUND',message:'Oturum sonlandırılmış. Tekrar giriş yapınız.'})
 
+
+
 	
 	db.sessions.findOne({_id:elvanDalton,passive:false},(err,doc)=>{
 		if(!err){

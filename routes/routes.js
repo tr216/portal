@@ -29,7 +29,7 @@ module.exports = function(app){
 			res.redirect('/general/login')
 		}else{
 			var referer=req.query.r || req.headers.referer
-			sessionHelper.changeDb(req,res,(err,data)=>{
+			sessionHelper.changeDb(req,req.query.db,(err,data)=>{
 				if(!err){
 					console.log(`referer:`,referer)
 					// res.redirect(referer)
@@ -237,7 +237,7 @@ var userInfo = function (req, res, next) {
 	if(req.params.module=='general' && req.params.page=='login')
 		return next()
 
-	developmentSession(req,()=>{
+	developmentSession(req,res,()=>{
 		if((req.session.elvanDalton || '')!=''){
 			db.sessions.findOne({_id:req.session.elvanDalton},(err,doc)=>{
 				if(!err){
@@ -246,8 +246,6 @@ var userInfo = function (req, res, next) {
 					}
 				}
 				redirectLogin(req,res)
-				
-				
 			})
 		}else{
 			redirectLogin(req,res)
@@ -255,6 +253,7 @@ var userInfo = function (req, res, next) {
 		}
 	})
 }
+
 
 function redirectLogin(req,res){
 	var referer=req.headers.referer || ''
@@ -269,21 +268,24 @@ function redirectLogin(req,res){
 	res.redirect(`/login${r}`)
 }
 
-
-function developmentSession(req,next){
+function developmentSession(req,res,next){
 	if(config.status=='development' && req.get('host')=='localhost:5100'){
-		db.sessions.find({passive:false}).sort({_id:-1}).limit(1).exec((err,docs)=>{
+		api.post(`/login`,null,{username:'alitek@gmail.com',password:'atabar18'},(err,resp)=>{
 			if(!err){
-				if(docs.length>0){
-					req.session.elvanDalton=docs[0]._id.toString()
-				}
+				sessionHelper.newSession(resp.data,req,res,(err,sessionId)=>{
+					req.session.elvanDalton=sessionId
+					next()
+				})
+			}else{
+				console.error(err)
+				next()
 			}
-			next()
 		})
 	}else{
-		next()	
+		next()
 	}
 }
+
 
 function errorPage(req,res,err){
 	var data={}
@@ -347,26 +349,28 @@ function setGeneralParams(req, res, data, cb){
 
 
 var maxVersion=''
+
 function getJSONPages(req,res){
 	maxVersion=''
-	setGeneralParams(req,res,{},(err,data)=>{
+	sessionHelper.changeDb(req,'',(err,data)=>{
 		if(!err){
 			getStaticValues((err,sabitDegerler)=>{
 				if(!err){
 					getJSONPageLoader(path.join(__dirname,'../forms'),'.json','',(err,holder)=>{
 						if(!err){
+
 							res.status(200).json({
 								success:true,
 								data:{
 									version:maxVersion,
 									staticValues:sabitDegerler,
 									pages:holder,
-									menu:data.leftMenu,
+									menu:data.menu,
 									databases:data.databases,
 									db:data.db,
 									dbName:data.dbName,
-									sessionId:data.elvanDalton || '',
-									settings:data.session.settings || {}
+									sessionId:req.session.elvanDalton || '',
+									settings:data.settings || {}
 								}
 							})
 						}else{
@@ -381,6 +385,7 @@ function getJSONPages(req,res){
 			res.status(200).json({success:false,error:err})
 		}
 	})
+
 }
 
 function getStaticValues(callback){
