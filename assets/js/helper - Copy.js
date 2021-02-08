@@ -1510,13 +1510,11 @@ function runProgramAjax(data){
 						download(`data:application/file;base64,${btoa2(result.data)}`,`export_${(new Date()).yyyymmddhhmmss()}.txt`,'application/file')
 						return
 					}else if(programType=='connector-exporter'){
-						alertX(result.data,(answer)=>{
-							window.location.reload()
-						})
+						alert(result.data)
 					}
 				}
 				
-				
+				window.location.reload()	
 			}else{
 				showError(result.error)
 			}
@@ -1526,40 +1524,6 @@ function runProgramAjax(data){
 		}
 	})
 }
-
-function runPanelButtons(url,method){
-	
-	var list=[]
-
-	$(".checkSingle").each(function() {
-		if(this.checked){
-			list.push({_id:this.value})
-		}
-	})
-	if(list.length==0)
-		return alertX('Hiç kayıt seçilmemiş')
-	var data={list:list}
-	$.ajax({
-		url:url,
-		data:data,
-		type:'POST',
-		dataType: "json",
-		success:function(result){
-			if(result.success){
-				alertX(result.data,()=>{
-					window.onhashchange()
-				})
-				
-			}else{
-				showError(result.error)
-			}
-		},
-		error:function(err){
-			showError(err)
-		}
-	})
-}
-
 
 
 function frameYazdir(frameId){

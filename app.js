@@ -129,8 +129,6 @@ app.use(function(err, req, res, next) {
 
 
 
-
-
 global.staticValues=require('./resources/staticvalues.json')
 
 var tryCount=0

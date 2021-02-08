@@ -1,10 +1,11 @@
-<% layout('../_common/layouts/general') %>
+<% layout('../_common/layouts/plain') %>
 <div id="mainCtrl"></div>
 
 <script type="text/javascript">
+	
+
 	function sayfaBul(){
-		document.title=hashObj.title + ' - tr216'
-		$('#pageTitle').html(`<i class="${hashObj.icon}"></i> ${hashObj.breadCrumbsHtml}`)
+		console.log(`hashObj.pathKey:`,hashObj.pathKey)
 		var sayfa=getPropertyByKeyPath(global.pages,hashObj.pathKey)
 		if(!sayfa)
 			return null
@@ -31,22 +32,36 @@
 			resp=sayfa[hashObj.func] || null
 			break
 		}
+		if(Array.isArray(resp)){
+			var obj
+			resp.forEach((e)=>{
+				if(e.type=='form' || e.type=='print'){
+					obj=e
+				}
+			})
+			if(obj){
+				return obj
+			}
+		}
 		return resp
 	}
 	
 	function sayfayiAcalim(){
-		if((hashObj.query.mid || '')!=''){
-			$(`#leftMenu a`).removeClass('active')
-			$(`#leftMenu #menu${hashObj.query.mid.replaceAll('.','-')}`).addClass('active')
+		if(hashObj.func=='print'){
+			var sayfa=sayfaBul()
+			
+			getRemoteData(sayfa,(err,data)=>{
+				if(!err){
+					$('#mainCtrl').html(data.value)
+				}else{
+					$('#mainCtrl').html(`${err.code || err.name} - ${err.message || err.name}`)
+				}
+			})
+			
+		}else{
+			$('#mainCtrl').html('baska bir plain sayfa')
 		}
 		
-		var sayfa=sayfaBul()
-		if(sayfa){
-
-			frm.build(sayfa,'mainCtrl')
-		}else{
-			$('#mainCtrl').html('sayfa bulunamadi')
-		}
 	}
 	
 	
@@ -55,13 +70,11 @@
 	
 
 	$(document).ready(()=>{
-		viewPlain('mainCtrl')
 		sayfalariTekrarYukle(()=>{
-
 			sayfayiAcalim()
 			window.onhashchange=()=>{
 				hashObj=getHashObject()
-				viewPlain('mainCtrl')
+				
 
 				$('#mainCtrl').html('loading...')
 				sayfayiAcalim()

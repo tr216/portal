@@ -105,6 +105,7 @@
 			{"module":"settings.printDesigns", "text":"Yazdırma Tasarımları",	"path":"/settings/print-designs", "icon":"fas fa-print"},
 			{"module":"settings.integrators", "text":"Evrak Seri ve Entegrator", "path":"/settings/integrators",	"icon":"fas fa-cogs"},
 			{"module":"settings.programs", "text":"Programlar",	"path":"/settings/programs",	"icon":"fas fa-code"},
+			{"text":"Form Options",	"path":"/settings/form-options",	"icon":"fas fa-cogs"},
 			{"text":"Çalışma Parametreleri",  "icon":"fas fa-sliders-h", 
 				"nodes":[
 					{"module":"settings.workingParams.general", "text":"Genel",  "path":"/settings/params-general", "icon":"fas fa-sliders-h"},

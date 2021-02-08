@@ -1,0 +1,140 @@
+{
+	"index":
+	[
+		{
+			"text":"Ayarlari yeniden yukle",
+			"type":"button",
+			"href":"/general/login/passport",
+			"class":"btn btn-primary",
+			"icon":"fas fa-sync-alt",
+			"noGroup":true
+		},
+		{
+			"type": "grid",
+			"fields": {
+				"type"				:{"title":"Type",  "type":"lookup", "staticValues":"settingTypes"},
+				"module"				:{"title":"Modül", "type":"lookup","staticValues":"modules"},
+				"name"				:{"title":"Adı", "type":"string"},
+				"autoSave"	:{"title":"Otomatik Kaydet", "type":"boolean"},
+				"print.form":{"title":"Form Print","type":"remoteLookup",
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/print-designs"
+					}
+				},
+				"print.list":{"title":"Liste Print","type":"remoteLookup",
+					"dataSource":{
+						"type":"remote",
+						"method":"GET",
+						"url":"/dbapi/print-designs"
+					}
+				}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"queryValues":true,
+				"buttons": {
+					"add": true,
+					"edit": true,
+					"delete": true,
+					"view": false,
+					"print": false,
+					"copy": true
+				}
+			},
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/settings"
+			}
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"tabs":[
+				{
+					"title":"Bilgiler",
+					"fields":{
+						"type"				:{"title":"Type",  "type":"lookup", "staticValues":"settingTypes", "required":true, "col":4},
+						"module"				:{"title":"Modül", "type":"lookup","staticValues":"modules", "required":true, "col":4},
+						"name"				:{"title":"Adı",  "type":"string","readonly":true, "col":4},
+						"programButtons" :{
+							"collapsed":true,
+							"title":"Program Butonlari",  
+							"type":"grid",
+							"fields":{
+								"program":{"title":"Program","type":"remoteLookup",
+									"dataSource":{
+										"type":"remote",
+										"method":"GET",
+										"url":"/dbapi/programs?passive=false"
+									}
+								},
+								"text":{"title":"Buton Text",  "type":"string"},
+								"icon":{"title":"Icon",  "type":"string"},
+								"class":{"title":"Class",  "type":"string"},
+								"passive":{"title":"Pasif?","type":"boolean"}
+							},
+							"options": {
+								"buttons": {
+									"add": true,
+									"edit": true,
+									"delete": true,
+									"view": false,
+									"print": false,
+									"copy": false
+								}
+							}
+						},
+						"Yazdirma" :{
+							"collapsed":true,
+							"title":"Yazdırma Secenekleri",
+							"type":"group",
+							"fields":{
+								"print.form":{"title":"Form Yazdırma Tasarımı","type":"remoteLookup",
+									"dataSource":{
+										"type":"remote",
+										"method":"GET",
+										"url":"/dbapi/print-designs?passive=false"
+									},
+									"col":6
+								},
+								"print.list":{"title":"Liste Yazdırma Tasarımı","type":"remoteLookup",
+									"dataSource":{
+										"type":"remote",
+										"method":"GET",
+										"url":"/dbapi/print-designs?passive=false"
+									},
+									"col":6
+								}
+							}
+						},
+						"diger":{
+							"collapsed":false,
+							"title":"Diğer",
+							"type":"group",
+							"fields":{
+								"autoSave":{"title":"Otomatik Kayıt","type":"boolean","col":6
+								}
+							}
+						}
+					}
+				}
+			]
+
+			,
+			"options": {
+				"mode": "general",
+				"isForm":true,
+				"queryValues":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/settings"
+			}
+		}
+	]
+}

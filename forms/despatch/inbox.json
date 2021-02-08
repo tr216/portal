@@ -35,12 +35,12 @@
 			"dataSource": {
 				"type":"remote",
 				"method":"GET",
-				"url":"/dbapi/despatch/outbox",
+				"url":"/dbapi/despatch/inbox",
 				"deleteUrl":"/dbapi/despatch",
 				"copyUrl":"/dbapi/despatch/copy",
 				"printUrl":"/dbapi/despatch/print"
 			},
-			"panelButtons":{
+			"panelButtons111":{
 				"btnSendToGib":{"text":"GIB e gonder","type":"button", "icon" :"fas fa-cloud-upload-alt",
 					"dataSource":{
 						"method":"POST",

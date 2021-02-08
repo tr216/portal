@@ -6,7 +6,6 @@
 				"name":{"title":"Adı", "type":"string"},
 				"type":{"title":"Türü", "type":"lookup", "staticValues":"programTypes"},
 				"crontab":{"title":"crontab (m h dom dow)", "type":"string"},
-				"showButtonText":{"title":"ButtonText?", "type":"boolean"},
 				"passive":{"title":"Pasif?", "type":"boolean"}
 			},
 			"options": {
@@ -39,15 +38,6 @@
 						"type":{"title":"Türü", "type":"lookup", "staticValues":"programTypes","col":3},
 						"crontab":{"title":"crontab (zamanlayici) m h dom dow", "type":"string"},
 						"passive":{"title":"Pasif?", "type":"boolean"},
-						"button":{
-							"title":"Buton",
-							"collapsed":true,
-							"fields":{
-								"showButtonText":{"title":"ButtonText?", "type":"boolean","col":3},
-								"icon":{"title":"icon", "type":"string","col":3},
-								"class":{"title":"class", "type":"string","col":3}
-							}
-						},
 						"tables1":{
 							"title":"Collection",
 							"collapsed":true,

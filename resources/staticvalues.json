@@ -1032,7 +1032,15 @@
 		"despatches": "despatches",
 		"despatches_receipt_advice": "despatches_receipt_advice",
 		"file_importers": "file_importers",
-		"pos_device_zreports": "pos_device_zreports",
-		"pos_device_zreports": "qwerty"
+		"pos_device_zreports": "pos_device_zreports"
+	},
+	"settingTypes": {
+		"global": "Genel",
+		"user": "Kullanıcıya Özel"
+	},
+	"settingNameList": {
+		"printForm": "Form Yazdırma",
+		"printList": "Liste Yazdırma",
+		"xslt": "Xslt Tasarımı"
 	}
 }

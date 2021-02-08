@@ -31,7 +31,7 @@ module.exports = function(app){
 			var referer=req.query.r || req.headers.referer
 			sessionHelper.changeDb(req,req.query.db,(err,data)=>{
 				if(!err){
-					console.log(`referer:`,referer)
+					
 					// res.redirect(referer)
 					res.redirect(`/general/login/passport?r=${referer}`)
 				}else{
@@ -168,9 +168,14 @@ function hahamRender(req,res){
 	setGeneralParams(req,res,{}, (err,data)=>{
 		if(!err){
 			var hahamJS='../pages/_common/haham.js'
-			var hahamEJS='../pages/_common/haham.ejs'
+			
+			
 			require(hahamJS)(req,res,data, (err,data2)=>{
 				if(!err){
+					var hahamEJS=`../pages/_common/haham.ejs`
+					// if(req.query.view=='plain'){
+					// 	hahamEJS=`../pages/_common/haham-plain.ejs`
+					// }
 					res.render(hahamEJS, data,(err,html)=>{
 						if(!err){
 							res.status(200).send(html)
@@ -390,13 +395,21 @@ function getJSONPages(req,res){
 
 function getStaticValues(callback){
 	var fileName=path.join(__dirname,'../resources/staticvalues.json')
-	var resp=require(fileName)
+	var stValues=require(fileName)
 	var stats = fs.statSync(fileName)
 	var fileVer=(new Date(stats.mtime)).yyyymmddhhmmss().replaceAll('-','').replaceAll(' ','').replaceAll(':','')
 	if(fileVer>maxVersion){
 		maxVersion=fileVer
 	}
-	callback(null,resp)
+	api.get('/portal-modules',null,{view:'list'},(err,resp)=>{
+		if(!err){
+			stValues['modules']=resp.data
+			callback(null,stValues)
+		}else{
+			callback(err)
+		}
+	})
+	
 }
 
 function getJSONPageLoader(folder,suffix,expression,callback){

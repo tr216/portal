@@ -283,7 +283,7 @@ function objectToListObject(objOrj,exceptArrays=false){
 				listObj[parentKey]=obj
 			}
 		}else if(typeof obj=='object'){
-			Object.keys(obj).forEach((key)=>{
+			Object.keys(obj || {}).forEach((key)=>{
 				var key2=(parentKey?parentKey+'.':'')+key
 				calistir(obj[key],key2)
 			})

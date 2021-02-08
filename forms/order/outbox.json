@@ -12,6 +12,7 @@
 		{
 			"type": "grid",
 			"fields": {
+				"ID"				:{"title":"ID",  "type":"string", "visible":false},
 				"orderNo"	:{"title":"Sip. No",  "type":"string","html":"<b>{ID}</b><br>{localDocumentId}"},
 				"tarih"	:{"title":"Tarih",  "type":"string","html":"{issueDate}<br><small class=\"text-primary\">{issueTime}</small>"},
 				"musteri"	:{"title":"Müşteri", "type":"string", "filterField":"partyName", "html":"<b>{party.title}</b><br><small class=\"text-primary\">{party.vknTckn}</small> | Satır:{lineCountNumeric}"},
@@ -25,7 +26,7 @@
 					"edit": true,
 					"delete": true,
 					"view": false,
-					"print": false,
+					"print": true,
 					"copy": true
 				}
 			},
@@ -33,7 +34,9 @@
 				"type":"remote",
 				"method":"GET",
 				"url":"/dbapi/order/outbox",
-				"deleteUrl":"/dbapi/order/{_id}"
+				"deleteUrl":"/dbapi/order",
+				"copyUrl":"/dbapi/order/copy",
+				"printUrl":"/dbapi/order/print"
 			}
 		}
 	],
@@ -137,7 +140,7 @@
 						"lineExtensionAmount.value" :{"title":"Tutar", "type":"money","calc":"Math.round({orderedQuantity.value}*{price.priceAmount.value}*100)/100" , "readonly":true},
 						"taxTotal.taxSubtotal.0.percent.value" :{"title":"Kdv %", "type":"number"},
 						"taxTotal.taxAmount.value" :{"title":"Kdv", "type":"number","calc":"Math.round(100*{lineExtensionAmount.value}*{taxTotal.taxSubtotal.0.percent.value}/100)/100", "readonly":true},
-						"note":{"title":"Notlar 1", "type":"string", "visible":false}
+						"note":{"title":"Notlar", "type":"string", "visible":false}
 					},
 					"modal":{
 						"tabs":[
@@ -164,11 +167,11 @@
 								}
 							},
 							{
-								"title":"Diger",
+								"title":"Diğer",
 								"fields":{
 									"note": {
 										"type":"grid",
-										"title":"Notlar",
+										"title":"Satır Notları",
 										"fields":{
 											"value":{"title":"Not", "type":"string"}
 										},
@@ -239,6 +242,16 @@
 				"}"
 			]
 			
+		}
+	],
+	"print": [
+		{
+			"type":"html",
+			"title":"print data",
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/order/print"
+			}
 		}
 	]
 }
