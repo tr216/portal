@@ -68,396 +68,398 @@
 	})
 
 	function build(sayfalar,divId){
-// $('#spinner').show()
-_divId=divId
+
+		_divId=divId
 
 
-var mainCtrl=document.getElementById(divId)
-if(mainCtrl.tagName=='DIV'){
-	mainCtrl.innerHTML=''
-}
+		var mainCtrl=document.getElementById(divId)
+		if(mainCtrl.tagName=='DIV'){
+			mainCtrl.innerHTML=''
+		}
 
-script=''
-// try{
+		script=''
+		try{
 
-	$('#headerButtons').html('')
+			$('#headerButtons').html('')
 
-	var s='<form><div class="row">'
+			var s='<form><div class="row">'
 
-	var index=0
+			var index=0
 
-	function calistir(cb){
-		if(index>=sayfalar.length)
-			return cb()
+			function calistir(cb){
+				if(index>=sayfalar.length)
+					return cb()
 
-		var sayfa=clone(sayfalar[index])
-		getRemoteData(sayfa,(err,data)=>{
-			if(!err){
-				var fieldList=collectFieldList(sayfa)
+				var sayfa=clone(sayfalar[index])
+				getRemoteData(sayfa,(err,data)=>{
+					if(!err){
+						var fieldList=collectFieldList(sayfa)
 
-				script+=`
+						script+=`
 
-				`
-				if(sayfa.type=='form' && sayfa.dataSource){
-					var hbtn=`
-					<a href="javascript:formKaydet('#${divId}');" class="btn btn-primary  btn-form-header" title="Kaydet"><i class="fas fa-save"></i></a>
-					<a href="javascript:history.back(-1);" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>`
-					$('#headerButtons').html(hbtn)
-					script+=`
-					function formKaydet(divId){
-						var dataSource=${JSON.stringify(sayfa.dataSource)}
-						var formData=getFormData(\`\${divId} form\`)
-						formSave(dataSource,formData)
+						`
+						if(sayfa.type=='form' && sayfa.dataSource){
+							var hbtn=`
+							<a href="javascript:formKaydet('#${divId}');" class="btn btn-primary  btn-form-header" title="Kaydet"><i class="fas fa-save"></i></a>
+							<a href="javascript:history.back(-1);" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>`
+							$('#headerButtons').html(hbtn)
+							script+=`
+							function formKaydet(divId){
+								var dataSource=${JSON.stringify(sayfa.dataSource)}
+								var formData=getFormData(\`\${divId} form\`)
+								formSave(dataSource,formData)
+							}
+
+							$('#${divId} input,select').on('change',(e)=>{
+								var fields=${JSON.stringify(fieldList)}
+								var valueObj=getDivData('#${divId}')
+								Object.keys(fields).forEach((key)=>{
+									if(fields[key].id!=e.target.id && fields[key].calc){
+										try{
+											$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
+										}catch(tryErr){
+											$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
+										}
+
+									}
+								})
+							})
+							`
+						}
+
+						s+=generateControls(sayfa,data,true)
+
+
+						index++
+						setTimeout(calistir,0,cb)
+					}else{
+						cb(err)
+					}
+				})
+			}
+
+			calistir((err)=>{
+				if(!err){
+					s+=`</div></form>`
+					if(mainCtrl.tagName=='DIV'){
+						mainCtrl.innerHTML=s
+						loadCardCollapses()
+						$(`#${divId}`).append(`<script type="text/javascript">${script}<\/script>`)
+					}else if(mainCtrl.tagName=='IFRAME'){
+						var iframe = mainCtrl.contentWindow || ( mainCtrl.contentDocument.document || mainCtrl.contentDocument)
+						iframe.document.open()
+						iframe.document.write(s)
+						iframe.document.write(`<script type="text/javascript">${script}<\/script>`)
+						iframe.document.close()
 					}
 
-					$('#${divId} input,select').on('change',(e)=>{
-						var fields=${JSON.stringify(fieldList)}
-						var valueObj=getDivData('#${divId}')
-						Object.keys(fields).forEach((key)=>{
-							if(fields[key].id!=e.target.id && fields[key].calc){
-								try{
-									$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
-								}catch(tryErr){
-									$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
-								}
 
+
+
+				}else{
+					s+=`Hata:${err.code || err.name || ''} - ${err.message || err.name || ''}</div></form>`
+					mainCtrl.innerHTML=s
+					if(err.code=='SESSION_NOT_FOUND'){
+						confirmX(`Oturum sonlandırılmış. Tekrar giriş yapalım mı?`,(answer)=>{
+							if(answer){
+								window.location.href=`/login?r=${window.location.href}`
 							}
 						})
-					})
-					`
+					}
 				}
+				script=''
+				$('#spinner').hide()
+			})
 
-				s+=generateControls(sayfa,data,true)
 
-
-				index++
-				setTimeout(calistir,0,cb)
-			}else{
-				cb(err)
-			}
-		})
+		}catch(err){
+			console.error('Hata:',err)
+			mainCtrl.innerHTML=`Oppsss! Render Hatasi: <br>${err.name || ''}<br>${err.message || ''}<br>${(err.stack || '').replaceAll('\n','<br>')}`
+		}
 	}
 
-	calistir((err)=>{
-		if(!err){
-			s+=`</div></form>`
-			if(mainCtrl.tagName=='DIV'){
-				mainCtrl.innerHTML=s
-				loadCardCollapses()
-				$(`#${divId}`).append(`<script type="text/javascript">${script}<\/script>`)
-			}else if(mainCtrl.tagName=='IFRAME'){
-				var iframe = mainCtrl.contentWindow || ( mainCtrl.contentDocument.document || mainCtrl.contentDocument)
-				iframe.document.open()
-				iframe.document.write(s)
-				iframe.document.write(`<script type="text/javascript">${script}<\/script>`)
-				iframe.document.close()
+	function generateControls(item,data,bRoot=false,insideOfModal=false){
+		var s=''
+		var autocol=item.options?(item.options.autocol===true?true:false):false
+		var queryValues=item.options?(item.options.queryValues===true?true:false):false
+		if(item.script!=undefined){
+			if(Array.isArray(item.script)){
+				script+=item.script.join('\r\n')
+			}else{
+				script+=`${item.script || ''}\r\n`
 			}
-			
+		}
 
-			
+		if(item.fields){
+			Object.keys(item.fields).forEach((key)=>{
+				item.fields[key].field=key
+				item.fields[key]=itemDefaultValues(item.fields[key],autocol,insideOfModal,queryValues)
+				if(item.type=='grid'){
+					item.fields[key].parentField=item.field || ''
+					item.parentField=item.field || ''
+				}
+			})
+		}else if(item.tabs){
+			item.tabs.forEach((tab)=>{
+				if(tab.fields){
+					Object.keys(tab.fields).forEach((key)=>{
+						tab.fields[key].field=key
+						tab.fields[key]=itemDefaultValues(tab.fields[key],autocol,insideOfModal,queryValues)
+					})
+				}
+			})
+		}
+		if(!data){
+			data={value:{}}
+		}
 
-		}else{
-			s+=`Hata:${err.code || err.name || ''} - ${err.message || err.name || ''}</div></form>`
-			mainCtrl.innerHTML=s
-			if(err.code=='SESSION_NOT_FOUND'){
-				confirmX(`Oturum sonlandırılmış. Tekrar giriş yapalım mı?`,(answer)=>{
-					if(answer){
-						window.location.href=`/login?r=${window.location.href}`
-					}
+		item.insideOfModal=insideOfModal
+
+
+		switch((item.type || '').toLowerCase()){
+			case 'string' :
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=textBox(item)
+			break
+			case 'number' :
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || 0
+			s+=numberBox(item)
+			break
+
+			case 'money' :
+			if(item.readonly){
+				item.value=Number(getPropertyByKeyPath(data.value,item.field) || item.value || 0).formatMoney()
+				item.class+=' text-right'
+				s+=textBox(item)
+			}else{
+				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || 0
+				s+=numberBox(item)
+			}
+			break
+			case 'identity' :
+
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || 0
+			item.readonly=true
+			s+=numberBox(item)
+			break
+			case 'date' : 
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=dateBox(item)
+			break
+			case 'time' : 
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=timeBox(item)
+			break
+			case 'filebase64image' :
+			case 'image' :
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=imageBox(item)
+			break
+			case 'filebase64' :
+			case 'file' :
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=fileBox(item)
+			break
+			case 'strings':
+			case 'textarea':
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=textareaBox(item)
+			break
+			case 'code':
+			item.rows=item.rows || 40
+			item.encoding=item.encoding || 'base64'
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=textareaBox(item)
+			break
+			case 'json':
+			item.rows=item.rows || 40
+			item.encoding=item.encoding || 'base64'
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=textareaBox(item)
+			break
+			case 'button' : 
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=button(item)
+			break
+			case 'lookup' :
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=lookup(item)
+			break
+			case 'html' :
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=item.value
+			break
+
+			case 'remotelookup' : 
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value
+			if(item.lookupTextField){
+				item.valueText=getPropertyByKeyPath(data.value,item.lookupTextField) || item.valueText || ''
+			}
+			s+=remoteLookup(item)
+
+			break
+			case 'boolean' :
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=checkBox(item)
+			break
+			case 'daterange' : 
+			s+=dateRangeBox(item)
+			break
+			case 'w-100': 
+			case 'w100': 
+			case 'divisor': 
+			s+=`<div class="w-100"></div>`
+			break
+			case 'grid':
+
+			if(bRoot){
+				item.value=data.value || []
+				item.paging=data.paging
+				s+=grid(item, bRoot,insideOfModal)
+			}else{
+				item.value=getPropertyByKeyPath(data.value,item.field)
+				item.controls=grid(item, bRoot,insideOfModal)
+				s+=card(item)
+			}
+
+			break
+			case 'filter':
+			if(item.fields){
+				item.controls=`<div id="filterForm" class="col-12 m-0 p-0"><div class="row m-0 p-0">`
+				Object.keys(item.fields).forEach((key)=>{
+					item.fields[key].value=hashObj[key] || ''
+					item.fields[key].showAll=true
+					item.fields[key].class='my-0'
+					item.controls+=generateControls(item.fields[key],{value:{}},false,insideOfModal)
 				})
-			}
-		}
-		script=''
-		$('#spinner').hide()
-	})
+				item.controls+=`${filterFormButton('filterForm')}</div></div>`
 
-
-// }catch(err){
-			// 	console.error('Hata:',err)
-			// 	mainCtrl.innerHTML=`Oppsss! Render Hatasi: <br>${err.name || ''}<br>${err.message || ''}<br>${(err.stack || '').replaceAll('\n','<br>')}`
-			// }
-		}
-
-		function generateControls(item,data,bRoot=false,insideOfModal=false){
-			var s=''
-			var autocol=item.options?(item.options.autocol===true?true:false):false
-			var queryValues=item.options?(item.options.queryValues===true?true:false):false
-			if(item.script!=undefined){
-				if(Array.isArray(item.script)){
-					script+=item.script.join('\r\n')
+				if(bRoot){
+					s+=item.controls
 				}else{
-					script+=`${item.script || ''}\r\n`
+
+					s+=card(item)
 				}
 			}
+			break
+			case 'tab':
+			case 'form':
+			case 'group':
+			case 'modal':
+
 
 			if(item.fields){
+				item.controls=''
 				Object.keys(item.fields).forEach((key)=>{
-					item.fields[key].field=key
-					item.fields[key]=itemDefaultValues(item.fields[key],autocol,insideOfModal,queryValues)
-					if(item.type=='grid'){
-						item.fields[key].parentField=item.field || ''
-						item.parentField=item.field || ''
-					}
+					item.controls+=generateControls(item.fields[key],data,false,insideOfModal)
 				})
+
+				if(bRoot || item.type=='modal'){
+					s+=item.controls
+				}else{
+
+					s+=card(item)
+				}
 			}else if(item.tabs){
-				item.tabs.forEach((tab)=>{
+				item.tabs.forEach((tab,index)=>{
+					tab.controls=''
 					if(tab.fields){
 						Object.keys(tab.fields).forEach((key)=>{
-							tab.fields[key].field=key
-							tab.fields[key]=itemDefaultValues(tab.fields[key],autocol,insideOfModal,queryValues)
+							tab.controls+=generateControls(tab.fields[key],data,false,insideOfModal)
 						})
 					}
 				})
-			}
-			if(!data){
-				data={value:{}}
+				s+=tab(item)
 			}
 
-			item.insideOfModal=insideOfModal
+			break
 
-			switch((item.type || '').toLowerCase()){
-				case 'string' :
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=textBox(item)
-				break
-				case 'number' :
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || 0
-				s+=numberBox(item)
-				break
-
-				case 'money' :
-				if(item.readonly){
-					item.value=Number(getPropertyByKeyPath(data.value,item.field) || item.value || 0).formatMoney()
-					item.class+=' text-right'
-					s+=textBox(item)
-				}else{
-					item.value=getPropertyByKeyPath(data.value,item.field) || item.value || 0
-					s+=numberBox(item)
-				}
-				break
-				case 'identity' :
-
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || 0
-				item.readonly=true
-				s+=numberBox(item)
-				break
-				case 'date' : 
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=dateBox(item)
-				break
-				case 'time' : 
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=timeBox(item)
-				break
-				case 'filebase64image' :
-				case 'image' :
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=imageBox(item)
-				break
-				case 'filebase64' :
-				case 'file' :
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=fileBox(item)
-				break
-				case 'strings':
-				case 'textarea':
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=textareaBox(item)
-				break
-				case 'code':
-				item.rows=item.rows || 40
-				item.encoding=item.encoding || 'base64'
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=textareaBox(item)
-				break
-				case 'json':
-				item.rows=item.rows || 40
-				item.encoding=item.encoding || 'base64'
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=textareaBox(item)
-				break
-				case 'button' : 
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=button(item)
-				break
-				case 'lookup' :
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=lookup(item)
-				break
-				case 'html' :
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=item.value
-				break
-				
-				case 'remotelookup' : 
-				item.value=getPropertyByKeyPath(data.value,item.field)
-				if(item.lookupTextField){
-					item.valueText=getPropertyByKeyPath(data.value,item.lookupTextField)
-				}
-				s+=remoteLookup(item)
-
-				break
-				case 'boolean' :
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=checkBox(item)
-				break
-				case 'daterange' : 
-				s+=dateRangeBox(item)
-				break
-				case 'w-100': 
-				case 'w100': 
-				case 'divisor': 
-				s+=`<div class="w-100"></div>`
-				break
-				case 'grid':
-
-				if(bRoot){
-					item.value=data.value || []
-					item.paging=data.paging
-					s+=grid(item, bRoot,insideOfModal)
-				}else{
-					item.value=getPropertyByKeyPath(data.value,item.field)
-					item.controls=grid(item, bRoot,insideOfModal)
-					s+=card(item)
-				}
-
-				break
-				case 'filter':
-				if(item.fields){
-					item.controls=`<div id="filterForm" class="col-12 m-0 p-0"><div class="row m-0 p-0">`
-					Object.keys(item.fields).forEach((key)=>{
-						item.fields[key].value=hashObj[key] || ''
-						item.fields[key].showAll=true
-						item.fields[key].class='my-0'
-						item.controls+=generateControls(item.fields[key],{value:{}},false,insideOfModal)
-					})
-					item.controls+=`${filterFormButton('filterForm')}</div></div>`
-
-					if(bRoot){
-						s+=item.controls
-					}else{
-
-						s+=card(item)
-					}
-				}
-				break
-				case 'tab':
-				case 'form':
-				case 'group':
-				case 'modal':
-				
-				
-				if(item.fields){
-					item.controls=''
-					Object.keys(item.fields).forEach((key)=>{
-						item.controls+=generateControls(item.fields[key],data,false,insideOfModal)
-					})
-					
-					if(bRoot || item.type=='modal'){
-						s+=item.controls
-					}else{
-
-						s+=card(item)
-					}
-				}else if(item.tabs){
-					item.tabs.forEach((tab,index)=>{
-						tab.controls=''
-						if(tab.fields){
-							Object.keys(tab.fields).forEach((key)=>{
-								tab.controls+=generateControls(tab.fields[key],data,false,insideOfModal)
-							})
-						}
-					})
-					s+=tab(item)
-				}
-				
-				break
-				
-				default:
-				item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
-				s+=textBox(item)
-				break
-			}
-
-			
-			
-			return s
+			default:
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=textBox(item)
+			break
 		}
 
-		function grid(item,bRoot,insideOfModal){
-			
-			var s=``
-			item=gridDefaults(item,bRoot,insideOfModal)
-			if(insideOfModal==false){
-				
-				script+=`
-				var grid${item.id}=FormControl.FormControl
-				grid${item.id}.item=${JSON.stringify(item)}
-				grid${item.id}.bRoot=${bRoot}
-				grid${item.id}.gridRefresh()
 
-				document.getElementById('${item.id}').item=${JSON.stringify(item)}
 
-				$('.modal-dialog').draggable({handle: '.modal-header'})
-				`
-				this.bRoot=bRoot
+		return s
+	}
 
-				s=`<div id="${item.id}" class="table-responsive ${item.options.show.infoRow?'mt-1':''}"></div>
-				${gridModalTemplate(item)}
-				`
-			}else{
-				s=`<div id="${item.id}" class="table-responsive ${item.options.show.infoRow?'mt-1':''}">${gridHtml(item,false,true)}</div>`
 
-				script+=`
-				document.getElementById('${item.id}').item=${JSON.stringify(item)}
-				
-				`
-			}
-			
-			return s
+	function grid(item,bRoot,insideOfModal){
+
+		var s=``
+		item=gridDefaults(item,bRoot,insideOfModal)
+		if(insideOfModal==false){
+
+			script+=`
+			var grid${item.id}=FormControl.FormControl
+			grid${item.id}.item=${JSON.stringify(item)}
+			grid${item.id}.bRoot=${bRoot}
+			grid${item.id}.gridRefresh()
+
+			document.getElementById('${item.id}').item=${JSON.stringify(item)}
+
+			$('.modal-dialog').draggable({handle: '.modal-header'})
+			`
+			this.bRoot=bRoot
+
+			s=`<div id="${item.id}" class="table-responsive ${item.options.show.infoRow?'mt-1':''}"></div>
+			${gridModalTemplate(item)}
+			`
+		}else{
+			s=`<div id="${item.id}" class="table-responsive ${item.options.show.infoRow?'mt-1':''}">${gridHtml(item,false,true)}</div>`
+
+			script+=`
+			document.getElementById('${item.id}').item=${JSON.stringify(item)}
+
+			`
 		}
 
-		function gridButtonOptions(item,bRoot,insideOfModal){
-			var options=item.options || {}
-			var buttonCount=0
-			var currentPath=window.location.pathname
+		return s
+	}
 
-			if(options.buttons==undefined){
-				options.buttons=defaultButtons
-			}else{
-				options.buttons=Object.assign({},defaultButtons, options.buttons)
-				Object.keys(options.buttons).forEach((key)=>{
-					if(typeof options.buttons[key]=='boolean'){
-						options.buttons[key]=[options.buttons[key],'']
-					}else if(Array.isArray(options.buttons[key])){
-						if(options.buttons[key].length<2)
-							options.buttons[key].push('')
-					}
-				})
-			}
-			var q={mid:hashObj.query.mid}
-			if(options.queryValues){
-				q=hashObj.query
-			}else{
+	function gridButtonOptions(item,bRoot,insideOfModal){
+		var options=item.options || {}
+		var buttonCount=0
+		var currentPath=window.location.pathname
 
-			}
-			if(options.buttons.add[0]==true && options.buttons.add[1]==''){
-				if(bRoot){
-					options.buttons.add[1]=`<a href="${menuLink(hashObj.path + '/addnew',q)}" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
+		if(options.buttons==undefined){
+			options.buttons=defaultButtons
+		}else{
+			options.buttons=Object.assign({},defaultButtons, options.buttons)
+			Object.keys(options.buttons).forEach((key)=>{
+				if(typeof options.buttons[key]=='boolean'){
+					options.buttons[key]=[options.buttons[key],'']
+				}else if(Array.isArray(options.buttons[key])){
+					if(options.buttons[key].length<2)
+						options.buttons[key].push('')
+				}
+			})
+		}
+		var q={mid:hashObj.query.mid}
+		if(options.queryValues){
+			q=hashObj.query
+		}else{
+
+		}
+		if(options.buttons.add[0]==true && options.buttons.add[1]==''){
+			if(bRoot){
+				options.buttons.add[1]=`<a href="${menuLink(hashObj.path + '/addnew',q)}" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
+			}else{
+				if(item.modal && !item.insideOfModal){
+					options.buttons.add[1]=`<a href="javascript:grid${item.id}.gridModalAddRow()" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle (modal)"></a>`
 				}else{
-					if(item.modal && !item.insideOfModal){
-						options.buttons.add[1]=`<a href="javascript:grid${item.id}.gridModalAddRow()" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle (modal)"></a>`
-					}else{
-						options.buttons.add[1]=``
-					}
+					options.buttons.add[1]=``
 				}
 			}
+		}
 
-			if(options.buttons.copy[0]==true && options.buttons.copy[1]==''){
-				options.buttons.copy[1]=`<a href="javascript:gridCopyItem({rowIndex},'${item.id}')" class="btn btn-grid-row btn-success " title="Kopyala"><i class="fas fa-copy"></i></a>`
-			}
+		if(options.buttons.copy[0]==true && options.buttons.copy[1]==''){
+			options.buttons.copy[1]=`<a href="javascript:gridCopyItem({rowIndex},'${item.id}')" class="btn btn-grid-row btn-success " title="Kopyala"><i class="fas fa-copy"></i></a>`
+		}
 
-			if(options.buttons.print[0]==true && options.buttons.print[1]==''){
+		if(options.buttons.print[0]==true && options.buttons.print[1]==''){
 				// options.buttons.print[1]=`<a href="javascript:popupCenter('/haham?view=plain#${hashObj.path + '/print/{_id}'}','Yazdır','900','600')" class="btn btn-grid-row btn-info " title="Yazdır"><i class="fas fa-print"></i></a>`
 				var q2=clone(q)
 				q2['view']='plain'
@@ -701,9 +703,25 @@ script=''
 			}
 
 			item.insideOfModal=insideOfModal
-			if(queryValues && !item.value){
-				item.value=hashObj.query[item.field] || ''
+			if(!item.value){
+				if(queryValues){
+					item.value=hashObj.query[item.field] || ''
+				}else if(item.type=='date'){
+					item.value=(new Date()).yyyymmdd()
+				}else if(item.type=='time'){
+					item.value=(new Date()).hhmmss()
+				}else if(item.lastRecord===true && !item.value){
+					var lastRecord= pageSettings.getItem('lastRecord')
+					if(lastRecord){
+						
+						item.value=getPropertyByKeyPath(lastRecord,item.field)
+						console.log(`${item.field}:`,item.value)
+					}
+					
+				}
 			}
+			
+			
 			return item
 		}
 		
@@ -1100,22 +1118,22 @@ s+=`</tr>`
 }
 
 // if((insideOfModal || !item.modal)  && item.options.buttons.add[0] && !bRoot){
-if(item.options.buttons.add[0] && !bRoot){
-	s+=`<tr id="${item.id}-row-editor">`
+	if(item.options.buttons.add[0] && !bRoot){
+		s+=`<tr id="${item.id}-row-editor">`
 
-	Object.keys(fieldList).forEach((key)=>{
-		var field=fieldList[key]
-		var cls=''
-		field.field=`${item.parentField}.-1.${key}`
-		field.noGroup=true
-		field.id=generateFormId(field.field)
-		field.name=generateFormName(field.field)
-		field.value=undefined
-		delete field.value
-		field.valueText=undefined
-		delete field.valueText
+		Object.keys(fieldList).forEach((key)=>{
+			var field=fieldList[key]
+			var cls=''
+			field.field=`${item.parentField}.-1.${key}`
+			field.noGroup=true
+			field.id=generateFormId(field.field)
+			field.name=generateFormName(field.field)
+			field.value=undefined
+			delete field.value
+			field.valueText=undefined
+			delete field.valueText
 
-		if(field.type=='boolean'){
+			if(field.type=='boolean'){
 			//cls+=' text-center'
 			field.class='grid-checkbox'
 		}else if(field.type=='identity'){
@@ -1128,28 +1146,28 @@ if(item.options.buttons.add[0] && !bRoot){
 
 		s+=td
 	})
-	s+=`<td class="text-center">
-	<a href="javascript:gridSatirOK('${item.id}','${item.id}-row-editor',-1,${insideOfModal})" class="btn btn-primary btn-grid-row" title="Tamam"><i class="fas fa-check"></i></a>
-	<a href="javascript:gridSatirVazgec('${item.id}','${item.id}-row-editor',-1,${insideOfModal}) "class="btn btn-dark btn-grid-row" title="Vazgeç"><i class="fas fa-reply"></i></a>
-	</td>`
-	s+=`</tr>`
+		s+=`<td class="text-center">
+		<a href="javascript:gridSatirOK('${item.id}','${item.id}-row-editor',-1,${insideOfModal})" class="btn btn-primary btn-grid-row" title="Tamam"><i class="fas fa-check"></i></a>
+		<a href="javascript:gridSatirVazgec('${item.id}','${item.id}-row-editor',-1,${insideOfModal}) "class="btn btn-dark btn-grid-row" title="Vazgeç"><i class="fas fa-reply"></i></a>
+		</td>`
+		s+=`</tr>`
 
 
 
+
+		script+=`
+		editRowCalculation('#${item.id}-row-editor','${item.parentField}.-1', ${JSON.stringify(fieldList)})
+
+		`
+	}
 
 	script+=`
-	editRowCalculation('#${item.id}-row-editor','${item.parentField}.-1', ${JSON.stringify(fieldList)})
-
+	refreshRemoteList(${JSON.stringify(remoteList)})
 	`
-}
-
-script+=`
-refreshRemoteList(${JSON.stringify(remoteList)})
-`
 
 
-s+=`</tbody>`
-return s
+	s+=`</tbody>`
+	return s
 }
 
 function buttonRowCell(listItem,rowIndex,item,bRoot){
@@ -1686,7 +1704,7 @@ function remoteLookup(item){
 	var s=``
 	var input=`
 	<div class="input-group">
-	<input type="search" class="form-control ${item.class || ''}" id="${item.id}-autocomplete-text"  placeholder="${item.placeholder || item.title || ''}" value="${item.valueText || ''}" autocomplete="off" autofill="off" spellcheck="false" ${item.required?'required="required"':''} ${item.readonly?'readonly':''} >
+	<input type="search" class="form-control ${item.class || ''}" id="${item.id}-autocomplete-text"  placeholder="${item.placeholder || item.title || ''}" value="${item.valueText || ''}" autocomplete="off" autofill="off" spellcheck="false" ${item.required?'required="required"':''} ${item.readonly?'readonly':''} title="${item.title || ''}: Tümünü listelemek için boşluk tuşuna basabilirsiniz." >
 	<div class="input-group-prepend">
 	<div class="input-group-text"><i class="fas fa-ellipsis-v"></i></div>
 	</div>

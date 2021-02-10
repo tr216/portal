@@ -750,6 +750,10 @@ function formSave(dataSource,formData){
 		return alertX('URL hatasi var')
 	}
 
+	if(method=='POST'){
+		pageSettings.setItem('lastRecord',formData)
+	}
+	
 	$.ajax({
 		url:url,
 		type:method,

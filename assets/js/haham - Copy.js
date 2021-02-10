@@ -384,16 +384,6 @@ script=''
 			return s
 		}
 
-		function filterFormButton(divId){
-			var s=`
-			<div class="ml-auto col text-right" style="padding-top: 1.2rem !important;">
-			<a href="javascript:runFilter('#${divId}')" class="btn btn-primary" title="Filtrele" ><i class="fas fa-filter"></i></a>
-			</div>
-			`
-
-			return s
-		}
-
 		function grid(item,bRoot,insideOfModal){
 			
 			var s=``
@@ -456,7 +446,7 @@ script=''
 					options.buttons.add[1]=`<a href="${menuLink(hashObj.path + '/addnew',q)}" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 				}else{
 					if(item.modal && !item.insideOfModal){
-						options.buttons.add[1]=`<a href="javascript:grid${item.id}.gridModalAddRow()" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
+						options.buttons.add[1]=`<a href="javascript:grid${item.id}.gridModalAddRow()" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle (modal)"></a>`
 					}else{
 						options.buttons.add[1]=``
 					}
@@ -490,10 +480,9 @@ script=''
 				if(bRoot){
 					options.buttons.edit[1]=`<a href="${menuLink(hashObj.path + '/edit/{_id}',q)}" class="btn btn-primary btn-grid-row fas fa-edit" target="_self"  title="Düzenle"></a>`
 				}else{
+					options.buttons.edit[1]=`<a href="javascript:gridSatirDuzenle({rowIndex},'${item.id}',${insideOfModal})" class="btn btn-info btn-grid-row fas fa-edit" title="Satır Düzenle"></a>`
 					if(item.modal && !item.insideOfModal){
-						options.buttons.edit[1]=`<a href="javascript:grid${item.id}.gridModalEditRow({rowIndex})" class="btn btn-success btn-grid-row fas fa-edit" title="Düzenle"></a>`	
-					}else{
-						options.buttons.edit[1]=`<a href="javascript:gridSatirDuzenle({rowIndex},'${item.id}',${insideOfModal})" class="btn btn-info btn-grid-row fas fa-edit" title="Düzenle"></a>`	
+						options.buttons.edit[1]+=`<a href="javascript:grid${item.id}.gridModalEditRow({rowIndex})" class="btn btn-success btn-grid-row fas fa-edit" title="Modal Düzenle"></a>`
 					}
 					
 				}
@@ -522,16 +511,37 @@ script=''
 			if(bRoot){
 				options.buttonWidth=`${buttonCount*45+10}px`
 			}else{
-				options.buttonWidth=`${2*45+10}px`
+				options.buttonWidth=`${3*45+10}px`
 			}
 			item.options=options
 
 			return item
 		}
 
+		function panelButtons(item){
+			var s=''
+
+			if(item.panelButtons){
+				Object.keys(item.panelButtons).forEach((key)=>{
+					item.panelButtons[key].noGroup=true
+					item.panelButtons[key].class=item.panelButtons[key].class || 'btn btn-primary'
+					item.panelButtons[key].class+=' mr-2'
+					console.log(`item.panelButtons[key].dataSource:`,item.panelButtons[key].dataSource)
+					
+					if(!item.panelButtons[key].href && item.panelButtons[key].dataSource){
+						item.panelButtons[key].href=`javascript:runPanelButtons('${item.panelButtons[key].dataSource.url}','${item.panelButtons[key].dataSource.method}')`
+					}
+
+					s+=generateControls(item.panelButtons[key])
+				})
+				
+			}
+			return s
+		}
 
 		function gridHtml(item,bRoot,insideOfModal=false){
-			var sayfaProgramlari=bRoot?programButtons():''
+
+			var sayfaProgramlari=bRoot?programButtons(panelButtons(item)):''
 			var s=``
 			if(item.options.show.infoRow || sayfaProgramlari!=''){
 				s+=`
@@ -586,6 +596,18 @@ script=''
 			
 			return s
 		}
+
+		function filterFormButton(divId){
+			var s=`
+			<div class="ml-auto col text-right" style="padding-top: 1.2rem !important;">
+			<a href="javascript:runFilter('#${divId}')" class="btn btn-primary" title="Filtrele" ><i class="fas fa-filter"></i></a>
+			</div>
+			`
+
+			return s
+		}
+
+
 
 		function itemDefaultValues(item,autocol=false,insideOfModal=false,queryValues=false){
 			var field=item.field
@@ -708,8 +730,8 @@ script=''
 				pageSettings.setItem(`pageSize`,$(`#pageSize${this.item.id}`).val())
 				
 				setHashObject(hashObj)
-				
 			})
+
 			$(`#selectAll${this.item.id}`).on(`change`,(e)=>{
 				$(`input:checkbox`).not($(`#selectAll${this.item.id}`)).prop(`checked`, $(`#selectAll${this.item.id}`).prop(`checked`))
 			})
@@ -932,7 +954,7 @@ script=''
 						if(field.type.toLowerCase()=='identity' || field.type.toLowerCase()=='autoincrement' || field.type.toLowerCase()=='autoinc'){
 							itemValue=rowIndex+1
 						}else{
-							if(field.html){
+							if(field.html && field.type!='lookup'){
 								itemValue=replaceUrlCurlyBracket(field.html,listItem) || ''
 							}else{
 								itemValue=getPropertyByKeyPath(listItem,key)
@@ -949,18 +971,28 @@ script=''
 
 						switch(field.type.toLowerCase()){
 							case 'lookup':
+							var valueText=''
+							var o={}
 							Object.keys(field.lookup || {}).forEach((key2)=>{
 								if(key2===itemValue.toString()){
 									td+= field.lookup[key2]
+									valueText=field.lookup[key2]
 									return
 								}
 							})
 							if(td==''){
 								td+=itemValue
 							}
+							
 							if(field.lookupTextField){
-								var valueText=getPropertyByKeyPath(listItem,field.lookupTextField) || ''
-								td+=`<input type="hidden" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}" value="${valueText}" />`
+								o[field.lookupTextField]=valueText
+								if(!bRoot){
+									td+=`<input type="hidden" name="${generateFormName((field.parentField?field.parentField + '.':'') + rowIndex + '.' + field.lookupTextField)}" value="${valueText}" />`
+								}
+							}
+							if(field.html){
+								o[field.field]=itemValue.toString()
+								td=replaceUrlCurlyBracket(field.html,o) || ''
 							}
 							break
 							case 'number':
@@ -1038,7 +1070,13 @@ script=''
 							if(Array.isArray(itemValue)){
 								
 								itemValue.forEach((e,index)=>{
-									td+=`<input type="hidden" name="${generateFormName(prefix + '.' + key + '.' + index)}" value="${e}" />`
+									if(typeof e=='object'){
+										Object.keys(e).forEach((k)=>{
+											td+=`<input type="hidden" name="${generateFormName(prefix + '.' + key + '.' + index + '.' + k)}" value="${e[k]}" />`
+										})
+									}else{
+										td+=`<input type="hidden" name="${generateFormName(prefix + '.' + key + '.' + index)}" value="${e}" />`
+									}
 								})
 							}else if(typeof itemValue=='object'){
 								
@@ -1061,7 +1099,8 @@ s+=`</tr>`
 })
 }
 
-if((insideOfModal || !item.modal)  && item.options.buttons.add[0] && !bRoot){
+// if((insideOfModal || !item.modal)  && item.options.buttons.add[0] && !bRoot){
+if(item.options.buttons.add[0] && !bRoot){
 	s+=`<tr id="${item.id}-row-editor">`
 
 	Object.keys(fieldList).forEach((key)=>{
@@ -1118,8 +1157,9 @@ function buttonRowCell(listItem,rowIndex,item,bRoot){
 
 	listItem['rowIndex']=rowIndex
 	Object.keys(item.options.buttons).forEach((key)=>{
-		if(key!='add')
+		if(key!='add'){
 			s+=`${item.options.buttons[key][0]?replaceUrlCurlyBracket(item.options.buttons[key][1],listItem):''}`
+		}
 	})
 
 	return s
@@ -1245,7 +1285,7 @@ function gridFilterRow(item){
 	Object.keys(fields).forEach((key,index)=>{
 		var field=fields[key]
 		var cell=''
-		field.visible=field.visible==undefined?field.visible:true
+		//field.visible=field.visible==undefined?field.visible:true
 		field.filter=field.filter==undefined?item.options.filter:field.filter
 		field.filterField=field.filterField || key
 		field.id=generateFormId(`${item.id}_filter_${field.filterField}`)
@@ -1285,7 +1325,7 @@ function gridFilterRow(item){
 				break
 			}
 		}
-		s+=`<th class="${field.visible==false?'hidden':''}">${cell}</th>`
+		s+=`<th class="${field.visible===false?'hidden':''}">${cell}</th>`
 	})
 
 	s+=`
@@ -1467,11 +1507,12 @@ function textBox(item){
 }
 
 function button(item){
-	var label=`${item.title || ''}`
+	var label=`${item.text || ''}`
+	var titleText=`${item.title || item.text || ''}`
 	if(item.icon){
 		label=`<i class="${item.icon}"></i> ${label}`
 	}
-	var s= group(`<a class="${item.class || 'btn btn-info'}" id="${item.id || ''}" href="${item.href || item.value || ''}" target="${item.target || ''}">${label}</a>`,item)
+	var s= group(`<a class="${item.class || 'btn btn-info'}" id="${item.id || ''}" href="${item.href || item.value || ''}" target="${item.target || ''}" title="${titleText}">${label}</a>`,item)
 	
 	return s
 }
