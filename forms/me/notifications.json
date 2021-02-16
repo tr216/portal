@@ -1,0 +1,55 @@
+{
+	"index":[
+		{
+			"type":"form",
+			"fields":{
+				"aciklama":{"type":"html","value":"Son 90 gün içindeki bildirimler"}
+			}
+		},
+		{
+			"type": "grid",
+			"fields": {
+				"status":{"title":"Durum", "type":"string"},
+				"createdDate":{"title":"Tarih", "type":"datetime","width":"150px"},
+				"text":{"title":"Açıklama", "type":"string"},
+				"isRead":{"title":"Okundu?", "type":"boolean"}
+			},
+			"options": {
+				"selection": true,
+				"filter": true,
+				"buttons": {
+					"add": false,
+					"edit": false,
+					"delete": true,
+					"view": true,
+					"print": false,
+					"copy": false
+				}
+			},
+			"dataSource": {
+				"type":"remote",
+				"method":"GET",
+				"url":"/dbapi/my-currentdb-notifications"
+			}
+		}
+	],
+	"form": [
+		{
+			"type":"form",
+			"fields": {
+				"status":{"title":"Durum", "type":"string"},
+				"createdDate":{"title":"Tarih", "type":"datetime"},
+				"text":{"title":"Açıklama", "type":"strings"},
+				"isRead":{"title":"Okundu?", "type":"boolean"}
+			},
+			"options": {
+				"mode": "view",
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/my-currentdb-notifications"
+			}
+		}
+	]
+}

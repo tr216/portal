@@ -1,10 +1,11 @@
 {
-	"index":[
+	"index":
+	[
 		{
 			"type": "grid",
 			"fields":{
-				"partyName.name.value": {"title":"Müşteri adı", "type":"string", "filterField":"partyName"},
-				"partyType":{"title":"Tür", "type":"lookup", "staticValues":"partyTypeShortList", "class":"text-center" },
+				"partyType"				:{"title":"Türü",  "type":"lookup","staticValues":"partyTypeList"},
+				"partyName.name.value": {"title":"Adı", "type":"string", "filterField":"partyName"},
 				"postalAddress.cityName.value": {"title":"Şehir", "type":"string", "filterField":"cityName"},
 				"postalAddress.district.value": {"title":"İlçe", "type":"string", "filterField":"district"},
 				"passive": {"title":"Pasif?", "type":"boolean"}
@@ -24,7 +25,21 @@
 			"dataSource": {
 				"type":"remote",
 				"method":"GET",
-				"url":"/dbapi/customers"
+				"url":"/dbapi/autonew-parties"
+			},
+			"panelButtons":{
+				"btnGenerateItem":{"text":"Oluştur","type":"button", "icon" :"far fa-object-ungroup",
+					"dataSource":{
+						"method":"POST",
+						"url":"/dbapi/autonew-parties/generate"
+					}
+				},
+				"btnNoGenerateItem":{"text":"İptal et, oluşturma","type":"button", "class":"btn btn-danger", "icon" :"fas fa-times",
+					"dataSource":{
+						"method":"POST",
+						"url":"/dbapi/autonew-parties/nogenerate"
+					}
+				}
 			}
 		}
 	],
@@ -32,10 +47,11 @@
 		{
 			"type":"form",
 			"fields": {
-				"partyName.name.value":{"title":"Müşteri Adı", "type":"string", "col":6 ,"required":true},
+				"partyType"				:{"title":"Türü",  "type":"lookup","staticValues":"partyTypeList"},
+				"partyName.name.value":{"title":"Adı", "type":"string", "col":6 ,"required":true},
 				"person.firstName.value":{"title":"Kişi Adı", "type":"string", "col":3},
 				"person.familyName.value":{"title":"Kişi Soyadı", "type":"string", "col":3},
-				"partyIdentification.0.ID.attr.schemeID":{"title":"Veri No Tür", "type":"lookup", "lookup":{"VKN":"VKN","TCKN":"TCKN"} , "col":4},
+				"partyIdentification.0.ID.attr.schemeID":{"title":"Tür", "type":"lookup", "lookup":{"VKN":"VKN","TCKN":"TCKN"} , "col":4},
 
 				"partyIdentification.0.ID.value":{"title":"Vergi No/Tckn", "type":"string", "col":3},
 				"partyTaxScheme.taxScheme.name.value":{"title":"Vergi Dairesi", "type":"string", "col":4},
@@ -71,7 +87,6 @@
 						"websiteURI.value"											:{"title":"Web sitesi", "type":"string", 	"col":3}
 					}
 				},
-				"partyType":{"title":"Tür", "type":"lookup", "staticValues":"partyTypeList" , "col":4},
 				"passive":{"title":"Pasif?", "type":"boolean", "col":4    }
 			},
 			"options": {
@@ -80,7 +95,7 @@
 			},
 			"dataSource": {
 				"method":"GET",
-				"url":"/dbapi/customers"
+				"url":"/dbapi/autonew-parties"
 			}
 		}
 	]

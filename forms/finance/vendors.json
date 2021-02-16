@@ -4,6 +4,7 @@
 			"type": "grid",
 			"fields":{
 				"partyName.name.value": {"title":"Müşteri adı", "type":"string", "filterField":"partyName"},
+				"partyType":{"title":"Tür", "type":"lookup", "staticValues":"partyTypeShortList", "class":"text-center" },
 				"postalAddress.cityName.value": {"title":"Şehir", "type":"string", "filterField":"cityName"},
 				"postalAddress.district.value": {"title":"İlçe", "type":"string", "filterField":"district"},
 				"passive": {"title":"Pasif?", "type":"boolean"}
@@ -61,11 +62,16 @@
 						"postalAddress.district.value"					:{"title":"İlçe", "type":"string", 	"col":3},
 						"postalAddress.cityName.value"					:{"title":"Şehir", "type":"string", 	"col":3},
 						"postalAddress.region.value"						:{"title":"Bölge", "type":"string", 	"col":3},
-						"postalAddress.country.name.value"			:{"title":"Ülke", "type":"string", 	"col":3},
+						"postalAddress.country.identificationCode.value":{
+							"title":"Ülke", "type":"lookup", "staticValues":"countryList","col":3,
+							"lookupTextField":"postalAddress.country.name.value",
+							"onchange":"countryCode_changed('')"
+						},
 						"postalAddress.postbox.value"						:{"title":"Posta Kutusu", "type":"string", 	"col":3},
 						"websiteURI.value"											:{"title":"Web sitesi", "type":"string", 	"col":3}
 					}
 				},
+				"partyType":{"title":"Tür", "type":"lookup", "staticValues":"partyTypeList" , "col":4},
 				"passive":{"title":"Pasif?", "type":"boolean", "col":4    }
 			},
 			"options": {

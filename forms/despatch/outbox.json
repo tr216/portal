@@ -132,7 +132,7 @@
 								"deliveryCustomerParty.party.postalAddress.country.identificationCode.value":{
 									"title":"Ülke Kodu", "type":"lookup", "staticValues":"countryList","col":2,
 									"lookupTextField":"deliveryCustomerParty.party.postalAddress.country.name.value",
-									"onchange":"countryCode_changed('deliveryCustomerParty')"
+									"onchange":"countryCode_changed('deliveryCustomerParty.party.')"
 								},
 								
 								"deliveryCustomerParty.party.postalAddress.postbox.value":{"title":"Posta Kodu", "type":"string","col":2}
@@ -163,11 +163,16 @@
 								"label":"{name.value} {description.value}"
 							},
 							"lookupTextField":"item.name.value",
+							"displayFormat":"{item.name.value} - {item.description.value}",
 							"required":true
 						},
 						"deliveredQuantity.value" :{"title":"Miktar", "type":"number","required":true},
 						"deliveredQuantity.attr.unitCode" :{"title":"Birim", "type":"lookup","staticValues":"unitCodeList","required":true},
-						"note" :{"title":"notlar", "type":"string", "visible":false}
+						"note.0.value" :{"title":"SatırNot 1", "type":"string"},
+						"note.1.value" :{"title":"SatırNot 2", "type":"string"},
+						"note.2.value" :{"title":"SatırNot 3", "type":"string"},
+						"note.3.value" :{"title":"SatırNot 4", "type":"string","visible":false},
+						"note.4.value" :{"title":"SatırNot 5", "type":"string","visible":false}
 					},
 					"modal":{
 						"tabs":[

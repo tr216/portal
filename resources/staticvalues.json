@@ -1005,6 +1005,16 @@
 		"asset": "Demirbaş",
 		"expense": "Masraf/gider"
 	},
+	"partyTypeList": {
+		"Customer": "Müşteri",
+		"Vendor": "Tedarikçi",
+		"Both": "Müşteri & Tedarikçi"
+	},
+	"partyTypeShortList": {
+		"Customer": "M",
+		"Vendor": "T",
+		"Both": "M+T"
+	},
 	"bloodGroups": {
 		"none": "Belirtilmemiş",
 		"0+": "0+",

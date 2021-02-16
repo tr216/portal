@@ -69,7 +69,8 @@
 										"url":"/dbapi/account-groups",
 										"label":"{name}"
 									}, 
-									"col":4
+									"col":4,
+									"lastRecord":true
 								}
 							}
 						},

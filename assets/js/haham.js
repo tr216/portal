@@ -21,6 +21,7 @@
 		tab:tab,
 		group:group,
 		textBox:textBox,
+		label:label,
 		numberBox:numberBox,
 		dateBox:dateBox,
 		timeBox:timeBox,
@@ -35,9 +36,9 @@
 
 		grid:grid,
 		gridHtml:gridHtml,
-		gridModalAddRow:gridModalAddRow,
-		gridModalEditRow:gridModalEditRow,
-		gridModalOK:gridModalOK,
+		// gridModalAddRow:gridModalAddRow,
+		// gridModalEditRow:gridModalEditRow,
+		// gridModalOK:gridModalOK,
 		gridRefresh:gridRefresh,
 		generateControls:generateControls,
 		get item(){
@@ -99,9 +100,16 @@
 
 						`
 						if(sayfa.type=='form' && sayfa.dataSource){
-							var hbtn=`
+							var hbtn=``
+
+							hbtn=`
 							<a href="javascript:formKaydet('#${divId}');" class="btn btn-primary  btn-form-header" title="Kaydet"><i class="fas fa-save"></i></a>
 							<a href="javascript:history.back(-1);" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>`
+							if(sayfa.options){
+								if(sayfa.options.mode=='view'){
+									hbtn=`<a href="javascript:history.back(-1);" class="btn btn-dark  btn-form-header ml-2" title="Vazgeç"><i class="fas fa-reply"></i></a>`
+								}
+							}
 							$('#headerButtons').html(hbtn)
 							script+=`
 							function formKaydet(divId){
@@ -289,7 +297,10 @@
 			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
 			s+=item.value
 			break
-
+			case 'label' :
+			item.value=getPropertyByKeyPath(data.value,item.field) || item.value || ''
+			s+=label(item)
+			break
 			case 'remotelookup' : 
 			item.value=getPropertyByKeyPath(data.value,item.field) || item.value
 			if(item.lookupTextField){
@@ -327,7 +338,7 @@
 			if(item.fields){
 				item.controls=`<div id="filterForm" class="col-12 m-0 p-0"><div class="row m-0 p-0">`
 				Object.keys(item.fields).forEach((key)=>{
-					item.fields[key].value=hashObj[key] || ''
+					item.fields[key].value=hashObj.query[key] || ''
 					item.fields[key].showAll=true
 					item.fields[key].class='my-0'
 					item.controls+=generateControls(item.fields[key],{value:{}},false,insideOfModal)
@@ -437,7 +448,9 @@
 				}
 			})
 		}
-		var q={mid:hashObj.query.mid}
+		var q={}
+		if(hashObj.query.mid)
+			q={mid:hashObj.query.mid}
 		if(options.queryValues){
 			q=hashObj.query
 		}else{
@@ -448,7 +461,7 @@
 				options.buttons.add[1]=`<a href="${menuLink(hashObj.path + '/addnew',q)}" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle"></a>`
 			}else{
 				if(item.modal && !item.insideOfModal){
-					options.buttons.add[1]=`<a href="javascript:grid${item.id}.gridModalAddRow()" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle (modal)"></a>`
+					options.buttons.add[1]=`<a href="javascript:gridModalAddRow('${item.id}',${insideOfModal})" class="btn btn-primary  btn-sm far fa-plus-square" target="_self"  title="Yeni Ekle (modal)"></a>`
 				}else{
 					options.buttons.add[1]=``
 				}
@@ -475,7 +488,7 @@
 			}
 
 			if(options.buttons.view[0]==true && options.buttons.view[1]==''){
-				options.buttons.view[1]=`<a href="${menuLink(hashObj.path + '/view/{_id}',q)}','İncele','900','600')" class="btn btn-info btn-grid-row fas fa-eye" title="İncele"></a>`
+				options.buttons.view[1]=`<a href="${menuLink(hashObj.path + '/view/{_id}',q)}" class="btn btn-info btn-grid-row fas fa-eye" title="İncele"></a>`
 			}
 
 			if(options.buttons.edit[0]==true && options.buttons.edit[1]==''){
@@ -484,7 +497,7 @@
 				}else{
 					options.buttons.edit[1]=`<a href="javascript:gridSatirDuzenle({rowIndex},'${item.id}',${insideOfModal})" class="btn btn-info btn-grid-row fas fa-edit" title="Satır Düzenle"></a>`
 					if(item.modal && !item.insideOfModal){
-						options.buttons.edit[1]+=`<a href="javascript:grid${item.id}.gridModalEditRow({rowIndex})" class="btn btn-success btn-grid-row fas fa-edit" title="Modal Düzenle"></a>`
+						options.buttons.edit[1]+=`<a href="javascript:gridModalEditRow({rowIndex},'${item.id}',${insideOfModal})" class="btn btn-success btn-grid-row fas fa-window-restore" title="Modal Düzenle"></a>`
 					}
 					
 				}
@@ -528,7 +541,6 @@
 					item.panelButtons[key].noGroup=true
 					item.panelButtons[key].class=item.panelButtons[key].class || 'btn btn-primary'
 					item.panelButtons[key].class+=' mr-2'
-					console.log(`item.panelButtons[key].dataSource:`,item.panelButtons[key].dataSource)
 					
 					if(!item.panelButtons[key].href && item.panelButtons[key].dataSource){
 						item.panelButtons[key].href=`javascript:runPanelButtons('${item.panelButtons[key].dataSource.url}','${item.panelButtons[key].dataSource.method}')`
@@ -710,12 +722,10 @@
 					item.value=(new Date()).yyyymmdd()
 				}else if(item.type=='time'){
 					item.value=(new Date()).hhmmss()
-				}else if(item.lastRecord===true && !item.value){
+				}else if(item.lastRecord===true){
 					var lastRecord= pageSettings.getItem('lastRecord')
 					if(lastRecord){
-						
 						item.value=getPropertyByKeyPath(lastRecord,item.field)
-						console.log(`${item.field}:`,item.value)
 					}
 					
 				}
@@ -785,141 +795,6 @@
 				}
 			}
 			gridRefreshCalisiyor=false
-		}
-
-		
-
-		function gridModalAddRow(){
-			this.gridModalEditRow(-1)
-		}
-
-		function gridModalEditRow(rowIndex){
-			if(!this.item.value){
-				this.item.value=[]
-			}
-			var gridLine={}
-			if(this.item.modal){
-				gridLine=clone(this.item.modal)
-			}else{
-				gridLine={
-					fields:clone(this.item.fields || {})
-				}
-			}
-			script=''
-			gridLine.type="modal"
-			gridLine.options={autocol:true}
-
-			if(rowIndex>=0){
-				gridLine.value=this.item.value[rowIndex]
-				$(`#modalRow${this.item.id} .modal-title`).html(`#${rowIndex+1} satırını düzenle`)
-			}else{
-				gridLine.value={}
-				$(`#modalRow${this.item.id} .modal-title`).html('Yeni satir')
-				
-			}
-			
-			gridLine=modalRowIcinParentFieldAyarla(this.item,gridLine)
-
-			$(`#modalRow${this.item.id} .modal-body`).html(`<div class="row">${this.generateControls(gridLine,{value:gridLine.value},false,true,-1)}</div>`)
-			$(`#modalRow${this.item.id} .modal-footer`).html(`<a class="btn btn-primary" href="javascript:grid${this.item.id}.gridModalOK(${rowIndex})" title="Kaydet"><i class="fas fa-check"></i> Tamam</a><button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>`)
-
-			script+=`
-			$('#modalRow${this.item.id} .modal-body input,select').on('change',(e)=>{
-				var fields=${JSON.stringify(gridLine.fieldList)}
-				var valueObj=getDivData('#modalRow${this.item.id}','modalRow${this.item.id}')
-				Object.keys(fields).forEach((key)=>{
-					if(fields[key].id!=e.target.id && fields[key].calc){
-						try{
-							$(\`#\${fields[key].id}\`).attr('type','text')
-							$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
-						}catch(tryErr){
-							console.error('tryErr:',tryErr)
-							$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
-						}
-					}
-				})
-			})
-			`
-
-			if(script!=''){
-				$(`#${this.divId}`).append(`<script type="text/javascript">${script}<\/script>`)
-			}
-			
-
-			$(`#modalRow${this.item.id}`).modal('show')
-		}
-
-		function modalRowIcinParentFieldAyarla(item, gridLine){
-			var pfield=`modalRow${item.id}`
-			var fieldList={}
-
-			if(gridLine.tabs){
-				gridLine.tabs.forEach((tab)=>{
-					if(tab.fields){
-						var fields={}
-						Object.keys(tab.fields).forEach((key)=>{
-							fields[`${pfield}.${key}`]=tab.fields[key]
-							if(tab.fields[key].lookupTextField){
-								fields[`${pfield}.${key}`].lookupTextField=`${pfield}.${tab.fields[key].lookupTextField}`
-							}
-						})
-						tab.fields=fields
-						fieldList=Object.assign({},fieldList,clone(fields))
-					}
-				})
-			}else if(gridLine.fields){
-				var fields={}
-				Object.keys(gridLine.fields).forEach((key)=>{
-					fields[`${pfield}.${key}`]=gridLine.fields[key]
-					if(gridLine.fields[key].lookupTextField){
-						fields[`${pfield}.${key}`].lookupTextField=`${pfield}.${gridLine.fields[key].lookupTextField}`
-					}
-				})
-				gridLine.fields=fields
-				fieldList=Object.assign({},fieldList,clone(fields))
-			}
-
-			var listObj=objectToListObject(gridLine.value)
-			
-			gridLine.value={}
-			Object.keys(listObj).forEach((key)=>{
-				gridLine.value[`${pfield}.${key}`]=listObj[key]
-			})
-			gridLine.value=listObjectToObject(gridLine.value)
-
-			Object.keys(fieldList).forEach((key)=>{
-				fieldList[key].id=generateFormId(key)
-				fieldList[key].name=generateFormName(key)
-			})
-			gridLine.fieldList=fieldList
-
-			return gridLine
-		}
-
-		function gridModalOK(rowIndex){
-			if(!this.item)
-				return
-			if(!this.item.value)
-				this.item.value=[]
-			
-			var dizi=[]
-
-			var pfield=`modalRow${this.item.id}`
-			
-			var obj=getDivData(`#modalRow${this.item.id}`,pfield,false)
-			if(rowIndex>=0 && rowIndex<this.item.value.length){
-				var valObj=objectToListObject(this.item.value[rowIndex],true)
-				valObj=Object.assign({},valObj,objectToListObject(obj,true))
-
-				this.item.value[rowIndex]=listObjectToObject(valObj)
-			}else if(rowIndex<0){
-				this.item.value.push(obj)
-			}
-			
-			
-			$(`#modalRow${this.item.id}`).modal('hide')
-
-			this.gridRefresh()
 		}
 
 		function gridModalTemplate(item){
@@ -1022,7 +897,15 @@
 							tdClass=field.class || 'text-right mr-1'
 							td=Number(itemValue).formatMoney()
 							break
-
+							case 'date':
+							td=(new Date(itemValue)).yyyymmdd()
+							break
+							case 'time':
+							td=(new Date(itemValue)).hhmmss()
+							break
+							case 'datetime':
+							td=(new Date(itemValue)).yyyymmddhhmmss()
+							break
 							case 'boolean':
 							tdClass=field.class || 'text-center'
 							itemValue=(itemValue || '').toString()==='true'?true:false
@@ -1515,6 +1398,13 @@ function group(input,item){
 		${input}
 		</div>`
 	}
+}
+
+function label(item){
+	script+=`
+	$('#${item.id}').val(decodeURIComponent('${encodeURIComponent2(item.value || '')}'))
+	`
+	return group(`<label  id="${item.id}" class="m-0 p-0 ${item.class || ''}">${item.value || item.title  || item.label || item.text || ''}</label>`,item)
 }
 
 function textBox(item){

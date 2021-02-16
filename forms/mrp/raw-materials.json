@@ -51,7 +51,6 @@
 							"name.value":{"title":"Adı", "type":"string", "col":4   , "required":true},
 							"description.value":{"title":"Açıklama", "type":"string", "col":8 },
 							"tags":{"title":"Etiketler (virgulle ayrılmış)", "type":"string"},
-
 							"grup1":{
 								"title":"Diger",
 								"collapsed":true,
@@ -70,7 +69,8 @@
 											"url":"/dbapi/account-groups",
 											"label":"{name}"
 										}, 
-										"col":4
+										"col":4,
+										"lastRecord":true
 									}
 								}
 							},

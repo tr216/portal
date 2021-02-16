@@ -17,6 +17,10 @@
 		"brand_name" : "Plaset MRP",
 		"styles" : "/css/custom.css"
 	},
-	"status":"development",
-	"tmpDir":"C:\\arge\\tr216\\temp"
+	"ispiyonService":{
+		"url":"http://localhost:3900",
+		"enabled":true
+	},
+	"tmpDir":"C:\\arge\\tr216\\temp",
+	"status":"development"
 }

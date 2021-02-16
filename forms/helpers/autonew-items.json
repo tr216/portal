@@ -4,6 +4,7 @@
 		{
 			"type": "grid",
 			"fields": {
+				"itemType"				:{"title":"Türü",  "type":"lookup","staticValues":"itemTypeList"},
 				"name.value"				:{"title":"Adı",  "type":"string"},
 				"description.value"	:{"title":"Açıklama",  "type":"string"},
 				"tracking.lotNo"		:{"title":"Lot No?", "type":"boolean"},
@@ -36,7 +37,21 @@
 			"dataSource": {
 				"type":"remote",
 				"method":"GET",
-				"url":"/dbapi/items?itemType=semi-product"
+				"url":"/dbapi/autonew-items"
+			},
+			"panelButtons":{
+				"btnGenerateItem":{"text":"Kartları Oluştur","type":"button", "icon" :"far fa-object-ungroup",
+					"dataSource":{
+						"method":"POST",
+						"url":"/dbapi/autonew-items/generate"
+					}
+				},
+				"btnNoGenerateItem":{"text":"İptal et, oluşturma","type":"button", "class":"btn btn-danger", "icon" :"fas fa-times",
+					"dataSource":{
+						"method":"POST",
+						"url":"/dbapi/autonew-items/nogenerate"
+					}
+				}
 			}
 		}
 	],
@@ -47,6 +62,7 @@
 				{
 					"title":"Bilgiler",
 					"fields":{
+						"itemType" :{"title":"Türü",  "type":"lookup","staticValues":"itemTypeList", "value":"item"},
 						"name.value":{"title":"Adı", "type":"string", "col":4   , "required":true},
 						"description.value":{"title":"Açıklama", "type":"string", "col":8 },
 						"tags":{"title":"Etiketler (virgulle ayrılmış)", "type":"string"},
@@ -75,7 +91,7 @@
 							}
 						},
 						"tracking1" :{
-							"title":"Stok Takibi", 
+							"title":"Stok Takibi",   
 							"fields":{
 								"tracking.lotNo":{"title":"Lot No?", "type":"boolean", "col":"col-4 col-md-2"  },
 								"tracking.serialNo":{"title":"Seri No?", "type":"boolean","col":"col-4 col-md-2"    },
@@ -113,26 +129,7 @@
 									"view": false,
 									"print": false,
 									"copy": false
-								},
-								"dataSource": {
-									"type":"local",
-									"method11111":"GET",
-									"url1111":"/dbapi/1111111"
 								}
-							},
-							"data":{
-								"list":[
-									{
-										"_id":"888859595",
-										"unitCode":"NIU", 
-										"netWeight":{"value":78}, 
-										"dimension":{
-											"width":{"value":40},
-											"length":{"value":25}, 
-											"height":{"value":180} 
-										}
-									}
-								]
 							}
 
 						},
@@ -156,16 +153,15 @@
 						"ambalajTanimlari":{"title":"Paketleme", "type":"partial"}
 					}
 				}
-			]
-,
-"options": {
-	"mode": "general",
-	"isForm":true
-},
-"dataSource": {
-	"method":"GET",
-	"url":"/dbapi/items?itemType=semi-product"
-}
-}
-]
+			],
+			"options": {
+				"mode": "general",
+				"isForm":true
+			},
+			"dataSource": {
+				"method":"GET",
+				"url":"/dbapi/autonew-items"
+			}
+		}
+	]
 }

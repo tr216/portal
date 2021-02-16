@@ -54,15 +54,16 @@
 								"url":"/dbapi/integrators",
 								"label":"{name}"
 							},
-							"col":"col-sm-6 col-md-3"
+							"col":"col-sm-6 col-md-3",
+							"lastRecord":true
 						},
 						"ID.value" :{"title":"Belge No(Boş ise otomatik)","type":"string" ,"col":"col-sm-6 col-md-3"},
 						"uuid.value" :{"title":"ETTN(uuid)","type":"string", "readonly":true,"col":"col-sm-6 col-md-3"},
 						"divsor1" :{"type":"w-100"},
 						"issueDate.value" :{"title":"Tarih","type":"date","col":3},
 						"issueTime.value" :{"title":"Saat","type":"time","col":3},
-						"profileId.value" :{"title":"Senaryo","type":"lookup", "staticValues":"orderProfileIdList","col":3},
-						"orderTypeCode.value" :{"title":"Tipi","type":"lookup", "staticValues":"orderTypeCodeList","col":3}
+						"profileId.value" :{"title":"Senaryo","type":"lookup", "staticValues":"orderProfileIdList","lastRecord":true, "col":3},
+						"orderTypeCode.value" :{"title":"Tipi","type":"lookup", "staticValues":"orderTypeCodeList","lastRecord":true, "col":3}
 					}
 				},
 				
@@ -101,7 +102,7 @@
 								"buyerCustomerParty.party.postalAddress.country.identificationCode.value":{
 									"title":"Ülke Kodu", "type":"lookup", "staticValues":"countryList","col":2,
 									"lookupTextField":"buyerCustomerParty.party.postalAddress.country.name.value",
-									"onchange":"countryCode_changed('buyerCustomerParty')"
+									"onchange":"countryCode_changed('buyerCustomerParty.party.')"
 								},
 								
 								"buyerCustomerParty.party.postalAddress.postbox.value":{"title":"Posta Kodu", "type":"string","col":2}

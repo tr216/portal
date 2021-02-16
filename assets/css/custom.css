@@ -432,6 +432,11 @@ footer.footer {
 	border: #00000059 thin solid;
 }
 
+
+.sb-topnav {
+	font-size: 14pt;
+}
+
 .sb-topnav .navbar-brand {
 	width: 200px;
 	/* padding-left: 0.5rem; */
@@ -439,6 +444,7 @@ footer.footer {
 	margin: 0;
 	margin-left: 8px;
 }
+
 .sb-topnav .btn {
 	color:var(--orange);
 	border-color:var(--orange)!important;
@@ -705,4 +711,31 @@ body {
 
 .font-size-150 {
 	font-size: 150%;
+}
+
+
+.sb-topnav .nav-item .nav-link .badge-counter {
+    position: absolute;
+    transform: scale(.8);
+    transform-origin: top right;
+    right: 1.0rem;
+    margin-top: -.25rem;
+}
+
+.icon-circle {
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rounded-circle {
+    border-radius: 50%!important;
+}
+
+img {
+    vertical-align: middle;
+    border-style: none;
 }

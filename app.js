@@ -22,6 +22,7 @@ global.uuid = require('node-uuid')
 // global.ejs = require('./assets/vendor/js/ejs.js')
 global.ejs = require('ejs')
 
+
 global.config = require('./config.json')
 
 
@@ -33,6 +34,9 @@ if(process.argv.length>=3){
 }else if(fs.existsSync('./config-test.json')){
 	global.config = require('./config-test.json')
 }
+
+
+
 
 global.rootDir=__dirname
 
@@ -60,6 +64,7 @@ app.set('view engine', 'ejs')
 app.set('name',require('./package').name)
 app.set('version',require('./package').version)
 app.set('port',config.httpserver.port)
+
 
 
 app.use(favicon(path.join(__dirname,'assets','img','webicon.png')))
@@ -158,6 +163,34 @@ var http = require('http')
 
 var server = http.createServer(app)
 
+global.io = require('socket.io')(server)
+
+io.on('connection', socket => {
+  let counter = 0;
+  setInterval(() => {
+    socket.emit('sayac', ++counter);
+  }, 3000)
+
+  // handle the event sent with socket.send()
+  socket.on('message', (data) => {
+    console.log('clienttan gelen mesaj:',data);
+  });
+
+  socket.on('baglandi', (sessionId) => {
+
+    console.log('baglandi sessionId:',sessionId);
+    var client=require('socket.io-client')('http://localhost:3500')
+    client.on('connection', socketClient => {
+		  socketClient.send('portal serverdan gelen mesaj: sessionId:'+sessionId)
+		})
+
+  });
+
+  // handle the event sent with socket.emit()
+  socket.on('selamlama', (elem1, elem2, elem3) => {
+    console.log('selamlama',elem1, elem2, elem3);
+  });
+})
 
 server.listen(config.httpserver.port)
 server.on('error', onError)
@@ -211,6 +244,7 @@ function onListening() {
 	? 'pipe ' + addr
 	: 'port ' + addr.port
 	debug('Listening on ' + bind)
+
 }
 
 // ==========HTTP SERVER /===========

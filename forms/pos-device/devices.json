@@ -52,7 +52,8 @@
 						"method":"GET",
 						"url":"/dbapi/locations",
 						"label":"{name}"
-					}
+					},
+					"lastRecord":true
 				},
 				"service" : {"title":"Service", "type":"remoteLookup", 
 					"dataSource":{
@@ -60,7 +61,8 @@
 						"method":"GET",
 						"url":"/dbapi/pos-device-services",
 						"label":"{name}"
-					}
+					},
+					"lastRecord":true
 				},
 				"deviceSerialNo" 				: {"title":"Cihaz Seri No", "type":"string"},
 				"deviceModel" 				: {"title":"Model", "type":"string"},

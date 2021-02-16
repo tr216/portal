@@ -97,6 +97,16 @@
 			}
 		]
 	},
+	{"text":"Yardımcı İşlemler",	"icon":"fas fa-seedling",
+		"nodes":[
+			{"text":"Otomatik oluştur", "icon":"fas fa-sliders-h", 
+				"nodes":[
+					{"text":"Stok/Ürün/Masraf vb. Kartlar", "path":"/helpers/autonew-items", "icon":"far fa-object-ungroup"},
+					{"text":"Müşteri/Tedarikçi", "path":"/helpers/autonew-parties", "icon":"far fa-object-ungroup"}
+				]
+			}
+		]
+	},	
 	{"text":"Ayarlar",  "icon":"fas fa-wrench",
 		"nodes":[
 			{"module":"settings.locations", "text":"Lokasyonlar", "path":"/settings/locations", "icon":"fas fa-map-marker"},
@@ -119,5 +129,9 @@
 			{"module":"system.general", "text":"Veri Ambarları",  "path":"/settings/dbdefine", "icon":"fas fa-database"},
 			{"module":"system.workingParams.general", "text":"Görev Yöneticisi",  "path":"/system/tasks", "icon":"fas fa-tasks"}
 		]
-	}
+	},
+
+	
+	{"text":"Profilim",  "path":"/me/profile", "icon":"fas fa-user","visible":false},
+	{"text":"Tüm Bildirimler",  "path":"/me/notifications", "icon":"fas fa-bell","visible":false}
 ]

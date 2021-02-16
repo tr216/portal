@@ -1,15 +1,19 @@
 {
-  "httpserver":{
-  	"port" : 5100
-  },
-  "mongodb": {
-    "address":"mongodb://localhost:27017/portalweb"
-  },
-  "api": {
-  	"url":"https://api.tr216.com/api/v1"
-  },
-  "pagination":{
-  	"pageSize":10
-  },
+	"httpserver":{
+		"port" : 5100
+	},
+	"mongodb": {
+		"address":"mongodb://localhost:27017/portalweb"
+	},
+	"api": {
+		"url":"https://api.tr216.com/api/v1"
+	},
+	"pagination":{
+		"pageSize":10
+	},
+	"ispiyonService":{
+		"url":"http://localhost:3900",
+		"enabled":true
+	},
 	"status":"release"
 }

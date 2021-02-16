@@ -279,6 +279,7 @@ function developmentSession(req,res,next){
 			if(!err){
 				sessionHelper.newSession(resp.data,req,res,(err,sessionId)=>{
 					req.session.elvanDalton=sessionId
+					
 					next()
 				})
 			}else{
@@ -315,6 +316,7 @@ function setGeneralParams(req, res, data, cb){
 	var currentUrl=req.protocol + '://' + req.get('host') + req.originalUrl
 
 	data['elvanDalton']=req.session.elvanDalton || ''
+	data['token']=req.session.token || ''
 	data['mid']=req.query.mid || ''
 	data['leftMenu']=[]
 	data['databases']=[]
@@ -372,9 +374,11 @@ function getJSONPages(req,res){
 									pages:holder,
 									menu:data.menu,
 									databases:data.databases,
-									db:data.db,
+									dbId:data.dbId,
 									dbName:data.dbName,
 									sessionId:req.session.elvanDalton || '',
+									token:req.session.token || '',
+									ispiyonServiceUrl:config.ispiyonService?config.ispiyonService.url || '':'',
 									settings:data.settings || {}
 								}
 							})

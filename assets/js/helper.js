@@ -4,9 +4,11 @@ var global={
 	pages:{},
 	menu:[],
 	databases:[],
-	db:'',
+	dbId:'',
 	dbName:'',
 	sessionId:'',
+	token:'',
+	ispiyonServiceUrl:'',
 	settings:{},
 	formOptionsLink:''
 }
@@ -22,7 +24,7 @@ function initGlobals(){
 }
 
 initGlobals()
-
+initIspiyonService()
 
 var hashObj=getHashObject()
 
@@ -153,7 +155,13 @@ function getPageInfos(h=null){
 	if(h==null){
 		h=hashObj
 	}
-	var breadCrumbs=getBreadCrumbs(global.menu,(h.query.mid || '0')) || []
+	var breadCrumbs=[]
+	if((h.query.mid || '')==''){
+		breadCrumbs=getBreadCrumbsFromPath(global.menu,(h.path)) || []
+	}else{
+		breadCrumbs=getBreadCrumbs(global.menu,(h.query.mid)) || []
+	}
+	
 
 	if(breadCrumbs.length>0){
 		p.icon=breadCrumbs[breadCrumbs.length-1].icon || ''
@@ -485,9 +493,9 @@ function cboEasyDateChange(value){
 	var date1=new Date()
 	var date2=new Date()
 	date1.setHours(0, 0, 0, 0)
-	date1.setMinutes((new Date()).getTimezoneOffset())
+	date1.setMinutes(-1*(new Date()).getTimezoneOffset())
 	date2.setHours(0, 0, 0, 0)
-	date2.setMinutes((new Date()).getTimezoneOffset())
+	date2.setMinutes(-1*(new Date()).getTimezoneOffset())
 
 	switch(value){
 		case 'today':
@@ -645,7 +653,7 @@ function getRemoteData(item,cb){
 	if(filterString!=''){
 		url+=`${url.indexOf('?')>-1?'&':'?'}${filterString}`
 	}
-	console.log(`getRemoteData url:`,url)
+	
 	$.ajax({
 		url:url,
 		type:item.dataSource.method || 'GET',
@@ -724,8 +732,8 @@ function cariKart_changed(prefix){
 }
 
 function countryCode_changed(prefix){
-	var fieldName=`${prefix}.party.postalAddress.country.identificationCode.value`
-	var fieldNameCountryName=`${prefix}.party.postalAddress.country.name.value`
+	var fieldName=`${prefix}postalAddress.country.identificationCode.value`
+	var fieldNameCountryName=`${prefix}postalAddress.country.name.value`
 	var countryCode=$(`#${generateFormId(fieldName)}`).val() || ''
 	var countryText=$(`#${generateFormId(fieldName)} option:selected`).text() || ''
 
@@ -747,7 +755,8 @@ function formSave(dataSource,formData){
 			url+='?' + url.split[1]
 		}
 	}else{
-		return alertX('URL hatasi var')
+		method='PUT'
+		//return alertX('URL hatasi var')
 	}
 
 	if(method=='POST'){
@@ -761,9 +770,13 @@ function formSave(dataSource,formData){
 		dataType: 'json',
 		success: function(result) {
 			if(result.success){
-
-				var h=Object.assign({},hashObj,{func:'index',page:1})
-				setHashObject(h)
+				if(hashObj.func=='index'){
+					alertX('Kayıt başarılı :-)')
+				}else{
+					var h=Object.assign({},hashObj,{func:'index',query:{page:1}})
+					setHashObject(h)
+				}
+				
 			}else{
 				showError(result.error)
 			}
@@ -817,6 +830,144 @@ function collectFieldList(item){
 	return fieldList
 }
 
+function gridModalAddRow(tableId,insideOfModal){
+	gridModalEditRow(-1,tableId,insideOfModal)
+}
+
+function gridModalEditRow(rowIndex,tableId,insideOfModal){
+	var frm=FormControl.FormControl
+	var table=document.getElementById(tableId)
+	var thead=document.querySelector(`#${tableId} thead`)
+	var tbody=document.querySelector(`#${tableId} tbody`)
+	var item=clone(table.item)
+
+	if(rowIndex>-1){
+		
+	}
+
+
+	var gridLine={}
+
+	if(item.modal){
+		gridLine=clone(item.modal)
+	}else{
+		gridLine={
+			fields:clone(item.fields || {})
+		}
+	}
+	script=''
+	gridLine.id=tableId
+	gridLine.type="modal"
+	gridLine.options={autocol:true}
+
+	if(rowIndex>=0){
+		gridLine.value=item.value[rowIndex]
+		$(`#modalRow${tableId} .modal-title`).html(`#${rowIndex+1} satırını düzenle`)
+	}else{
+		gridLine.value={}
+		$(`#modalRow${tableId} .modal-title`).html('Yeni satir')
+
+	}
+
+	gridLine=modalRowIcinParentFieldAyarla(item,gridLine)
+	frm.item=gridLine
+	$(`#modalRow${tableId} .modal-body`).html(`<div class="row">${frm.generateControls(gridLine,{value:gridLine.value},false,true,-1)}</div>`)
+	$(`#modalRow${tableId} .modal-footer`).html(`<a class="btn btn-primary" href="javascript:gridModalOK('${tableId}',${rowIndex},${insideOfModal})" title="Kaydet"><i class="fas fa-check"></i> Tamam</a><button class="btn btn-secondary" type="button" data-dismiss="modal">Vazgeç</button>`)
+
+	script+=frm.script
+	script+=`
+	$('#modalRow${tableId} .modal-body input,select').on('change',(e)=>{
+		var fields=${JSON.stringify(gridLine.fieldList)}
+		var valueObj=getDivData('#modalRow${tableId}','modalRow${tableId}')
+		Object.keys(fields).forEach((key)=>{
+			if(fields[key].id!=e.target.id && fields[key].calc){
+				try{
+					$(\`#\${fields[key].id}\`).attr('type','text')
+					$(\`#\${fields[key].id}\`).val(eval(replaceUrlCurlyBracket(fields[key].calc,valueObj)))
+				}catch(tryErr){
+					console.error('tryErr:',tryErr)
+					$(\`#\${fields[key].id}\`).val(replaceUrlCurlyBracket(fields[key].calc,valueObj))
+				}
+			}
+		})
+	})
+	`
+
+	if(script!=''){
+		$(`#${tableId}`).append(`<script type="text/javascript">${script}<\/script>`)
+	}
+
+
+	$(`#modalRow${tableId}`).modal('show')
+}
+
+function modalRowIcinParentFieldAyarla(item, gridLine){
+	var pfield=`modalRow${item.id}`
+	var fieldList={}
+
+	if(gridLine.tabs){
+		gridLine.tabs.forEach((tab)=>{
+			if(tab.fields){
+				var fields={}
+				Object.keys(tab.fields).forEach((key)=>{
+					fields[`${pfield}.${key}`]=tab.fields[key]
+					if(tab.fields[key].lookupTextField){
+						fields[`${pfield}.${key}`].lookupTextField=`${pfield}.${tab.fields[key].lookupTextField}`
+					}
+				})
+				tab.fields=fields
+				fieldList=Object.assign({},fieldList,clone(fields))
+			}
+		})
+	}else if(gridLine.fields){
+		var fields={}
+		Object.keys(gridLine.fields).forEach((key)=>{
+			fields[`${pfield}.${key}`]=gridLine.fields[key]
+			if(gridLine.fields[key].lookupTextField){
+				fields[`${pfield}.${key}`].lookupTextField=`${pfield}.${gridLine.fields[key].lookupTextField}`
+			}
+		})
+		gridLine.fields=fields
+		fieldList=Object.assign({},fieldList,clone(fields))
+	}
+
+	var listObj=objectToListObject(gridLine.value)
+
+	gridLine.value={}
+	Object.keys(listObj).forEach((key)=>{
+		gridLine.value[`${pfield}.${key}`]=listObj[key]
+	})
+	gridLine.value=listObjectToObject(gridLine.value)
+
+	Object.keys(fieldList).forEach((key)=>{
+		fieldList[key].id=generateFormId(key)
+		fieldList[key].name=generateFormName(key)
+	})
+	gridLine.fieldList=fieldList
+
+	return gridLine
+}
+
+function gridModalOK(tableId,rowIndex,insideOfModal){
+	var table=document.getElementById(tableId)
+	var pfield=`modalRow${tableId}`
+	var satirObj=getDivData(`#modalRow${tableId}`,pfield,false)
+	var item=clone(table.item)
+	if(rowIndex>-1){
+		item.value[rowIndex]=satirObj
+	}else{
+		item.value.push(satirObj)
+	}
+	var frm=FormControl.FormControl
+	$(`#${tableId}`).html(frm.gridHtml(item,false,insideOfModal))
+	frm.script+=`
+	document.getElementById('${tableId}').item=${JSON.stringify(item)}
+	`
+	$(`#${tableId}`).append(`<script type="text/javascript">${frm.script}<\/script>`)
+
+	$(`#modalRow${tableId}`).modal('hide')
+}
+
 function gridSatirDuzenle(rowIndex,tableId,insideOfModal){
 	var frm=FormControl.FormControl
 	var table=document.getElementById(tableId)
@@ -834,7 +985,7 @@ function gridSatirDuzenle(rowIndex,tableId,insideOfModal){
 		var fieldList=clone(table.item.fields)
 
 		editRowCalculation(`#${tableId} tbody #${editRow.id}`, `${table.item.parentField}.${rowIndex}`, fieldList)
-		ilkElemanaFocuslan(`#${tableId} tbody #${editRow.id}`)
+		// ilkElemanaFocuslan(`#${tableId} tbody #${editRow.id}`)
 	}
 
 	$(`#${tableId}`).append(`<script type="text/javascript">${frm.script}<\/script>`)
@@ -849,28 +1000,61 @@ function gridSatirDuzenle(rowIndex,tableId,insideOfModal){
 			field.value=''
 			var td=editRow.insertCell()
 			if(field.visible===false){
+				td.innerHTML=editRow.detail.cells[cellIndex].innerHTML
 				td.classList.add('hidden')
+				// var inputs=editRow.detail.cells[cellIndex].querySelectorAll(`input`)
+				// var i=0
+				// td.innerHTML=''
+				// while(i<inputs.length){
+				// 	if(inputs.length>1){
+				// 		field.field=`${item.field}.${rowIndex}.${key}.${i}`
+				// 	}
+				// 	field.id=generateFormId(field.field)
+				// 	field.name=generateFormName(field.field)
+				// 	field.value=inputs[i].value
+				// 	if(field.type=='boolean'){
+				// 		field.class='grid-checkbox'
+				// 		field.value=field.value.toString()==='true'?true:false
+				// 	}
+
+				// 	field.valueText=editRow.detail.cells[cellIndex].innerText
+
+				// 	var data={value:{}}
+				// 	data.value[field.field]=field.value
+				// 	if(field.lookupTextField){
+				// 		data.value[field.lookupTextField]=field.valueText
+				// 	}
+				// 	data.value=listObjectToObject(data.value)
+
+				// 	td.innerHTML+=frm.generateControls(field,data)
+				// 	i++
+				// }
+
+			}else{
+				if(editRow.detail.cells[cellIndex].querySelector(`input`)){
+					field.value=editRow.detail.cells[cellIndex].querySelector(`input`).value
+				}
+				if(field.type=='boolean'){
+					field.class='grid-checkbox'
+					field.value=field.value.toString()==='true'?true:false
+				}
+
+				field.valueText=editRow.detail.cells[cellIndex].innerText
+				var data={value:{}}
+				data.value[field.field]=field.value
+				if(field.lookupTextField){
+					data.value[field.lookupTextField]=field.valueText
+				}
+				data.value=listObjectToObject(data.value)
+
+				td.innerHTML=frm.generateControls(field,data)
 			}
 
-			if(editRow.detail.cells[cellIndex].querySelector(`input`)){
-				field.value=editRow.detail.cells[cellIndex].querySelector(`input`).value
-			}
-			if(field.type=='boolean'){
-				
-				field.class='grid-checkbox'
-				field.value=field.value.toString()==='true'?true:false
-			}
+			
+			
+			
 
-			field.valueText=editRow.detail.cells[cellIndex].innerText
-
-			var data={value:{}}
-			data.value[field.field]=field.value
-			if(field.lookupTextField){
-				data.value[field.lookupTextField]=field.valueText
-			}
-			data.value=listObjectToObject(data.value)
-
-			td.innerHTML=frm.generateControls(field,data)
+			
 		})
 		var td=editRow.insertCell()
 		td.classList.add('text-center')
@@ -893,9 +1077,13 @@ function gridSatirOK(tableId,rowId,rowIndex,insideOfModal){
 	$(`#${tableId}`).html(frm.gridHtml(item,false,insideOfModal))
 	frm.script+=`
 	document.getElementById('${tableId}').item=${JSON.stringify(item)}
-	ilkElemanaFocuslan('#${tableId} tbody #${rowId}')
-
 	`
+	if(rowIndex<0){
+		frm.script+=`
+		ilkElemanaFocuslan('#${tableId} tbody #${rowId}')
+		`
+	}
+	
 	$(`#${tableId}`).append(`<script type="text/javascript">${frm.script}<\/script>`)
 }
 
@@ -913,6 +1101,7 @@ function gridSatirSil(rowIndex,tableId,insideOfModal){
 
 function gridSatirVazgec(tableId,rowId,rowIndex,insideOfModal){
 	if(rowIndex>-1){
+
 		var editRow=document.getElementById(rowId)
 		editRow.innerHTML=editRow.detail.innerHTML
 	}else{
@@ -1127,7 +1316,9 @@ function refreshRemoteList(remoteList){
 				Object.keys(remoteList[e].list).forEach((key)=>{
 					dizi.forEach((d)=>{
 						if(d.obj._id==key){
-							$(remoteList[e].list[key].cellId).html(d.value)
+							// $(remoteList[e].list[key].cellId).html(d.value)
+							console.log(`remoteList[e].dataSource.label:`,remoteList[e].dataSource.label)
+							$(remoteList[e].list[key].cellId).html(replaceUrlCurlyBracket((remoteList[e].dataSource.label || '{name}'),d.obj))
 							if(remoteList[e].list[key].lookupTextField){
 
 								$(`input[name="${remoteList[e].list[key].lookupTextField}"]`).val(d.value)
@@ -1180,7 +1371,12 @@ function runFilter(selector,prefix=''){
 	if(h.query.page){
 		h.query.page=1
 	}
-	setHashObject(h)
+	if(JSON.stringify(h.query)==JSON.stringify(hashObj.query)){
+		window.onhashchange()
+	}else{
+		setHashObject(h)
+		window.onhashchange()
+	}
 }
 
 function menuLink(path,filter){
@@ -1250,7 +1446,9 @@ function generateLeftMenu(leftMenu){
 function generateMenu(menu,mid,parent){
 	var s=``
 	var bActive=false
-
+	if(menu.visible===false)
+		return ''
+	
 	if(typeof menu.nodes!='undefined'){
 		if(menu.nodes.length>0){
 			bActive=false
@@ -1369,6 +1567,54 @@ function getBreadCrumbs(leftMenu,mid){
 
 	return menuItem
 }
+
+function getBreadCrumbsFromPath(leftMenu,path){
+	var menuItem=[]
+
+	leftMenu.forEach((m1)=>{
+		if(menuItem.length>0)
+			return
+		if(m1.path==path){
+			menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId, module:m1.module || ''})
+			return
+		}
+
+		if(m1.nodes){
+			m1.nodes.forEach((m2)=>{
+
+				if(m2.path==path){
+					menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId, module:m1.module || ''})
+					menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId, module:m2.module || ''})
+					return
+				}
+				if(m2.nodes){
+					m2.nodes.forEach((m3)=>{
+						if(m3.path==path){
+							menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId, module:m1.module || ''})
+							menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId, module:m2.module || ''})
+							menuItem.push({text:m3.text,icon:m3.icon, mId:m3.mId, module:m3.module || ''})
+							return
+						}
+						if(m3.nodes){
+							m3.nodes.forEach((m4)=>{
+								if(m4.path==path){
+									menuItem.push({text:m1.text,icon:m1.icon, mId:m1.mId, module:m1.module || ''})
+									menuItem.push({text:m2.text,icon:m2.icon, mId:m2.mId, module:m2.module || ''})
+									menuItem.push({text:m3.text,icon:m3.icon, mId:m3.mId, module:m3.module || ''})
+									menuItem.push({text:m4.text,icon:m4.icon, mId:m4.mId, module:m4.module || ''})
+									return
+								}
+							})
+						}
+					})
+				}
+			})
+		}
+	})
+
+	return menuItem
+}
+
 
 function changedb(dbId){
 	window.location.href=`/changedb?db=${dbId}&r=${window.location.href}`
@@ -1515,7 +1761,11 @@ function runProgramAjax(data){
 						return
 					}else if(programType=='connector-exporter'){
 						alertX(result.data,(answer)=>{
-							window.location.reload()
+							window.onhashchange()
+						})
+					}else{
+						alertX(result.data,(answer)=>{
+							window.onhashchange()
 						})
 					}
 				}
@@ -1576,7 +1826,7 @@ function frameYazdir(frameId){
 
 function pencereyiKapat(){
 	window.open('','_parent',''); 
-  window.close()
+	window.close()
 }
 
 function viewPlain(divId){
@@ -1606,12 +1856,12 @@ function viewPlain(divId){
 	document.getElementById('main-container').appendChild(ifrm)
 	document.getElementById('main-container').innerHTML+=`
 	<div class="row p-0 m-0">
-    <div class="col-12 p-0 m-0">
-    		<a class="btn btn-primary ml-3 mt-2" href="javascript:frameYazdir('${divId}')"><i class="fas fa-print"></i> Yazdır</a>
-    		<a class="btn btn-dark ml-3 mt-2" href="javascript:pencereyiKapat()"><i class="fas fa-times"></i> Kapat</a>
-    </div>
-    </div>
-  `
+	<div class="col-12 p-0 m-0">
+	<a class="btn btn-primary ml-3 mt-2" href="javascript:frameYazdir('${divId}')"><i class="fas fa-print"></i> Yazdır</a>
+	<a class="btn btn-dark ml-3 mt-2" href="javascript:pencereyiKapat()"><i class="fas fa-times"></i> Kapat</a>
+	</div>
+	</div>
+	`
 	$('body').show()
 }
 
@@ -1629,4 +1879,142 @@ function getPageSettings(module){
 	return obj || {}
 }
 
+moment.updateLocale('en', {
+    relativeTime : {
+        future: "in %s",
+        past:   "%s önce",
+        s  : 'birkaç saniye',
+        ss : '%d saniye',
+        m:  "bir dakika",
+        mm: "%d dakika",
+        h:  "bir saat",
+        hh: "%d saat",
+        d:  "bir gün",
+        dd: "%d gün",
+        w:  "bir hafta",
+        ww: "%d hafta",
+        M:  "bir ay",
+        MM: "%d ay",
+        y:  "bir yıl",
+        yy: "%d yıl"
+    }
+})
+
+
+function initIspiyonService(){
+	if(!global.ispiyonServiceUrl)
+		return
+	var socket = io(global.ispiyonServiceUrl,{
+		reconnectionDelayMax: 10000
+	})
+	socket.on('connect', () => {
+		socket.emit('I_AM_HERE', global.token,global.dbId)
+
+	})
+
+	socket.on('TOTAL_UNREAD', (count,lastNotifications) => {
+		
+		if(Number(count)>0){
+			$('#unread-notification-count').html(count)
+			global.lastNotifications=lastNotifications
+		}else{
+			$('#unread-notification-count').html('')
+			global.lastNotifications=[]
+		}
+	})
+
+	socket.on('NOTIFY', (text,status,icon) => {
+		var message = SnackBar({
+			message: (text || '').substr(0,500),
+			status: status || 'orange',
+			dismissible:true,
+			timeout:false
+		})
+	})
+	socket.on('message', data => {
+		console.log('serverdan gelen mesaj:',data)
+	})
+
+	$(document).ready(()=>{
+		
+		$('#alertsDropdown').on('shown.bs.dropdown',()=>{
+			
+			var s=``
+			if(global.lastNotifications){
+				global.lastNotifications.forEach((e,index)=>{
+					s+=notificationItem(e._id,e.createdDate,e.text,e.status,e.icon)
+				})
+			}
+			$('#last-notifications').html(s)
+			$('#unread-notification-count').html('')
+			global.lastNotifications=[]
+			socket.emit('READ_ALL') //, global.token,global.dbId)
+
+		})
+
+		$('#alertsDropdown').on('hidden.bs.dropdown',()=>{
+			console.log('global.lastNotifications:',global.lastNotifications)
+
+		})
+
+	})
+}
+
+function notificationItem(id,notifyDate,text,status,icon){
+	var bgClass='bg-primary'
+	switch(status || ''){
+		case 'success':
+		bgClass='bg-primary'
+		icon=icon || 'fas fa-bell'
+		break
+		case 'error':
+		bgClass='bg-danger'
+		icon=icon || 'fas fa-times'
+		break
+		case 'warning':
+		bgClass='bg-warning'
+		icon=icon || 'fas fa-exclamation-triangle'
+		break
+	}
+	var s=`
+	<a id='${id}' class="notification-dropdown-item dropdown-item d-flex align-items-center" href="#">
+		<div class="mr-3">
+			<div class="icon-circle ${bgClass}">
+				<i class="${icon?icon:'fas fa-bell'} text-white"></i>
+			</div>
+		</div>
+		<div  class="text-truncate" style="max-width:300px" >
+			<div class="small text-gray-500">${moment(notifyDate).fromNow()}</div>
+			<span>${text}</span>
+		</div>
+	</a>
+	`
+	return s
+}
+
+function notifyMe(text,status) {
+	var message = SnackBar({
+		message: text,
+		status: status || 'orange',
+		dismissible:true,
+		timeout:10000,
+		// actions: [{
+		// 	text: "Click Me!",
+		// 	function: function(){
+		// 		alert("A-C-T-I-O-N");
+		// 	}
+		// }]
+	})
+  // if (!("Notification" in window)) {
+  //   alert("This browser does not support desktop notification");
+  // } else if (Notification.permission === "granted") {
+  //   var notification = new Notification(text)
+  // }else if (Notification.permission !== "denied") {
+  //   Notification.requestPermission().then(function (permission) {
+  //     if (permission === "granted") {
+  //       var notification = new Notification(text)
+  //     }
+  //   })
+  // }
+}
 

@@ -66,7 +66,8 @@
 						"method":"GET",
 						"url":"/dbapi/mrp-machine-groups",
 						"label":"{name}"
-					}
+					},
+					"lastRecord":true
 				},
 				"station":{
 					"title":"Istasyon", "type":"remoteLookup", 
@@ -75,7 +76,8 @@
 						"method":"GET",
 						"url":"/dbapi/mrp-stations",
 						"label":"{name}"
-					}
+					},
+					"lastRecord":true
 				},
 				"name":{"title":"Adı", "type":"string"},
 				"description":{"title":"Açıklama", "type":"string"},
@@ -88,7 +90,8 @@
 						"method":"GET",
 						"url":"/dbapi/accounts",
 						"label":"{accountCode} - {name}"
-					}
+					},
+					"lastRecord":true
 				},
 				"passive":{"title":"Pasif?", "type":"boolean"}
 			},
